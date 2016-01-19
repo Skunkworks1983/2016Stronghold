@@ -14,6 +14,9 @@ public:
 	void InitDefaultCommand();
 	void setLeftSpeed(double speed);
 	void setRightSpeed(double sped);
+	void resetEncoder();
+	float getLeftDistance();
+	float getRightDistance();
 };
 
 #endif
