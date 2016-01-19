@@ -1,6 +1,7 @@
 #include "Drivebase.h"
 #include "../RobotMap.h"
 #include "WPILib.h"
+#include "Commands/TankDrive.h"
 
 Drivebase::Drivebase() :
 		Subsystem("Drivebase") {
@@ -24,6 +25,7 @@ Drivebase::~Drivebase() {
 void Drivebase::InitDefaultCommand() {
 	// Set the default command for a subsystem here.
 	//SetDefaultCommand(new MySpecialCommand());
+	SetDefaultCommand(new TankDrive());
 }
 
 void Drivebase::setLeftSpeed(double speed) {
