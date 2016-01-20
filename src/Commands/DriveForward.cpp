@@ -1,6 +1,6 @@
 #include "DriveForward.h"
 
-DriveForward::DriveForward(float distance, double speed)
+DriveForward::DriveForward(float distance, float speed)
 {
 	Requires(drivebase);
 	this->distance = distance;

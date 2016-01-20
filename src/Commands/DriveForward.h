@@ -8,9 +8,9 @@ class DriveForward: public CommandBase
 {
 private:
 	float distance;
-	double speed;
+	float speed;
 public:
-	DriveForward(float, double);
+	DriveForward(float, float);
 	virtual ~DriveForward();
 	void Initialize();
 	void Execute();
