@@ -7,17 +7,27 @@
 #include <PIDSource.h>
 #include <SensorBase.h>
 
-class SkunkEncoder: public SensorBase,
-		public CounterBase,
-		public PIDSource,
-		public LiveWindowSendable {
-	SkunkEncoder(int dataPort, int signPort);
-	~SkunkEncoder();
+struct Data {
+	int *counter;
+	priority_mutex *m_mutex;
+	DigitalInput * m_DataSource;
+	DigitalInput * m_SignSource;
+};
+
+class SkunkEncoder: public PIDSource {
+public:
+	SkunkEncoder(int dataPort, int signPort, std::string name = "DEFAULT");
+	virtual ~SkunkEncoder();
 	int GetPosition();
-	void update();
+	void Reset();
+	double PIDGet();
+	void post();
 private:
 	int current_position;
 	DigitalInput *dataSource, *signSource;
+	priority_mutex *mutex;
+	Data *data;
+	std::string name;
 };
 
 #endif
