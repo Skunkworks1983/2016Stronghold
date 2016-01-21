@@ -20,5 +20,10 @@ void Drivebase::setLeftSpeed(double speed) {
 void Drivebase::setRightSpeed(double speed) {
 
 }
+float Drivebase::getLightSensorValue(){
+	return 0.0;
+
+
+}
 // Put methods for controlling this subsystem
 // here. Call these from Commands.

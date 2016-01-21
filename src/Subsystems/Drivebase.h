@@ -13,7 +13,8 @@ public:
 	Drivebase();
 	void InitDefaultCommand();
 	void setLeftSpeed(double speed);
-	void setRightSpeed(double sped);
+	void setRightSpeed(double speed);
+	float getLightSensorValue();
 };
 
 #endif
