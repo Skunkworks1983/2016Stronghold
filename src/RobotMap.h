@@ -41,4 +41,8 @@
 #define OI_JOYSTICK_LEFT_PORT 0
 #define OI_JOYSTICK_RIGHT_PORT 1
 
+//Buttons
+
+#define OI_BUTTON_BREACH_PORT 2
+
 #endif
