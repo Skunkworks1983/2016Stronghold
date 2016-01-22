@@ -1,12 +1,10 @@
 #include "OI.h"
-#include <Joystick.h>
-#include <cstring>
-#include <RobotMap.h>
 
 OI::OI()
 {
 	leftStick = new Joystick(OI_JOYSTICK_LEFT_PORT);
 	rightStick = new Joystick(OI_JOYSTICK_RIGHT_PORT);
+	breachButton = new JoystickButton(leftStick, OI_BUTTON_BREACH_PORT);
 }
 
 OI::~OI() {

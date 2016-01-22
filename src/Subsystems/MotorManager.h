@@ -2,6 +2,7 @@
 #define MotorManager_H
 
 #include "IMotor.h"
+#include <WPILib.h>
 
 class MotorManager: public Subsystem
 {
