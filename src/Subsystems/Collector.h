@@ -1,13 +1,14 @@
 #ifndef COLLECTOR_H
 #define COLLECTOR_H
 
-#include "Commands/Subsystem.h"
-#include "WPILib.h"
+#include <Commands/Subsystem.h>
+
+class CANTalon;
 
 class Collector: public Subsystem
 {
 private:
-	Talon *rotatorMotor1, *rollerMotor1;
+	CANTalon *rotatorMotor1, *rollerMotor1;
 public:
 	Collector();
 	~Collector();
@@ -18,6 +19,7 @@ public:
 	void setRotatorPosition();
 	void motorRollerOn();
 	void motorRollerOff();
+	void setRotatorPosition(float position);
 };
 
 #endif

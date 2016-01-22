@@ -1,8 +1,9 @@
 #ifndef Drivebase_H
 #define Drivebase_H
 
-#include "Commands/Subsystem.h"
-#include "WPILib.h"
+#include <Commands/Subsystem.h>
+
+class Talon;
 
 class Drivebase: public Subsystem
 {

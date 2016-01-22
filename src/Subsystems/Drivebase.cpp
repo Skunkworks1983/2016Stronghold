@@ -1,7 +1,7 @@
-#include "Drivebase.h"
-#include "../RobotMap.h"
-#include "WPILib.h"
-#include "Commands/TankDrive.h"
+#include <Commands/TankDrive.h>
+#include <RobotMap.h>
+#include <Subsystems/Drivebase.h>
+#include <Talon.h>
 
 Drivebase::Drivebase() :
 		Subsystem("Drivebase") {
