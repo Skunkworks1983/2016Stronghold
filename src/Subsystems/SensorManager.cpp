@@ -13,7 +13,17 @@ void SensorManager::InitDefaultCommand()
 	// Set the default command for a subsystem here.
 	//SetDefaultCommand(new MySpecialCommand());
 }
+ SensorManager SensorManager::getSensorManager(){
+	 static SensorManager instance;
+	 if(instance == NULL){
+		 instance = SensorManager();
+		 return instance;
+	 }
+	 else{
+		 return instance;
+	 }
 
+ }
 float SensorManager::getYaw() {
 	return ahrs->GetYaw();
 }
