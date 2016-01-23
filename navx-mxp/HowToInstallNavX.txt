@@ -1,0 +1,20 @@
+Instructions for the installation of required libraries to compile and use the NavX gyroscope.
+Pulled from the following official navX installation instructions located at http://www.pdocs.kauailabs.com/navx-mxp/software/roborio-libraries/c/
+
+First you must install the library onto your {HOME} directory using the navX installer
+Go to http://www.kauailabs.com/public_files/navx-mxp/navx-mxp.zip to download the required files
+Unzip the files anywhere, and run setup.exe
+
+This will install the library in addition to various UI applications to view sensor data on the MXP
+
+Open eclipse and your desired 2016 project
+Right click 2016 project, and click properties
+
+Under C/C++ Build -> Settings -> Tool Settings -> Cross G++ Compiler -> Includes
+Click the green plus button to add another include path, set "${HOME}\navx-mxp\cpp\include" as the directory
+Make sure there is only one set of quotes surrounding the path when copying
+
+Now move onto linking the library in Cross G++ Linker -> Libraries
+Under Libraries, click the green plus and add navx_frc_cpp as the library name
+Now click the newly added library and move it above your wpilib library so that it links beforehand
+Now under library search path, add the following directory "${HOME}/navx-mxp/cpp/lib"
