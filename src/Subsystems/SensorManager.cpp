@@ -27,6 +27,7 @@ float SensorManager::getRoll() {
 }
 float SensorManager::GetLightSensorVoltage(){
 
+	return lightSensor->GetVoltage();
 
 
 }
