@@ -8,20 +8,22 @@ SensorManager::SensorManager() :
 	lightSensor = new AnalogInput(LIGHT_SENSOR_PORT);
 }
 
+SensorManager::~SensorManager()
+{
+
+}
+
 void SensorManager::InitDefaultCommand()
 {
 	// Set the default command for a subsystem here.
 	//SetDefaultCommand(new MySpecialCommand());
 }
- SensorManager SensorManager::getSensorManager(){
-	 static SensorManager instance;
-	 if(instance == NULL){
-		 instance = SensorManager();
-		 return instance;
+ SensorManager* SensorManager::getSensorManager(){
+	 static SensorManager *instance;
+	 if(instance == 0){
+		 instance = new SensorManager();
 	 }
-	 else{
-		 return instance;
-	 }
+	return instance;
 
  }
 float SensorManager::getYaw() {
@@ -39,6 +41,21 @@ float SensorManager::GetLightSensorVoltage(){
 
 	return lightSensor->GetVoltage();
 
+
+}
+float  SensorManager::GetAccelX(){
+
+	return ahrs->GetWorldLinearAccelX();
+
+}
+
+float  SensorManager::GetAccelY(){
+	return ahrs->GetWorldLinearAccelY();
+
+}
+
+float  SensorManager::GetAccelZ(){
+	return ahrs->GetWorldLinearAccelZ();
 
 }
 

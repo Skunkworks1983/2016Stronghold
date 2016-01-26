@@ -12,16 +12,21 @@ private:
 	// for methods that implement subsystem capabilities
 	AHRS * ahrs;
 	AnalogInput *lightSensor;
+
+
 	SensorManager();
 	~SensorManager();
 	//Declare other sensor types later (Encoder, Vision, etc)
 public:
-	static SensorManager getSensorManager();
+	static SensorManager* getSensorManager();
 	void InitDefaultCommand();
 	float GetLightSensorVoltage();
 	float getYaw();
 	float getPitch();
 	float getRoll();
+	float  GetAccelX();
+	float  GetAccelY();
+	float  GetAccelZ();
 };
 
 #endif
