@@ -1,11 +1,11 @@
 #ifndef Drivebase_H
 #define Drivebase_H
-
+#include <Subsystems/MotorManager.h>
 
 
 #include "Commands/Subsystem.h"
 #include "WPILib.h"
-#include "./MotorManager.h"
+
 
 
 
@@ -18,6 +18,7 @@ private:
 
 public:
 	Drivebase();
+	~Drivebase();
 	void InitDefaultCommand();
 	void resetEncoder();
 	void setLeftSpeed(double);

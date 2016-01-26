@@ -1,25 +1,26 @@
 #ifndef COLLECTOR_H
 #define COLLECTOR_H
 
-#include <Commands/Subsystem.h>
+#include <Subsystems/MotorManager.h>
 
-class CANTalon;
-
-class Collector: public Subsystem
-{
+class Collector: public Subsystem {
 private:
-	CANTalon *rotatorMotor1, *rollerMotor1;
+	MotorManager *motorManager;
 public:
+	enum rollerDirection {
+		KForward, KBackward, KStop
+	};
+
 	Collector();
 	~Collector();
 	void InitDefaultCommand();
 	void setLeftSpeed(double speed);
 	void setRightSpeed(double speed);
 	void resetEncoder();
-	void setRotatorPosition();
-	void motorRollerOn();
-	void motorRollerOff();
+	void setMotorPosition();
 	void setRotatorPosition(float position);
+	void setRoller(rollerDirection direction, float speed);
+
 };
 
 #endif

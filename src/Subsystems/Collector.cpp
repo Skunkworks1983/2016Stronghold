@@ -1,18 +1,16 @@
 #include <CANTalon.h>
-#include <RobotMap.h>
 #include <Subsystems/Collector.h>
 
 //TODO: set position of collector
 //TODO: set speed
 Collector::Collector() :
 Subsystem("Collector") {
-	rotatorMotor1 = new CANTalon(COLLECTOR_ROTATOR_MOTOR_1_PORT);
-	rollerMotor1 = new CANTalon(COLLECTOR_ROLLER_MOTOR_1_PORT);
+	motorManager = MotorManager::getMotorManager();
+
 }
 
 Collector::~Collector(){
-	delete rotatorMotor1;
-	delete rollerMotor1;
+//ailis wants motor manager gone
 }
 
 void Collector::InitDefaultCommand(){
@@ -20,22 +18,32 @@ void Collector::InitDefaultCommand(){
 }
 
 void Collector::resetEncoder(){
-	rotatorMotor1->Reset();
-	rollerMotor1->Reset();
+	// motorManager->resetRollerEncoder(0.0);
 }
 
-void Collector::setRotatorPosition(){
-	rotatorMotor1->SetPosition(1); //TODO: find actual value
-}
-
-void Collector::motorRollerOn(){
-	rollerMotor1->Set(1.0);
-}
-
-void Collector::motorRollerOff(){
-	rollerMotor1->Set(0.0);
+void Collector::setMotorPosition(){
+	motorManager->setPosition(5, 2);
 }
 
 void Collector::setRotatorPosition(float position){
 
+}
+
+void Collector::setRoller(rollerDirection direction, float speed){
+	switch(direction){
+	case KForward:
+		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, speed);
+		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_2_PORT, speed);
+		break;
+
+	case KBackward:
+		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT,-speed);
+		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_2_PORT,-speed);
+		break;
+
+	case KStop:
+		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, 0.0);
+		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_2_PORT, 0.0);
+		break;
+	}
 }

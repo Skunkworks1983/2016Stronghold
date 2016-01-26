@@ -2,6 +2,7 @@
 #include <RobotMap.h>
 #include <Subsystems/Drivebase.h>
 #include <Talon.h>
+#include <Subsystems/MotorManager.h>
 
 Drivebase::Drivebase() :
 		Subsystem("Drivebase") {
@@ -23,14 +24,6 @@ void Drivebase::InitDefaultCommand() {
 void Drivebase::resetEncoder()
 {
 
-}
-
-void Drivebase::setLeftSpeed(double speed) {
-	motorManager->setLeftSpeed(speed);
-}
-
-void Drivebase::setRightSpeed(double speed) {
-	motorManager->setRightSpeed(speed);
 }
 
 float Drivebase::getRightDistance(){

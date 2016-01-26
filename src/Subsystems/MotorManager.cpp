@@ -1,24 +1,27 @@
 #include "MotorManager.h"
 #include "../RobotMap.h"
+#include "WPILib.h"
 
 MotorManager::MotorManager() :
 		Subsystem("MotorManager")
 {
-	leftMotor1 = new IMotor(DRIVEBASE_LEFTMOTOR_1_PORT);
-	leftMotor2 = new IMotor(DRIVEBASE_LEFTMOTOR_2_PORT);
-	leftMotor3 = new IMotor(DRIVEBASE_LEFTMOTOR_3_PORT);
-	rightMotor1 = new IMotor(DRIVEBASE_RIGHTMOTOR_1_PORT);
-	rightMotor2 = new IMotor(DRIVEBASE_RIGHTMOTOR_2_PORT);
-	rightMotor3 = new IMotor(DRIVEBASE_RIGHTMOTOR_3_PORT);
+	Motors[DRIVEBASE_LEFTMOTOR_1_PORT] = new CANTalon(DRIVEBASE_LEFTMOTOR_1_PORT);
+	Motors[DRIVEBASE_LEFTMOTOR_2_PORT] = new CANTalon(DRIVEBASE_LEFTMOTOR_2_PORT);
+	Motors[DRIVEBASE_LEFTMOTOR_3_PORT] = new CANTalon(DRIVEBASE_LEFTMOTOR_3_PORT);
+	Motors[DRIVEBASE_RIGHTMOTOR_1_PORT] = new CANTalon(DRIVEBASE_RIGHTMOTOR_1_PORT);
+	Motors[DRIVEBASE_RIGHTMOTOR_2_PORT] = new CANTalon(DRIVEBASE_RIGHTMOTOR_2_PORT);
+	Motors[DRIVEBASE_RIGHTMOTOR_3_PORT] = new CANTalon(DRIVEBASE_RIGHTMOTOR_3_PORT);
 }
 
 MotorManager::~MotorManager() {
-	delete leftMotor1;
-	delete leftMotor2;
-	delete leftMotor3;
-	delete rightMotor1;
-	delete rightMotor2;
-	delete rightMotor3;
+	for (int i=0; i< MAX_MANAGED_MOTORS;i++)
+	{
+		if (Motors[i]!=NULL)
+		{
+			delete Motors[i];
+			Motors[i]=0;
+		}
+	}
 }
 
 void MotorManager::InitDefaultCommand()
@@ -27,18 +30,25 @@ void MotorManager::InitDefaultCommand()
 	//SetDefaultCommand(new MySpecialCommand());
 }
 
-void MotorManager::setLeftSpeed(double speed) {
-	leftMotor1->Set(-speed);
-	leftMotor2->Set(-speed);
-	leftMotor3->Set(-speed);
-}
 
-void MotorManager::setRightSpeed(double speed) {
-	rightMotor1->Set(speed);
-	rightMotor2->Set(speed);
-	rightMotor3->Set(speed);
-}
 
+
+void MotorManager::setPosition(int pid, float position){
+
+}
+void MotorManager::setSpeed(int ID, float speed) {
+	Motors[ID]->Set(speed);
+}
+int MotorManager::setPIDValues(int ID, double P, double I, double D){
+	Motors[ID]->SetPID(P, I, D);
+	return ID;
+}
+void setPosition(int PID, float position) {
+
+}
+Encoder* getEncoder(int ID) {
+
+}
 MotorManager * MotorManager::getMotorManager() {
 	static MotorManager motorManager;
 	return &motorManager;
