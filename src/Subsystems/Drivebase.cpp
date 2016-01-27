@@ -1,7 +1,8 @@
-#include "Drivebase.h"
-#include "../RobotMap.h"
-#include "WPILib.h"
-#include "Commands/TankDrive.h"
+#include <Commands/TankDrive.h>
+#include <RobotMap.h>
+#include <Subsystems/Drivebase.h>
+#include <Talon.h>
+#include <Subsystems/MotorManager.h>
 
 Drivebase::Drivebase() :
 		Subsystem("Drivebase") {
@@ -22,14 +23,6 @@ void Drivebase::resetEncoder()
 
 }
 
-void Drivebase::setLeftSpeed(double speed) {
-	motorManager->setLeftSpeed(speed);
-}
-
-void Drivebase::setRightSpeed(double speed) {
-	motorManager->setRightSpeed(speed);
-}
-
 float Drivebase::getRightDistance(){
 	return 0; //TODO change this
 }
@@ -37,3 +30,10 @@ float Drivebase::getRightDistance(){
 float Drivebase::getLeftDistance(){
 	return 0;
 } //Maybe move to somewhere else. Not now -Eli
+
+void Drivebase::setLeftSpeed(double speed) {
+}
+
+void Drivebase::setRightSpeed(double speed) {
+}
+
