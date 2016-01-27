@@ -46,8 +46,8 @@ int MotorManager::setPIDValues(int ID, double P, double I, double D){
 void setPosition(int PID, float position) {
 
 }
-Encoder* getEncoder(int ID) {
-
+double MotorManager::GetPosition(int ID) {
+	return this->Motors[ID]->GetPosition();
 }
 MotorManager * MotorManager::getMotorManager() {
 	static MotorManager motorManager;
