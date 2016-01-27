@@ -9,8 +9,8 @@
 #ifndef SRC_COMMANDS_DRIVETOSOMETHING_H_
 #define SRC_COMMANDS_DRIVETOSOMETHING_H_
 
-#include<Subsystems/DriveBase.h>
-#include<CommandBase.h>
+#include <Subsystems/Drivebase.h>
+#include <CommandBase.h>
 
 class DriveToSomething: public CommandBase {
 private:

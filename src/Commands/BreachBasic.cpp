@@ -20,7 +20,7 @@ BreachBasicGroup::BreachBasicGroup()
 	// e.g. if Command1 requires chassis, and Command2 requires arm,
 	// a CommandGroup containing them would require both the chassis and the
 	// arm.
-	AddSequential(new DriveForward(distance, speed));
+	AddSequential(new DriveForward(distance, speed, true));
 	//AddSequential(new Align("vertical"));
 
 }

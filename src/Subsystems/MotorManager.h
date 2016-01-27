@@ -1,8 +1,11 @@
 #ifndef MotorManager_H
 #define MotorManager_H
 
-#include "IMotor.h"
-#include <WPILib.h>
+#include <Commands/Subsystem.h>
+#include <RobotMap.h>
+
+class CANTalon;
+class Encoder;
 
 class MotorManager: public Subsystem
 {
@@ -10,18 +13,18 @@ private:
 	MotorManager();
 	~MotorManager();
 	MotorManager(const MotorManager &);
-	IMotor * leftMotor1;
-	IMotor * leftMotor2;
-	IMotor * leftMotor3;
-	IMotor * rightMotor1;
-	IMotor * rightMotor2;
-	IMotor * rightMotor3;
+	CANTalon* Motors[MAX_MANAGED_MOTORS];
+protected:
+	double GetPosition(int ID);
+
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
 public:
 	void InitDefaultCommand();
-	void setLeftSpeed(double speed);
-	void setRightSpeed(double speed);
+	void setPosition(int pid, float position);
+	void setSpeed(int ID, float speed);
+	int setPIDValues(int ID, double P, double I, double D);
+
 	static MotorManager * getMotorManager();
 };
 
