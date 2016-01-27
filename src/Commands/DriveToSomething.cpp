@@ -13,6 +13,7 @@ DriveToSomething::DriveToSomething(float distance, float speed){
 	this->distance = distance;
 	this->speed = speed;
 	this->dt = 0;
+	this->distant = distant;
 
 }
 
@@ -30,6 +31,13 @@ void DriveToSomething::Initialize(){
 
 void DriveToSomething::Execute(){
 	this->dt = drivebase->getRightDistance();
+
+	if (distance-dt < distant) {
+		float newSpeed = (speed*.2)*((distance - dt)/distance);
+		drivebase->setLeftSpeed(newSpeed);
+		drivebase->setRightSpeed(newSpeed);
+	}
+
 	if (IsFinished()) {
 		End();
 	}

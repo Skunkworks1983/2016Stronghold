@@ -15,8 +15,9 @@
 class DriveToSomething: public CommandBase {
 private:
 	float distance;
-	int speed;
+	float speed;
 	float dt;
+	float distant;
 public:
 	DriveToSomething(float distance,float speed);
 		void Initialize();
@@ -25,6 +26,7 @@ public:
 		void End();
 		void Interrupted();
 		~DriveToSomething();
+
 
 };
 
