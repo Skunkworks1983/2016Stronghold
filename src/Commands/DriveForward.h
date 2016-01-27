@@ -10,7 +10,7 @@ private:
 	float distance;
 	float speed;
 public:
-	DriveForward(float, float);
+	DriveForward(float distance, float speed, bool orient); //distance to drive, speed at which to drive, whether or not to orient after drive is complete
 	virtual ~DriveForward();
 	void Initialize();
 	void Execute();
