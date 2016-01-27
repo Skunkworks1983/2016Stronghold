@@ -16,13 +16,15 @@ class DriveToSomething: public CommandBase {
 private:
 	float distance;
 	int speed;
+	float dt;
 public:
-	DriveToSomething(float distance,int speed);
+	DriveToSomething(float distance,float speed);
 		void Initialize();
 		void Execute();
 		bool IsFinished();
 		void End();
 		void Interrupted();
+		~DriveToSomething();
 
 };
 
