@@ -27,6 +27,9 @@ public:
 	float  GetAccelX();
 	float  GetAccelY();
 	float  GetAccelZ();
+	double GetEncoderPosition(int ID);
+
+
 };
 
 #endif
