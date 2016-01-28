@@ -9,6 +9,10 @@ Drivebase::Drivebase() :
 		motorManager = MotorManager::getMotorManager();
 }
 
+Drivebase::~Drivebase()
+{
+}
+
 void Drivebase::InitDefaultCommand() {
 	// Set the default command for a subsystem here.
 	//SetDefaultCommand(new MySpecialCommand());
