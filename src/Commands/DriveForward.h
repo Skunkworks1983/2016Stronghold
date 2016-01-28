@@ -2,7 +2,7 @@
 #define DriveForward_H
 
 #include <CommandBase.h>
-#include "Subsystems/Drivebase.h"
+#include <cstdbool>
 
 class DriveForward: public CommandBase
 {
