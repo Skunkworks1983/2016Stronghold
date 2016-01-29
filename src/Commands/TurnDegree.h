@@ -9,7 +9,7 @@
 #define SRC_COMMANDS_TURNDEGREE_H_
 #include <Subsystems/Drivebase.h>
 #include <CommandBase.h>
-#define ENCODER_TURN_RADIUS_RATIO 1.2
+#define ENCODER_TURN_RADIUS_RATIO 1.2 // this is a placeholder for the actual ratio
 
 class TurnDegree: public CommandBase
 {

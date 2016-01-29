@@ -10,6 +10,7 @@
 TurnDegree::TurnDegree(double degree, double placeholder)
 {
 	this->degree = degree;
+	this->speed = speed;
 }
 
 TurnDegree::~TurnDegree()
