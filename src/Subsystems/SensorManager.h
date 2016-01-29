@@ -1,9 +1,13 @@
 #ifndef SensorManager_H
 #define SensorManager_H
 
-#include "Commands/Subsystem.h"
+#include <Commands/Subsystem.h>
+
 #include "WPILib.h"
 #include "../../navx-mxp/cpp/include/AHRS.h"
+
+class AHRS;
+class AnalogInput;
 
 class SensorManager: public Subsystem
 {

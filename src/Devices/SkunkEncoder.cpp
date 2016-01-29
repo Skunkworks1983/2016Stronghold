@@ -1,9 +1,9 @@
+#include <Devices/SkunkEncoder.h>
 #include <DigitalInput.h>
 #include <HAL/cpp/Semaphore.hpp>
-#include <pthread.h>
-#include "SkunkEncoder.h"
-#include <cstdbool>
+#include <SmartDashboard/SmartDashboard.h>
 #include <cstdint>
+#include <string>
 
 static void tInteruptSkunk(uint32_t interruptAssertedMask, void *param) {
 	Data * data = (Data *) param;

@@ -1,8 +1,9 @@
 #include <AnalogInput.h>
 #include <RobotMap.h>
 #include <SPI.h>
+#include <Subsystems/MotorManager.h>
 #include <Subsystems/SensorManager.h>
-#include "MotorManager.h"
+
 
 SensorManager::SensorManager() :
 		Subsystem("SensorManager")
