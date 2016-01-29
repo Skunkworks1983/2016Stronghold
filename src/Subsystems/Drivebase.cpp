@@ -1,16 +1,17 @@
 #include <Commands/TankDrive.h>
-#include <RobotMap.h>
 #include <Subsystems/Drivebase.h>
-#include <Talon.h>
 #include <Subsystems/MotorManager.h>
 #include <Subsystems/SensorManager.h>
+
 Drivebase::Drivebase() :
 		Subsystem("Drivebase") {
 		motorManager = MotorManager::getMotorManager();
 }
 
+
 Drivebase::~Drivebase()
 {
+
 }
 
 void Drivebase::InitDefaultCommand() {
@@ -33,6 +34,7 @@ float Drivebase::getRightDistance(){
 
 float Drivebase::getLeftDistance(){
 	return SensorManager::getSensorManager()->GetEncoderPosition(DRIVEBASE_LEFTENCODER_PORT);
+
 } //Maybe move to somewhere else. Not now -Eli
 
 void Drivebase::setLeftSpeed(double speed) {
