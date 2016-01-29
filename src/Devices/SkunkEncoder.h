@@ -7,11 +7,14 @@
 #include <PIDSource.h>
 #include <SensorBase.h>
 
+class SkunkEncoder;
+
 struct Data {
 	int *counter;
 	priority_mutex *m_mutex;
 	DigitalInput * m_DataSource;
 	DigitalInput * m_SignSource;
+	SkunkEncoder *ref;
 };
 
 class SkunkEncoder: public PIDSource {
