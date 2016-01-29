@@ -8,7 +8,7 @@
 
 #ifndef SRC_COMMANDS_DRIVETOSOMETHING_H_
 #define SRC_COMMANDS_DRIVETOSOMETHING_H_
-
+#include <Subsystems/SensorManager.h>
 #include <Subsystems/Drivebase.h>
 #include <CommandBase.h>
 

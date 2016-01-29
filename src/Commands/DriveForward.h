@@ -1,6 +1,6 @@
 #ifndef DriveForward_H
 #define DriveForward_H
-
+#include <Subsystems/SensorManager.h>
 #include <CommandBase.h>
 #include <cstdbool>
 
