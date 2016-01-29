@@ -38,8 +38,10 @@ float Drivebase::getLeftDistance(){
 } //Maybe move to somewhere else. Not now -Eli
 
 void Drivebase::setLeftSpeed(double speed) {
+
 }
 
 void Drivebase::setRightSpeed(double speed) {
+
 }
 
