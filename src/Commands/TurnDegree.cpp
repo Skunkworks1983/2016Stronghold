@@ -10,7 +10,6 @@
 TurnDegree::TurnDegree(double degree, double placeholder)
 {
 	this->degree = degree;
-	this->placeholder = placeholder;
 }
 
 TurnDegree::~TurnDegree()
@@ -20,10 +19,9 @@ TurnDegree::~TurnDegree()
 
 void TurnDegree::Initialize()
 {
-	TurnDegree::SetSetPoint(40000);
 	drivebase->resetEncoder();
-	TurnDegree::SetLeftSpeed(speed);
-	TurnDegree::SetRightSpeed(-speed);
+	drivebase->setLeftSpeed(speed);
+	drivebase->setRightSpeed(-speed);
 }
 
 void TurnDegree::Execute()
@@ -33,7 +31,7 @@ void TurnDegree::Execute()
 
 bool TurnDegree::IsFinished()
 {
-	if (drivebase->getLeftDistance() >= (degree * placeholder)) {
+	if (drivebase->getLeftDistance() >= (degree * ENCODER_TURN_RADIUS_RATIO)) {
 		return true;
 
 	}

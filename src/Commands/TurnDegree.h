@@ -9,25 +9,21 @@
 #define SRC_COMMANDS_TURNDEGREE_H_
 #include <Subsystems/Drivebase.h>
 #include <CommandBase.h>
+#define ENCODER_TURN_RADIUS_RATIO 1.2
 
 class TurnDegree: public CommandBase
 {
 private:
 	double degree;
-	double placeholder;
 	double speed;
 public:
-	TurnDegree(double degree, double placeholder);
-	void SetLeftSpeed (double speed);
-	void SetRightSpeed (double speed);
-	void SetSetPoint (double targetTicks);
+	TurnDegree(double degree, double speed); //number of degrees to turn, speed at which to turn
 	virtual ~TurnDegree();
 	void Initialize();
 	void Execute();
 	bool IsFinished();
 	void End();
 	void Interrupted();
-
 };
 
 
