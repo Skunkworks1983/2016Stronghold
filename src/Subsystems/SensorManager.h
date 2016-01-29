@@ -1,9 +1,10 @@
 #ifndef SensorManager_H
 #define SensorManager_H
 
-#include "Commands/Subsystem.h"
-#include "WPILib.h"
-#include <AHRS.h>
+#include <Commands/Subsystem.h>
+
+class AHRS;
+class AnalogInput;
 
 class SensorManager: public Subsystem
 {

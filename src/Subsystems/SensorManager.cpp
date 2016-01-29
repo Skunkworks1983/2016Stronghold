@@ -1,5 +1,9 @@
-#include "SensorManager.h"
-#include "../RobotMap.h"
+#include <AnalogInput.h>
+#include <RobotMap.h>
+#include <SPI.h>
+#include <Subsystems/SensorManager.h>
+
+#include "../../navx-mxp/cpp/include/AHRS.h"
 
 SensorManager::SensorManager() :
 		Subsystem("SensorManager")

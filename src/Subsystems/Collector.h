@@ -2,6 +2,7 @@
 #define COLLECTOR_H
 
 #include <Subsystems/MotorManager.h>
+#include <CommandBase.h>
 
 class Collector: public Subsystem {
 private:
