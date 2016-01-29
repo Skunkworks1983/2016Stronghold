@@ -1,6 +1,6 @@
 #ifndef MotorManager_H
 #define MotorManager_H
-
+#include "SensorManager.h"
 #include <Commands/Subsystem.h>
 #include <RobotMap.h>
 
@@ -24,8 +24,10 @@ public:
 	void setPosition(int pid, float position);
 	void setSpeed(int ID, float speed);
 	int setPIDValues(int ID, double P, double I, double D);
-
+	void resetEncoder();
 	static MotorManager * getMotorManager();
+	friend SensorManager;
+
 };
 
 #endif

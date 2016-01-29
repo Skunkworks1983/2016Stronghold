@@ -6,6 +6,8 @@
  */
 #include<Subsystems/Drivebase.h>
 #include<Commands/DriveToSomething.h>
+#include <Subsystems/SensorManager.h>
+
 #define EPSILON 0.0005f
 
 DriveToSomething::DriveToSomething(float distance, float speed){

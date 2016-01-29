@@ -3,6 +3,9 @@
 
 #include <Commands/Subsystem.h>
 
+#include "WPILib.h"
+#include "../../navx-mxp/cpp/include/AHRS.h"
+
 class AHRS;
 class AnalogInput;
 
@@ -28,6 +31,9 @@ public:
 	float  GetAccelX();
 	float  GetAccelY();
 	float  GetAccelZ();
+	double GetEncoderPosition(int ID);
+
+
 };
 
 #endif
