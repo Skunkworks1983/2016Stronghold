@@ -1,11 +1,10 @@
 #ifndef COMMAND_BASE_H
 #define COMMAND_BASE_H
 
-#include <string>
-#include <Subsystems/Drivebase.h>
-#include "Commands/Command.h"
-#include "OI.h"
-#include "WPILib.h"
+#include <Commands/Command.h>
+
+class Collector;
+class OI;
 
 /**
  * The base for all commands. All atomic commands should subclass CommandBase.
@@ -22,6 +21,7 @@ public:
 	// Create a single static instance of all of your subsystems
 	static OI *oi;
 	static Drivebase *drivebase;
+	static Collector *collector;
 };
 
 #endif

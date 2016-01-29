@@ -1,13 +1,9 @@
-#ifndef Drivebase_H
-#define Drivebase_H
+#ifndef DRIVEBASE_H
+#define DRIVEBASE_H
+
 #include <Subsystems/MotorManager.h>
-
-
 #include "Commands/Subsystem.h"
 #include "WPILib.h"
-
-
-
 
 class Drivebase: public Subsystem
 {
@@ -21,8 +17,8 @@ public:
 	~Drivebase();
 	void InitDefaultCommand();
 	void resetEncoder();
-	void setLeftSpeed(double);
-	void setRightSpeed(double);
+	void setLeftSpeed(double speed);
+	void setRightSpeed(double speed);
 	float getLeftDistance(); //Maybe to be removed? Check on later -Eli
 	float getRightDistance();
 };

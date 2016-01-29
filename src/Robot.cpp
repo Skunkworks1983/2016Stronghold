@@ -3,19 +3,15 @@
 #include <IterativeRobot.h>
 #include <LiveWindow/LiveWindow.h>
 #include <RobotBase.h>
-#include <SerialPort.h>
 
-#include "../navx-mxp/cpp/include/AHRS.h"
 
 class Robot: public IterativeRobot {
 private:
 	LiveWindow *lw;
-	AHRS *gyro;
 
 	void RobotInit() {
 		CommandBase::init();
 		lw = LiveWindow::GetInstance();
-		gyro = new AHRS(SerialPort::kMXP); /* Alternatives:  SPI::kMXP, I2C::kMXP or SerialPort::kUSB */
 	}
 
 	void DisabledPeriodic() {

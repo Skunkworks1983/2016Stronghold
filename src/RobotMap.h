@@ -6,7 +6,6 @@
  * the wiring easier and significantly reduces the number of magic numbers
  * floating around.
  */
-
 // For example to map the left and right motors, you could define the
 // following variables to use with your drivetrain subsystem.
 //const int LEFTMOTOR = 1;
@@ -17,17 +16,12 @@
 //const int RANGE_FINDER_MODULE = 1;
 #define LIGHT_SENSOR_PORT 1
 
-
-
-
 #define LINE_FOLLOW_P 1
 #define LINE_FOLLOW_I 0
 #define LINE_FOLLOW_D 0
 
-
 #define OI_JOYSTICK_LEFT_PORT 0
 #define OI_JOYSTICK_RIGHT_PORT 1
-
 
 #define COLLECTOR_ROTATOR_MOTOR_1_PORT 0
 #define COLLECTOR_ROTATOR_MOTOR_2_PORT 1
@@ -44,6 +38,8 @@
 #define DRIVEBASE_RIGHTMOTOR_2_PORT 1
 #define DRIVEBASE_RIGHTMOTOR_3_PORT 2
 
+#define DRIVEBASE_RIGHTENCODER_PORT 0
+#define DRIVEBASE_LEFTENCODER_PORT 4
 
 //Buttons
 

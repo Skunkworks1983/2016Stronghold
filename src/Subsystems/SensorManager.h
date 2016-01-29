@@ -1,9 +1,13 @@
 #ifndef SensorManager_H
 #define SensorManager_H
 
-#include "Commands/Subsystem.h"
+#include <Commands/Subsystem.h>
+
 #include "WPILib.h"
-#include "AHRS.h"
+#include "../../navx-mxp/cpp/include/AHRS.h"
+
+class AHRS;
+class AnalogInput;
 
 class SensorManager: public Subsystem
 {
@@ -27,6 +31,9 @@ public:
 	float  GetAccelX();
 	float  GetAccelY();
 	float  GetAccelZ();
+	double GetEncoderPosition(int ID);
+
+
 };
 
 #endif
