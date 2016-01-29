@@ -3,7 +3,7 @@
 
 #include "Commands/Subsystem.h"
 #include "WPILib.h"
-#include <AHRS.h>
+#include "../../navx-mxp/cpp/include/AHRS.h"
 
 class SensorManager: public Subsystem
 {
