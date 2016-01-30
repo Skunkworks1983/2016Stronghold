@@ -1,6 +1,9 @@
-#include "WPILib.h"
-#include "Commands/Command.h"
-#include "CommandBase.h"
+#include <CommandBase.h>
+#include <Commands/Scheduler.h>
+#include <IterativeRobot.h>
+#include <LiveWindow/LiveWindow.h>
+#include <RobotBase.h>
+
 
 class Robot: public IterativeRobot {
 private:
