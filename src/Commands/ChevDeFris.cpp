@@ -1,55 +1,53 @@
-/*
- * PortcullisAuto.cpp
- *
- *  Created on: Jan 27, 2016
- *      Author: s-2507264
- */
-#include "PortcullisAuto.h"
-#include<Subsystems/Drivebase.h>
-#include<Subsystems/Collector.h>
+#include "ChevDeFris.h"
+#define REACHDT 3.0f
 
-PortcullisAuto::PortcullisAuto(float speed, float distance, float turnup){
+ChevDeFris::ChevDeFris(float speed, float distance, float turn){
 	Requires(drivebase);
 	Requires(collector);
 	this->speed = speed;
 	this->distance = distance;
-	this->turnup = turnup;
-	this->dt = 0;
 	this->turn = turn;
+	this->dt = 0;
+	this->turning = 0;
 	this->firststop = false;
+
 }
 
-void PortcullisAuto::Initialize(){
+void ChevDeFris::Initialize(){
 	drivebase->resetEncoder();
 	drivebase->setLeftSpeed(speed);
 	drivebase->setRightSpeed(speed);
-	drivebase->getLeftDistance();
+	collector->setRotatorPosition(turn);
 
 
 }
-PortcullisAuto::~PortcullisAuto(){
+ChevDeFris::~ChevDeFris(){
 
 }
 
-void PortcullisAuto::Execute(){
+void ChevDeFris::Execute(){
 	this->dt = drivebase->getRightDistance();
 	if (fabs(distance-dt) <= EPSILON && firststop==false) {
 		this->firststop = true;
 		drivebase->setRightSpeed(0);
 		drivebase->setLeftSpeed(0);
 	}
-	collector->setRotatorPosition(turnup);
-	if ((turnup - turn) < EPSILON){
-
+	collector->setRotatorPosition(turning); //getmotor not set
+	if ((turn - turning) < EPSILON){
+//down for 1 in then go up
 	}
+	if (dt >= REACHDT){
+		collector->setRotatorPosition(turn); //turninging back to the original position
+	}
+	//define the dt value which is not dt
 	this->dt = drivebase->getRightDistance();
 	drivebase->setLeftSpeed(speed);
 	drivebase->setRightSpeed(speed);
 	}
 
 
-bool PortcullisAuto::IsFinished(){
-	if ((2*distance-dt) <= EPSILON && (turnup-turn) <= EPSILON){
+bool ChevDeFris::IsFinished(){
+	if ((2*distance-dt) <= EPSILON && (turn-turning) <= EPSILON){
 		return true;
 	}
 	else {
@@ -57,12 +55,12 @@ bool PortcullisAuto::IsFinished(){
 	}
 }
 
-void PortcullisAuto::End(){
+void ChevDeFris::End(){
 	drivebase->setLeftSpeed(0);
 	drivebase->setRightSpeed(0);
 	collector->setRotatorPosition(0);
 }
 
-void PortcullisAuto::Interrupted(){
+void ChevDeFris::Interrupted(){
 	End();
 }

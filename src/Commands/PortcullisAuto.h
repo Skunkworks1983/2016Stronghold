@@ -1,15 +1,10 @@
-/*
- * PortcullisAuto.h
- *
- *  Created on: Jan 27, 2016
- *      Author: s-2507264
- */
-
 #ifndef SRC_PORTCULLISAUTO_H_
 #define SRC_PORTCULLISAUTO_H_
+
 #include <Subsystems/Drivebase.h>
 #include <Commandbase.h>
 #include <Subsystems/Collector.h>
+
 #define EPSILON .0005f
 
 class PortcullisAuto: public CommandBase{
@@ -30,9 +25,5 @@ public:
 	void Interrupted();
 
 };
-
-
-
-
 
 #endif /* SRC_PORTCULLISAUTO_H_ */
