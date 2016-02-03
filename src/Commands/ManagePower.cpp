@@ -19,7 +19,7 @@ void ManagePower::Execute()
 {
 	double voltage = powerPanel->GetVoltage();
 
-	if (voltage >= POWER_LEVEL_1) {//SHIELDS ARE UP CAPIN'
+	if (voltage >= POWER_LEVEL_1) {//SHIELDS ARE UP CAPPIN'
 		manager->setPriority(PRIORITY_ACCESSORIES);
 
 	} else if (voltage >= POWER_LEVEL_2) {//CUT THE SECONDARY PHASERS
@@ -29,7 +29,7 @@ void ManagePower::Execute()
 		manager->setPriority(PRIORITY_PRIMARY_ACTUATORS);
 	}
 
-	else{//CAPIN' THE SHIPS RUNNIN' ON IMPULSE ONLY
+	else{//CAPPIN' THE SHIPS RUNNIN' ON IMPULSE ONLY
 		manager->setPriority(PRIORITY_DRIVEBASE);
 	}
 

@@ -5,6 +5,7 @@
 #include <RobotMap.h>
 #include <vector>
 
+
 class CANTalon;
 
 class Encoder;
@@ -19,6 +20,7 @@ enum Priority {
 };
 
 class Motor {
+	friend class Motor;
 private:
 
 public:
@@ -28,11 +30,15 @@ public:
 	float      speed;
 	Priority   priority;
 	int    	   port;
+	float C;
+	void setC(Priority priority, float voltage );
+
 
 };
 
 class MotorManager: public Subsystem {
 	friend class SensorManager;
+	friend class Motor;
 private:
 	MotorManager();
 	~MotorManager();
@@ -57,6 +63,7 @@ public:
 	void setPriority(Priority priorityARG);
 
 	static MotorManager * getMotorManager();
+	void setCForAll();
 };
 
 #endif

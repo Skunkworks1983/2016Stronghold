@@ -5,18 +5,18 @@
 MotorManager::MotorManager() :
 		Subsystem("MotorManager") {
 	/*Motors[DRIVEBASE_LEFTMOTOR_1_PORT] = new CANTalon(
-	*DRIVEBASE_LEFTMOTOR_1_PORT);
-	*Motors[DRIVEBASE_LEFTMOTOR_2_PORT] = new CANTalon(
-	*DRIVEBASE_LEFTMOTOR_2_PORT);
-	*Motors[DRIVEBASE_LEFTMOTOR_3_PORT] = new CANTalon(
-	*DRIVEBASE_LEFTMOTOR_3_PORT);
-	Motors[DRIVEBASE_RIGHTMOTOR_1_PORT] = new CANTalon(
-	DRIVEBASE_RIGHTMOTOR_1_PORT);
-	Motors[DRIVEBASE_RIGHTMOTOR_2_PORT] = new CANTalon(
-	DRIVEBASE_RIGHTMOTOR_2_PORT);
-	Motors[DRIVEBASE_RIGHTMOTOR_3_PORT] = new CANTalon(
-	DRIVEBASE_RIGHTMOTOR_3_PORT);
-	*/
+	 *DRIVEBASE_LEFTMOTOR_1_PORT);
+	 *Motors[DRIVEBASE_LEFTMOTOR_2_PORT] = new CANTalon(
+	 *DRIVEBASE_LEFTMOTOR_2_PORT);
+	 *Motors[DRIVEBASE_LEFTMOTOR_3_PORT] = new CANTalon(
+	 *DRIVEBASE_LEFTMOTOR_3_PORT);
+	 Motors[DRIVEBASE_RIGHTMOTOR_1_PORT] = new CANTalon(
+	 DRIVEBASE_RIGHTMOTOR_1_PORT);
+	 Motors[DRIVEBASE_RIGHTMOTOR_2_PORT] = new CANTalon(
+	 DRIVEBASE_RIGHTMOTOR_2_PORT);
+	 Motors[DRIVEBASE_RIGHTMOTOR_3_PORT] = new CANTalon(
+	 DRIVEBASE_RIGHTMOTOR_3_PORT);
+	 */
 
 	allowedPriority = PRIORITY_ACCESSORIES;
 
@@ -50,14 +50,13 @@ void MotorManager::setSpeed(int ID, float speed) {
 	std::vector<Motor>::iterator ptr = motors.begin();
 	std::vector<Motor>::iterator end = motors.end();
 
-	for(; ptr != end; ++ptr) {
-		if(ptr-> port == ID){
+	for (; ptr != end; ++ptr) {
+		if (ptr->port == ID) {
 			ptr->speed = speed;
 
-			if(ptr->priority <= allowedPriority){
+			if (ptr->priority <= allowedPriority) {
 				ptr->talon->Set(speed);
-			}
-			else{
+			} else {
 				ptr->talon->Set(0);
 			}
 			break;
@@ -65,6 +64,7 @@ void MotorManager::setSpeed(int ID, float speed) {
 	}
 
 }
+
 
 int MotorManager::setPIDValues(int ID, double P, double I, double D) {
 	Motors[ID]->SetPID(P, I, D);
@@ -79,21 +79,40 @@ double MotorManager::GetPosition(int ID) {
 	return this->Motors[ID]->GetPosition();
 }
 
-void MotorManager::setPriority(Priority priorityArg){
+void MotorManager::setPriority(Priority priorityArg) {
 
 	std::vector<Motor>::iterator ptr = motors.begin();
 	std::vector<Motor>::iterator end = motors.end();
 
 	allowedPriority = priorityArg;
 
-	for(; ptr != end; ++ptr) {
-		if(ptr->priority > priorityArg){
+	for (; ptr != end; ++ptr) {
+		if (ptr->priority > priorityArg) {
 			ptr->talon->Set(0);
-		}
-		else{
+		} else {
 			ptr->talon->Set(ptr->speed);
 		}
 	}
+
+}
+
+void Motor::setC(Priority priorityArg, float voltage) {
+	if (priority == 0) {
+		return;
+	}
+	if (this->priority >= priorityArg) {
+		this->C = pow((((voltage - 5) / (priority * 2))), 2);
+	}
+}
+
+
+void MotorManager::setCForAll(Priority p1, Priority p2,Priority p3,Priority p4){
+
+	setC(p1, 8);
+	setC(p2, 6);
+	setC(p3, 4);
+	setC(p4, 2);
+
 
 }
 

@@ -9,6 +9,7 @@
 class MotorManager;
 
 class ManagePower: public CommandBase {
+
 private:
 	PowerDistributionPanel * powerPanel;
 
