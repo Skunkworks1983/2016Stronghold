@@ -106,13 +106,22 @@ void Motor::setC(Priority priorityArg, float voltage) {
 }
 
 
-void MotorManager::setCForAll(Priority p1, Priority p2,Priority p3,Priority p4){
+void MotorManager::setCForAll(){
+	std::vector<Motor>::iterator ptr = motors.begin();
+	std::vector<Motor>::iterator end = motors.end();
 
-	setC(p1, 8);
-	setC(p2, 6);
-	setC(p3, 4);
-	setC(p4, 2);
+	for(int i = Priority::PRIORITY_FIRST; i < (int)Priority::PRIORITYS; ++i){
 
+		for (; ptr != end; ++ptr) {
+			if(ptr->priority > i){
+				ptr->setC((Priority) i, DriverStation::GetInstance().GetBatteryVoltage());
+			}
+
+
+		}
+
+
+	}
 
 }
 

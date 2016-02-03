@@ -20,7 +20,7 @@ enum Priority {
 };
 
 class Motor {
-	friend class Motor;
+	friend class MotorManager;
 private:
 
 public:

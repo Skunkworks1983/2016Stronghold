@@ -1,7 +1,6 @@
 #include "ManagePower.h"
 
 ManagePower::ManagePower(MotorManager* managerArg) {
-	powerPanel = new PowerDistributionPanel(POWER_DISTRIBUTION_PANEL_PORT);
 
 	manager = managerArg;
 
@@ -17,7 +16,7 @@ void ManagePower::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void ManagePower::Execute()
 {
-	double voltage = powerPanel->GetVoltage();
+	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
 
 	if (voltage >= POWER_LEVEL_1) {//SHIELDS ARE UP CAPPIN'
 		manager->setPriority(PRIORITY_ACCESSORIES);
@@ -32,6 +31,8 @@ void ManagePower::Execute()
 	else{//CAPPIN' THE SHIPS RUNNIN' ON IMPULSE ONLY
 		manager->setPriority(PRIORITY_DRIVEBASE);
 	}
+
+	manager->setCForAll();
 
 }
 
