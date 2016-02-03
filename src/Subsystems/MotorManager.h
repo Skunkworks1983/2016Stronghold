@@ -23,6 +23,7 @@ public:
 	void InitDefaultCommand();
 	void setPosition(int pid, float position);
 	void setSpeed(int ID, float speed);
+	float getSpeed(int ID);
 	int setPIDValues(int ID, double P, double I, double D);
 	void resetEncoder();
 	static MotorManager * getMotorManager();

@@ -27,6 +27,7 @@
 #define COLLECTOR_ROTATOR_MOTOR_2_PORT 1
 #define COLLECTOR_ROLLER_MOTOR_1_PORT 2
 #define COLLECTOR_ROLLER_MOTOR_2_PORT 3
+#define COLLECTOR_KICKER_MOTOR_PORT 4 //very very tentative
 
 //MotorManager(ewe) Constants
 #define MAX_MANAGED_MOTORS 20

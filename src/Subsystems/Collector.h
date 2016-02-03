@@ -21,6 +21,7 @@ public:
 	void setMotorPosition();
 	void setRotatorPosition(float position);
 	void setRoller(rollerDirection direction, float speed);
+	void activateKicker();
 
 };
 

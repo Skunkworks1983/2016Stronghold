@@ -22,6 +22,7 @@ public:
 	static OI *oi;
 	static Drivebase *drivebase;
 	static Collector *collector;
+
 };
 
 #endif
