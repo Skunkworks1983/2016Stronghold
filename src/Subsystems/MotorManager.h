@@ -64,7 +64,7 @@ public:
 
 	static MotorManager * getMotorManager();
 	void setCForAll();
-	void setSpeedForAll(Priority priorityArg);
+	void setSpeedForAll();
 };
 
 #endif

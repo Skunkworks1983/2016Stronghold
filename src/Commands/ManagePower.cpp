@@ -32,6 +32,7 @@ void ManagePower::Execute() {
 	}
 
 	manager->setCForAll();
+	manager->setSpeedForAll();
 
 
 }

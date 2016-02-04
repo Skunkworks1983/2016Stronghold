@@ -65,17 +65,12 @@ void MotorManager::setSpeed(int ID, float speed) {
 	}
 
 }
-void MotorManager::setSpeedForAll(Priority priorityArg){
+void MotorManager::setSpeedForAll(){
 	std::vector<Motor>::iterator ptr = motors.begin();
 	std::vector<Motor>::iterator end = motors.end();
 
 	for (; ptr != end; ++ptr) {
-		if(ptr->motorPriority > priorityArg){
-
-
-		}
-
-
+		setSpeed(ptr->port, ptr->speed);
 }
 }
 
