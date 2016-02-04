@@ -26,7 +26,23 @@ MotorManager::MotorManager() :
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_1_PORT);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_2_PORT);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_3_PORT);
-	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, 1);
+
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_PULLY_MOTOR_1_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_PULLY_MOTOR_2_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_PULLY_MOTOR_3_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_PULLY_MOTOR_4_PORT);
+
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT);
+
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS, MULTI_TOOL_MOTRO_1_PORT);
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS, MULTI_TOOL_MOTRO_2_PORT);
+
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS, COLLECTOR_MOTOR_PORT);
+
+	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_1_PORT);
+	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_2_PORT);
+
+
 }
 
 MotorManager::~MotorManager() {
@@ -65,13 +81,13 @@ void MotorManager::setSpeed(int ID, float speed) {
 	}
 
 }
-void MotorManager::setSpeedForAll(){
+void MotorManager::setSpeedForAll() {
 	std::vector<Motor>::iterator ptr = motors.begin();
 	std::vector<Motor>::iterator end = motors.end();
 
 	for (; ptr != end; ++ptr) {
 		setSpeed(ptr->port, ptr->speed);
-}
+	}
 }
 
 int MotorManager::setPIDValues(int ID, double P, double I, double D) {
@@ -118,29 +134,28 @@ void MotorManager::setCForAll() {
 	std::vector<Motor>::iterator end = motors.end();
 
 	for (; ptr != end; ++ptr) {
-		ptr->setC(allowedPriority,DriverStation::GetInstance().GetBatteryVoltage());
+		ptr->setC(allowedPriority,
+				DriverStation::GetInstance().GetBatteryVoltage());
 	}
 
 }
 
-
-
 MotorManager * MotorManager::getMotorManager() {
-static MotorManager motorManager;
-return &motorManager;
+	static MotorManager motorManager;
+	return &motorManager;
 }
 
 CANTalon * MotorManager::addMotor(Priority priority, int Port) {
-Motor * motor = new Motor(priority, Port);
-motors.push_back(*motor);
+	Motor * motor = new Motor(priority, Port);
+	motors.push_back(*motor);
 }
 
 Motor::Motor(Priority prioArg, int portArg) {
 
-port = portArg;
-speed = 0;
-motorPriority = prioArg;
-talon = new CANTalon(port);
+	port = portArg;
+	speed = 0;
+	motorPriority = prioArg;
+	talon = new CANTalon(port);
 
 }
 
