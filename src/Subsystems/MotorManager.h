@@ -28,7 +28,7 @@ public:
 	~Motor();
 	CANTalon * talon;
 	float      speed;
-	Priority   priority;
+	Priority   motorPriority;
 	int    	   port;
 	float C;
 	void setC(Priority priority, float voltage );
@@ -64,6 +64,7 @@ public:
 
 	static MotorManager * getMotorManager();
 	void setCForAll();
+	void setSpeedForAll(Priority priorityArg);
 };
 
 #endif

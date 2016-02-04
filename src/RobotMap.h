@@ -49,10 +49,10 @@
 
 #define POWER_DISTRIBUTION_PANEL_PORT (0)
 
-#define POWER_LEVEL_1 10
-#define POWER_LEVEL_2 8
-#define POWER_LEVEL_3 10
-#define POWER_LEVEL_4 10
+#define POWER_LEVEL_1 11
+#define POWER_LEVEL_2 10
+#define POWER_LEVEL_3 9
+
 
 
 

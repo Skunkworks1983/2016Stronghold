@@ -16,7 +16,7 @@ private:
 	MotorManager * manager;
 
 public:
-	ManagePower(MotorManager* manager);
+	ManagePower(MotorManager * manager);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
