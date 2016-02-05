@@ -6,18 +6,20 @@
 #include <Subsystems/drivebase.h>
 #include <Subsystems/Collector.h>
 #define EPSILON .0005f
+#include <Subsystems/SensorManager.h>
+#include <RobotMap.h>
 
 class ChevDeFris: public CommandBase
 {
 private:
 	float speed; // how fast to go during this breach
 	float distance; // how far to go in order to breach the cheval de fris
-	float turn; // how far to turn the collector to lower the teeter-totter
-	float turning; // how far the collector has turned
+	double turning; // how far the collector has turned
 	float dt;  // distance traveled since command started
 	bool firststop; // have we driven to the Cheval yet?
+	float shortdis;// 2nd stop for a short distant
 public:
-	ChevDeFris(float speed, float distance, float turndown);
+	ChevDeFris(float speed, float distance, float shortdis);
 	~ChevDeFris();
 	void Initialize();
 	void Execute();

@@ -8,14 +8,14 @@
 #include<Subsystems/Drivebase.h>
 #include<Subsystems/Collector.h>
 
-PortcullisAuto::PortcullisAuto(float speed, float distance, float turnup){
+PortcullisAuto::PortcullisAuto(float speed, float distance, float turn){
 	Requires(drivebase);
 	Requires(collector);
 	this->speed = speed;
 	this->distance = distance;
-	this->turnup = turnup;
-	this->dt = 0;
 	this->turn = turn;
+	this->dt = 0;
+	this->turning = 0;
 	this->firststop = false;
 }
 
@@ -38,8 +38,8 @@ void PortcullisAuto::Execute(){
 		drivebase->setRightSpeed(0);
 		drivebase->setLeftSpeed(0);
 	}
-	collector->setRotatorPosition(turnup);
-	if ((turnup - turn) < EPSILON){
+	collector->setRotatorPosition(turn);
+	if ((turn - turning) < EPSILON){
 
 	}
 	this->dt = drivebase->getRightDistance();
@@ -49,7 +49,7 @@ void PortcullisAuto::Execute(){
 
 
 bool PortcullisAuto::IsFinished(){
-	if ((2*distance-dt) <= EPSILON && (turnup-turn) <= EPSILON){
+	if ((2*distance-dt) <= EPSILON && (turn-turning) <= EPSILON){
 		return true;
 	}
 	else {
