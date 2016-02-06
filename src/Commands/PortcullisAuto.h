@@ -2,7 +2,7 @@
 #define SRC_PORTCULLISAUTO_H_
 
 #include <Subsystems/Drivebase.h>
-#include <Commandbase.h>
+#include <CommandBase.h>
 #include <Subsystems/Collector.h>
 #include <Subsystems/SensorManager.h>
 

@@ -1,14 +1,36 @@
 #include <AnalogInput.h>
 #include <RobotMap.h>
 #include <SPI.h>
-#include <Subsystems/MotorManager.h>
 #include <Subsystems/SensorManager.h>
-
+#include "MotorManager.h"
 
 SensorManager::SensorManager() :
 		Subsystem("SensorManager")
 {
-	ahrs = new AHRS(SPI::Port::kMXP);
+	ahrsDead = false;
+	try {
+	    //ahrs = new AHRS(SPI::Port::kMXP);
+	    ahrs = new AHRS(I2C::Port::kMXP);
+	    ahrs->Reset();
+	    counter = 0;
+	    while(!ahrs->IsConnected()){
+	    	printf("AHRS NOT CONNECTED\n");
+	    	counter++;
+	    	if(counter > AHRS_CYCLE_TIMEOUT) {
+	    		std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
+	    		ahrsDead = true;
+	    		break;
+	    	}
+	    }
+	    printf("Is the AHRS connected? %s", (ahrs->IsConnected() ? "Yes\n": "no\n"));
+	} catch(std::exception * ex){
+		std::string err_string = "Error instantiating navX MXP:  ";
+		std::cout << err_string;
+		err_string += ex->what();
+		std::cout << err_string;
+		std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
+		ahrsDead = true;
+	}
 	lightSensor = new AnalogInput(LIGHT_SENSOR_PORT);
 }
 
@@ -39,7 +61,8 @@ float SensorManager::getPitch() {
 }
 
 float SensorManager::getRoll() {
-	return ahrs->GetRoll();
+	return ahrs->GetAngle();
+	//return ahrs->GetRoll();
 }
 float SensorManager::GetLightSensorVoltage(){
 
