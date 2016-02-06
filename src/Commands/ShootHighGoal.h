@@ -15,13 +15,18 @@ private:
 	enum EShootState {
 		SHOOT_STATE_AIMING,
 		SHOOT_STATE_FIRING,
-		SHOOT_STATE_RESETTING
+		SHOOT_STATE_RESETTING,
+		SHOOT_STATE_FINISHED
 	};
 	float rollerSpeed;
 	int collectorRotatorSetpoint;
 	int collectorRotatorPosition;
-	bool kickerActivated;
 	EShootState shootState;
+	SensorManager * sensorManager;
+	Collector * collector;
+	const float SHOOTER_AIM_TOLERANCE = 5;
+	const float SHOOTER_SPEED_TOLERANCE = 5;
+	clock_t shootTime;
 	void ExecuteOff();
 	void ExecuteAiming();
 	void ExecuteFiring();

@@ -13,10 +13,14 @@
 
 ShootLowGoal::ShootLowGoal() {
 	// TODO Auto-generated constructor stub
-this->speed = speed;
-this->collectorRotatorSetpoint = collectorRotatorSetpoint;
+//this->collectorRotatorSetpoint = collectorRotatorSetpoint;
 this->collectorRotatorPosition = collectorRotatorPosition;
 this->kickerActivated = kickerActivated;
+this->shootState = shootState;
+this->rollerSpeed = rollerSpeed;
+this->shootTime = shootTime;
+sensorManager = SensorManager::getSensorManager();
+collector = CommandBase::collector;
 }
 
 ShootLowGoal::~ShootLowGoal() {
@@ -25,30 +29,22 @@ ShootLowGoal::~ShootLowGoal() {
 
 void ShootLowGoal::Initialize()
 {
+	shootTime = 0;
 	shootState = SHOOT_STATE_AIMING;
+
 
 
 }
 
 void ShootLowGoal::Execute(){
-	switch (shootState){
-		case SHOOT_STATE_AIMING:
-			ExecuteAiming();
-		break;
-		case SHOOT_STATE_FIRING:
-			ExecuteFiring();
-		break;
+	this->collectorRotatorPosition = sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
+	ExecuteAiming();
+	ExecuteFiring();
+
 	}
 
-
-
-}
-
 void ShootLowGoal::ExecuteAiming() {
-	speed = 1;
-	SensorManager * sensorManager = SensorManager::getSensorManager();
-	Collector * collector = CommandBase::collector;
-	collector->setRotatorPosition(collectorRotatorSetpoint);
+	collector->setRotatorPosition(0);
 	sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
 	collectorRotatorPosition = sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
 			if (((collectorRotatorSetpoint - collectorRotatorPosition) < 5) && ((collectorRotatorSetpoint - collectorRotatorPosition) > -5)){
@@ -57,18 +53,29 @@ void ShootLowGoal::ExecuteAiming() {
 
 }
 void ShootLowGoal::ExecuteFiring() {
-	MotorManager * MotorManager = MotorManager::getMotorManager();
-	Collector * collector = CommandBase::collector;
-			collector->setRoller(Collector::KBackward, speed);
-			if ((MotorManager->getSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT) == speed) && (COLLECTOR_ROLLER_MOTOR_2_PORT == speed)){
-				MotorManager->setSpeed(COLLECTOR_KICKER_MOTOR_PORT, 1);
-					kickerActivated = true;
-			}
+	if (shootState == SHOOT_STATE_FIRING) {
+		collector->activateShooter(true);
+		if (fabs(collector->getRollerSpeed() - rollerSpeed) < SHOOTER_SPEED_TOLERANCE){
+				collector->activateKicker(true);
+				if (shootTime == 0){
+					shootTime = clock();
+				}
+				if (clock() == shootTime + CLOCKS_PER_SEC){
+					shootState = SHOOT_STATE_RESETTING;
+				}
 		}
-
+	}
+}
+void ShootLowGoal::ExecuteResetting() {
+	if (shootState == SHOOT_STATE_RESETTING) {
+		collector->activateShooter(false);
+		collector->activateKicker(false);
+		shootState = SHOOT_STATE_FINISHED;
+	}
+}
 bool ShootLowGoal::IsFinished()
 {
- if (kickerActivated = true){
+ if (shootState == SHOOT_STATE_FINISHED){
  		return true;
  	 } else {
  			return false;
@@ -78,11 +85,12 @@ bool ShootLowGoal::IsFinished()
 
 void ShootLowGoal::End()
 {
-	Collector * collector = CommandBase::collector;
 	collector->setRoller(Collector::KStop, 0);
 }
 
 void ShootLowGoal::Interrupted()
 {
+	collector->activateShooter(false);
+	collector->activateKicker(false);
 	End();
 }

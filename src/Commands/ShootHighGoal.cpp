@@ -13,11 +13,13 @@
 
 ShootHighGoal::ShootHighGoal() {
 	// TODO Auto-generated constructor stub
-this->rollerSpeed = rollerSpeed;
 this->collectorRotatorSetpoint = collectorRotatorSetpoint;
 this->collectorRotatorPosition = collectorRotatorPosition;
-this->kickerActivated = kickerActivated;
 this->shootState = shootState;
+this->rollerSpeed = rollerSpeed;
+this->shootTime = shootTime;
+sensorManager = SensorManager::getSensorManager();
+collector = CommandBase::collector;
 }
 
 ShootHighGoal::~ShootHighGoal() {
@@ -27,58 +29,53 @@ ShootHighGoal::~ShootHighGoal() {
 void ShootHighGoal::Initialize()
 {
 	shootState = SHOOT_STATE_AIMING;
+	shootTime = 0;
 
 }
 
 void ShootHighGoal::Execute()
 {
-	SensorManager * sensorManager = SensorManager::getSensorManager();
-	MotorManager * MotorManager = MotorManager::getMotorManager();
-	Collector * collector = CommandBase::collector;
 	this->collectorRotatorPosition = sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
-
-
+	ExecuteAiming();
+	ExecuteFiring();
+	ExecuteResetting();
 		}
 
 void ShootHighGoal::ExecuteAiming() {
-	SensorManager * sensorManager = SensorManager::getSensorManager();
-	Collector * collector = CommandBase::collector;
-	MotorManager * MotorManager = MotorManager::getMotorManager();
-	sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
-	sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_2_PORT);
-	collector->setRotatorPosition(collectorRotatorSetpoint);
-	if (((collectorRotatorSetpoint - collectorRotatorPosition) < 5) && ((collectorRotatorSetpoint - collectorRotatorPosition) > -5)){
-			MotorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, 0);
-			MotorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_2_PORT, 0);
-			shootState = SHOOT_STATE_FIRING;
-	}
+	if (shootState == SHOOT_STATE_AIMING) {
+		collector->setRotatorPosition(collectorRotatorSetpoint);
+		if ((fabs(collectorRotatorSetpoint - collectorRotatorPosition) < SHOOTER_AIM_TOLERANCE)){
+				shootState = SHOOT_STATE_FIRING;
+		}
 
+	}
 }
 void ShootHighGoal::ExecuteFiring() {
-	Collector * collector = CommandBase::collector;
-	MotorManager * MotorManager = MotorManager::getMotorManager();
-	collector->setRoller(Collector::KBackward, rollerSpeed);
-	if (MotorManager->getSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT) == rollerSpeed){
-		MotorManager->setSpeed(COLLECTOR_KICKER_MOTOR_PORT, 1);
-			kickerActivated = true;
-			shootState = SHOOT_STATE_RESETTING;
+	if (shootState == SHOOT_STATE_FIRING) {
+		collector->activateShooter(true);
+		if (fabs(collector->getRollerSpeed() - rollerSpeed) < SHOOTER_SPEED_TOLERANCE){
+				collector->activateKicker(true);
+				if (shootTime == 0) {
+					shootTime = clock();
+				}
+				if (clock() == shootTime + CLOCKS_PER_SEC) {
+					shootState = SHOOT_STATE_RESETTING;
+				}
+		}
 	}
 }
 void ShootHighGoal::ExecuteResetting() {
-	Collector * collector = CommandBase::collector;
-	MotorManager * MotorManager = MotorManager::getMotorManager();
-	collector->setRoller(Collector::KStop, 0);
-	collector->setRotatorPosition(0);
-	if (collectorRotatorPosition < 5 && collectorRotatorPosition > -5){
-			MotorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, 0);
-			MotorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_2_PORT, 0);
+	if (shootState == SHOOT_STATE_RESETTING) {
+		collector->activateShooter(false);
+		collector->activateKicker(false);
+		collector->setRotatorPosition(0);
+		shootState = SHOOT_STATE_FINISHED;
 	}
 }
-
 bool ShootHighGoal::IsFinished()
 {
- if (kickerActivated == true && (collectorRotatorPosition < 5 && collectorRotatorPosition > -5)){
- 		return true;
+	if (shootState == SHOOT_STATE_FINISHED) {
+	return true;
  	 } else {
  			return false;
 	}
@@ -92,5 +89,7 @@ void ShootHighGoal::End()
 
 void ShootHighGoal::Interrupted()
 {
+	collector->activateShooter(false);
+	collector->activateKicker(false);
 	End();
 }

@@ -18,10 +18,12 @@ public:
 	void setLeftSpeed(double speed);
 	void setRightSpeed(double speed);
 	void resetEncoder();
-	void setMotorPosition();
 	void setRotatorPosition(float position);
 	void setRoller(rollerDirection direction, float speed);
-	void activateKicker();
+	float getRollerSpeed();
+	void activateKicker(bool active); //put actual things into this!
+	void activateShooter(bool active); //parameterize this and also put actual things into this!
+	void activateCollector(bool active); //put actual things into this!
 
 };
 
