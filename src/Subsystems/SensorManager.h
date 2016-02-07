@@ -1,12 +1,17 @@
 #ifndef SensorManager_H
 #define SensorManager_H
 
-#include "Commands/Subsystem.h"
+#include <Commands/Subsystem.h>
+
 #include "WPILib.h"
-#include <AHRS.h>
+#include "../../navx-mxp/cpp/include/AHRS.h"
+
+class AHRS;
+class AnalogInput;
 
 class SensorManager: public Subsystem
 {
+	friend class MotorManager;
 private:
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
@@ -27,6 +32,10 @@ public:
 	float  GetAccelX();
 	float  GetAccelY();
 	float  GetAccelZ();
+	double GetEncoderPosition(int ID);
+
+
+
 };
 
 #endif

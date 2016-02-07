@@ -6,13 +6,12 @@ LineFollow::LineFollow() {
 	Requires(drivebase);
 
 	pid = new PIDController(LINE_FOLLOW_P, LINE_FOLLOW_I, LINE_FOLLOW_D, this, this);
-	lightsensor = new AnalogInput(1);
+	sensorManager = SensorManager::getSensorManager();
 
 }
 LineFollow::~LineFollow(){
 
 	delete pid;
-	delete lightsensor;
 
 }
 // Called just before this Command runs the first time
@@ -54,7 +53,7 @@ void LineFollow::Interrupted() {
 
 double LineFollow::PIDGet(){
 
-return lightsensor->GetValue();
+return sensorManager->GetLightSensorVoltage();
 
 }
 

@@ -1,6 +1,6 @@
 #ifndef LINEFOLLOW_H
 #define LINEFOLLOW_H
-
+#include "Subsystems/SensorManager.h"
 #include "../CommandBase.h"
 #include "OI.h"
 #include "WPILib.h"
@@ -8,7 +8,7 @@
 class LineFollow: public CommandBase, PIDSource, PIDOutput {
 private:
 	PIDController *pid;
-	AnalogInput *lightsensor;
+	SensorManager * sensorManager;
 
 public:
 	LineFollow();

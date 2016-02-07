@@ -1,5 +1,9 @@
-#include "SensorManager.h"
-#include "../RobotMap.h"
+#include <AnalogInput.h>
+#include <RobotMap.h>
+#include <SPI.h>
+#include <Subsystems/MotorManager.h>
+#include <Subsystems/SensorManager.h>
+
 
 SensorManager::SensorManager() :
 		Subsystem("SensorManager")
@@ -56,6 +60,11 @@ float  SensorManager::GetAccelY(){
 
 float  SensorManager::GetAccelZ(){
 	return ahrs->GetWorldLinearAccelZ();
+
+}
+
+double SensorManager::GetEncoderPosition(int ID) {
+	return MotorManager::getMotorManager()->GetPosition(ID);
 
 }
 
