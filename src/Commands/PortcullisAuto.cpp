@@ -4,9 +4,10 @@
  *  Created on: Jan 27, 2016
  *      Author: s-2507264
  */
-#include <PortcullisAuto.h>
-#include<Subsystems/Drivebase.h>
-#include<Subsystems/Collector.h>
+
+#include <Commands/PortcullisAuto.h>
+#include <cmath>
+#include <cstdbool>
 
 Portcullis::Portcullis(float speed, float distance, float turnup){
 	Requires(drivebase);

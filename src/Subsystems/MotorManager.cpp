@@ -121,11 +121,11 @@ void MotorManager::setPriority(Priority priorityArg) {
 }
 
 void Motor::setC(Priority priorityArg, float voltage) {
-	if (motorPriority == 0) {
+	if (motorPriority == PRIORITY_FIRST) {
 		this->C = 1;
 	}
 	if (this->motorPriority >= priorityArg) {
-		this->C = pow((((voltage - 5) / (motorPriority * 2))), 2);
+		this->C = pow((((voltage - 7) / (motorPriority * 1.5))), 2);
 	}
 }
 
