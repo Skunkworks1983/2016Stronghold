@@ -42,7 +42,6 @@ MotorManager::MotorManager() :
 	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_1_PORT);
 	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_2_PORT);
 
-
 }
 
 MotorManager::~MotorManager() {
@@ -121,12 +120,17 @@ void MotorManager::setPriority(Priority priorityArg) {
 }
 
 void Motor::setC(Priority priorityArg, float voltage) {
+
 	if (motorPriority == PRIORITY_FIRST) {
-		this->C = 1;
+		if (voltage > POWER_BROWNOUT_VOLTAGE+POWER_DRIVEBASE_VOLTAGE_WIDTH) {
+			this->C = 1;
+		} else {
+			this->C = pow((((voltage - POWER_BROWNOUT_VOLTAGE) / (POWER_DRIVEBASE_VOLTAGE_WIDTH))), 2);
+		}
+	} else if (this->motorPriority >= priorityArg) {
+		    this->C = pow((((voltage - POWER_BROWNOUT_VOLTAGE) / (motorPriority * POWER_VOLTAGE_WIDTH))), 2);
 	}
-	if (this->motorPriority >= priorityArg) {
-		this->C = pow((((voltage - 7) / (motorPriority * 1.5))), 2);
-	}
+
 }
 
 void MotorManager::setCForAll() {
