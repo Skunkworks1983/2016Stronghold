@@ -5,7 +5,13 @@
 //TODO: set speed
 Collector::Collector() :
 Subsystem("Collector") {
+	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
+	P = 0.0075;
+	I = 0;
+	D = 0;
+	pidController = new PIDController(P, I, D, this, this);
+
 
 }
 
@@ -21,8 +27,14 @@ void Collector::resetEncoder(){
 	// motorManager->resetRollerEncoder(0.0);
 }
 
-void Collector::setRotatorPosition(float position){
+void Collector::setRotatorSpeed(float rotatorSpeed) {
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, rotatorSpeed);
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_2_PORT, rotatorSpeed);
+}
 
+
+double Collector::getRotatorPosition() {
+	return sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
 }
 
 void Collector::setRoller(rollerDirection direction, float speed){
@@ -43,3 +55,33 @@ void Collector::setRoller(rollerDirection direction, float speed){
 		break;
 	}
 }
+
+void Collector::PIDWrite(float) {
+
+}
+
+double Collector::PIDGet() {
+
+return sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT); //is this right? No idea
+}
+
+void Collector::activateKicker(bool active) {
+
+}
+
+void Collector::activateShooter(bool active) {
+
+}
+
+void Collector::activateCollector(bool active) {
+
+}
+
+float Collector::getRollerSpeed() {
+//needs code!
+	}
+
+
+
+
+

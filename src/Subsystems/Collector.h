@@ -4,9 +4,11 @@
 #include <Subsystems/MotorManager.h>
 #include <CommandBase.h>
 
-class Collector: public Subsystem {
+class Collector: public Subsystem, public PIDSource, public PIDOutput {
 private:
+	SensorManager * sensorManager;
 	MotorManager *motorManager;
+	PIDController * pidController;
 public:
 	enum rollerDirection {
 		KForward, KBackward, KStop
@@ -14,11 +16,15 @@ public:
 
 	Collector();
 	~Collector();
+	double P;
+	double I;
+	double D;
+	double PIDGet();
+	void PIDWrite(float output);
 	void InitDefaultCommand();
-	void setLeftSpeed(double speed);
-	void setRightSpeed(double speed);
 	void resetEncoder();
-	void setRotatorPosition(float position);
+	void setRotatorSpeed(float rotatorSpeed); //now with code!
+	double getRotatorPosition(); //now with code!
 	void setRoller(rollerDirection direction, float speed);
 	float getRollerSpeed();
 	void activateKicker(bool active); //put actual things into this!

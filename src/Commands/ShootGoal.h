@@ -1,5 +1,5 @@
 /*
- * ShootLowGoal.h
+ * ShootHighGoal.h
  *
  *  Created on: Jan 30, 2016
  *      Author: s-4032218
@@ -7,36 +7,33 @@
 #include <Subsystems/Collector.h>
 #include <Subsystems/SensorManager.h>
 #include <CommandBase.h>
-#ifndef SRC_COMMANDS_SHOOTLOWGOAL_H_
-#define SRC_COMMANDS_SHOOTLOWGOAL_H_
+#include "CollectorMove.h"
+#ifndef SRC_COMMANDS_SHOOTHIGHGOAL_H_
+#define SRC_COMMANDS_SHOOTHIGHGOAL_H_
 
-
-
-class ShootLowGoal {
+class ShootGoal :public Command{
 private:
 	enum EShootState {
-		SHOOT_STATE_AIMING,
 		SHOOT_STATE_FIRING,
 		SHOOT_STATE_RESETTING,
 		SHOOT_STATE_FINISHED
-
-
 	};
 	float rollerSpeed;
-	bool kickerActivated;
-	int collectorRotatorSetpoint = 0; //unless that 0 isn't the automatic for collecting the ball
-	int collectorRotatorPosition;
+	int collectorRotatorSetpoint;
+	float collectorRotatorPosition;
+	EShootState shootState;
 	SensorManager * sensorManager;
 	Collector * collector;
-	clock_t shootTime;
-	EShootState shootState;
+	const float SHOOTER_AIM_TOLERANCE = 5;
 	const float SHOOTER_SPEED_TOLERANCE = 5;
+	clock_t shootTime;
+	void ExecuteOff();
 	void ExecuteAiming();
 	void ExecuteFiring();
 	void ExecuteResetting();
 public:
-	ShootLowGoal();
-	virtual ~ShootLowGoal();
+	ShootGoal();
+	virtual ~ShootGoal();
 	void Initialize();
 	void Execute();
 	bool IsFinished();
@@ -44,4 +41,4 @@ public:
 	void Interrupted();
 };
 
-#endif /* SRC_COMMANDS_ShootLowGoal_H_ */
+#endif /* SRC_COMMANDS_SHOOTHIGHGOAL_H_ */

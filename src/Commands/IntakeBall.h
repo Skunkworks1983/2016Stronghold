@@ -1,5 +1,5 @@
 /*
- * CollectBall.h
+ * IntakeBall.h
  *
  *  Created on: Jan 30, 2016
  *      Author: s-4032218
@@ -7,31 +7,30 @@
 #include <Subsystems/Collector.h>
 #include <Subsystems/SensorManager.h>
 #include <CommandBase.h>
-#ifndef SRC_COMMANDS_CollectBall_H_
-#define SRC_COMMANDS_CollectBall_H_
+#include "CollectorMove.h"
+#ifndef SRC_COMMANDS_INTAKEBALL_H_
+#define SRC_COMMANDS_INTAKEBALL_H_
 
 
 
-class CollectBall {
+class IntakeBall :public Command {
 private:
-	enum ECollectBallState {
-		COLLECT_STATE_AIMING,
-		COLLECT_STATE_COLLECTING,
-		COLLECT_STATE_RESETTING,
-		COLLECT_STATE_FINISHED
+	enum EIntakeBallState {
+		INTAKE_STATE_COLLECTING,
+		INTAKE_STATE_RESETTING,
+		INTAKE_STATE_FINISHED
 	};
-	ECollectBallState collectState;
+	EIntakeBallState intakeState;
 	SensorManager * sensorManager;
 	Collector * collector;
 	float collectorRotatorPosition;
 	float rollerSpeed = 1;
 	clock_t collectTime;
-	void ExecuteAiming();
 	void ExecuteCollecting();
 	void ExecuteResetting();
 public:
-	CollectBall();
-	virtual ~CollectBall();
+	IntakeBall();
+	virtual ~IntakeBall();
 	void Initialize();
 	void Execute();
 	bool IsFinished();
@@ -39,4 +38,4 @@ public:
 	void Interrupted();
 };
 
-#endif /* SRC_COMMANDS_CollectBall_H_ */
+#endif /* SRC_COMMANDS_IntakeBall_H_ */

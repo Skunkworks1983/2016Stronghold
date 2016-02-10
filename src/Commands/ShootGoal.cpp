@@ -9,48 +9,35 @@
  * Need the actual numbers for the rotator position (numbers for collectorRotatorSetpoint
 
  */
-#include <Commands/ShootHighGoal.h>
+#include <Commands/ShootGoal.h>
 
-ShootHighGoal::ShootHighGoal() {
+ShootGoal::ShootGoal() {
 	// TODO Auto-generated constructor stub
-this->collectorRotatorSetpoint = collectorRotatorSetpoint;
-this->collectorRotatorPosition = collectorRotatorPosition;
-this->shootState = shootState;
-this->rollerSpeed = rollerSpeed;
-this->shootTime = shootTime;
+
 sensorManager = SensorManager::getSensorManager();
 collector = CommandBase::collector;
 }
 
-ShootHighGoal::~ShootHighGoal() {
+ShootGoal::~ShootGoal() {
 	// TODO Auto-generated destructor stub
 }
 
-void ShootHighGoal::Initialize()
+void ShootGoal::Initialize()
 {
-	shootState = SHOOT_STATE_AIMING;
+	shootState = SHOOT_STATE_FIRING;
 	shootTime = 0;
 
 }
 
-void ShootHighGoal::Execute()
+void ShootGoal::Execute()
 {
 	this->collectorRotatorPosition = sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
-	ExecuteAiming();
 	ExecuteFiring();
 	ExecuteResetting();
 		}
 
-void ShootHighGoal::ExecuteAiming() {
-	if (shootState == SHOOT_STATE_AIMING) {
-		collector->setRotatorPosition(collectorRotatorSetpoint);
-		if ((fabs(collectorRotatorSetpoint - collectorRotatorPosition) < SHOOTER_AIM_TOLERANCE)){
-				shootState = SHOOT_STATE_FIRING;
-		}
 
-	}
-}
-void ShootHighGoal::ExecuteFiring() {
+void ShootGoal::ExecuteFiring() {
 	if (shootState == SHOOT_STATE_FIRING) {
 		collector->activateShooter(true);
 		if (fabs(collector->getRollerSpeed() - rollerSpeed) < SHOOTER_SPEED_TOLERANCE){
@@ -64,15 +51,14 @@ void ShootHighGoal::ExecuteFiring() {
 		}
 	}
 }
-void ShootHighGoal::ExecuteResetting() {
+void ShootGoal::ExecuteResetting() {
 	if (shootState == SHOOT_STATE_RESETTING) {
 		collector->activateShooter(false);
 		collector->activateKicker(false);
-		collector->setRotatorPosition(0);
 		shootState = SHOOT_STATE_FINISHED;
 	}
 }
-bool ShootHighGoal::IsFinished()
+bool ShootGoal::IsFinished()
 {
 	if (shootState == SHOOT_STATE_FINISHED) {
 	return true;
@@ -82,12 +68,12 @@ bool ShootHighGoal::IsFinished()
 
 }
 
-void ShootHighGoal::End()
+void ShootGoal::End()
 {
 
 }
 
-void ShootHighGoal::Interrupted()
+void ShootGoal::Interrupted()
 {
 	collector->activateShooter(false);
 	collector->activateKicker(false);
