@@ -64,23 +64,17 @@
 #define DRIVEBASE_RIGHTENCODER_PORT 0
 #define DRIVEBASE_LEFTENCODER_PORT 4
 
-<<<<<<< HEAD
 //Breach Buttons
 #define OI_PORTCULLIS_BREACH_PORT 0
 #define OI_CHEVAL_BREACH_PORT 2
 #define OI_GENERAL_BREACH_PORT 3
-=======
-#define POWER_DISTRIBUTION_PANEL_PORT (0)
+#define POWER_DISTRIBUTION_PANEL_PORT 0
 
 #define POWER_LEVEL_1 11
 #define POWER_LEVEL_2 10
 #define POWER_LEVEL_3 9
 
-
-
-
 //Buttons
->>>>>>> origin/trunk
 
 //Collecting buttons
 #define OI_COLLECT_BALL_PORT 4
