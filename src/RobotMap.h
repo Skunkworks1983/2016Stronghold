@@ -27,6 +27,7 @@
 
 #define OI_JOYSTICK_LEFT_PORT 0
 #define OI_JOYSTICK_RIGHT_PORT 1
+#define OI_OPERATOR_PORT 2
 
 
 #define COLLECTOR_ROTATOR_MOTOR_1_PORT 0
@@ -63,7 +64,11 @@
 #define DRIVEBASE_RIGHTENCODER_PORT 0
 #define DRIVEBASE_LEFTENCODER_PORT 4
 
-#define POWER_DISTRIBUTION_PANEL_PORT (0)
+//Breach Buttons
+#define OI_PORTCULLIS_BREACH_PORT 0
+#define OI_CHEVAL_BREACH_PORT 2
+#define OI_GENERAL_BREACH_PORT 3
+#define POWER_DISTRIBUTION_PANEL_PORT 0
 
 #define POWER_LEVEL_1 11
 #define POWER_LEVEL_2 10
@@ -72,12 +77,24 @@
 #define POWER_BROWNOUT_VOLTAGE 7
 #define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
 #define POWER_VOLTAGE_WIDTH 1.5
-
-
-
-
 //Buttons
 
-#define OI_BUTTON_BREACH_PORT 2
+//Collecting buttons
+#define OI_COLLECT_BALL_PORT 4
+#define OI_COLLECTOR_UP_PORT 5
+
+//aiming buttons
+#define OI_AIM_AT_GOAL_PORT 6
+
+//shooting buttons
+#define OI_SHOOT_LOW_PORT 7
+#define OI_SHOOT_HIGH_PORT 8
+#define OI_SPIN_UP_SHOOTER_PORT 9
+
+//climbing buttons
+#define OI_ATTACH_HOOK_PORT 10
+#define OI_ENGAGE_WINCH_PORT 11
+
+#define LOGFILE_NAME "/U/robotLog"
 
 #endif

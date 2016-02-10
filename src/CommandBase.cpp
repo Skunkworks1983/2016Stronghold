@@ -1,4 +1,5 @@
 #include <CommandBase.h>
+#include <Services/Logger.h>
 #include <OI.h>
 #include <stddef.h>
 #include <Subsystems/Collector.h>
@@ -23,4 +24,5 @@ void CommandBase::init() {
 	oi = new OI();
 	drivebase = new Drivebase();
 	collector = new Collector();
+	writeToLogFile(LOGFILE_NAME, "Robot initialized");
 }
