@@ -1,19 +1,55 @@
-#ifndef MotorManager_H
-#define MotorManager_H
-#include "SensorManager.h"
+#ifndef MOTOR_MANAGER_H
+#define MOTOR_MANAGER_H
+
 #include <Commands/Subsystem.h>
 #include <RobotMap.h>
+#include <vector>
+
 
 class CANTalon;
+
 class Encoder;
 
-class MotorManager: public Subsystem
-{
+enum Priority {
+	PRIORITY_FIRST,
+	PRIORITY_DRIVEBASE = PRIORITY_FIRST,
+	PRIORITY_PRIMARY_ACTUATORS,
+	PRIORITY_SECONDARY_ACTUATORS,
+	PRIORITY_ACCESSORIES,
+	PRIORITYS
+};
+
+class Motor {
+	friend class MotorManager;
+private:
+
+public:
+	Motor(Priority prioArg, int portArg);
+	~Motor();
+	CANTalon * talon;
+	float      speed;
+	Priority   motorPriority;
+	int    	   port;
+	float C;
+	void setC(Priority priority, float voltage );
+
+
+};
+
+class MotorManager: public Subsystem {
+	friend class SensorManager;
+	friend class Motor;
 private:
 	MotorManager();
 	~MotorManager();
 	MotorManager(const MotorManager &);
 	CANTalon* Motors[MAX_MANAGED_MOTORS];
+	Priority allowedPriority;
+
+	std::vector<Motor> motors;
+
+	CANTalon * addMotor(Priority priority, int Port);
+
 protected:
 	double GetPosition(int ID);
 
@@ -24,10 +60,11 @@ public:
 	void setPosition(int pid, float position);
 	void setSpeed(int ID, float speed);
 	int setPIDValues(int ID, double P, double I, double D);
-	void resetEncoder();
-	static MotorManager * getMotorManager();
-	friend SensorManager;
+	void setPriority(Priority priorityARG);
 
+	static MotorManager * getMotorManager();
+	void setCForAll();
+	void setSpeedForAll();
 };
 
 #endif

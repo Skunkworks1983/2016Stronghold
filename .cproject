@@ -30,9 +30,9 @@
 								<option id="gnu.cpp.compiler.option.include.paths.394786621" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${WPILIB}/cpp/current/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\Public\Documents\navx-mxp\cpp\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/home/user/navx_mxp/navxmxp-master/roborio/c++/navx_frc_cpp/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\navx-mxp\cpp\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Users\Public\Documents\navx-mxp\cpp\include&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.dialect.std.1060340803" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.c++1y" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1033680971" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
