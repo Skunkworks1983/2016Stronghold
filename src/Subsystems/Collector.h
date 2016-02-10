@@ -1,6 +1,7 @@
 #ifndef COLLECTOR_H
 #define COLLECTOR_H
 
+#include <Subsystems/SensorManager.h>
 #include <Subsystems/MotorManager.h>
 #include <CommandBase.h>
 

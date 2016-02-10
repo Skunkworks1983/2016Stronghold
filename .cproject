@@ -30,8 +30,9 @@
 								<option id="gnu.cpp.compiler.option.include.paths.394786621" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${WPILIB}/cpp/current/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\Public\Documents\navx-mxp\cpp\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/home/user/navx_mxp/navxmxp-master/roborio/c++/navx_frc_cpp/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\navx-mxp\cpp\lib&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\navx-mxp\cpp\include&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.dialect.std.1060340803" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.c++1y" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1033680971" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -46,7 +47,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Debug/src/Subsystems}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${WPILIB}/cpp/current/lib&quot;"/>
 									<listOptionValue builtIn="false" value="/home/user/navx-mxp-libs/roborio/cpp/lib"/>
-									<listOptionValue builtIn="false" value="C:\navx-mxp\cpp\lib"/>
+									<listOptionValue builtIn="false" value="&quot;C:\navx-mxp\cpp\lib&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\Public\Documents\navx-mxp\cpp\lib&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.flags.675338432" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="-Wl,-rpath,/opt/GenICam_v2_3/bin/Linux_armv7-a" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.132949138" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">

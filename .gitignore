@@ -28,3 +28,4 @@
 *.app
 /Debug/
 sysProps.xml
+.settings/language.settings.xml
