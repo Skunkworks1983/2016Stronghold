@@ -3,11 +3,13 @@
 #include <stddef.h>
 #include <Subsystems/Collector.h>
 #include <Subsystems/Drivebase.h>
+#include <Subsystems/Climber.h>
 
 // Initialize a single static instance of all of your subsystems to NULL
 OI* CommandBase::oi = NULL;
 Drivebase* CommandBase::drivebase = NULL;
 Collector* CommandBase::collector = NULL;
+Climber* CommandBase::climber = NULL;
 CommandBase::CommandBase(char const *name) :
 		Command(name) {
 }
@@ -23,4 +25,5 @@ void CommandBase::init() {
 	oi = new OI();
 	drivebase = new Drivebase();
 	collector = new Collector();
+	climber = new Climber();
 }

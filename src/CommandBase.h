@@ -2,7 +2,10 @@
 #define COMMAND_BASE_H
 
 #include <Commands/Command.h>
+#include "Subsystems/Climber.h"
 
+// Redeclare static classes
+class Drivebase;
 class Collector;
 class OI;
 
@@ -11,7 +14,7 @@ class OI;
  * CommandBase stores creates and stores each control system. To access a
  * subsystem elsewhere in your code in your code use CommandBase.examplesubsystem
  */
-class Drivebase;
+
 class CommandBase: public Command
 {
 public:
@@ -22,6 +25,7 @@ public:
 	static OI *oi;
 	static Drivebase *drivebase;
 	static Collector *collector;
+	static Climber *climber;
 };
 
 #endif
