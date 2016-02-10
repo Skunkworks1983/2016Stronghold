@@ -33,6 +33,7 @@ public:
 	float  GetAccelY();
 	float  GetAccelZ();
 	double GetEncoderPosition(int ID);
+	double GetSpeed(int ID);
 
 
 

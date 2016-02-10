@@ -52,6 +52,7 @@ private:
 
 protected:
 	double GetPosition(int ID);
+	double GetSpeed(int ID);
 
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities

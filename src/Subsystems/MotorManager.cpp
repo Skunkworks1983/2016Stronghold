@@ -101,6 +101,9 @@ void setPosition(int PID, float position) {
 double MotorManager::GetPosition(int ID) {
 	return this->Motors[ID]->GetPosition();
 }
+double MotorManager::GetSpeed(int ID){
+	return this->Motors[ID]->GetSpeed();
+}
 
 void MotorManager::setPriority(Priority priorityArg) {
 
