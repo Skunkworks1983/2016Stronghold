@@ -25,7 +25,7 @@ OI::OI()
 	spinUpShooter = new JoystickButton(op, OI_SPIN_UP_SHOOTER_PORT);
 
 	//climbing
-	attachHook = new JoystickButton(op, OI_ATTACH_HOOK_PORT);
+	rotateArm = new JoystickButton(op, OI_ROTATE_ARM_PORT);
 	engageWinch = new JoystickButton(op, OI_ENGAGE_WINCH_PORT);
 }
 
@@ -42,7 +42,7 @@ OI::~OI() {
 	delete shootLow;
 	delete shootHigh;
 	delete spinUpShooter;
-	delete attachHook;
+	delete rotateArm;
 	delete engageWinch;
 
 }
@@ -75,5 +75,5 @@ void OI::registerButtonListener()
 
 bool OI::isJoystickButtonPressed(int control, int button)
 {
-
+	return false;
 }

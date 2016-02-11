@@ -92,8 +92,13 @@
 #define OI_SPIN_UP_SHOOTER_PORT 9
 
 //climbing buttons
-#define OI_ATTACH_HOOK_PORT 10
+#define OI_ROTATE_ARM_PORT 10
 #define OI_ENGAGE_WINCH_PORT 11
+
+//auto constants
+#define CHEV_SPEED 0.5
+#define CHEV_SHORTDIST 3
+#define CHEV_DIST 5
 
 #define LOGFILE_NAME "/U/robotLog"
 
