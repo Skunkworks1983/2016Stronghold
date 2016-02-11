@@ -57,7 +57,7 @@ double OI::getRightStickY() {
 
 void OI::registerButtonListener()
 {
-	portcullisBreach->WhenPressed(new Portcullis (0.1, 0, 0));
+	portcullisBreach->WhenPressed(new PortcullisAuto(0.1, 0, 0));
 	//change values later - Superior DeSilva
 	//chevalBreach->WhenPressed(new ChevDeFris(0.1, 0, 0));
 	//change values later

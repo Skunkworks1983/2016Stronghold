@@ -9,15 +9,16 @@
 #include <cmath>
 #include <cstdbool>
 
-PortcullisAuto::PortcullisAuto(float speed, float distance, float turn){
+PortcullisAuto::PortcullisAuto(float speed, float distance, float turnup){
 	Requires(drivebase);
 	Requires(collector);
 	this->speed = speed;
 	this->distance = distance;
-	this->turn = turn;
+	this->turnup = turnup;
 	this->dt = 0;
-	this->turning = 0;
+	this->turn = turn;
 	this->firststop = false;
+
 }
 
 void PortcullisAuto::Initialize(){
@@ -39,8 +40,8 @@ void PortcullisAuto::Execute(){
 		drivebase->setRightSpeed(0);
 		drivebase->setLeftSpeed(0);
 	}
-	collector->setRotatorPosition(turn);
-	if ((turn - turning) < EPSILON){
+	collector->setRotatorPosition(turnup);
+	if ((turnup - turn) < EPSILON){
 
 	}
 	this->dt = drivebase->getRightDistance();
@@ -50,7 +51,7 @@ void PortcullisAuto::Execute(){
 
 
 bool PortcullisAuto::IsFinished(){
-	if ((2*distance-dt) <= EPSILON && (turn-turning) <= EPSILON){
+	if ((2*distance-dt) <= EPSILON && (turnup-turn) <= EPSILON){
 		return true;
 	}
 	else {

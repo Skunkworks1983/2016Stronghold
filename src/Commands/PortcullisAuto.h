@@ -8,7 +8,7 @@
 #ifndef SRC_PORTCULLISAUTO_H_
 #define SRC_PORTCULLISAUTO_H_
 #include <Subsystems/Drivebase.h>
-#include <Commandbase.h>
+#include <CommandBase.h>
 #include <Subsystems/Collector.h>
 #define EPSILON .0005f
 
