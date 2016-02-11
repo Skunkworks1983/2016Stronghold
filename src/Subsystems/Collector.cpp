@@ -56,17 +56,25 @@ void Collector::setRoller(rollerDirection direction, float speed){
 	}
 }
 
-void Collector::PIDWrite(float) {
+void Collector::PIDWrite(float rotatorSpeed) {
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, rotatorSpeed); // ???
 
 }
 
 double Collector::PIDGet() {
 
-return sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT); //is this right? No idea
+return sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT); //is this right??? No idea
+}
+
+void Collector::setKickerSpeed(double kickerSpeed) {
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, kickerSpeed);
+
 }
 
 void Collector::activateKicker(bool active) {
+	if (active == true) {
 
+	}
 }
 
 void Collector::activateShooter(bool active) {

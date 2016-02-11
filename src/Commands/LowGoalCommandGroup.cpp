@@ -2,22 +2,16 @@
 
 LowGoalCommandGroup::LowGoalCommandGroup()
 {
-	// Add Commands here:
-	// e.g. AddSequential(new Command1());
-	//      AddSequential(new Command2());
-	// these will run in order.
-
-	// To run multiple commands at the same time,
-	// use AddParallel()
-	// e.g. AddParallel(new Command1());
-	//      AddSequential(new Command2());
-	// Command1 and Command2 will run in parallel.
-
-	// A command group will require all of the subsystems that each member
-	// would require.
-	// e.g. if Command1 requires chassis, and Command2 requires arm,
-	// a CommandGroup containing them would require both the chassis and the
-	// arm.
+/*Hopefully what this will look like:
+ *
+ * AddSequential(new CollectorMove(0));
+ * AddSequential(new SpinUpShooter(true)); //not sure how this bit will work; how to turn it off?
+ * AddParallel(new ActivateKicker()); 	   //how to make ActivateKicker() only work when the shooter is at full speed?
+ *
+ *
+ *
+ *
+ */
 	AddSequential(new CollectorMove(0));
 	AddSequential(new ShootGoal());
 }

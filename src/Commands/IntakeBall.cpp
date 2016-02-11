@@ -27,15 +27,12 @@ IntakeBall::~IntakeBall() {
 
 void IntakeBall::Initialize() {
 	intakeState = INTAKE_STATE_COLLECTING;
-	collector->activateKicker(false);
-	collector->activateShooter(false);
 	collectTime = 0;
 
 }
 
 void IntakeBall::Execute() {
-	collectorRotatorPosition = sensorManager->GetEncoderPosition(
-			COLLECTOR_ROTATOR_MOTOR_1_PORT);
+	collectorRotatorPosition = sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
 	void ExecuteAiming();
 	void ExecuteCollecting();
 }

@@ -28,6 +28,7 @@ public:
 	double getRotatorPosition(); //now with code!
 	void setRoller(rollerDirection direction, float speed);
 	float getRollerSpeed();
+	void setKickerSpeed(double kickerSpeed);
 	void activateKicker(bool active); //put actual things into this!
 	void activateShooter(bool active); //parameterize this and also put actual things into this!
 	void activateCollector(bool active); //put actual things into this!
