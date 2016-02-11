@@ -39,16 +39,20 @@ void MotorManager::setPosition(int pid, float position){
 void MotorManager::setSpeed(int ID, float speed) {
 	Motors[ID]->Set(speed);
 }
+
 int MotorManager::setPIDValues(int ID, double P, double I, double D){
 	Motors[ID]->SetPID(P, I, D);
 	return ID;
 }
+
 void setPosition(int PID, float position) {
 
 }
+
 double MotorManager::GetPosition(int ID) {
-	return this->Motors[ID]->GetPosition();
+	return this->Motors[ID]->GetEncPosition();
 }
+
 MotorManager * MotorManager::getMotorManager() {
 	static MotorManager motorManager;
 	return &motorManager;

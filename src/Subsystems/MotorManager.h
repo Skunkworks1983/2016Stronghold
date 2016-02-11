@@ -16,7 +16,6 @@ private:
 	CANTalon* Motors[MAX_MANAGED_MOTORS];
 protected:
 	double GetPosition(int ID);
-
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
 public:
