@@ -77,6 +77,10 @@
 #define POWER_BROWNOUT_VOLTAGE 7
 #define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
 #define POWER_VOLTAGE_WIDTH 1.5
+
+#define COLLECTOR_TURNUP 1
+#define COLLECTOR_TURNDOWN 0
+
 //Buttons
 
 //Collecting buttons
@@ -94,6 +98,8 @@
 //climbing buttons
 #define OI_ATTACH_HOOK_PORT 10
 #define OI_ENGAGE_WINCH_PORT 11
+
+#define OI_BUTTON_BREACH_PORT 2
 
 #define LOGFILE_NAME "/U/robotLog"
 

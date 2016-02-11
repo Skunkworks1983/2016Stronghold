@@ -9,19 +9,18 @@
 #include <cmath>
 #include <cstdbool>
 
-Portcullis::Portcullis(float speed, float distance, float turnup){
+PortcullisAuto::PortcullisAuto(float speed, float distance, float turn){
 	Requires(drivebase);
 	Requires(collector);
 	this->speed = speed;
 	this->distance = distance;
-	this->turnup = turnup;
-	this->dt = 0;
 	this->turn = turn;
+	this->dt = 0;
+	this->turning = 0;
 	this->firststop = false;
-
 }
 
-void Portcullis::Initialize(){
+void PortcullisAuto::Initialize(){
 	drivebase->resetEncoder();
 	drivebase->setLeftSpeed(speed);
 	drivebase->setRightSpeed(speed);
@@ -29,19 +28,19 @@ void Portcullis::Initialize(){
 
 
 }
-Portcullis::~Portcullis(){
+PortcullisAuto::~PortcullisAuto(){
 
 }
 
-void Portcullis::Execute(){
+void PortcullisAuto::Execute(){
 	this->dt = drivebase->getRightDistance();
 	if (fabs(distance-dt) <= EPSILON && firststop==false) {
 		this->firststop = true;
 		drivebase->setRightSpeed(0);
 		drivebase->setLeftSpeed(0);
 	}
-	collector->setRotatorPosition(turnup);
-	if ((turnup - turn) < EPSILON){
+	collector->setRotatorPosition(turn);
+	if ((turn - turning) < EPSILON){
 
 	}
 	this->dt = drivebase->getRightDistance();
@@ -50,8 +49,8 @@ void Portcullis::Execute(){
 	}
 
 
-bool Portcullis::IsFinished(){
-	if ((2*distance-dt) <= EPSILON && (turnup-turn) <= EPSILON){
+bool PortcullisAuto::IsFinished(){
+	if ((2*distance-dt) <= EPSILON && (turn-turning) <= EPSILON){
 		return true;
 	}
 	else {
@@ -59,12 +58,12 @@ bool Portcullis::IsFinished(){
 	}
 }
 
-void Portcullis::End(){
+void PortcullisAuto::End(){
 	drivebase->setLeftSpeed(0);
 	drivebase->setRightSpeed(0);
 	collector->setRotatorPosition(0);
 }
 
-void Portcullis::Interrupted(){
+void PortcullisAuto::Interrupted(){
 	End();
 }
