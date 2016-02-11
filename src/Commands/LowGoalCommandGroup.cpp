@@ -13,5 +13,5 @@ LowGoalCommandGroup::LowGoalCommandGroup()
  *
  */
 	AddSequential(new CollectorMove(0));
-	AddSequential(new ShootGoal());
+//	AddSequential(new ShootGoal()); obsolete
 }

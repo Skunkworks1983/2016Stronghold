@@ -25,21 +25,24 @@ void ActivateRollers::Execute()
 }
 
 // Make this return true when this Command no longer needs to run execute()
-bool ActivateRollers::IsFinished()
-{
+bool ActivateRollers::IsFinished() {
 	if (pidController->OnTarget()) {
 		if (rollerTime == 0) {
 			rollerTime = clock();
-
+			if (clock() == rollerTime + (2 * CLOCKS_PER_SEC)) {
+				return true;
+			}
 		}
+	} else {
+		return false;
 	}
-	return false;
 }
 
 // Called once after isFinished returns true
 void ActivateRollers::End()
 {
-
+	collector->setRoller(Collector::KStop, 0);
+	pidController->Disable();
 }
 
 // Called when another command which requires one or more of the same

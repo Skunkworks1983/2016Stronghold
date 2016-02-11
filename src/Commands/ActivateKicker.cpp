@@ -5,6 +5,10 @@ ActivateKicker::ActivateKicker()
 	kickTime = 0;
 	kickerActivated = false;
 	kickerDone = false;
+	collector = CommandBase::collector;
+	motorManager = MotorManager::getMotorManager();
+
+
 }
 void ActivateKicker::Initialize()
 {
@@ -14,7 +18,6 @@ void ActivateKicker::Initialize()
 
 void ActivateKicker::Execute()
 {
-	kickerPosition = sensorManager->GetEncoderPosition(COLLECTOR_KICKER_MOTOR_PORT);
 	if (kickerActivated == false){
 		collector->setKickerSpeed(1);
 		kickerActivated = true;

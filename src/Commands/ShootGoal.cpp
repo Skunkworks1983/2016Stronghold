@@ -7,8 +7,7 @@
 /*
  * Problems with this program:
  * Need the actual numbers for the rotator position (numbers for collectorRotatorSetpoint
-
- */
+ * THIS FILE IS OBSOLETE, AND BEING REPLACED WITH HIGHGOALCOMMANDGROUP AND LOWGOALCOMMANDGROUP
 #include <Commands/ShootGoal.h>
 
 ShootGoal::ShootGoal() {
@@ -16,6 +15,9 @@ ShootGoal::ShootGoal() {
 
 sensorManager = SensorManager::getSensorManager();
 collector = CommandBase::collector;
+this->shootState = shootState;
+this->shootTime = shootTime;
+this->rollerSpeed = rollerSpeed;
 }
 
 ShootGoal::~ShootGoal() {
@@ -79,3 +81,5 @@ void ShootGoal::Interrupted()
 	collector->activateKicker(false);
 	End();
 }
+
+ */

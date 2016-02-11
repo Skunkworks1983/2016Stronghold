@@ -10,11 +10,10 @@
 class ActivateKicker: public CommandBase
 {
 private:
-	SensorManager * sensorManager;
+//	SensorManager * sensorManager; //not being used for anything, but could be useful?
 	MotorManager * motorManager;
 	Collector * collector;
 	clock_t kickTime;
-	int kickerPosition;
 	bool kickerActivated;
 	bool kickerDone;
 public:

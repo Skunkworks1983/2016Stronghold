@@ -3,7 +3,7 @@
  *
  *  Created on: Jan 30, 2016
  *      Author: s-4032218
- */
+ * THIS FILE IS OBSOLETE
 #include <Subsystems/Collector.h>
 #include <Subsystems/SensorManager.h>
 #include <CommandBase.h>
@@ -19,8 +19,6 @@ private:
 		SHOOT_STATE_FINISHED
 	};
 	float rollerSpeed;
-	int collectorRotatorSetpoint;
-	float collectorRotatorPosition;
 	EShootState shootState;
 	SensorManager * sensorManager;
 	Collector * collector;
