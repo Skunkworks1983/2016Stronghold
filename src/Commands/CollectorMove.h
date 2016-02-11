@@ -17,7 +17,7 @@ public:
 
 #endif
 */
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter_Collector.h>
 #include <CommandBase.h>
 #include <PIDOutput.h>
 #include <PIDSource.h>

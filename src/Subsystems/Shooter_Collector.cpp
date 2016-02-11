@@ -1,5 +1,5 @@
 #include <CANTalon.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter_Collector.h>
 
 //TODO: set position of collector
 //TODO: set speed
@@ -88,6 +88,22 @@ void Collector::activateCollector(bool active) {
 float Collector::getRollerSpeed() {
 //needs code!
 	}
+
+
+Shooter::Shooter():
+Subsystem("Shooter"){
+
+
+
+}
+void Shooter::activateShooter(){
+
+}
+
+float Shooter::getSpeed(){
+
+}
+
 
 
 

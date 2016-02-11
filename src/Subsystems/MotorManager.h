@@ -4,9 +4,13 @@
 #include <Commands/Subsystem.h>
 #include <RobotMap.h>
 #include <vector>
+#include <map>
+
+
 
 
 class CANTalon;
+class PIDController;
 
 class Encoder;
 
@@ -47,6 +51,8 @@ private:
 	Priority allowedPriority;
 
 	std::vector<Motor> motors;
+	std::map<int, PIDController*> pidControllerMap;
+
 
 	CANTalon * addMotor(Priority priority, int Port);
 
@@ -63,6 +69,7 @@ public:
 	float getSpeed(int ID);
 	int setPIDValues(int ID, double P, double I, double D);
 	void setPriority(Priority priorityARG);
+	void createPID(int motorID, int encoderID, int pidID, float P, float I, float D, float F, bool isSpeedMode);
 
 	static MotorManager * getMotorManager();
 	void setCForAll();
