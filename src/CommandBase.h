@@ -2,6 +2,7 @@
 #define COMMAND_BASE_H
 
 #include <Commands/Command.h>
+#include <Subsystems/SensorManager.h>
 
 class Collector;
 class OI;
@@ -22,6 +23,7 @@ public:
 	static OI *oi;
 	static Drivebase *drivebase;
 	static Collector *collector;
+	static SensorManager *sensorManager;
 };
 
 #endif

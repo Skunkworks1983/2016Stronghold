@@ -15,8 +15,6 @@ public:
 	Collector();
 	~Collector();
 	void InitDefaultCommand();
-	void setLeftSpeed(double speed);
-	void setRightSpeed(double speed);
 	void resetEncoder();
 	void setMotorPosition();
 	void setRotatorPosition(float position);

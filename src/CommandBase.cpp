@@ -9,6 +9,7 @@
 OI* CommandBase::oi = NULL;
 Drivebase* CommandBase::drivebase = NULL;
 Collector* CommandBase::collector = NULL;
+SensorManager* CommandBase::sensorManager = NULL;
 CommandBase::CommandBase(char const *name) :
 		Command(name) {
 }
@@ -24,5 +25,8 @@ void CommandBase::init() {
 	oi = new OI();
 	drivebase = new Drivebase();
 	collector = new Collector();
+	sensorManager = SensorManager::getSensorManager();
+	sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
 	writeToLogFile(LOGFILE_NAME, "Robot initialized");
+
 }
