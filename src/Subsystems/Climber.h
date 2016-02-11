@@ -4,6 +4,7 @@
 #include "Commands/Subsystem.h"
 #include "WPILib.h"
 #include "MotorManager.h"
+#include "SensorManager.h"
 
 class Climber: public Subsystem
 {
@@ -13,13 +14,13 @@ public:
 	Climber();
 	~Climber();
 
-	void setwinchSpeed(float winchSpeed);
-	float getwinchSpeed();
+	void setWinchSpeed(float winchSpeed);
+	float getWinchSpeed();
 	void setArmSpeed(float armSpeed);
 	float getArmSpeed();
 	void InitDefaultCommand();
-	float getWinchEncoder();
-	float getArmEncoder();
+	float getWinchPos();
+	float getArmPos();
 };
 
 #endif

@@ -15,8 +15,8 @@ Climb::~Climb(){
 
 void Climb::Initialize()
 {
-	climber->setwinchSpeed(winchspeed);
-	this->winchStartPos = climber->getWinchEncoder();
+	climber->setWinchSpeed(winchspeed);
+	this->winchStartPos = climber->getWinchPos();
 	this->winchspeed = winchspeed;
 
 }
@@ -24,18 +24,18 @@ void Climb::Initialize()
 
 void Climb::Execute()
 {
-	climber->getwinchSpeed();
-	float currentWinchPos = climber->getWinchEncoder();
+	climber->getWinchSpeed();
+	float currentWinchPos = climber->getWinchPos();
 	float totaldistance = currentWinchPos - winchStartPos;
 
 	if(totaldistance > CLIMBDISTANCE)
-		climber->setwinchSpeed(0);
+		climber->setWinchSpeed(0);
 	}
 
 
 bool Climb::IsFinished()
 {
-	float currentWinchPos = climber->getWinchEncoder();
+	float currentWinchPos = climber->getWinchPos();
 	float totaldistance = currentWinchPos - winchStartPos;
 	if(totaldistance > CLIMBDISTANCE){
 		return true;
@@ -46,7 +46,7 @@ bool Climb::IsFinished()
 
 void Climb::End()
 {
-	climber->setwinchSpeed(0);
+	climber->setWinchSpeed(0);
 }
 
 void Climb::Interrupted()

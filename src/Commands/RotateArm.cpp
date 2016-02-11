@@ -15,7 +15,7 @@ RotateArm::~RotateArm(){
 // Called just before this Command runs the first time
 void RotateArm::Initialize()
 {
-	this->rotateArmEncoderTicks = climber->getArmEncoder();
+	this->rotateArmEncoderTicks = climber->getArmPos();
 	climber->setArmSpeed(armSpeed);
 }
 

@@ -18,35 +18,32 @@ void Climber::InitDefaultCommand()
 }
 
 
-void Climber::setwinchSpeed(float winchSpeed){
+void Climber::setWinchSpeed(float winchSpeed){
 	MotorManager* motorManager = MotorManager::getMotorManager();
-	motorManager->setSpeed(CLIMBER_MOTOR_1_PORT, winchSpeed);
-	motorManager->setSpeed(CLIMBER_MOTOR_2_PORT, winchSpeed);
-	motorManager->setSpeed(CLIMBER_MOTOR_3_PORT, winchSpeed);
-	motorManager->setSpeed(CLIMBER_MOTOR_4_PORT, winchSpeed);
+	motorManager->setSpeed(CLIMBER_WINCH_MOTOR_1_PORT, winchSpeed);
+	motorManager->setSpeed(CLIMBER_WINCH_MOTOR_2_PORT, winchSpeed);
+	motorManager->setSpeed(CLIMBER_WINCH_MOTOR_3_PORT, winchSpeed);
+	motorManager->setSpeed(CLIMBER_WINCH_MOTOR_4_PORT, winchSpeed);
 }
 
-float Climber::getwinchSpeed(){
-	return 1.0f;
+float Climber::getWinchSpeed(){
+	return SensorManager::getSensorManager()->GetSpeed(CLIMBER_WINCH_MOTOR_1_PORT);
 }
 
 void Climber::setArmSpeed(float armSpeed){
 	MotorManager*motorManager = MotorManager::getMotorManager();
-	motorManager->setSpeed(ARM_MOTOR_PORT, armSpeed);
-
+	motorManager->setSpeed(CLIMBER_ARM_MOTOR_PORT, armSpeed);
 }
 
 float Climber::getArmSpeed(){
-	return 1.0f;	//TODO: change this
+		return SensorManager::getSensorManager()->GetSpeed(CLIMBER_ARM_MOTOR_PORT);
 }
 
-float Climber::getWinchEncoder(){
-	SensorManager::getSensorManager()->GetEncoderPosition(CLIMBER_MOTOR_1_PORT);
-	return SensorManager::getSensorManager()->GetEncoderPosition(CLIMBER_MOTOR_1_PORT);
+float Climber::getWinchPos(){
+	return SensorManager::getSensorManager()->GetEncoderPosition(CLIMBER_WINCH_MOTOR_1_PORT);
 }
 
-float Climber::getArmEncoder(){
-	SensorManager::getSensorManager()->GetEncoderPosition(ARM_MOTOR_PORT);
-		return SensorManager::getSensorManager()->GetEncoderPosition(ARM_MOTOR_PORT);
+float Climber::getArmPos(){
+	return SensorManager::getSensorManager()->GetEncoderPosition(CLIMBER_ARM_MOTOR_PORT);
 }
 
