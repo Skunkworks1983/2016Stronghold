@@ -36,6 +36,7 @@
 #define COLLECTOR_ROLLER_MOTOR_2_PORT 3
 #define COLLECTOR_KICKER_MOTOR_PORT 4 //very very tentative
 
+
 //MotorManager(ewe) Constants
 #define MAX_MANAGED_MOTORS 20
 
@@ -62,6 +63,8 @@
 #define SHOOTER_MOTOR_1_PORT 14
 #define SHOOTER_MOTOR_2_PORT 15
 
+#define SHOOTER_SPEED 1
+
 #define DRIVEBASE_RIGHTENCODER_PORT 0
 #define DRIVEBASE_LEFTENCODER_PORT 4
 
@@ -78,6 +81,7 @@
 #define POWER_BROWNOUT_VOLTAGE 7
 #define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
 #define POWER_VOLTAGE_WIDTH 1.5
+
 //Buttons
 
 //Collecting buttons
@@ -96,6 +100,7 @@
 #define OI_ATTACH_HOOK_PORT 10
 #define OI_ENGAGE_WINCH_PORT 11
 
+//PID ID's
 #define LOGFILE_NAME "/U/robotLog"
 
 #endif

@@ -15,9 +15,9 @@ ShootGoal::ShootGoal() {
 
 sensorManager = SensorManager::getSensorManager();
 collector = CommandBase::collector;
-this->shootState = shootState;
-this->shootTime = shootTime;
-this->rollerSpeed = rollerSpeed;
+
+shooter = new Shooter();
+
 }
 
 ShootGoal::~ShootGoal() {
@@ -41,7 +41,7 @@ void ShootGoal::Execute()
 
 void ShootGoal::ExecuteFiring() {
 	if (shootState == SHOOT_STATE_FIRING) {
-		collector->activateShooter(true);
+		shooter->activateShooter();
 		if (fabs(collector->getRollerSpeed() - rollerSpeed) < SHOOTER_SPEED_TOLERANCE){
 				collector->activateKicker(true);
 				if (shootTime == 0) {

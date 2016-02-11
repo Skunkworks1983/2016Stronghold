@@ -4,7 +4,17 @@
 #include <Subsystems/SensorManager.h>
 #include <Subsystems/MotorManager.h>
 #include <CommandBase.h>
+class Shooter: public Subsystem{
+	friend class Collector;
+private:
+	//this is the best code ever - Tucker Bowlin 2016
+public:
+	Shooter();
+	void activateShooter();
+	float getSpeed();
 
+
+};
 class Collector: public Subsystem, public PIDSource, public PIDOutput {
 private:
 	SensorManager * sensorManager;

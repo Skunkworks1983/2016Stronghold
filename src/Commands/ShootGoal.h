@@ -3,10 +3,10 @@
  *
  *  Created on: Jan 30, 2016
  *      Author: s-4032218
- * THIS FILE IS OBSOLETE
-#include <Subsystems/Collector.h>
+
 #include <Subsystems/SensorManager.h>
 #include <CommandBase.h>
+#include <Subsystems/Shooter_Collector.h>
 #include "CollectorMove.h"
 #ifndef SRC_COMMANDS_SHOOTHIGHGOAL_H_
 #define SRC_COMMANDS_SHOOTHIGHGOAL_H_
@@ -22,6 +22,7 @@ private:
 	EShootState shootState;
 	SensorManager * sensorManager;
 	Collector * collector;
+	Shooter * shooter;
 	const float SHOOTER_AIM_TOLERANCE = 5;
 	const float SHOOTER_SPEED_TOLERANCE = 5;
 	clock_t shootTime;

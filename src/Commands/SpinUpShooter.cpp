@@ -42,10 +42,11 @@ void SpinUpShooter::Interrupted()
 {
 
 }
-double PIDSource::PIDGet(){
-	return 0;
+double SpinUpShooter::PIDGet(){
+	return 99; //TODO:pls
 }
-void PIDOutput::PIDWrite(float output){
+void SpinUpShooter::PIDWrite(float output){
+
 
 
 }

@@ -6,6 +6,7 @@
 #include "Subsystems/MotorManager.h"
 #include "OI.h"
 #include "Subsystems/SensorManager.h"
+#include "Subsystems/SensorManager.h"
 
 class SpinUpShooter: public CommandBase, PIDSource, PIDOutput
 {

@@ -3,7 +3,7 @@
 
 #include "../CommandBase.h"
 #include "WPILib.h"
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter_Collector.h>
 #include <PIDOutput.h>
 #include <PIDSource.h>
 
