@@ -21,8 +21,8 @@ void Collector::resetEncoder(){
 	// motorManager->resetRollerEncoder(0.0);
 }
 
-void Collector::setMotorPosition(){
-	motorManager->setPosition(5, 2);
+void Collector::setMotorPosition(int pid, float position){
+	motorManager->setPosition(pid, position);
 }
 
 void Collector::setRotatorPosition(float position){

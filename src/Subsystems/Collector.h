@@ -18,7 +18,7 @@ public:
 	void setLeftSpeed(double speed);
 	void setRightSpeed(double speed);
 	void resetEncoder();
-	void setMotorPosition();
+	void setMotorPosition(int pid, float position);
 	void setRotatorPosition(float position);
 	void setRoller(rollerDirection direction, float speed);
 

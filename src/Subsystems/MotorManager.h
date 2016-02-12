@@ -58,7 +58,7 @@ protected:
 	// for methods that implement subsystem capabilities
 public:
 	void InitDefaultCommand();
-	void setPosition(int pid, float position);
+	void setPosition(int PID, double Position);
 	void setSpeed(int ID, float speed);
 	int setPIDValues(int ID, double P, double I, double D);
 	void setPriority(Priority priorityARG);
