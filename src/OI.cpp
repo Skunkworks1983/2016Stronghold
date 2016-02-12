@@ -1,5 +1,10 @@
-#include "OI.h"
+#include <Commands/ChevDeFris.h>
+#include <Commands/GeneralBreach.h>
 #include <Commands/PortcullisAuto.h>
+#include <OI.h>
+#include <Subsystems/Collector.h>
+#include <cmath>
+#include <cstdbool>
 
 OI::OI()
 {
@@ -58,12 +63,12 @@ double OI::getRightStickY() {
 void OI::registerButtonListener()
 {
 	portcullisBreach->WhenPressed(new PortcullisAuto(0.1, 0, 0));
-	//change values later - Superior DeSilva
-	//chevalBreach->WhenPressed(new ChevDeFris(0.1, 0, 0));
+	//change values later - Superior DeSilva)
+	chevalBreach->WhenPressed(new ChevDeFris(0.1, 0, 0));
 	//change values later
-	//generalBreach->WhenPressed(new BreachBasicGroup());
+	generalBreach->WhenPressed(new GeneralBreach(0.1, 0));
 	//collectBall->WhenPressed(new );
-//	collectorUp->WhenPressed(new );
+	//collectorUp->WhenPressed(new );
 	//aimAtGoal->WhenPressed(new);
 //	shootLow->WhenPressed(new);
 	//shootHigh->WhenPressed(new);
