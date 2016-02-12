@@ -6,16 +6,13 @@
  */
 #include<Subsystems/Drivebase.h>
 #include<Commands/DriveToSomething.h>
-#include <Subsystems/SensorManager.h>
-
-#define EPSILON 0.0005f
+#define EPSILON 0.0005f // EPSILON checks to see if it reaches the distance.
 
 DriveToSomething::DriveToSomething(float distance, float speed){
 	Requires(drivebase);
 	this->distance = distance;
 	this->speed = speed;
-	this->dt = 0;
-	this->distant = distant;
+	this->dt = dt;
 
 }
 
@@ -34,7 +31,7 @@ void DriveToSomething::Initialize(){
 void DriveToSomething::Execute(){
 	this->dt = drivebase->getRightDistance();
 
-	if (distance-dt < distant) {
+	if (distance-dt < EPSILON) {
 		float newSpeed = (speed*.2)*((distance - dt)/distance);
 		drivebase->setLeftSpeed(newSpeed);
 		drivebase->setRightSpeed(newSpeed);
