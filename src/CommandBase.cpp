@@ -1,4 +1,5 @@
 #include <CommandBase.h>
+#include <Services/Logger.h>
 #include <OI.h>
 #include <stddef.h>
 #include <Subsystems/Collector.h>
@@ -26,4 +27,6 @@ void CommandBase::init() {
 	collector = new Collector();
 	sensorManager = SensorManager::getSensorManager();
 	sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
+	writeToLogFile(LOGFILE_NAME, "Robot initialized");
+
 }

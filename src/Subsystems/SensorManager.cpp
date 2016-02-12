@@ -90,6 +90,10 @@ double SensorManager::GetEncoderPosition(int ID) {
 	return MotorManager::getMotorManager()->GetPosition(ID);
 
 }
+double SensorManager::GetSpeed(int ID){
+
+	return MotorManager::getMotorManager()->GetSpeed(ID);
+}
 
 // Put methods for controlling this subsystem
 // here. Call these from Commands.

@@ -10,6 +10,7 @@
 
 class SensorManager: public Subsystem
 {
+	friend class MotorManager;
 private:
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
@@ -31,6 +32,7 @@ public:
 	float  GetAccelY();
 	float  GetAccelZ();
 	double GetEncoderPosition(int ID);
+	double GetSpeed(int ID);
 	bool ahrsDead;
 	int counter;
 };
