@@ -5,7 +5,8 @@
 #include "Commands/CommandGroup.h"
 #include "WPILib.h"
 #include "CollectorMove.h"
-#include "ShootGoal.h"
+#include "ActivateKicker.h"
+#include "SpinUpShooter.h"
 
 class HighGoalCommandGroup: public CommandGroup
 {

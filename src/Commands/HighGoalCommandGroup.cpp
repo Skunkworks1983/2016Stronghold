@@ -19,7 +19,8 @@ HighGoalCommandGroup::HighGoalCommandGroup()
 	// a CommandGroup containing them would require both the chassis and the
 	// arm.
 	AddSequential(new CollectorMove(30)); // Don't know where we should aim it
-//	AddSequential(new ShootGoal());
+	AddSequential(new SpinUpShooter());
+	AddSequential(new ActivateKicker());
 	AddSequential(new CollectorMove(0));
 
 }
