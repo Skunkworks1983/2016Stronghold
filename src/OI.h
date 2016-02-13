@@ -30,7 +30,7 @@ public:
 	JoystickButton *spinUpShooter;
 
 	//climbing buttons
-	JoystickButton *attachHook;
+	JoystickButton *rotateArm;
 	JoystickButton *engageWinch;
 
 	OI();

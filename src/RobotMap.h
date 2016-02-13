@@ -66,7 +66,8 @@
 
 //Breach Buttons
 #define OI_PORTCULLIS_BREACH_PORT 0
-#define OI_CHEVAL_BREACH_PORT 2
+#define OI_BUTTON_BREACH_PORT 2
+#define OI_CHEVAL_BREACH_PORT 1
 #define OI_GENERAL_BREACH_PORT 3
 #define POWER_DISTRIBUTION_PANEL_PORT 0
 
@@ -77,6 +78,10 @@
 #define POWER_BROWNOUT_VOLTAGE 7
 #define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
 #define POWER_VOLTAGE_WIDTH 1.5
+
+#define COLLECTOR_TURNUP 1
+#define COLLECTOR_TURNDOWN 0
+
 //Buttons
 
 //Collecting buttons
@@ -92,8 +97,13 @@
 #define OI_SPIN_UP_SHOOTER_PORT 9
 
 //climbing buttons
-#define OI_ATTACH_HOOK_PORT 10
+#define OI_ROTATE_ARM_PORT 10
 #define OI_ENGAGE_WINCH_PORT 11
+
+//auto constants
+#define CHEV_SPEED 0.5
+#define CHEV_SHORTDIST 3
+#define CHEV_DIST 5
 
 #define LOGFILE_NAME "/U/robotLog"
 

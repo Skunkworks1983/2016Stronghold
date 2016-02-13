@@ -13,7 +13,7 @@ void writeToLogFile (std::string fileName, std::string message)
 		time_t timer = time(NULL);
 		logFile<<timer<<" "<<message<<std::endl;
 	}
-	catch(std::ifstream::failure e)
+	catch(std::ifstream::failure *e)
 	{
 
 	}
