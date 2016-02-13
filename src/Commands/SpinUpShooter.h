@@ -13,9 +13,8 @@ class SpinUpShooter: public CommandBase, PIDSource, PIDOutput
 
 private:
 	OI            * oi;
-	MotorManager  * motormanager;
-	SensorManager * sensormanager;
-	PIDController * pid;
+	MotorManager  * motorManager;
+	SensorManager * sensorManager;
 
 
 public:
@@ -25,12 +24,8 @@ public:
 	bool IsFinished();
 	void End();
 	void Interrupted();
-	float P;
-	float I;
-	float D;
 	float speed;
-	double PIDGet();
-	void PIDWrite(float output);
+
 
 };
 

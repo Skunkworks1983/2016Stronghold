@@ -16,7 +16,7 @@ ShootGoal::ShootGoal() {
 
 sensorManager = SensorManager::getSensorManager();
 collector = CommandBase::collector;
-shooter = new Shooter();
+shooter = CommandBase::shooter;
 }
 
 ShootGoal::~ShootGoal() {
@@ -40,7 +40,7 @@ void ShootGoal::Execute()
 
 void ShootGoal::ExecuteFiring() {
 	if (shootState == SHOOT_STATE_FIRING) {
-		shooter->activateShooter();
+		shooter->activateShooter(true);
 		if (fabs(collector->getRollerSpeed() - rollerSpeed) < SHOOTER_SPEED_TOLERANCE){
 				collector->activateKicker(true);
 				if (shootTime == 0) {
@@ -54,7 +54,7 @@ void ShootGoal::ExecuteFiring() {
 }
 void ShootGoal::ExecuteResetting() {
 	if (shootState == SHOOT_STATE_RESETTING) {
-		collector->activateShooter(false);
+		shooter->activateShooter(false);
 		collector->activateKicker(false);
 		shootState = SHOOT_STATE_FINISHED;
 	}
@@ -76,7 +76,7 @@ void ShootGoal::End()
 
 void ShootGoal::Interrupted()
 {
-	collector->activateShooter(false);
+	shooter->activateShooter(false);
 	collector->activateKicker(false);
 	End();
 }

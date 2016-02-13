@@ -17,25 +17,19 @@
 //const int RANGE_FINDER_MODULE = 1;
 #define LIGHT_SENSOR_PORT 1
 
-
-
-
 #define LINE_FOLLOW_P 1
 #define LINE_FOLLOW_I 0
 #define LINE_FOLLOW_D 0
 
-
 #define OI_JOYSTICK_LEFT_PORT 0
 #define OI_JOYSTICK_RIGHT_PORT 1
 #define OI_OPERATOR_PORT 2
-
 
 #define COLLECTOR_ROTATOR_MOTOR_1_PORT 0
 #define COLLECTOR_ROTATOR_MOTOR_2_PORT 1
 #define COLLECTOR_ROLLER_MOTOR_1_PORT 2
 #define COLLECTOR_ROLLER_MOTOR_2_PORT 3
 #define COLLECTOR_KICKER_MOTOR_PORT 4 //very very tentative
-
 
 //MotorManager(ewe) Constants
 #define MAX_MANAGED_MOTORS 20
@@ -100,7 +94,11 @@
 #define OI_ATTACH_HOOK_PORT 10
 #define OI_ENGAGE_WINCH_PORT 11
 
-//PID ID's
 #define LOGFILE_NAME "/U/robotLog"
+//PID ID's
+#define PID_ID_SHOOTER_1 0
+#define PID_ID_SHOOTER_1 1
+#define PID_ID_COLLECTOR 2
+#define PID_ID_TURN_DEGREE 3
 
 #endif

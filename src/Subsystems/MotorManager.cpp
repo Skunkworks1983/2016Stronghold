@@ -89,10 +89,10 @@ void MotorManager::setSpeedForAll() {
 	}
 }
 
-float MotorManager::getSpeed(int ID){
-return this->Motors[ID]->GetSpeed();
+float MotorManager::getSpeed(int ID) {
+	return this->Motors[ID]->GetSpeed();
 }
-int MotorManager::setPIDValues(int ID, double P, double I, double D){
+int MotorManager::setPIDValues(int ID, double P, double I, double D) {
 	Motors[ID]->SetPID(P, I, D);
 	return ID;
 }
@@ -104,7 +104,7 @@ void setPosition(int PID, float position) {
 double MotorManager::GetPosition(int ID) {
 	return this->Motors[ID]->GetPosition();
 }
-double MotorManager::GetSpeed(int ID){
+double MotorManager::GetSpeed(int ID) {
 	return this->Motors[ID]->GetSpeed();
 }
 
@@ -128,13 +128,17 @@ void MotorManager::setPriority(Priority priorityArg) {
 void Motor::setC(Priority priorityArg, float voltage) {
 
 	if (motorPriority == PRIORITY_FIRST) {
-		if (voltage > POWER_BROWNOUT_VOLTAGE+POWER_DRIVEBASE_VOLTAGE_WIDTH) {
+		if (voltage > POWER_BROWNOUT_VOLTAGE + POWER_DRIVEBASE_VOLTAGE_WIDTH) {
 			this->C = 1;
 		} else {
-			this->C = pow((((voltage - POWER_BROWNOUT_VOLTAGE) / (POWER_DRIVEBASE_VOLTAGE_WIDTH))), 2);
+			this->C = pow(
+					(((voltage - POWER_BROWNOUT_VOLTAGE)
+							/ (POWER_DRIVEBASE_VOLTAGE_WIDTH))), 2);
 		}
 	} else if (this->motorPriority >= priorityArg) {
-		    this->C = pow((((voltage - POWER_BROWNOUT_VOLTAGE) / (motorPriority * POWER_VOLTAGE_WIDTH))), 2);
+		this->C = pow(
+				(((voltage - POWER_BROWNOUT_VOLTAGE)
+						/ (motorPriority * POWER_VOLTAGE_WIDTH))), 2);
 	}
 
 }
@@ -171,18 +175,50 @@ Motor::Motor(Priority prioArg, int portArg) {
 
 Motor::~Motor() {
 
-}void MotorManager::createPID(int motorID, int encoderID, int pidID, float P, float I, float D, float F, bool isSpeedMode){
-
-	PIDController * pidcontroller = new PIDController( P,  I,  D, F, motors[encoderID].talon , motors[motorID].talon);
-
-	if(isSpeedMode == true){
-		pidcontroller->SetPIDSourceType(PIDSourceType::kRate);
-	}
-	else{
-	pidcontroller->SetPIDSourceType(PIDSourceType::kDisplacement);
-	}
-
-	pidControllerMap[pidID] = pidcontroller;
-
 }
 
+
+
+void MotorManager::createPID(std::vector<int> motorID, int encoderID, int pidID,
+		float P, float I, float D, float F, bool isSpeedMode) {
+	if (pidControllerMap.count(pidID) < 1) {
+		std::vector<Motor> motorlist;
+
+		for (int x = 0; x<motorID.size(); x++) {
+			motorlist.push_back(motors[motorID[x]]);
+		}
+		MotorGroup * group = new MotorGroup(motorlist);
+	PIDController * pidcontroller = new PIDController(P, I, D, F,motors[encoderID].talon, group );
+	if (isSpeedMode == true) {
+		pidcontroller->SetPIDSourceType(PIDSourceType::kRate);
+	}
+	else {
+		pidcontroller->SetPIDSourceType(PIDSourceType::kDisplacement);
+		pidControllerMap[pidID] = pidcontroller;
+	}
+	}
+	else {
+	pidControllerMap[pidID]->Enable();
+	}
+}
+
+void MotorManager::enablePID(int pidID, float setPoint) {
+pidControllerMap[pidID]->SetSetpoint(setPoint);
+pidControllerMap[pidID]->Enable();
+
+}
+void MotorManager::disablePID(int pidID) {
+pidControllerMap[pidID]->Disable();
+}
+MotorGroup::MotorGroup(std::vector<Motor> motorgroup) {
+this->motorlist = std::vector<Motor>(motorgroup);
+}
+
+void MotorGroup::PIDWrite(float output) {
+std::vector<Motor>::iterator ptr = motorlist.begin();
+std::vector<Motor>::iterator end = motorlist.end();
+for (; ptr != end; ++ptr) {
+	ptr->talon->Set(output * ptr->C);
+
+}
+}

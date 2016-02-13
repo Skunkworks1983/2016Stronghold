@@ -5,13 +5,10 @@
 #include <RobotMap.h>
 #include <vector>
 #include <map>
-
-
-
+#include <PIDOutput.h>
 
 class CANTalon;
 class PIDController;
-
 class Encoder;
 
 enum Priority {
@@ -22,7 +19,6 @@ enum Priority {
 	PRIORITY_ACCESSORIES,
 	PRIORITYS
 };
-
 class Motor {
 	friend class MotorManager;
 private:
@@ -36,7 +32,14 @@ public:
 	int    	   port;
 	float C;
 	void setC(Priority priority, float voltage );
+};
 
+class MotorGroup: public PIDOutput {
+private:
+	std::vector<Motor> motorlist;
+public:
+	MotorGroup(std::vector<Motor> motorgroup);
+	void PIDWrite(float output);
 
 };
 
@@ -69,7 +72,9 @@ public:
 	float getSpeed(int ID);
 	int setPIDValues(int ID, double P, double I, double D);
 	void setPriority(Priority priorityARG);
-	void createPID(int motorID, int encoderID, int pidID, float P, float I, float D, float F, bool isSpeedMode);
+	void createPID( std::vector<int> motorID, int encoderID, int pidID, float P, float I, float D, float F, bool isSpeedMode);
+	void enablePID(int pidID, float setPoint);
+	void disablePID(int pidID);
 
 	static MotorManager * getMotorManager();
 	void setCForAll();
