@@ -29,7 +29,7 @@ void writeToLogFile (std::string fileName, std::string message)
 			timeinfo = localtime(&rawtime);
 
 			strftime(timer, 32, "%c", timeinfo); //VISUALLY AESTHETIC OKAY
-			logFile<<"["<<timer<<"] "<< ROBOT_NAME + " "<< message<<std::endl;
+			logFile<<"["<<timer<<"] "<< ROBOT_NAME << " "<< message<<std::endl;
 			loggerMutex->unlock();
 		}
 		catch(std::ifstream::failure *e) {}
