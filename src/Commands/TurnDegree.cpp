@@ -17,7 +17,7 @@ TurnDegree::TurnDegree(double degree)
 	sensorManager = SensorManager::getSensorManager();
 	pidController = new PIDController(P, I, D, this, this);
 	motorManager = MotorManager::getMotorManager();
-	ahrsDead = sensorManager->ahrsDead;
+	ahrsDead = sensorManager->ahrsDead; //True if the ahrs (gyro) is non functional for the round
 	pidController->SetAbsoluteTolerance(1.0f);
 }
 
@@ -39,7 +39,7 @@ void TurnDegree::Initialize()
 
 void TurnDegree::Execute()
 {
-
+	//All looping of PID is done by the pidController object
 }
 
 bool TurnDegree::IsFinished()
