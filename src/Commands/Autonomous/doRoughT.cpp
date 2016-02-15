@@ -1,6 +1,6 @@
-#include <Commands\Autonomous\AutoBase.h>
+#include <Commands/Autonomous/AutoBase.h>
 
-AutoBase *AutoBase::doRoughT(startingPosition sp, goalPosition gp)
+AutoBase *AutoBase::doRoughT()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doRoughT");
 	//cmd->AddSequential(new myCommand(myCommandParameters));
