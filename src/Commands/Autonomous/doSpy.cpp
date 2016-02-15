@@ -1,6 +1,6 @@
-#include <Commands\Autonomous\AutoBase.h>
+#include <Commands/Autonomous/AutoBase.h>
 
-AutoBase *AutoBase::doSpy(startingPosition sp, goalPosition gp)
+AutoBase *AutoBase::doSpy()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doSpy");
 	//cmd->AddSequential(new myCommand(myCommandParameters));

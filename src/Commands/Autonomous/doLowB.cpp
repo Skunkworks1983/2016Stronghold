@@ -1,6 +1,6 @@
-#include <Commands\Autonomous\AutoBase.h>
+#include <Commands/Autonomous/AutoBase.h>
 
-AutoBase *AutoBase::doLowB(startingPosition sp, goalPosition gp)
+AutoBase *AutoBase::doLowB()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doLowB");
 	//cmd->AddSequential(new myCommand(myCommandParameters));

@@ -4,19 +4,20 @@
 #include "Commands/CommandGroup.h"
 #include "WPILib.h"
 #include "RobotMap.h"
+#include <vector>
+#include <DigitalInput.h>
 
 class AutoBase: public CommandGroup
 {
-public:
-	AutoBase();
-	AutoBase(char *style);
-	~AutoBase();
-	enum goalPosition
+private:
+
+	enum eGoalPos
 	{
 		high,
 		low
 	};
-	enum startingPosition
+
+	enum eStartPos
 	{
 		spy,
 		lowBar,
@@ -25,15 +26,38 @@ public:
 		posTwo,
 		posThree
 	};
-	static AutoBase *doCheval(startingPosition sp, goalPosition gp);
-	static AutoBase *doMoat(startingPosition sp, goalPosition gp);
-	static AutoBase *doRockW(startingPosition sp, goalPosition gp);
-	static AutoBase *doRamP(startingPosition sp, goalPosition gp);
-	static AutoBase *doRoughT(startingPosition sp, goalPosition gp);
-	static AutoBase *doPortC(startingPosition sp, goalPosition gp);
-	static AutoBase *doSpy(startingPosition sp, goalPosition gp);
-	static AutoBase *doLowB(startingPosition sp, goalPosition gp);
+
+	enum eObstacle
+	{
+		Obstacle_lowBar,
+		Obstacle_cheval,
+		Obstacle_moat,
+		Obstacle_rough,
+		Obstacle_ramppart,
+		Obstacle_rockwall,
+		Obstacle_portcullis
+	};
+
+
+
+	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos, eGoalPos goalPos);
+	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp, eGoalPos *goal);
+	static AutoBase *doCheval(); //Cheval de Frise
+	static AutoBase *doMoat(); // the U-shape
+	static AutoBase *doRockW(); //Rock Wall
+	static AutoBase *doRamP(); // Ramparts
+	static AutoBase *doRoughT(); //Tough Terrain
+	static AutoBase *doPortC(); //Portcullis
+	static AutoBase *doSpy(); //Spy box
+	static AutoBase *doLowB(); // Low Bar
+
+	AutoBase();
+	AutoBase(char *style);
+	~AutoBase();
+public:
+	static AutoBase *getSelectedAuto();
 
 };
 
 #endif
+;
