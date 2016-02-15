@@ -1,4 +1,6 @@
-#include <Commands\Autonomous\AutoBase.h>
+#include <Commands/Autonomous/AutoBase.h>
+#include <Commands/DriveForward.h>
+#include <RobotMap.h>
 
 AutoBase *AutoBase::doLowB(startingPosition sp, goalPosition gp)
 {

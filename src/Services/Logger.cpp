@@ -9,11 +9,12 @@ void writeToLogFile (std::string fileName, std::string message)
 	if(loggerMutex == NULL) {
 		loggerMutex = new priority_mutex();
 	}
-	while(!loggerMutex->try_lock() && !loggerDied)  {
-		if(loggerDied) {
-			break;
-		}
-	}
+	loggerMutex->lock();
+//	while(!loggerMutex->try_lock() && !loggerDied)  {
+//		if(loggerDied) {
+//			break;
+//		}
+//	}
 	if(!loggerDied) {
 		std::ofstream logFile;
 		logFile.exceptions(std::ifstream::failbit | std::ifstream::badbit );
@@ -30,9 +31,9 @@ void writeToLogFile (std::string fileName, std::string message)
 
 			strftime(timer, 32, "%c", timeinfo); //VISUALLY AESTHETIC OKAY
 			logFile<<"["<<timer<<"] "<< ROBOT_NAME << " "<< message<<std::endl;
-			loggerMutex->unlock();
 		}
 		catch(std::ifstream::failure *e) {}
+		loggerMutex->unlock();
 	}
 }
 //add thing
