@@ -14,6 +14,7 @@ private:
 public:
 	Shooter();
 	void activateShooter(bool active);
+	void setShooterSpeed(float speed);
 	float getSpeed();
 
 
@@ -35,7 +36,7 @@ public:
 	void setRotatorSpeed(float rotatorSpeed); //now with code!
 	void setRotatorPosition(float position);
 	double getRotatorPosition(); //now with code!
-	void setRoller(rollerDirection direction, float speed);
+	void setRollerSpeed(rollerDirection direction, float speed);
 	float getRollerSpeed();
 	void setKickerSpeed(double kickerSpeed);
 	void activateKicker(bool active); //put actual things into this!

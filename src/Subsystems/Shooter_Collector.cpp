@@ -11,7 +11,7 @@ Collector::Collector() :
 }
 
 Collector::~Collector() {
-//ailis wants motor manager gone
+
 }
 
 void Collector::InitDefaultCommand() {
@@ -31,7 +31,8 @@ double Collector::getRotatorPosition() {
 	return sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
 }
 
-void Collector::setRoller(rollerDirection direction, float speed) {
+void Collector::setRollerSpeed(rollerDirection direction, float speed) {
+	motorManager->enablePID(PID_ID_ROLLER,1);
 	switch (direction) {
 	case KForward:
 		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, speed);

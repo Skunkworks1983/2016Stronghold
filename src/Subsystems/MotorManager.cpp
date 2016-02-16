@@ -37,6 +37,11 @@ MotorManager::MotorManager() :
 			COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I, COLLECTOR_ROTATION_D,
 			COLLECTOR_ROTATION_F, false);
 
+	std::vector<Motor*> RollerMotors = std::vector<Motor*>();
+	RollerMotors.push_back(getMotor(COLLECTOR_MOTOR_PORT));
+	MotorGroup * groupRoller = new MotorGroup(RollerMotors);
+	createPID(groupRoller, ROLLER_ENCODER_PORT, PID_ID_ROLLER, 0.0075,0,0,0,true);
+
 	std::vector<Motor*> ShooterMotor1 = std::vector<Motor*>();
 	ShooterMotor1.push_back(getMotor(SHOOTER_MOTOR_1_PORT));
 	MotorGroup * groupShooterMotor1 = new MotorGroup(ShooterMotor1);

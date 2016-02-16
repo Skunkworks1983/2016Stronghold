@@ -4,8 +4,6 @@
 #include "../CommandBase.h"
 #include "WPILib.h"
 #include <Subsystems/Shooter_Collector.h>
-#include <PIDOutput.h>
-#include <PIDSource.h>
 
 class ActivateRollers: public CommandBase
 {
