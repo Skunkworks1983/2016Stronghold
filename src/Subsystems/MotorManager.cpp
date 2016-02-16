@@ -89,7 +89,10 @@ void MotorManager::setSpeedForAll() {
 	}
 }
 
-int MotorManager::setPIDValues(int ID, double P, double I, double D) {
+float MotorManager::getSpeed(int ID){
+return this->Motors[ID]->GetSpeed();
+}
+int MotorManager::setPIDValues(int ID, double P, double I, double D){
 	Motors[ID]->SetPID(P, I, D);
 	return ID;
 }
@@ -167,6 +170,19 @@ Motor::Motor(Priority prioArg, int portArg) {
 }
 
 Motor::~Motor() {
+
+}void MotorManager::createPID(int motorID, int encoderID, int pidID, float P, float I, float D, float F, bool isSpeedMode){
+
+	PIDController * pidcontroller = new PIDController( P,  I,  D, F, motors[encoderID].talon , motors[motorID].talon);
+
+	if(isSpeedMode == true){
+		pidcontroller->SetPIDSourceType(PIDSourceType::kRate);
+	}
+	else{
+	pidcontroller->SetPIDSourceType(PIDSourceType::kDisplacement);
+	}
+
+	pidControllerMap[pidID] = pidcontroller;
 
 }
 

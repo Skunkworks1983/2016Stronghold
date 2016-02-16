@@ -9,7 +9,8 @@
 #define SRC_PORTCULLISAUTO_H_
 #include <Subsystems/Drivebase.h>
 #include <Commandbase.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter_Collector.h>
+#include <Commands/CollectorMove.h>
 #define EPSILON .0005f
 
 class Portcullis: public CommandBase{

@@ -40,7 +40,7 @@ void Portcullis::Execute(){
 		drivebase->setRightSpeed(0);
 		drivebase->setLeftSpeed(0);
 	}
-	collector->setRotatorPosition(turnup);
+//	CollectorMove(turnup);
 	if ((turnup - turn) < EPSILON){
 
 	}
@@ -62,7 +62,7 @@ bool Portcullis::IsFinished(){
 void Portcullis::End(){
 	drivebase->setLeftSpeed(0);
 	drivebase->setRightSpeed(0);
-	collector->setRotatorPosition(0);
+	CollectorMove(0);
 }
 
 void Portcullis::Interrupted(){
