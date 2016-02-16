@@ -44,7 +44,6 @@ OI::~OI() {
 	delete spinUpShooter;
 	delete attachHook;
 	delete engageWinch;
-
 }
 
 double OI::getLeftStickY() {
@@ -75,5 +74,6 @@ void OI::registerButtonListener()
 
 bool OI::isJoystickButtonPressed(int control, int button)
 {
-
+	//TODO: this method needs to be completed
+	return false;
 }
