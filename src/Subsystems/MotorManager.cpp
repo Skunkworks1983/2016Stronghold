@@ -102,7 +102,7 @@ void setPosition(int PID, float position) {
 }
 
 double MotorManager::GetPosition(int ID) {
-	return this->Motors[ID]->GetPosition();
+	return this->Motors[ID]->GetEncPosition();
 }
 double MotorManager::GetSpeed(int ID){
 	return this->Motors[ID]->GetSpeed();

@@ -1,6 +1,7 @@
 #ifndef DriveForward_H
 #define DriveForward_H
 #include <Subsystems/SensorManager.h>
+#include <Subsystems/MotorManager.h>
 #include <CommandBase.h>
 #include <cstdbool>
 #include "Subsystems/Drivebase.h"
@@ -8,14 +9,19 @@
 class DriveForward: public CommandBase
 {
 private:
-	float 			distance;
-	float 			speed;
-	float 			initialYaw;
-	float 			newYaw;
-	bool 			startedCorrection;
+	float 			distance; 			//In inches (or the same units as wheel diameter)
+	float 			speed;				//0-1 (decimal as percentage of full motor power)
+	float 			initialYaw;			//Initial yaw at the start of the command
+	float			initialPosition;	//Initial encoder position at start of command
 	SensorManager * sensorManager;
+	MotorManager * 	motorManager;
+	float			errorOffset;		//Current enc position - initial enc position
+
+	float			WHEEL_DIAMETER; //When we know, put it in a static variable somewhere else
+	float			ENCODER_TICKS_PER_REVOLUTION; //When we know, put it in a static variable somewhere else
+	//Todo: Check if ahrsDead and ignore all orient calls if it is
 public:
-	DriveForward(float distance, float speed, bool orient); //distance to drive, speed at which to drive, whether or not to orient after drive is complete
+	DriveForward(float distance, float speed); //distance to drive, speed at which to drive, whether or not to orient after drive is complete
 	virtual 		~DriveForward();
 	void 			Initialize();
 	void 			Execute();

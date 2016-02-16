@@ -88,7 +88,9 @@ void Collector::activateCollector(bool active) {
 float Collector::getRollerSpeed() {
 //needs code!
 	}
+void Collector::setRotatorPosition(float position){
 
+}
 
 Shooter::Shooter():
 Subsystem("Shooter"){

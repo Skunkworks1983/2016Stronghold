@@ -7,6 +7,7 @@
 #include <PIDSource.h>
 #include <SensorBase.h>
 
+class priority_mutex;
 class SkunkEncoder;
 
 struct Data {
