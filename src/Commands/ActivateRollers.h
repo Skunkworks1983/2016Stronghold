@@ -12,12 +12,6 @@ class ActivateRollers: public CommandBase
 private:
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
-	PIDController * pidController;
-	double P;
-	double I;
-	double D;
-	double PIDGet();
-	void PIDWrite(float output);
 	clock_t rollerTime;
 public:
 	ActivateRollers();
