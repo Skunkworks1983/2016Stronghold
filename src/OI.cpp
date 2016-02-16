@@ -49,7 +49,6 @@ OI::~OI() {
 	delete spinUpShooter;
 	delete rotateArm;
 	delete engageWinch;
-
 }
 
 double OI::getLeftStickY() {
