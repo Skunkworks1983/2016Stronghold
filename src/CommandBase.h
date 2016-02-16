@@ -2,6 +2,7 @@
 #define COMMAND_BASE_H
 
 #include <Commands/Command.h>
+#include <Subsystems/SensorManager.h>
 
 class Collector;
 class OI;
@@ -12,6 +13,7 @@ class OI;
  * subsystem elsewhere in your code in your code use CommandBase.examplesubsystem
  */
 class Drivebase;
+class Shooter;
 class CommandBase: public Command
 {
 public:
@@ -22,6 +24,9 @@ public:
 	static OI *oi;
 	static Drivebase *drivebase;
 	static Collector *collector;
+	static Shooter *shooter;
+	static SensorManager *sensorManager;
+
 };
 
 #endif

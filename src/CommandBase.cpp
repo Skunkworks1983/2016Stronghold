@@ -2,13 +2,19 @@
 #include <Services/Logger.h>
 #include <OI.h>
 #include <stddef.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter_Collector.h>
 #include <Subsystems/Drivebase.h>
+
 
 // Initialize a single static instance of all of your subsystems to NULL
 OI* CommandBase::oi = NULL;
 Drivebase* CommandBase::drivebase = NULL;
 Collector* CommandBase::collector = NULL;
+
+Shooter* CommandBase::shooter = NULL;
+
+SensorManager* CommandBase::sensorManager = NULL;
+
 CommandBase::CommandBase(char const *name) :
 		Command(name) {
 }
@@ -24,5 +30,8 @@ void CommandBase::init() {
 	oi = new OI();
 	drivebase = new Drivebase();
 	collector = new Collector();
+	sensorManager = SensorManager::getSensorManager();
+	sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
 	writeToLogFile(LOGFILE_NAME, "Robot initialized");
+
 }

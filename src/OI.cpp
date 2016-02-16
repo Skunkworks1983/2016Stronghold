@@ -1,5 +1,10 @@
-#include "OI.h"
+#include <Commands/ChevDeFris.h>
+#include <Commands/GeneralBreach.h>
 #include <Commands/PortcullisAuto.h>
+#include <OI.h>
+#include <Subsystems/Shooter_Collector.h>
+#include <cmath>
+#include <cstdbool>
 
 OI::OI()
 {
@@ -25,7 +30,7 @@ OI::OI()
 	spinUpShooter = new JoystickButton(op, OI_SPIN_UP_SHOOTER_PORT);
 
 	//climbing
-	attachHook = new JoystickButton(op, OI_ATTACH_HOOK_PORT);
+	rotateArm = new JoystickButton(op, OI_ROTATE_ARM_PORT);
 	engageWinch = new JoystickButton(op, OI_ENGAGE_WINCH_PORT);
 }
 
@@ -42,7 +47,7 @@ OI::~OI() {
 	delete shootLow;
 	delete shootHigh;
 	delete spinUpShooter;
-	delete attachHook;
+	delete rotateArm;
 	delete engageWinch;
 }
 
@@ -56,13 +61,13 @@ double OI::getRightStickY() {
 
 void OI::registerButtonListener()
 {
-	portcullisBreach->WhenPressed(new Portcullis (0.1, 0, 0));
-	//change values later - Superior DeSilva
-	//chevalBreach->WhenPressed(new ChevDeFris(0.1, 0, 0));
+	portcullisBreach->WhenPressed(new PortcullisAuto(0.1, 0, 0));
+	//change values later - Superior DeSilva)
+	chevalBreach->WhenPressed(new ChevDeFris(0.1, 0, 0));
 	//change values later
-	//generalBreach->WhenPressed(new BreachBasicGroup());
+	generalBreach->WhenPressed(new GeneralBreach(0.1, 0));
 	//collectBall->WhenPressed(new );
-//	collectorUp->WhenPressed(new );
+	//collectorUp->WhenPressed(new );
 	//aimAtGoal->WhenPressed(new);
 //	shootLow->WhenPressed(new);
 	//shootHigh->WhenPressed(new);
@@ -74,6 +79,5 @@ void OI::registerButtonListener()
 
 bool OI::isJoystickButtonPressed(int control, int button)
 {
-	//TODO: this method needs to be completed
 	return false;
 }

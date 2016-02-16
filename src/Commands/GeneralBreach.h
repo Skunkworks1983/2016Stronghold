@@ -5,13 +5,11 @@
 #include "WPILib.h"
 #include <Commands/DriveForward.h>
 
-class BreachBasicGroup: public CommandGroup
+class GeneralBreach: public CommandGroup
 {
 private:
-	double distance;
-	double speed;
 public:
-	BreachBasicGroup();
+	GeneralBreach(float distance, float speed);
 };
 
 #endif

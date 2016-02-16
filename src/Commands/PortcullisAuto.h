@@ -9,10 +9,11 @@
 #define SRC_PORTCULLISAUTO_H_
 #include <Subsystems/Drivebase.h>
 #include <Commandbase.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter_Collector.h>
+#include <Commands/CollectorMove.h>
 #define EPSILON .0005f
 
-class Portcullis: public CommandBase{
+class PortcullisAuto: public CommandBase{
 private:
 	float speed;
 	float distance;
@@ -21,9 +22,9 @@ private:
 	float turn;
 	bool firststop;
 public:
-	Portcullis(float speed, float distance, float turnup);
+	PortcullisAuto(float speed, float distance, float turnup);
 	void Initialize();
-	~Portcullis();
+	~PortcullisAuto();
 	void Execute();
 	bool IsFinished();
 	void End();

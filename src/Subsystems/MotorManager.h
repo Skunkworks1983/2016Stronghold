@@ -4,9 +4,13 @@
 #include <Commands/Subsystem.h>
 #include <RobotMap.h>
 #include <vector>
+#include <map>
+
+
 
 
 class CANTalon;
+class PIDController;
 
 class Encoder;
 
@@ -47,11 +51,14 @@ private:
 	Priority allowedPriority;
 
 	std::vector<Motor> motors;
+	std::map<int, PIDController*> pidControllerMap;
+
 
 	CANTalon * addMotor(Priority priority, int Port);
 
 protected:
 	double GetPosition(int ID);
+	double GetSpeed(int ID);
 
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
@@ -59,8 +66,10 @@ public:
 	void InitDefaultCommand();
 	void setPosition(int pid, float position);
 	void setSpeed(int ID, float speed);
+	float getSpeed(int ID);
 	int setPIDValues(int ID, double P, double I, double D);
 	void setPriority(Priority priorityARG);
+	void createPID(int motorID, int encoderID, int pidID, float P, float I, float D, float F, bool isSpeedMode);
 
 	static MotorManager * getMotorManager();
 	void setCForAll();

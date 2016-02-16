@@ -9,21 +9,33 @@
 #define SRC_COMMANDS_TURNDEGREE_H_
 #include <Subsystems/Drivebase.h>
 #include <CommandBase.h>
+#include <PIDOutput.h>
+#include <PIDSource.h>
+#include <CommandBase.h>
 #define ENCODER_TURN_RADIUS_RATIO 1.2 // this is a placeholder for the actual ratio
 
-class TurnDegree: public CommandBase
+class TurnDegree: public CommandBase, public PIDOutput, public PIDSource
 {
 private:
 	double degree;
-	double speed;
+	//double speed; See cpp
+	bool ahrsDead;
+	MotorManager * motorManager;
+	SensorManager * sensorManager;
+	PIDController * pidController;
 public:
-	TurnDegree(double degree, double speed); //number of degrees to turn, speed at which to turn
+	TurnDegree(double degree); //number of degrees to turn, speed at which to turn
 	virtual ~TurnDegree();
 	void Initialize();
 	void Execute();
 	bool IsFinished();
 	void End();
 	void Interrupted();
+	double P;
+	double I;
+	double D;
+	double PIDGet();
+	void PIDWrite(float output);
 };
 
 

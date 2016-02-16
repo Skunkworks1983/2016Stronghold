@@ -1,9 +1,7 @@
-#include <Commands/BreachBasic.h>
+#include "HighGoalCommandGroup.h"
 
-BreachBasicGroup::BreachBasicGroup()
+HighGoalCommandGroup::HighGoalCommandGroup()
 {
-	distance = 0;
-	speed = 0;
 	// Add Commands here:
 	// e.g. AddSequential(new Command1());
 	//      AddSequential(new Command2());
@@ -20,7 +18,9 @@ BreachBasicGroup::BreachBasicGroup()
 	// e.g. if Command1 requires chassis, and Command2 requires arm,
 	// a CommandGroup containing them would require both the chassis and the
 	// arm.
-	AddSequential(new DriveForward(distance, speed, true));
-	//AddSequential(new Align("vertical"));
+	AddSequential(new CollectorMove(30)); // Don't know where we should aim it
+	AddSequential(new SpinUpShooter());
+	AddSequential(new ActivateKicker());
+	AddSequential(new CollectorMove(0));
 
 }
