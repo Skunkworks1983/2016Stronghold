@@ -5,21 +5,24 @@
 #include <Subsystems/MotorManager.h>
 #include <CommandBase.h>
 class Shooter: public Subsystem{
-	friend class Collector;
+
 private:
+	SensorManager * sensorManager;
+	MotorManager *motorManager;
+
 	//this is the best code ever - Tucker Bowlin 2016
 public:
 	Shooter();
-	void activateShooter();
+	void activateShooter(bool active);
 	float getSpeed();
 
 
 };
-class Collector: public Subsystem, public PIDSource, public PIDOutput {
+class Collector: public Subsystem {
 private:
 	SensorManager * sensorManager;
-	MotorManager *motorManager;
-	PIDController * pidController;
+	MotorManager * motorManager;
+
 public:
 	enum rollerDirection {
 		KForward, KBackward, KStop
@@ -27,11 +30,6 @@ public:
 
 	Collector();
 	~Collector();
-	double P;
-	double I;
-	double D;
-	double PIDGet();
-	void PIDWrite(float output);
 	void InitDefaultCommand();
 	void resetEncoder();
 	void setRotatorSpeed(float rotatorSpeed); //now with code!

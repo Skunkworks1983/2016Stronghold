@@ -22,14 +22,13 @@ public:
 #include <PIDOutput.h>
 #include <PIDSource.h>
 
-class CollectorMove: public CommandBase, public PIDOutput, public PIDSource
+class CollectorMove: public CommandBase
 {
 private:
 	double degree;
 	//double speed; See cpp
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
-	PIDController * pidController;
 	int target;
 	double initialCollectorPosition;
 public:
@@ -39,11 +38,7 @@ public:
 	bool IsFinished();
 	void End();
 	void Interrupted();
-	double P;
-	double I;
-	double D;
-	double PIDGet();
-	void PIDWrite(float output);
+
 };
 
 

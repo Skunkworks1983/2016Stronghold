@@ -4,8 +4,8 @@ SpinUpShooter::SpinUpShooter()
 {
 
 	oi = new OI();
-	motormanager = MotorManager::getMotorManager();
-	sensormanager = SensorManager::getSensorManager();
+	motorManager = MotorManager::getMotorManager();
+	sensorManager = SensorManager::getSensorManager();
 
 
 
@@ -14,7 +14,7 @@ SpinUpShooter::SpinUpShooter()
 // Called just before this Command runs the first time
 void SpinUpShooter::Initialize()
 {
-	pid = new PIDController(P, I, D, this,this);
+
 
 }
 
@@ -40,13 +40,5 @@ void SpinUpShooter::End()
 // subsystems is scheduled to run
 void SpinUpShooter::Interrupted()
 {
-
-}
-double SpinUpShooter::PIDGet(){
-	return 99; //TODO:pls
-}
-void SpinUpShooter::PIDWrite(float output){
-
-
 
 }

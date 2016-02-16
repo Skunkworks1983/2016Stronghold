@@ -8,14 +8,13 @@
 #include "Subsystems/SensorManager.h"
 #include "Subsystems/SensorManager.h"
 
-class SpinUpShooter: public CommandBase, PIDSource, PIDOutput
+class SpinUpShooter: public CommandBase
 {
 
 private:
 	OI            * oi;
-	MotorManager  * motormanager;
-	SensorManager * sensormanager;
-	PIDController * pid;
+	MotorManager  * motorManager;
+	SensorManager * sensorManager;
 
 
 public:
@@ -25,12 +24,8 @@ public:
 	bool IsFinished();
 	void End();
 	void Interrupted();
-	float P;
-	float I;
-	float D;
 	float speed;
-	double PIDGet();
-	void PIDWrite(float output);
+
 
 };
 
