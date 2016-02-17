@@ -2,7 +2,7 @@
 #include <Commands/GeneralBreach.h>
 #include <Commands/PortcullisAuto.h>
 #include <OI.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter_Collector.h>
 #include <cmath>
 #include <cstdbool>
 
@@ -49,7 +49,6 @@ OI::~OI() {
 	delete spinUpShooter;
 	delete rotateArm;
 	delete engageWinch;
-
 }
 
 double OI::getLeftStickY() {

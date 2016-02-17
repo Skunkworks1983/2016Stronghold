@@ -3,6 +3,7 @@
 ChevDeFris::ChevDeFris(float speed, float distance, float shortdis){
 	Requires(drivebase);
 	Requires(collector);
+	Requires(shooter);
 	this->speed = speed;
 	this->distance = distance;
 	this->dt = 0; // distance travel starts at 0, using encoder
