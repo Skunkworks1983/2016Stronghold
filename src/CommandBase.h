@@ -3,17 +3,15 @@
 
 #include <Commands/Command.h>
 #include <Subsystems/SensorManager.h>
+#include "Subsystems/Climber.h"
 
+
+// Redeclare static classes
+class Drivebase;
 class Collector;
 class OI;
-
-/**
- * The base for all commands. All atomic commands should subclass CommandBase.
- * CommandBase stores creates and stores each control system. To access a
- * subsystem elsewhere in your code in your code use CommandBase.examplesubsystem
- */
-class Drivebase;
 class Shooter;
+
 class CommandBase: public Command
 {
 public:
@@ -24,8 +22,10 @@ public:
 	static OI *oi;
 	static Drivebase *drivebase;
 	static Collector *collector;
+
 	static Shooter *shooter;
 	static SensorManager *sensorManager;
+	static Climber *climber;
 
 };
 

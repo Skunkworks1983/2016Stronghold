@@ -14,10 +14,10 @@
 
 class DriveToSomething: public CommandBase {
 private:
-	float distance;
+	float distance; //how far you want it to go
 	float speed;
 	float dt;
-	float distant;
+	//float distant; // total distant
 public:
 	DriveToSomething(float distance,float speed);
 		void Initialize();

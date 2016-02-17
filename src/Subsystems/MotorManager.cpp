@@ -2,6 +2,8 @@
 #include "../RobotMap.h"
 #include "WPILib.h"
 
+#pragma once;
+
 MotorManager::MotorManager() :
 		Subsystem("MotorManager") {
 	allowedPriority = PRIORITY_ACCESSORIES;
@@ -13,10 +15,10 @@ MotorManager::MotorManager() :
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_2_PORT);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_3_PORT);
 
-	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_PULLY_MOTOR_1_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_PULLY_MOTOR_2_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_PULLY_MOTOR_3_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_PULLY_MOTOR_4_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT);
 
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT);
 
@@ -98,10 +100,6 @@ void MotorManager::InitDefaultCommand() {
 	//SetDefaultCommand(new MySpecialCommand());
 }
 
-void MotorManager::setPosition(int pid, float position) {
-
-}
-
 void MotorManager::setSpeed(int ID, float speed) {
 	std::vector<Motor>::iterator ptr = motors.begin();
 	std::vector<Motor>::iterator end = motors.end();
@@ -120,6 +118,7 @@ void MotorManager::setSpeed(int ID, float speed) {
 	}
 
 }
+
 void MotorManager::setSpeedForAll() {
 	std::vector<Motor>::iterator ptr = motors.begin();
 	std::vector<Motor>::iterator end = motors.end();
@@ -137,7 +136,12 @@ int MotorManager::setPIDValues(int ID, double P, double I, double D) {
 	return ID;
 }
 
-void setPosition(int PID, float position) {
+void MotorManager::setPosition(int PID, double Position) {
+
+
+	//this->Motors[PID]->setPosition(PID, position);
+	Motors[MULTI_TOOL_MOTOR_1_PORT]->CANTalon::SetPosition(Position);
+	Motors[MULTI_TOOL_MOTOR_2_PORT]->CANTalon::SetPosition(Position);
 
 }
 
