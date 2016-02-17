@@ -1,12 +1,17 @@
 #ifndef PIDGyroTest_H
 #define PIDGyroTest_H
 
-#include "CommandBase.h"
-#include "WPILib.h"
-#include "../../Subsystems/MotorManager.h"
-#include "../../Subsystems/SensorManager.h"
-#include "PIDController.h"
-#include "RobotMap.h"
+#include <CommandBase.h>
+#include <PIDOutput.h>
+#include <PIDSource.h>
+#include <cstdbool>
+
+#include <Services/MotorManager.h>
+#include <Services/SensorManager.h>
+
+class MotorManager;
+class PIDController;
+class SensorManager;
 
 class PIDGyroTest: public CommandBase, public PIDOutput, public PIDSource
 {

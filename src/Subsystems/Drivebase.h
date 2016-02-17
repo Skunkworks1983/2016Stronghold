@@ -1,9 +1,10 @@
 #ifndef DRIVEBASE_H
 #define DRIVEBASE_H
 
-#include <Subsystems/MotorManager.h>
-#include "Commands/Subsystem.h"
-#include "WPILib.h"
+#include <Commands/Subsystem.h>
+#include <Services/MotorManager.h>
+
+class MotorManager;
 
 class Drivebase: public Subsystem
 {

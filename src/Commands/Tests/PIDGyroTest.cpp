@@ -1,4 +1,6 @@
-#include "PIDGyroTest.h"
+#include <Commands/Tests/PIDGyroTest.h>
+#include <PIDController.h>
+#include <RobotMap.h>
 
 PIDGyroTest::PIDGyroTest()
 {

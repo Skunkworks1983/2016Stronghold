@@ -7,6 +7,7 @@
 #include <HAL/cpp/priority_mutex.h>
 
 CameraReader::CameraReader() {
+	thread = (pthread_t)NULL;
 	lastX = 0;
 	lastY = 0;
 	len = -1;
@@ -79,4 +80,9 @@ float CameraReader::getLastY() {
 	mutex->unlock();
 	return tempLastX;
 }
+
+double CameraReader::PIDGet(){
+	return getLastX();
+}
+
 
