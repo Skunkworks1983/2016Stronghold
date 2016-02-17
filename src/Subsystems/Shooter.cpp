@@ -1,16 +1,18 @@
-#include <Services/MotorManager.h>
-#include <Services/SensorManager.h>
 #include <Subsystems/Shooter.h>
 
-Shooter::Shooter():
+Shooter::Shooter() :
 		Subsystem("Shooter") {
+}
 
-	sensorManager = SensorManager::getSensorManager();
-	motorManager = MotorManager::getMotorManager();
+Shooter::~Shooter(){
+
+}
+
+void Shooter::InitDefaultCommand() {
+
 }
 
 void Shooter::activateShooter(bool active) {
-	//motorManager->enablePID();
 
 }
 

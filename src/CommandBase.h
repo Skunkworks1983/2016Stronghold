@@ -3,10 +3,12 @@
 
 #include <Commands/Command.h>
 
-class Collector;
+// Redeclare static classes
 class Drivebase;
+class Collector;
 class OI;
 class Shooter;
+class Climber;
 
 class CommandBase: public Command
 {
@@ -19,6 +21,7 @@ public:
 	static Drivebase *drivebase;
 	static Collector *collector;
 	static Shooter *shooter;
+	static Climber *climber;
 };
 
 #endif

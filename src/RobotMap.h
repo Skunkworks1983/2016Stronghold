@@ -3,6 +3,7 @@
 
 #include "TuningValues.h"
 
+
 #define MOVE_TOWARD_CAMERA_P 1
 #define MOVE_TOWARD_CAMERA_I 0
 #define MOVE_TOWARD_CAMERA_D 0
@@ -45,7 +46,7 @@
 
 #define COLLECTOR_ROLLER_ENCODER_PORT 19
 
-#define COLLECTOR_KICKER_MOTOR_PORT 4 //very very tentative
+#define COLLECTOR_KICKER_MOTOR_PORT 4
 
 
 /**
@@ -75,6 +76,9 @@
 /**
  * OI Ports
  */
+
+//Breach Buttons
+
 #define OI_PORTCULLIS_BREACH_PORT 0
 #define OI_BUTTON_BREACH_PORT 2
 #define OI_CHEVAL_BREACH_PORT 1
@@ -83,6 +87,11 @@
 /**
  * Collecting Buttons
  */
+
+#define POWER_BROWNOUT_VOLTAGE 7
+#define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
+#define POWER_VOLTAGE_WIDTH 1.5
+
 #define OI_COLLECT_BALL_PORT 4
 #define OI_COLLECTOR_UP_PORT 5
 

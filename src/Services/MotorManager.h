@@ -69,6 +69,8 @@ public:
 	void setSpeedForAll();
 
 	void setCForAll();
+
+	int setPIDValues(unsigned ID, double P, double I, double D);
 	void setPriority(Priority priorityARG);
 
 	void setPID(unsigned ID, double P, double I, double D);

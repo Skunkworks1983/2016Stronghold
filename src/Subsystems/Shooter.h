@@ -1,17 +1,18 @@
-#pragma once
+#ifndef SHOOTER_H
+#define SHOOTER_H
 
-class Shooter: public Subsystem{
+#include <Commands/Subsystem.h>
+#include <cstdbool>
 
+class Shooter: public Subsystem {
 private:
-	SensorManager * sensorManager;
-	MotorManager *motorManager;
-
-	//this is the best code ever - Tucker Bowlin 2016
 public:
 	Shooter();
+	~Shooter();
+	void InitDefaultCommand();
 	void activateShooter(bool active);
 	void setShooterSpeed(float speed);
 	float getSpeed();
-
-
 };
+
+#endif
