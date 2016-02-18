@@ -1,5 +1,6 @@
 //doCheval.cpp
-#include <Commands\Autonomous\AutoBase.h>
+
+#include <Commands/Autonomous/AutoBase.h>
 
 AutoBase *AutoBase::doCheval(startingPosition sp, goalPosition gp)
 {
