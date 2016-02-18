@@ -1,4 +1,7 @@
-#include "RoughTerrainAuto.h"
+#include <Commands/Driving/DriveForward.h>
+#include <Commands/Driving/TurnDegree.h>
+#include <Commands/RoughTerrainAuto.h>
+#include <Services/SensorManager.h>
 
 RoughTerrainAuto::RoughTerrainAuto()
 {

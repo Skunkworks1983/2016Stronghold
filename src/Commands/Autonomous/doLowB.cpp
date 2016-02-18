@@ -1,5 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/LowBarAuto.h>
+
 AutoBase *AutoBase::doLowB()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doLowB");

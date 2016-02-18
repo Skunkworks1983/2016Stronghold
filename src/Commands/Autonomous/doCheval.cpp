@@ -1,7 +1,8 @@
 //doCheval.cpp
 
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/ChevDeFris.h>
+#include <Commands/Defences/ChevDeFris.h>
+#include <TuningValues.h>
 
 AutoBase *AutoBase::doCheval()
 {
