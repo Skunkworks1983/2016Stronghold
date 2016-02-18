@@ -1,11 +1,15 @@
-#include "SpinUpShooter.h"
-
-SpinUpShooter::SpinUpShooter()
+#include <Commands/Shooting/SpinUpShooter.h>
+#include <OI.h>
+#include <Services/MotorManager.h>
+#include <Services/SensorManager.h>
+//
+SpinUpShooter::SpinUpShooter(float timeOut, float speed)
 {
 
 	oi = new OI();
-	motormanager = MotorManager::getMotorManager();
-	sensormanager = SensorManager::getSensorManager();
+	motorManager = MotorManager::getMotorManager();
+	sensorManager = SensorManager::getSensorManager();
+	this->timeOut = timeOut;
 
 
 
@@ -14,13 +18,15 @@ SpinUpShooter::SpinUpShooter()
 // Called just before this Command runs the first time
 void SpinUpShooter::Initialize()
 {
-	pid = new PIDController(P, I, D, this,this);
 
+SetTimeout(timeOut);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void SpinUpShooter::Execute()
 {
+motorManager->enablePID(PID_ID_SHOOTER_1, speed);
+motorManager->enablePID(PID_ID_SHOOTER_1, speed);
 
 }
 
@@ -40,13 +46,5 @@ void SpinUpShooter::End()
 // subsystems is scheduled to run
 void SpinUpShooter::Interrupted()
 {
-
-}
-double SpinUpShooter::PIDGet(){
-	return 99; //TODO:pls
-}
-void SpinUpShooter::PIDWrite(float output){
-
-
 
 }

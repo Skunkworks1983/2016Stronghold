@@ -1,36 +1,31 @@
 #ifndef SpinUpShooter_H
 #define SpinUpShooter_H
 
-#include "../CommandBase.h"
-#include "WPILib.h"
-#include "Subsystems/MotorManager.h"
-#include "OI.h"
-#include "Subsystems/SensorManager.h"
-#include "Subsystems/SensorManager.h"
+#include <CommandBase.h>
+#include <cstdbool>
 
-class SpinUpShooter: public CommandBase, PIDSource, PIDOutput
+class MotorManager;
+class SensorManager;
+
+class SpinUpShooter: public CommandBase
 {
 
 private:
 	OI            * oi;
-	MotorManager  * motormanager;
-	SensorManager * sensormanager;
-	PIDController * pid;
+	MotorManager  * motorManager;
+	SensorManager * sensorManager;
+	float timeOut;
 
 
 public:
-	SpinUpShooter();
+	SpinUpShooter(float timeOut, float speed);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
 	void End();
 	void Interrupted();
-	float P;
-	float I;
-	float D;
 	float speed;
-	double PIDGet();
-	void PIDWrite(float output);
+
 
 };
 
