@@ -3,12 +3,13 @@
 #include <Services/SensorManager.h>
 #include <cstdbool>
 //TODO: Find the correct target ticks for low goal, high goal, etc.
-CollectorMove::CollectorMove(int target)
+CollectorMove::CollectorMove(float target)
 {
 
 	this->target = target;
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
+	tolerance = 5;
 }
 
 void CollectorMove::Initialize()
@@ -18,12 +19,12 @@ void CollectorMove::Initialize()
 
 void CollectorMove::Execute()
 {
-motorManager->enablePID(PID_ID_COLLECTOR_ROTATOR, target);
+motorManager->enablePID(PID_ID_COLLECTOR, target);
 }
 
 bool CollectorMove::IsFinished()
 {
-	if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - target) <= 5) {
+	if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - target) <= tolerance) {
 		return true;
 	} else {
 		return false;

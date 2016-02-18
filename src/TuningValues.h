@@ -6,7 +6,7 @@
  */
 #define PID_ID_SHOOTER_1 0
 #define PID_ID_SHOOTER_2 1
-#define PID_ID_COLLECTOR_ROTATOR 2
+#define PID_ID_COLLECTOR 2
 #define PID_ID_TURN_DEGREE 3
 #define PID_ID_CAMERA 4
 #define PID_ID_ROLLER 5
