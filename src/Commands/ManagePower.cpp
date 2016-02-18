@@ -1,4 +1,6 @@
-#include "ManagePower.h"
+#include <Commands/ManagePower.h>
+#include <DriverStation.h>
+#include <RobotMap.h>
 
 ManagePower::ManagePower(MotorManager * managerArg) {
 

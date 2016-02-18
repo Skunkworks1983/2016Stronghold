@@ -1,0 +1,72 @@
+#ifndef TUNING_VALUES_H
+#define TUNING_VALUES_H
+
+/**
+ * PID ID's
+ */
+#define PID_ID_SHOOTER_1 0
+#define PID_ID_SHOOTER_2 1
+#define PID_ID_COLLECTOR 2
+#define PID_ID_TURN_DEGREE 3
+#define PID_ID_CAMERA 4
+#define PID_ID_ROLLER 5
+
+/**
+ * Sensor IDs
+ */
+
+#define SENSOR_GYRO_ID 0
+#define SENSOR_CAMERA_ID 1
+#define SENSOR_DRIVE_BASE_LEFT_ENCODER_ID 2
+#define SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID 3
+#define SENSOR_COLLECTOR_ROTATION_ENCODER_ID 4
+#define SENSOR_COLLECTOR_ROLLER_ENCODER_ID 5
+#define SENSOR_SHOOTER_ENCODER_1_ID 6
+#define SENSOR_SHOOTER_ENCODER_2_ID 7
+
+/**
+ * Cheval De Fris Constants
+ */
+#define CHEV_SPEED 0.5
+#define CHEV_SHORTDIST 3
+#define CHEV_DIST 5
+
+#define COLLECTOR_TURNUP 1
+#define COLLECTOR_TURNDOWN 0
+
+/**
+ * Power Management
+ */
+#define POWER_LEVEL_1 11
+#define POWER_LEVEL_2 10
+#define POWER_LEVEL_3 9
+
+#define POWER_BROWNOUT_VOLTAGE 7
+#define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
+#define POWER_VOLTAGE_WIDTH 1.5
+
+/**
+ * PID Values
+ */
+
+#define COLLECTOR_ROTATION_P 0.0075
+#define COLLECTOR_ROTATION_I 0
+#define COLLECTOR_ROTATION_D 0
+#define COLLECTOR_ROTATION_F 0.1
+
+#define SHOOTER_1_P 0.0075
+#define SHOOTER_1_I 0
+#define SHOOTER_1_D 0
+#define SHOOTER_1_F 0
+
+#define SHOOTER_2_P 0.0075
+#define SHOOTER_2_I 0
+#define SHOOTER_2_D 0
+#define SHOOTER_2_F 0
+
+#define TURN_GYRO_P 0.0075
+#define TURN_GYRO_I 0
+#define TURN_GYRO_D 0
+#define TURN_GYRO_F 0
+
+#endif
