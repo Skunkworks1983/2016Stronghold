@@ -1,8 +1,9 @@
 #ifndef ROBOTMAP_H
 #define ROBOTMAP_H
 
-#include "TuningValues.h"
+#define ROBOT_NAME "VanillaThunder"
 
+#include "TuningValues.h"
 
 #define MOVE_TOWARD_CAMERA_P 1
 #define MOVE_TOWARD_CAMERA_I 0
@@ -77,7 +78,9 @@
  * OI Ports
  */
 
-//Breach Buttons
+/**
+ * Breach Buttons
+ */
 
 #define OI_PORTCULLIS_BREACH_PORT 0
 #define OI_BUTTON_BREACH_PORT 2
@@ -112,5 +115,30 @@
  */
 #define OI_ROTATE_ARM_PORT 10
 #define OI_ENGAGE_WINCH_PORT 11
+
+//auto constants
+
+#define LOGFILE_NAME "/U/robotLog"
+
+#define CHEVAL_ENCODER_TICKS 0
+#define MOAT_ENCODER_TICKS 0
+#define ROCKWALL_ENCODER_TICKS 0
+#define RAMPART_ENCODER_TICKS 0
+#define ROUGHTERRAIN_ENCODER_TICKS 0
+#define PORTCULLIS_ENCODER_TICKS 0
+#define SALLYPORT_ENCODER_TICKS 0
+#define LOWBAR_ENCODER_TICKS 0
+
+#define CHEVAL_SPEED 1
+#define MOAT_SPEED 1
+#define ROCKWALL_SPEED 1
+#define RAMPART_SPEED 1
+#define ROUGHTERRAIN_SPEED 1
+#define PORTCULLIS_SPEED 1
+#define SALLYPORT_SPEED 1
+#define LOWBAR_SPEED 1
+
+#define MOTOR_DIAMETER 8
+#define TICKS_REVOLUTION 360
 
 #endif

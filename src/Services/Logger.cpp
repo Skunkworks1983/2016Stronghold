@@ -2,20 +2,38 @@
 #include <ctime>
 #include <fstream>
 #include <string>
+#include <RobotMap.h>
 
 void writeToLogFile (std::string fileName, std::string message)
 {
-	std::ofstream logFile;
-	logFile.exceptions(std::ifstream::failbit | std::ifstream::badbit );
-	try
-	{
-		logFile.open(fileName.c_str(), std::ios::app);
-		time_t timer = time(NULL);
-		logFile<<timer<<" "<<message<<std::endl;
+	if(loggerMutex == NULL) {
+		loggerMutex = new priority_mutex();
 	}
-	catch(std::ifstream::failure *e)
-	{
+	loggerMutex->lock();
+//	while(!loggerMutex->try_lock() && !loggerDied)  {
+//		if(loggerDied) {
+//			break;
+//		}
+//	}
+	if(!loggerDied) {
+		std::ofstream logFile;
+		logFile.exceptions(std::ifstream::failbit | std::ifstream::badbit );
+		try
+		{
 
+			logFile.open(fileName.c_str(), std::ios::app);
+			time_t rawtime;
+			struct tm * timeinfo;
+			char timer [32];
+
+			time (&rawtime);
+			timeinfo = localtime(&rawtime);
+
+			strftime(timer, 32, "%c", timeinfo); //VISUALLY AESTHETIC OKAY
+			logFile<<"["<<timer<<"] "<< ROBOT_NAME << " "<< message<<std::endl;
+		}
+		catch(std::ifstream::failure *e) {}
+		loggerMutex->unlock();
 	}
 }
 //add thing
