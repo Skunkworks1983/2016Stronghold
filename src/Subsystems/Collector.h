@@ -1,12 +1,16 @@
-#ifndef COLLECTOR_H
-#define COLLECTOR_H
+#pragma once
 
-#include <Subsystems/MotorManager.h>
-#include <CommandBase.h>
+#include <Commands/Subsystem.h>
+#include <cstdbool>
+
+class MotorManager;
+class SensorManager;
 
 class Collector: public Subsystem {
 private:
-	MotorManager *motorManager;
+	SensorManager * sensorManager;
+	MotorManager * motorManager;
+
 public:
 	enum rollerDirection {
 		KForward, KBackward, KStop
@@ -15,13 +19,15 @@ public:
 	Collector();
 	~Collector();
 	void InitDefaultCommand();
-	void setLeftSpeed(double speed);
-	void setRightSpeed(double speed);
 	void resetEncoder();
-	void setMotorPosition();
+	void setRotatorSpeed(float rotatorSpeed); //now with code!
 	void setRotatorPosition(float position);
-	void setRoller(rollerDirection direction, float speed);
+	double getRotatorPosition(); //now with code!
+	void setRollerSpeed(rollerDirection direction, float speed);
+	float getRollerSpeed();
+	void setKickerSpeed(double kickerSpeed);
+	void activateKicker(bool active); //put actual things into this!
+	void activateShooter(bool active); //parameterize this and also put actual things into this!
+	void activateCollector(bool active); //put actual things into this!
 
 };
-
-#endif
