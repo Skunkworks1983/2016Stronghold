@@ -9,24 +9,29 @@ class Robot: public IterativeRobot {
 private:
 	LiveWindow *lw;
 
-	void RobotInit() {
+	void RobotInit()
+	{
 		CommandBase::init();
 		lw = LiveWindow::GetInstance();
 	}
 
-	void DisabledPeriodic() {
+	void DisabledPeriodic()
+	{
 		Scheduler::GetInstance()->Run();
 	}
 
-	void AutonomousInit() {
+	void AutonomousInit()
+	{
 
 	}
 
-	void AutonomousPeriodic() {
+	void AutonomousPeriodic()
+	{
 		Scheduler::GetInstance()->Run();
 	}
 
-	void TeleopInit() {
+	void TeleopInit()
+	{
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to 
 		// continue until interrupted by another command, remove
@@ -34,11 +39,13 @@ private:
 
 	}
 
-	void TeleopPeriodic() {
+	void TeleopPeriodic()
+	{
 		Scheduler::GetInstance()->Run();
 	}
 
-	void TestPeriodic() {
+	void TestPeriodic()
+	{
 		lw->Run();
 	}
 };

@@ -1,9 +1,7 @@
-#include <Commands/BreachBasic.h>
+#include <Commands/GeneralBreach.h>
 
-BreachBasicGroup::BreachBasicGroup()
+GeneralBreach::GeneralBreach(float distance, float speed)
 {
-	distance = 0;
-	speed = 0;
 	// Add Commands here:
 	// e.g. AddSequential(new Command1());
 	//      AddSequential(new Command2());
@@ -20,7 +18,7 @@ BreachBasicGroup::BreachBasicGroup()
 	// e.g. if Command1 requires chassis, and Command2 requires arm,
 	// a CommandGroup containing them would require both the chassis and the
 	// arm.
-	AddSequential(new DriveForward(distance, speed, true));
+	AddSequential(new DriveForward(distance, speed));
 	//AddSequential(new Align("vertical"));
 
 }

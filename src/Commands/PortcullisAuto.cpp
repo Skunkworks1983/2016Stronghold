@@ -4,11 +4,12 @@
  *  Created on: Jan 27, 2016
  *      Author: s-2507264
  */
-#include <PortcullisAuto.h>
-#include<Subsystems/Drivebase.h>
-#include<Subsystems/Collector.h>
 
-Portcullis::Portcullis(float speed, float distance, float turnup){
+#include <Commands/PortcullisAuto.h>
+#include <cmath>
+#include <cstdbool>
+
+PortcullisAuto::PortcullisAuto(float speed, float distance, float turnup){
 	Requires(drivebase);
 	Requires(collector);
 	this->speed = speed;
@@ -20,7 +21,7 @@ Portcullis::Portcullis(float speed, float distance, float turnup){
 
 }
 
-void Portcullis::Initialize(){
+void PortcullisAuto::Initialize(){
 	drivebase->resetEncoder();
 	drivebase->setLeftSpeed(speed);
 	drivebase->setRightSpeed(speed);
@@ -28,11 +29,11 @@ void Portcullis::Initialize(){
 
 
 }
-Portcullis::~Portcullis(){
+PortcullisAuto::~PortcullisAuto(){
 
 }
 
-void Portcullis::Execute(){
+void PortcullisAuto::Execute(){
 	this->dt = drivebase->getRightDistance();
 	if (fabs(distance-dt) <= EPSILON && firststop==false) {
 		this->firststop = true;
@@ -49,7 +50,7 @@ void Portcullis::Execute(){
 	}
 
 
-bool Portcullis::IsFinished(){
+bool PortcullisAuto::IsFinished(){
 	if ((2*distance-dt) <= EPSILON && (turnup-turn) <= EPSILON){
 		return true;
 	}
@@ -58,12 +59,12 @@ bool Portcullis::IsFinished(){
 	}
 }
 
-void Portcullis::End(){
+void PortcullisAuto::End(){
 	drivebase->setLeftSpeed(0);
 	drivebase->setRightSpeed(0);
 	collector->setRotatorPosition(0);
 }
 
-void Portcullis::Interrupted(){
+void PortcullisAuto::Interrupted(){
 	End();
 }
