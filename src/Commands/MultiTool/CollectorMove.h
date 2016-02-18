@@ -30,7 +30,7 @@ private:
 	float target;
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
-	float tolerance;
+
 public:
 	CollectorMove(float target);
 	void Initialize();

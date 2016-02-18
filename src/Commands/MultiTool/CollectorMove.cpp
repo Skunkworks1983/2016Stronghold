@@ -9,7 +9,6 @@ CollectorMove::CollectorMove(float target)
 	this->target = target;
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
-	tolerance = 5;
 }
 
 void CollectorMove::Initialize()
@@ -24,7 +23,7 @@ motorManager->enablePID(PID_ID_COLLECTOR, target);
 
 bool CollectorMove::IsFinished()
 {
-	if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - target) <= tolerance) {
+	if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - target) <= COLLECTOR_ROTATOR_TOLERANCE) {
 		return true;
 	} else {
 		return false;

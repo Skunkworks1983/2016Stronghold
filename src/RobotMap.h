@@ -62,6 +62,8 @@
 
 #define COLLECTOR_KICKER_MOTOR_PORT 4
 
+#define COLLECTOR_ROTATOR_TOLERANCE 5
+
 
 /**
  * Climber
