@@ -100,13 +100,19 @@
 #define OI_ROTATE_ARM_PORT 10
 #define OI_ENGAGE_WINCH_PORT 11
 
-//auto constants
+//cheval de frise auto constants
 #define CHEV_SPEED 0.5
 #define CHEV_SHORTDIST 3
 #define CHEV_DIST 5
 
+//low bar auto
+#define LOWB_DISTANCE 5
+#define LOWB_SPEED .5
+#define LOWB_TURN 1.0
+
 #define LOGFILE_NAME "/U/robotLog"
 
+//autobase
 #define DIP_CHANNEL_POSITION_START 0
 #define DIP_CHANNEL_POSITIONS 3
 #define DIP_CHANNEL_POSITION_END 	DIP_CHANNEL_POSITION_START 	+ DIP_CHANNEL_POSITIONS
