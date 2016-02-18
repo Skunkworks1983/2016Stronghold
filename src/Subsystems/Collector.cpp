@@ -1,49 +1,73 @@
-#include <CANTalon.h>
+#include <RobotMap.h>
 #include <Subsystems/Collector.h>
+#include <Services/MotorManager.h>
+#include <Services/SensorManager.h>
 
 //TODO: set position of collector
 //TODO: set speed
 Collector::Collector() :
-Subsystem("Collector") {
+		Subsystem("Collector") {
+	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
 
 }
 
-Collector::~Collector(){
-//ailis wants motor manager gone
-}
-
-void Collector::InitDefaultCommand(){
+Collector::~Collector() {
 
 }
 
-void Collector::resetEncoder(){
+void Collector::InitDefaultCommand() {
+
+}
+
+void Collector::resetEncoder() {
 	// motorManager->resetRollerEncoder(0.0);
 }
 
-void Collector::setMotorPosition(){
-	motorManager->setPosition(5, 2);
+void Collector::setRotatorSpeed(float rotatorSpeed) {
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, rotatorSpeed);
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_2_PORT, rotatorSpeed);
 }
 
-void Collector::setRotatorPosition(float position){
-
+double Collector::getRotatorPosition() {
+	return sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
 }
 
-void Collector::setRoller(rollerDirection direction, float speed){
-	switch(direction){
+void Collector::setRollerSpeed(rollerDirection direction, float speed) {
+	switch (direction) {
 	case KForward:
 		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, speed);
-		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_2_PORT, speed);
 		break;
 
 	case KBackward:
-		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT,-speed);
-		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_2_PORT,-speed);
+		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, -speed);
 		break;
 
 	case KStop:
 		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, 0.0);
-		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_2_PORT, 0.0);
 		break;
 	}
 }
+
+void Collector::setKickerSpeed(double kickerSpeed) {
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, kickerSpeed);
+
+}
+
+void Collector::activateKicker(bool active) {
+	if (active == true) {
+
+	}
+}
+float Collector::getRollerSpeed() {
+//needs code!
+	return 0.0;
+	}
+void Collector::setRotatorPosition(float position){
+
+}
+
+void Collector::activateCollector(bool active){
+
+}
+

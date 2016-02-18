@@ -1,11 +1,9 @@
 #ifndef RoughTerrainAuto_H
 #define RoughTerrainAuto_H
 
-#include "Commands/CommandGroup.h"
-#include "WPILib.h"
-#include "Subsystems/SensorManager.h"
-#include "DriveForward.h"
-#include "TurnDegree.h"
+#include <Commands/CommandGroup.h>
+
+class SensorManager;
 
 class RoughTerrainAuto: public CommandGroup
 {

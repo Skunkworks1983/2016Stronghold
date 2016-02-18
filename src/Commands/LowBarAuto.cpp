@@ -1,4 +1,6 @@
-#include "LowBarAuto.h"
+#include <Commands/Driving/DriveForward.h>
+#include <Commands/Driving/TurnDegree.h>
+#include <Commands/LowBarAuto.h>
 
 LowBarAuto::LowBarAuto()
 {

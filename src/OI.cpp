@@ -1,8 +1,7 @@
-#include <Commands/ChevDeFris.h>
-#include <Commands/GeneralBreach.h>
-#include <Commands/PortcullisAuto.h>
+#include <Commands/Defences/ChevDeFris.h>
+#include <Commands/Defences/GeneralBreach.h>
+#include <Commands/Defences/PortcullisAuto.h>
 #include <OI.h>
-#include <Subsystems/Collector.h>
 #include <cmath>
 #include <cstdbool>
 
@@ -49,7 +48,6 @@ OI::~OI() {
 	delete spinUpShooter;
 	delete rotateArm;
 	delete engageWinch;
-
 }
 
 double OI::getLeftStickY() {
