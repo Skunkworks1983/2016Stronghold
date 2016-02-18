@@ -34,7 +34,6 @@ float Drivebase::getRightDistance(){
 
 float Drivebase::getLeftDistance(){
 	return SensorManager::getSensorManager()->GetEncoderPosition(DRIVEBASE_LEFT_ENCODER_PORT);
-
 } //Maybe move to somewhere else. Not now -Eli
 
 void Drivebase::setLeftSpeed(double speed) {

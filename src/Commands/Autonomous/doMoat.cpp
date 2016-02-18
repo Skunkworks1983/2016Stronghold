@@ -1,6 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
 
-AutoBase *AutoBase::doMoat(startingPosition sp, goalPosition gp)
+AutoBase *AutoBase::doMoat()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doMoat");
 	//cmd->AddSequential(new DriveForward(myCommandParameters));

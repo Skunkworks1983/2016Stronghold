@@ -11,6 +11,10 @@
 #define PID_ID_CAMERA 4
 #define PID_ID_ROLLER 5
 
+#define LOWB_DISTANCE 1
+#define LOWB_SPEED 1
+#define LOWB_TURN 1
+
 /**
  * Sensor IDs
  */
