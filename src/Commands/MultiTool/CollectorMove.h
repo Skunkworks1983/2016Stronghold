@@ -31,7 +31,7 @@ private:
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
 public:
-	CollectorMove(int target);
+	CollectorMove(float target);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
