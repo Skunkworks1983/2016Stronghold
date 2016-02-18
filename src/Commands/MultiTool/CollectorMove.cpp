@@ -2,19 +2,13 @@
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <cstdbool>
-
+//TODO: Find the correct target ticks for low goal, high goal, etc.
 CollectorMove::CollectorMove(int target)
 {
 
-	this->degree = degree;
-	//this->speed = speed; Speed is not passed in, would be tricky to implement with PID
-	sensorManager = SensorManager::getSensorManager();
-
-	motorManager = MotorManager::getMotorManager();
-
 	this->target = target;
-	initialCollectorPosition = collector->getRotatorPosition();
-
+	sensorManager = SensorManager::getSensorManager();
+	motorManager = MotorManager::getMotorManager();
 }
 
 void CollectorMove::Initialize()
@@ -24,14 +18,16 @@ void CollectorMove::Initialize()
 
 void CollectorMove::Execute()
 {
-
-
-
+motorManager->enablePID(PID_ID_COLLECTOR_ROTATOR, target);
 }
 
 bool CollectorMove::IsFinished()
 {
-return true;
+	if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - target) <= 5) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void CollectorMove::End()

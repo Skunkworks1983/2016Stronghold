@@ -13,9 +13,7 @@ private:
 //	SensorManager * sensorManager; //not being used for anything, but could be useful?
 	MotorManager * motorManager;
 	Collector * collector;
-	clock_t kickTime;
-	bool kickerActivated;
-	bool kickerDone;
+	float timeOut;
 public:
 	ActivateKicker();
 	void Initialize();
