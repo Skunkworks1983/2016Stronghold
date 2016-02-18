@@ -4,7 +4,6 @@ AutoBase *AutoBase::doSpy()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doSpy");
 	//cmd->AddSequential(new myCommand(myCommandParameters));
-		//Add commands here
 	return cmd;
 }
 

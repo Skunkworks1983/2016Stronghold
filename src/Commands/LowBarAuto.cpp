@@ -1,6 +1,8 @@
-#include "LowBarAuto.h"
+#include <Commands/Driving/DriveForward.h>
+#include <Commands/Driving/TurnDegree.h>
+#include <Commands/LowBarAuto.h>
 
-LowBarAuto::LowBarAuto()
+LowBarAuto::LowBarAuto(float distance, float speed, float turn)
 {
 	AddSequential(new DriveForward(5, 1));
 	AddSequential(new TurnDegree(45)); //or until aligned with tower

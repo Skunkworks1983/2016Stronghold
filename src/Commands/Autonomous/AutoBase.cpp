@@ -45,6 +45,8 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 	}
 
+	//TODO: move to desired goal
+
 	switch (goalPos) {
 	case high:
 		break;
