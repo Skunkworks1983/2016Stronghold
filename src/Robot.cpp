@@ -3,16 +3,26 @@
 #include <IterativeRobot.h>
 #include <LiveWindow/LiveWindow.h>
 #include <RobotBase.h>
+#include <SmartDashboard/SmartDashboard.h>
+#include <Commands/Debug/EncoderOutput.h>
+#include <Commands/Debug/ResetEncoders.h>
+#include <RobotMap.h>
 
 
 class Robot: public IterativeRobot {
 private:
 	LiveWindow *lw;
+	EncoderOutput * encoderOutput;
 
 	void RobotInit()
 	{
 		CommandBase::init();
 		lw = LiveWindow::GetInstance();
+		if(DEBUG) {
+			SmartDashboard::PutData("Reset Encoders", new ResetEncoders());
+			encoderOutput = new EncoderOutput();
+			encoderOutput->Start();
+		}
 	}
 
 	void DisabledPeriodic()

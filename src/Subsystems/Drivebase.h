@@ -20,7 +20,7 @@ public:
 	void resetEncoder();
 	void setLeftSpeed(double speed);
 	void setRightSpeed(double speed);
-	float getLeftDistance(); //Maybe to be removed? Check on later -Eli
+	float getLeftDistance();
 	float getRightDistance();
 };
 
