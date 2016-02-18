@@ -1,3 +1,4 @@
+#include "AutoBase.h"
 #include <Commands/Autonomous/AutoBase.h>
 
 AutoBase *AutoBase::doRockW()

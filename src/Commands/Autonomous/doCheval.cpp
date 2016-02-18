@@ -1,5 +1,4 @@
 //doCheval.cpp
-
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Defences/ChevDeFris.h>
 #include <TuningValues.h>
