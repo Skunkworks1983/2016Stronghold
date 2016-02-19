@@ -3,17 +3,19 @@
 #include <Services/SensorManager.h>
 #include <Subsystems/Collector.h>
 
-ActivateRollers::ActivateRollers()
+ActivateRollers::ActivateRollers(float timeOut)
 {
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
-	this->rollerTime = 0;
+	this->timeOut = timeOut;
 }
 
 // Called just before this Command runs the first time
 void ActivateRollers::Initialize()
 {
-	rollerTime = 0;
+	SetTimeout(timeOut);
+	collector->setRollerSpeed(Collector::KForward, 1);
+
 }
 
 // Called repeatedly when this Command is scheduled to run

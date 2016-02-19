@@ -4,6 +4,8 @@
 #include <CommandBase.h>
 #include <cstdbool>
 #include <ctime>
+#include <TuningValues.h>
+#include <RobotMap.h>
 
 class MotorManager;
 class SensorManager;
@@ -14,8 +16,9 @@ private:
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
 	clock_t rollerTime;
+	float timeOut;
 public:
-	ActivateRollers();
+	ActivateRollers(float timeOut);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

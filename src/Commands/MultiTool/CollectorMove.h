@@ -21,18 +21,17 @@ public:
 #include <PIDOutput.h>
 #include <PIDSource.h>
 #include <Subsystems/Collector.h>
+#include <TuningValues.h>
+#include <RobotMap.h>
 
 class CollectorMove: public CommandBase
 {
 private:
-	double degree;
-	//double speed; See cpp
+	float target;
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
-	int target;
-	double initialCollectorPosition;
 public:
-	CollectorMove(int target);
+	CollectorMove(float target);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
@@ -40,9 +39,5 @@ public:
 	void Interrupted();
 
 };
-
-
-
-
 
 #endif /* SRC_COMMANDS_TURNDEGREE_H_ */
