@@ -1,5 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
-
+#include <Commands/Driving/DriveForward.h>
+#include <Commands/MultiTool/CollectorMove.h>
 AutoBase *AutoBase::doPortC()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doPortC");

@@ -7,7 +7,7 @@
 
 AutoBase *AutoBase::doCheval()
 {
-	AutoBase *cmd = new AutoBase("Autonomous-doCheval");
+	AutoBase*cmd = new AutoBase("Autonomous-doCheval");
 	cmd->AddSequential(new CollectorMove(1.0f));
 	cmd->AddSequential(new DriveForward( 5 ,1.0));
 	cmd->AddSequential(new CollectorMove(0.0f));
