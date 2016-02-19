@@ -1,50 +1,43 @@
-#include <CommandBase.h>
+#include <Commands/ManagePower.h>
 #include <Commands/Scheduler.h>
-#include <IterativeRobot.h>
-#include <LiveWindow/LiveWindow.h>
+#include <Robot.h>
 #include <RobotBase.h>
+#include <Services/MotorManager.h>
+#include <Services/SensorManager.h>
 
+void Robot::RobotInit() {
+	SensorManager::getSensorManager();
+	MotorManager::getMotorManager();
+	//SensorManager::getSensorManager()->initGyro();
+	CommandBase::init();
+	//lw = LiveWindow::GetInstance();
+	managePower = new ManagePower();
+	managePower->Start();
+}
 
-class Robot: public IterativeRobot {
-private:
-	LiveWindow *lw;
+void Robot::DisabledPeriodic() {
+	Scheduler::GetInstance()->Run();
+}
 
-	void RobotInit()
-	{
-		CommandBase::init();
-		lw = LiveWindow::GetInstance();
-	}
+void Robot::AutonomousInit() {
 
-	void DisabledPeriodic()
-	{
-		Scheduler::GetInstance()->Run();
-	}
+}
 
-	void AutonomousInit()
-	{
+void Robot::AutonomousPeriodic() {
+	Scheduler::GetInstance()->Run();
+}
 
-	}
+void Robot::TeleopInit() {
 
-	void AutonomousPeriodic()
-	{
-		Scheduler::GetInstance()->Run();
-	}
+}
 
-	void TeleopInit()
-	{
+void Robot::TeleopPeriodic() {
+	Scheduler::GetInstance()->Run();
+}
 
-	}
-
-	void TeleopPeriodic()
-	{
-		Scheduler::GetInstance()->Run();
-	}
-
-	void TestPeriodic()
-	{
-		lw->Run();
-	}
-};
+void Robot::TestPeriodic() {
+	//lw->Run();
+}
 
 START_ROBOT_CLASS(Robot);
 

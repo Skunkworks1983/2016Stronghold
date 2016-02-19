@@ -7,8 +7,12 @@
 
 OI::OI()
 {
+#if USE_GAMEPAD
+	gamepad = new Joystick(OI_JOYSTICK_GAMEPAD);
+#else
 	leftStick = new Joystick(OI_JOYSTICK_LEFT_PORT);
 	rightStick = new Joystick(OI_JOYSTICK_RIGHT_PORT);
+#endif
 	op = new Joystick(OI_OPERATOR_PORT);
 
 	//breaching
@@ -34,8 +38,12 @@ OI::OI()
 }
 
 OI::~OI() {
+#if USE_GAMEPAD
+	delete gamepad;
+#else
 	delete leftStick;
 	delete rightStick;
+#endif
 	delete op;
 	delete portcullisBreach;
 	delete chevalBreach;
@@ -51,11 +59,19 @@ OI::~OI() {
 }
 
 double OI::getLeftStickY() {
+#if USE_GAMEPAD
+	return -gamepad->GetY()*fabs(gamepad->GetY());
+#else
 	return leftStick->GetY()*fabs(leftStick->GetY());
+#endif
 }
 
 double OI::getRightStickY() {
+#if USE_GAMEPAD
+	return -gamepad->GetAxis(Joystick::AxisType::kThrottleAxis)*fabs(gamepad->GetAxis(Joystick::AxisType::kThrottleAxis));
+#else
 	return rightStick->GetY()*fabs(rightStick->GetY());
+#endif
 }
 
 void OI::registerButtonListener()

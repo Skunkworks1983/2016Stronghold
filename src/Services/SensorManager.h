@@ -33,8 +33,10 @@ private:
 	SensorManager();
 	~SensorManager();
 	//Declare other sensor types later (Encoder, Vision, etc)
+
 public:
 	static SensorManager* getSensorManager();
+	void initGyro();
 	float GetLightSensorVoltage();
 	float getYaw();
 	float getPitch();

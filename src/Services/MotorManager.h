@@ -1,7 +1,6 @@
 #ifndef MOTOR_MANAGER_H
 #define MOTOR_MANAGER_H
 
-#include <Commands/Subsystem.h>
 #include <PIDController.h>
 #include <PIDOutput.h>
 #include <cstdbool>
@@ -51,9 +50,15 @@ private:
 	MotorManager();
 	~MotorManager();
 	MotorManager(const MotorManager &);
+
+	void initClimber();
+	void initDriveBase();
+	void initShooter();
+	void initCollector();
+
 	Priority allowedPriority;
 
-	std::vector<Motor*> motors;
+	std::vector<Motor*> motors = std::vector<Motor*>();
 	std::map<int, PIDController*> pidControllerMap;
 
 	void addMotor(Priority priority, int Port);

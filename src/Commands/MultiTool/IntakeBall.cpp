@@ -37,8 +37,8 @@ void IntakeBall::Initialize() {
 
 void IntakeBall::Execute() {
 	collectorRotatorPosition = sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
-	void ExecuteAiming();
-	void ExecuteCollecting();
+	ExecuteResetting();
+	ExecuteCollecting();
 }
 
 void IntakeBall::ExecuteCollecting() {

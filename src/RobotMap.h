@@ -5,6 +5,18 @@
 
 #include "TuningValues.h"
 
+#define USE_DRIVEBASE 1
+#define USE_COLLECTOR 0
+#define USE_CLIMBER 0
+#define USE_SHOOTER 0
+
+#define USE_LOGGING 1
+
+#define USE_GYRO 0
+#define USE_CAMERA 0
+
+#define USE_GAMEPAD 1
+
 #define MOVE_TOWARD_CAMERA_P 1
 #define MOVE_TOWARD_CAMERA_I 0
 #define MOVE_TOWARD_CAMERA_D 0
@@ -32,7 +44,9 @@
 
 #define OI_JOYSTICK_LEFT_PORT 0
 #define OI_JOYSTICK_RIGHT_PORT 1
-#define OI_OPERATOR_PORT 2
+#define OI_OPERATOR_PORT 5
+
+#define OI_JOYSTICK_GAMEPAD 0
 
 /**
  * DriveBase
@@ -46,8 +60,8 @@
 #define DRIVEBASE_RIGHTMOTOR_2_PORT 14
 #define DRIVEBASE_RIGHTMOTOR_3_PORT 15
 
-#define DRIVEBASE_RIGHT_ENCODER_PORT 0
-#define DRIVEBASE_LEFT_ENCODER_PORT 4
+#define DRIVEBASE_RIGHT_ENCODER_PORT 1
+#define DRIVEBASE_LEFT_ENCODER_PORT 14
 
 /**
  * Collector

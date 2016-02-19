@@ -36,40 +36,29 @@ double Sensor::PIDGet() {
 }
 
 SensorManager::SensorManager() {
+#if USE_GYRO
+	initGyro();
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_GYRO_ID, new Sensor(ahrs)));
+#endif
+#if USE_CAMERA
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_CAMERA_ID, new Sensor(CameraReader::getCameraReader())));
+#endif
+#if USE_DRIVEBASE
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_DRIVE_BASE_LEFT_ENCODER_ID, new Sensor(SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)));
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID, new Sensor(SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)));
+#endif
+#if USE_COLLECTOR
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_COLLECTOR_ROTATION_ENCODER_ID, new Sensor(SENSOR_COLLECTOR_ROTATION_ENCODER_ID)));
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_COLLECTOR_ROLLER_ENCODER_ID, new Sensor(SENSOR_COLLECTOR_ROLLER_ENCODER_ID)));
+#endif
+#if USE_SHOOTER
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_SHOOTER_ENCODER_1_ID, new Sensor(SENSOR_SHOOTER_ENCODER_1_ID)));
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_SHOOTER_ENCODER_2_ID, new Sensor(SENSOR_SHOOTER_ENCODER_2_ID)));
-
-	ahrsDead = false;
-	try {
-		//ahrs = new AHRS(SPI::Port::kMXP);
-		ahrs = new AHRS(I2C::Port::kMXP);
-		ahrs->Reset();
-		counter = 0;
-		while (!ahrs->IsConnected()) {
-			printf("AHRS NOT CONNECTED\n");
-			counter++;
-			if (counter > AHRS_CYCLE_TIMEOUT) {
-				std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
-				ahrsDead = true;
-				break;
-			}
-		}
-		printf("Is the AHRS connected? %s",
-				(ahrs->IsConnected() ? "Yes\n" : "no\n"));
-	} catch (std::exception * ex) {
-		std::string err_string = "Error instantiating navX MXP:  ";
-		std::cout << err_string;
-		err_string += ex->what();
-		std::cout << err_string;
-		std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
-		ahrsDead = true;
-	}
+#endif
+#if USE_CLIMBER
+	sensors.insert(std::pair<int, Sensor*>(SENSOR_CLIMBER_WINCH_ENCODER, new Sensor(SENSOR_CLIMBER_WINCH_ENCODER)));
+	sensors.insert(std::pair<int, Sensor*>(SENSOR_CLIMBER_ARM_ENCODER, new Sensor(SENSOR_CLIMBER_ARM_ENCODER)));
+#endif
 }
 
 SensorManager::~SensorManager() {
@@ -78,12 +67,41 @@ SensorManager::~SensorManager() {
 
 SensorManager* SensorManager::getSensorManager() {
 	static SensorManager *instance;
-	if (instance == 0) {
+	if (instance == NULL) {
 		instance = new SensorManager();
 	}
 	return instance;
 
 }
+
+void SensorManager::initGyro(){
+	ahrsDead = false;
+		try {
+			//ahrs = new AHRS(SPI::Port::kMXP);
+			ahrs = new AHRS(I2C::Port::kMXP);
+			ahrs->Reset();
+			counter = 0;
+			while (!ahrs->IsConnected()) {
+				printf("AHRS NOT CONNECTED\n");
+				counter++;
+				if (counter > AHRS_CYCLE_TIMEOUT) {
+					std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
+					ahrsDead = true;
+					break;
+				}
+			}
+			printf("Is the AHRS connected? %s",
+					(ahrs->IsConnected() ? "Yes\n" : "no\n"));
+		} catch (std::exception * ex) {
+			std::string err_string = "Error instantiating navX MXP:  ";
+			std::cout << err_string;
+			err_string += ex->what();
+			std::cout << err_string;
+			std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
+			ahrsDead = true;
+		}
+}
+
 float SensorManager::getYaw() {
 	return ahrs->GetYaw();
 }
@@ -94,7 +112,6 @@ float SensorManager::getPitch() {
 
 float SensorManager::getRoll() {
 	return ahrs->GetAngle();
-	//return ahrs->GetRoll();
 }
 
 float SensorManager::GetAccelX() {
@@ -118,12 +135,11 @@ double SensorManager::GetEncoderPosition(int ID) {
 
 }
 double SensorManager::GetSpeed(int ID) {
-
 	return MotorManager::getMotorManager()->GetSpeed(ID);
 }
 
 Sensor* SensorManager::getSensor(unsigned ID) {
-	if (ID >= 0 && ID < sensors.size()) {
+	if (sensors.count(ID) < 1 && ID >= 0 && ID < sensors.size()) {
 		return sensors[ID];
 	} else {
 		return NULL;

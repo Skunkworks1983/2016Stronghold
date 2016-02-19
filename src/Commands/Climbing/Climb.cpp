@@ -24,7 +24,6 @@ void Climb::Initialize()
 
 void Climb::Execute()
 {
-	climber->getWinchSpeed();
 	float currentWinchPos = climber->getWinchPos();
 	float totaldistance = currentWinchPos - winchStartPos;
 
