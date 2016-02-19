@@ -12,27 +12,27 @@
 MotorManager::MotorManager(){
 	allowedPriority = PRIORITY_ACCESSORIES;
 
-	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_1_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_2_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_3_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_1_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_2_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_3_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_1_PORT, CIM_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_2_PORT, CIM_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_3_PORT, CIM_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_1_PORT, CIM_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_2_PORT, CIM_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_3_PORT, CIM_MAX_CURRENT);
 
-	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_1_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_2_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_3_PORT);
-	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_4_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_1_PORT, RS775_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_2_PORT, RS775_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_3_PORT, RS775_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_4_PORT, RS775_MAX_CURRENT);
 
-	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT);
+	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT, RS775_MAX_CURRENT);
 
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS, COLLECTOR_ROTATOR_MOTOR_1_PORT);
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS, COLLECTOR_ROTATOR_MOTOR_2_PORT);
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS, COLLECTOR_ROTATOR_MOTOR_1_PORT, RS775_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS, COLLECTOR_ROTATOR_MOTOR_2_PORT, RS775_MAX_CURRENT);
 
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS, COLLECTOR_ROLLER_MOTOR_1_PORT);
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS, COLLECTOR_ROLLER_MOTOR_1_PORT, RS775_MAX_CURRENT);
 
-	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_1_PORT);
-	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_2_PORT);
+	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_1_PORT, MINI_CIM_MAX_CURRENT);
+	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_2_PORT, MINI_CIM_MAX_CURRENT);
 
 	std::vector<Motor*> RotationCollectorMotors = std::vector<Motor*>();
 	RotationCollectorMotors.push_back(getMotor(COLLECTOR_ROTATOR_MOTOR_1_PORT));
@@ -95,20 +95,23 @@ void MotorManager::setPosition(unsigned pidID, float position) {
 }
 
 void MotorManager::setSpeed(unsigned ID, float speed) {
-	std::vector<Motor*>::iterator ptr = motors.begin();
+	if(motors[ID]->stoppedStartTime == 0) {
+		std::vector<Motor*>::iterator ptr = motors.begin();
 
-	for (; ptr != motors.end(); ++ptr) {
-		if ((*ptr)->port == ID) {
-			(*ptr)->speed = speed;
+		for (; ptr != motors.end(); ++ptr) {
+			if ((*ptr)->port == ID) {
+				(*ptr)->speed = speed;
 
-			if ((*ptr)->motorPriority >= allowedPriority) {
-				(*ptr)->talon->Set(speed * (*ptr)->C);
-			} else {
-				(*ptr)->talon->Set(speed);
+				if ((*ptr)->motorPriority >= allowedPriority) {
+					(*ptr)->talon->Set(speed * (*ptr)->C);
+				} else {
+					(*ptr)->talon->Set(speed);
+				}
+				break;
 			}
-			break;
 		}
 	}
+
 
 }
 void MotorManager::setSpeedForAll() {
@@ -183,12 +186,15 @@ MotorManager * MotorManager::getMotorManager() {
 	return &motorManager;
 }
 
-void MotorManager::addMotor(Priority priority, int Port) {
-	Motor * motor = new Motor(priority, Port);
+void MotorManager::addMotor(Priority priority, int Port, float maxCurrent) {
+	Motor * motor = new Motor(priority, Port, maxCurrent);
 	motors.push_back(motor);
 }
 
-Motor::Motor(Priority prioArg, int portArg) {
+Motor::Motor(Priority prioArg, int portArg, float maxCurrent) {
+	this->maxCurrent = maxCurrent;
+	overCurrentStartTime = 0;
+	stoppedStartTime = 0;
 	port = portArg;
 	speed = 0;
 	motorPriority = prioArg;
@@ -241,6 +247,8 @@ MotorGroup::~MotorGroup(){
 
 void MotorGroup::PIDWrite(float output) {
 	for (unsigned i = 0; i < motorList.size(); i++) {
-		motorList[i]->talon->Set(output * motorList[i]->C);
+		if(motorList[i]->stoppedStartTime == 0) {
+			motorList[i]->talon->Set(output * motorList[i]->C);
+		}
 	}
 }

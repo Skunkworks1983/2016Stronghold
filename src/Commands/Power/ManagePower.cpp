@@ -1,4 +1,4 @@
-#include <Commands/ManagePower.h>
+#include <Commands/Power/ManagePower.h>
 #include <DriverStation.h>
 #include <RobotMap.h>
 

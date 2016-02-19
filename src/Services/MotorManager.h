@@ -11,6 +11,7 @@
 class CANTalon;
 class PIDController;
 class Encoder;
+class StallProtection;
 
 enum Priority {
 	PRIORITY_FIRST,
@@ -25,12 +26,15 @@ class Motor {
 private:
 
 public:
-	Motor(Priority prioArg, int portArg);
+	Motor(Priority prioArg, int portArg, float maxCurrent);
 	~Motor();
 	CANTalon * talon;
-	float      speed;
-	Priority   motorPriority;
-	unsigned    	   port;
+	float speed;
+	float maxCurrent;
+	long long int overCurrentStartTime;
+	long long int stoppedStartTime;
+	Priority motorPriority;
+	unsigned port;
 	float C;
 	void setC(Priority priority, float voltage );
 };
@@ -46,6 +50,7 @@ public:
 
 class MotorManager {
 	friend class SensorManager;
+	friend class StallProtection;
 	friend class Motor;
 private:
 	MotorManager();
@@ -56,7 +61,7 @@ private:
 	std::vector<Motor*> motors;
 	std::map<int, PIDController*> pidControllerMap;
 
-	void addMotor(Priority priority, int Port);
+	void addMotor(Priority priority, int Port, float maxCurrent);
 
 protected:
 	double GetPosition(unsigned ID);

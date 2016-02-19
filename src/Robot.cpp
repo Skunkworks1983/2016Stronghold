@@ -6,6 +6,7 @@
 #include <SmartDashboard/SmartDashboard.h>
 #include <Commands/Debug/EncoderOutput.h>
 #include <Commands/Debug/ResetEncoders.h>
+#include <Commands/Power/StallProtection.h>
 #include <RobotMap.h>
 
 
@@ -13,6 +14,7 @@ class Robot: public IterativeRobot {
 private:
 	LiveWindow *lw;
 	EncoderOutput * encoderOutput;
+	StallProtection * stallProtect;
 
 	void RobotInit()
 	{
@@ -23,6 +25,7 @@ private:
 			encoderOutput = new EncoderOutput();
 			encoderOutput->Start();
 		}
+		stallProtect = new StallProtection(); //Possibly temporary
 	}
 
 	void DisabledPeriodic()
