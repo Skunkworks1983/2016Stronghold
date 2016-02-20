@@ -1,12 +1,10 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/DriveForward.h>
-#include <RobotMap.h>
-#include <Commands/LowBarAuto.h>
 
 AutoBase *AutoBase::doLowB()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doLowB");
-	AddSequential(new DriveForward(5, 1));
+	cmd->AddSequential(new DriveForward(5, 1));
 //	does it need to handle anything after driving forward?
 //	AddSequential(new TurnDegree(45)); //or until aligned with tower
 //	or
@@ -15,8 +13,5 @@ AutoBase *AutoBase::doLowB()
 //	AddSequential(new HighGoalCommandGroup()); not actually in this branch
 
 //	AddSequential(LowGoalCommandGroup());
+	return cmd;
 }
-
-
-
-

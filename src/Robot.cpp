@@ -1,12 +1,12 @@
-#include <Commands/ManagePower.h>
-#include <Commands/Scheduler.h>
+#include <Commands/Power/ManagePower.h>
 #include <Robot.h>
 #include <RobotBase.h>
+#include <RobotMap.h>
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
-#include <string>
-#include <RobotMap.h>
+#include <TuningValues.h>
+#include <cstdio>
 
 void Robot::RobotInit() {
 	char nothing[1024];
@@ -23,6 +23,7 @@ void Robot::RobotInit() {
 	managePower = new ManagePower();
 	managePower->Start();
 }
+
 
 void Robot::DisabledPeriodic() {
 	Scheduler::GetInstance()->Run();

@@ -15,11 +15,6 @@ OI::OI()
 #endif
 	op = new Joystick(OI_OPERATOR_PORT);
 
-	//breaching
-	portcullisBreach = new JoystickButton(op, OI_PORTCULLIS_BREACH_PORT);
-	chevalBreach = new JoystickButton(op, OI_CHEVAL_BREACH_PORT);
-	generalBreach = new JoystickButton(op, OI_GENERAL_BREACH_PORT);
-
 	//collector
 	collectBall = new JoystickButton(op, OI_COLLECT_BALL_PORT);
 	collectorUp = new JoystickButton(op, OI_COLLECTOR_UP_PORT);

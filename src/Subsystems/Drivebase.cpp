@@ -30,10 +30,9 @@ float Drivebase::getRightDistance() {
 			DRIVEBASE_RIGHT_ENCODER_PORT);
 }
 
-float Drivebase::getLeftDistance() {
-	return SensorManager::getSensorManager()->GetEncoderPosition(
-			DRIVEBASE_LEFT_ENCODER_PORT);
-} //Maybe move to somewhere else. Not now -Eli
+float Drivebase::getLeftDistance(){
+	return SensorManager::getSensorManager()->GetEncoderPosition(DRIVEBASE_LEFT_ENCODER_PORT);
+}
 
 void Drivebase::setLeftSpeed(double speed) {
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_LEFTMOTOR_1_PORT,
@@ -52,4 +51,3 @@ void Drivebase::setRightSpeed(double speed) {
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_RIGHTMOTOR_3_PORT,
 			-speed);
 }
-
