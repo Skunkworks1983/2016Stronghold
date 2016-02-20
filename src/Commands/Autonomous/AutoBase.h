@@ -50,10 +50,12 @@ private:
 	static AutoBase *doPortC(); //Portcullis
 	static AutoBase *doSpy(); //Spy box
 	static AutoBase *doLowB(); // Low Bar
+	SensorManager * sensorManager;
 
 	AutoBase();
 	AutoBase(char *style);
 	~AutoBase();
+	float initialPosition;
 public:
 	static AutoBase *getSelectedAuto();
 
