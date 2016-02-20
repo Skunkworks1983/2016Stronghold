@@ -8,6 +8,6 @@
 
 static priority_mutex * loggerMutex = NULL;
 static bool loggerDied = false;
-void writeToLogFile (std::string fileName, std::string message);
+void writeToLogFile (const std::string &fileName,const std::string &message);
 
 #endif /* SRC_SERVICES_LOGGER_H_ */

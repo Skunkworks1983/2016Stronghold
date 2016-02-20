@@ -46,8 +46,7 @@ void RotateTowardCameraTarget::PIDWrite(float output) {
 	if (CameraReader::getCameraReader()->getLastX() != INVALID) {
 		int range = 1;
 		if (output < -range || output > range) {
-			printf("Output outside of range !(%d < %f < %d)", -range, output,
-					range);
+			//printf("Output outside of range !(%d < %f < %d)", -range, output, range);
 			return;
 		}
 
@@ -55,13 +54,13 @@ void RotateTowardCameraTarget::PIDWrite(float output) {
 		drivebase->setLeftSpeed(output);
 		drivebase->setRightSpeed(- output);
 	}else{
-		printf("CAMERA READER READ IS INVALID\n");
+		//printf("CAMERA READER READ IS INVALID\n");
 	}
 }
 
 double RotateTowardCameraTarget::PIDGet() {
 	if (CameraReader::getCameraReader()->getLastX() == INVALID) {
-		printf("CAMERA READER READ IS INVALID\n");
+		//printf("CAMERA READER READ IS INVALID\n");
 		//CameraReader::getCameraReader()->stopReading();
 		if(invalidCount++ > 20){
 			CameraReader::getCameraReader()->stopReading();

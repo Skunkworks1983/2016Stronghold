@@ -2,11 +2,13 @@
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <cstdbool>
-//TODO: Find the correct target ticks for low goal, high goal, etc.
+
+
+//TODO: Find the conversion ratio for encoder ticks to degrees
 CollectorMove::CollectorMove(float target)
 {
 
-	this->target = target;
+	this->target = target * COLLECTOR_ENCODER_TICKS_TO_ANGLE;
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
 }

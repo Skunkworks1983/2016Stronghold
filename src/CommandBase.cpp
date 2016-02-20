@@ -29,11 +29,19 @@ void CommandBase::init() {
 	// Create a single static instance of all of your subsystems. The following
 	// line should be repeated for each subsystem in the project.
 	oi = new OI();
+#if USE_DRIVEBASE
 	drivebase = new Drivebase();
+#endif
+#if USE_COLLECTOR
 	collector = new Collector();
+#endif
+#if USE_CLIMBER
 	climber = new Climber();
+#endif
+#if USE_SHOOTER
 	shooter = new Shooter();
-
+#endif
+#if USE_LOGGING
 	writeToLogFile(LOGFILE_NAME, "Robot initialized");
-
+#endif
 }

@@ -4,7 +4,7 @@
 #include <string>
 #include <RobotMap.h>
 
-void writeToLogFile (std::string fileName, std::string message)
+void writeToLogFile (const std::string &fileName, const std::string &message)
 {
 	if(loggerMutex == NULL) {
 		loggerMutex = new priority_mutex();
@@ -32,9 +32,9 @@ void writeToLogFile (std::string fileName, std::string message)
 			strftime(timer, 32, "%c", timeinfo); //VISUALLY AESTHETIC OKAY
 			logFile<<"["<<timer<<"] "<< ROBOT_NAME << " "<< message<<std::endl;
 		}
-		catch(std::ifstream::failure *e) {}
-		loggerMutex->unlock();
+		catch(/*std::ifstream::failure *e*/...) {}
 	}
+	loggerMutex->unlock();
 }
 //add thing
 

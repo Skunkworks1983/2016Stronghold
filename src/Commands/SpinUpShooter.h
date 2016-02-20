@@ -15,7 +15,7 @@ private:
 	MotorManager  * motorManager;
 	SensorManager * sensorManager;
 	float timeOut;
-	float speed;
+
 
 public:
 	SpinUpShooter(float timeOut, float speed);
@@ -24,6 +24,7 @@ public:
 	bool IsFinished();
 	void End();
 	void Interrupted();
+	float speed;
 
 
 };

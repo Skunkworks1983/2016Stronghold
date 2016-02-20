@@ -20,8 +20,10 @@ private:
 	MotorManager * 	motorManager;
 	float			errorOffset;		//Current enc position - initial enc position
 	//Todo: Check if ahrsDead and ignore all orient calls if it is
+	void            setDistance(float distance, float speed);
 public:
 	DriveForward(float distance, float speed); //distance to drive (ENCODER TICKS), speed at which to drive, whether or not to orient after drive is complete
+
 	virtual 		~DriveForward();
 	void 			Initialize();
 	void 			Execute();
