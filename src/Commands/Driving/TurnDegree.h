@@ -44,7 +44,4 @@ public:
 };
 
 
-
-
-
 #endif /* SRC_COMMANDS_TURNDEGREE_H_ */

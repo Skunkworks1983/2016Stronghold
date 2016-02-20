@@ -75,6 +75,11 @@ MotorManager::MotorManager(){
 	createPID(groupCamara, SENSOR_CAMERA_ID, PID_ID_CAMERA, MOVE_TOWARD_CAMERA_P,
 			MOVE_TOWARD_CAMERA_I, MOVE_TOWARD_CAMERA_D, MOVE_TOWARD_CAMERA_F, false);
 
+	std::vector<Motor*> armMotors;
+	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
+	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
+	createPID(groupArmMotors,CLIMBER_ARM_ENCODER_PORT, PID_ID_ARM,  0.0075,0,0,0, false  );
+
 }
 
 Motor *MotorManager::getMotor(unsigned ID) {
