@@ -10,6 +10,8 @@
 #define PID_ID_TURN_DEGREE 3
 #define PID_ID_CAMERA 4
 #define PID_ID_ROLLER 5
+#define PID_ID_DRIVEBASE_LEFT 6
+#define PID_ID_DRIVEBASE_RIGHT 7
 
 /**
  * Sensor IDs
@@ -68,5 +70,17 @@
 #define TURN_GYRO_I 0
 #define TURN_GYRO_D 0
 #define TURN_GYRO_F 0
+
+#define DRIVEBASE_LEFT_P 0.0075
+#define DRIVEBASE_LEFT_I 0
+#define DRIVEBASE_LEFT_D 0
+#define DRIVEBASE_LEFT_F 0
+
+#define DRIVEBASE_RIGHT_P 0
+#define DRIVEBASE_RIGHT_I 0
+#define DRIVEBASE_RIGHT_D 0
+#define DRIVEBASE_RIGHT_F 0
+
+
 
 #endif

@@ -38,11 +38,12 @@ float Drivebase::getLeftDistance(){
 }
 
 void Drivebase::setLeftSpeed(double speed) {
-
+	motorManager->enablePID(PID_ID_DRIVEBASE_LEFT, speed);
 
 }
 
 void Drivebase::setRightSpeed(double speed) {
 
+	motorManager->enablePID(PID_ID_DRIVEBASE_RIGHT, speed);
 }
 
