@@ -1,14 +1,19 @@
 #include <Commands/Autonomous/AutoBase.h>
+#include <Commands/Driving/DriveForward.h>
+#include <Commands/Driving/TurnDegree.h>
+#include <Services/SensorManager.h>
 
 AutoBase *AutoBase::doMoat()
 {
-	sensorManager = SensorManager::getSensorManager();
-
+	SensorManager * sensorManager = SensorManager::getSensorManager();
+	float initialPosition;
 	AutoBase *cmd = new AutoBase("Autonomous-doMoat");
-	//cmd->AddSequential(new DriveForward(myCommandParameters));
-		//Add commands here
 	initialPosition = sensorManager->getYaw();
-	AddSequential(new DriveForward(5, 1));
-	AddSequential(new TurnDegree(sensorManager->getYaw() - initialPosition));
+
+	cmd->AddSequential(new DriveForward(5, 1));
+
+	float turnAngle = sensorManager->getYaw() - initialPosition;
+	cmd->AddSequential(new TurnDegree(turnAngle));
+
 	return cmd;
 }

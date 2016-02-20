@@ -23,7 +23,7 @@ motorManager->enablePID(PID_ID_COLLECTOR, target);
 
 bool CollectorMove::IsFinished()
 {
-	if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - target) <= 5) {
+	if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - target) <= COLLECTOR_ROTATION_TOLERANCE) {
 		return true;
 	} else {
 		return false;
