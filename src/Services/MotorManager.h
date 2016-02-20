@@ -21,13 +21,22 @@ enum Priority {
 	PRIORITY_ACCESSORIES,
 	PRIORITYS
 };
+enum ESubsystem {
+	DRIVEBASE,
+	WINCH,
+	ARM,
+	COLLECTOR_ROTATOR,
+	ROLLER,
+	SHOOTER
+};
 class Motor {
 	friend class MotorManager;
 private:
 
 public:
-	Motor(Priority prioArg, int portArg, float maxCurrent);
+	Motor(Priority prioArg, int portArg, float maxCurrent, ESubsystem parentSubsystem);
 	~Motor();
+	ESubsystem parentSubsystem;
 	CANTalon * talon;
 	float speed;
 	float maxCurrent;
@@ -46,6 +55,7 @@ public:
 	MotorGroup(std::vector<Motor*> motorgroup);
 	virtual ~MotorGroup();
 	void PIDWrite(float output);
+	int getPID(Motor motor);
 };
 
 class MotorManager {
@@ -61,7 +71,7 @@ private:
 	std::vector<Motor*> motors;
 	std::map<int, PIDController*> pidControllerMap;
 
-	void addMotor(Priority priority, int Port, float maxCurrent);
+	void addMotor(Priority priority, int Port, float maxCurrent, ESubsystem subsystem);
 
 protected:
 	double GetPosition(unsigned ID);
@@ -82,7 +92,9 @@ public:
 	void createPID(MotorGroup * group, unsigned PIDSourceID, unsigned pidID, float P, float I, float D, float F, bool isSpeedMode);
 	void setPIDF(unsigned pidID, float P, float I, float D, float F);
 	void enablePID(unsigned pidID, float setPoint);
+	void enablePID(unsigned pidID);
 	void disablePID(unsigned pidID);
+	bool isPIDEnabled(unsigned pidID);
 
 	static MotorManager * getMotorManager();
 };
