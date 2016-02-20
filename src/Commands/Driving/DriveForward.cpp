@@ -9,7 +9,7 @@ DriveForward::DriveForward(float distance, float speed)
 	//ENCODER_TICKS_PER_REVOLUTION = 1000;//CHANGE
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
-	this->distance = distance;
+	this->distance = ((distance/DISTANCE_NUMBER));
 	this->speed = speed;
 	initialYaw = 0.0;
 	initialPosition = 0.0;
@@ -18,8 +18,8 @@ DriveForward::DriveForward(float distance, float speed)
 
 DriveForward::~DriveForward()
 {
-}
 
+}
 void DriveForward::Initialize()
 {
 	initialYaw = sensorManager->getYaw();

@@ -7,6 +7,7 @@ AutoBase *AutoBase::doRockW()
 	//cmd->AddSequential(new myCommand(myCommandParameters));
 		//Add commands here
 	return cmd;
+
 }
 
 

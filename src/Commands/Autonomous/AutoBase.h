@@ -6,13 +6,15 @@
 #include "RobotMap.h"
 #include <vector>
 #include <DigitalInput.h>
+#include "Commands/Driving/DriveForward.h"
+#include "Commands/Driving/RotateTowardCameraTarget.h"
+#include "Commands/Driving/TurnDegree.h"
 
 class SensorManager;
 
 class AutoBase: public CommandGroup
 {
 private:
-
 	enum eGoalPos
 	{
 		high,
@@ -20,8 +22,7 @@ private:
 	};
 
 	enum eStartPos
-	{
-		spy,
+	{	spy,
 		lowBar,
 		posZero,
 		posOne,
@@ -39,8 +40,6 @@ private:
 		Obstacle_rockwall,
 		Obstacle_portcullis
 	};
-
-
 
 	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos, eGoalPos goalPos);
 	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp, eGoalPos *goal);

@@ -364,7 +364,6 @@ void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 void MotorManager::setPIDF(unsigned pidID, float P, float I, float D, float F) {
 	pidControllerMap[pidID]->SetPID(P, I, D, F);
 }
-
 void MotorManager::enablePID(unsigned pidID, float setPoint) {
 	pidControllerMap[pidID]->SetSetpoint(setPoint);
 	pidControllerMap[pidID]->Enable();
