@@ -8,6 +8,7 @@ class ManagePower;
 class Robot: public IterativeRobot {
 private:
 	ManagePower *managePower;
+	int count;
 public:
 	void RobotInit();
 	void DisabledPeriodic();

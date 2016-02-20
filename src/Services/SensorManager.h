@@ -29,7 +29,7 @@ class SensorManager
 	friend class MotorManager;
 private:
 	AHRS * ahrs;
-	std::map<int,Sensor*> sensors;
+	std::map<unsigned,Sensor*> sensors;
 	SensorManager();
 	~SensorManager();
 	//Declare other sensor types later (Encoder, Vision, etc)

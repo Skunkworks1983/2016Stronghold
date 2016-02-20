@@ -19,6 +19,7 @@ enum Priority {
 	PRIORITY_ACCESSORIES,
 	PRIORITYS
 };
+
 class Motor {
 	friend class MotorManager;
 private:
@@ -58,8 +59,8 @@ private:
 
 	Priority allowedPriority;
 
-	std::vector<Motor*> motors = std::vector<Motor*>();
-	std::map<int, PIDController*> pidControllerMap;
+	std::map<unsigned, Motor*> motors;
+	std::map<unsigned, PIDController*> pidControllerMap;
 
 	void addMotor(Priority priority, int Port);
 

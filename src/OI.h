@@ -10,11 +10,8 @@
 class OI
 {
 private:
-#if USE_GAMEPAD
 	Joystick *gamepad;
-#else
 	Joystick *leftStick, *rightStick;
-#endif
 	Joystick *op;
 public:
 	//breaching buttons

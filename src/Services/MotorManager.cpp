@@ -1,17 +1,23 @@
+#include <assert.h>
 #include <CANTalon.h>
-#include <Commands/ManagePower.h>
 #include <DriverStation.h>
 #include <PIDSource.h>
 #include <RobotMap.h>
-#include <stddef.h>
+#include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <TuningValues.h>
 #include <cmath>
+#include <cstdio>
 #include <iterator>
 
 MotorManager::MotorManager() {
 	allowedPriority = PRIORITY_ACCESSORIES;
+	char str[1024];
+	sprintf(str, "MotorManager Constructor Called");
+	writeToLogFile(LOGFILE_NAME, str);
+
+	motors = std::map<unsigned, Motor*>();
 
 #if USE_DRIVEBASE
 	initDriveBase();
@@ -25,8 +31,6 @@ MotorManager::MotorManager() {
 #if USE_SHOOTER
 	initShooter();
 #endif
-
-	//managePower->Start();
 }
 
 void MotorManager::initClimber() {
@@ -61,6 +65,9 @@ void MotorManager::initDriveBase() {
 	driveBaseMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
 	driveBaseMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
 */
+	char str[1024];
+	sprintf(str, "Created DriveBase Motors");
+	writeToLogFile(LOGFILE_NAME, str);
 #if USE_GYRO
 	MotorGroup * groupGyroTurnMotors = new MotorGroup(driveBaseMotors);
 	createPID(groupGyroTurnMotors, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
@@ -119,10 +126,15 @@ void MotorManager::initCollector() {
 			0, 0, 0, true);
 }
 
-Motor *MotorManager::getMotor(unsigned ID) {
-	if (ID < 0 || ID >= motors.size()) {
+Motor * MotorManager::getMotor(unsigned ID) {
+	if (ID < 0 || motors.count(ID) < 1) {
+		std::string str = "ID: " + ID;
+		writeToLogFile(LOGFILE_NAME, str);
 		return NULL;
 	}
+	char str[1024];
+	sprintf(str, "Returning getMotor(%d)", ID);
+	writeToLogFile(LOGFILE_NAME, str);
 	return motors[ID];
 }
 
@@ -137,17 +149,17 @@ void MotorManager::setPosition(unsigned pidID, float position) {
 }
 
 void MotorManager::setSpeed(unsigned ID, float speed) {
-	std::vector<Motor*>::iterator ptr = motors.begin();
+	std::map<unsigned, Motor*>::iterator ptr = motors.begin();
 
 	for (; ptr != motors.end(); ++ptr) {
-		if ((*ptr)->port == ID) {
-			(*ptr)->speed = speed;
+		if ((*ptr).second->port == ID) {
+			(*ptr).second->speed = speed;
 
-			if ((*ptr)->talon != NULL) {
-				if ((*ptr)->motorPriority >= allowedPriority) {
-					(*ptr)->talon->Set(speed * (*ptr)->C);
+			if ((*ptr).second->talon != NULL) {
+				if ((*ptr).second->motorPriority >= allowedPriority) {
+					(*ptr).second->talon->Set(speed * (*ptr).second->C);
 				} else {
-					(*ptr)->talon->Set(speed);
+					(*ptr).second->talon->Set(speed);
 				}
 			}
 			break;
@@ -156,11 +168,11 @@ void MotorManager::setSpeed(unsigned ID, float speed) {
 
 }
 void MotorManager::setSpeedForAll() {
-	std::vector<Motor*>::iterator ptr = motors.begin();
-	std::vector<Motor*>::iterator end = motors.end();
+	std::map<unsigned, Motor*>::iterator ptr = motors.begin();
+	std::map<unsigned, Motor*>::iterator end = motors.end();
 
 	for (; ptr != end; ++ptr) {
-		setSpeed((*ptr)->port, (*ptr)->speed);
+		setSpeed((*ptr).second->port, (*ptr).second->speed);
 	}
 }
 
@@ -190,18 +202,17 @@ double MotorManager::GetSpeed(unsigned ID) {
 
 void MotorManager::setPriority(Priority priorityArg) {
 
-	std::vector<Motor*>::iterator ptr = motors.begin();
-	std::vector<Motor*>::iterator end = motors.end();
+	std::map<unsigned, Motor*>::iterator ptr = motors.begin();
 
 	allowedPriority = priorityArg;
 
-	for (; ptr != end; ++ptr) {
-		if ((*ptr)->talon != NULL) {
+	for (; ptr != motors.end(); ++ptr) {
+		if ((*ptr).second->talon != NULL) {
 
-			if ((*ptr)->motorPriority > priorityArg) {
-				(*ptr)->talon->Set(0);
+			if ((*ptr).second->motorPriority > priorityArg) {
+				(*ptr).second->talon->Set(0);
 			} else {
-				(*ptr)->talon->Set((*ptr)->speed);
+				(*ptr).second->talon->Set((*ptr).second->speed);
 			}
 		}
 	}
@@ -227,35 +238,50 @@ void Motor::setC(Priority priorityArg, float voltage) {
 }
 
 void MotorManager::setCForAll() {
-	std::vector<Motor*>::iterator ptr = motors.begin();
-	std::vector<Motor*>::iterator end = motors.end();
+	std::map<unsigned, Motor*>::iterator ptr = motors.begin();
+	std::map<unsigned, Motor*>::iterator end = motors.end();
 
 	for (; ptr != end; ++ptr) {
-		(*ptr)->setC(allowedPriority,
+		(*ptr).second->setC(allowedPriority,
 				DriverStation::GetInstance().GetBatteryVoltage());
 	}
 
 }
 
 MotorManager * MotorManager::getMotorManager() {
-	static MotorManager *motorManager;
+	static MotorManager *motorManager = NULL;
 	if (motorManager == NULL) {
 		motorManager = new MotorManager();
 	}
 	return motorManager;
 }
 
-void MotorManager::addMotor(Priority priority, int Port) {
-	Motor * motor = new Motor(priority, Port);
-	motors.push_back(motor);
+void MotorManager::addMotor(Priority priority, int PortAndID) {
+	Motor * motor = new Motor(priority, PortAndID);
+	motors.insert(std::pair<int, Motor*>(PortAndID, motor));
 }
 
 Motor::Motor(Priority prioArg, int portArg) {
+	char str[1024];
+	sprintf(str, "Motor Constructor Created");
+	writeToLogFile(LOGFILE_NAME, str);
 	port = portArg;
 	speed = 0;
 	motorPriority = prioArg;
+
+	const char * uintStr = "Unsigned Value: %d";
+
 	if (SensorBase::CheckPWMChannel(port)) {	//TODO: make sure this works
 		talon = new CANTalon(port);
+	}else{
+		char *thing = new char[30];
+		sprintf(thing, uintStr, portArg);
+		writeToLogFile(LOGFILE_NAME, thing);
+
+		sprintf(thing, uintStr, portArg);
+		writeToLogFile(LOGFILE_NAME, thing);
+		//assert(0);
+		delete []thing;
 	}
 	C = 1;
 }
