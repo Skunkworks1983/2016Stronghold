@@ -10,6 +10,8 @@
 #define PID_ID_TURN_DEGREE 3
 #define PID_ID_CAMERA 4
 #define PID_ID_ROLLER 5
+#define PID_ID_ARM 6
+
 #define PID_ID_DRIVEBASE_LEFT 6
 #define PID_ID_DRIVEBASE_RIGHT 7
 

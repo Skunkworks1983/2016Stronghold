@@ -30,7 +30,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_rough:
-		auto_base->AddSequential(AutoBase::doMoat());
+		auto_base->AddSequential(AutoBase::doRoughT());
 		break;
 
 	case Obstacle_ramppart:

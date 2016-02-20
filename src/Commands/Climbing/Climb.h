@@ -3,7 +3,7 @@
 
 #include <CommandBase.h>
 #include <cstdbool>
-
+#include <Subsystems/Climber.h>
 #define CLIMBDISTANCE 50.f
 
 class Climb: public CommandBase

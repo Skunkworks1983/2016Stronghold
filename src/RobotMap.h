@@ -9,6 +9,7 @@
 #define USE_COLLECTOR 0
 #define USE_CLIMBER 0
 #define USE_SHOOTER 0
+#define USE_ARM 0
 
 #define USE_LOGGING 1
 
@@ -92,6 +93,8 @@
 #define COLLECTOR_KICKER_MOTOR_PORT 4
 #define COLLECTOR_ENCODER_TICKS_TO_ANGLE 1
 
+#define COLLECTOR_ROTATOR_TOLERANCE 5
+
 
 /**
  * Climber
@@ -105,6 +108,8 @@
 #define CLIMBER_WINCH_ENCODER_PORT -1
 
 #define CLIMBER_ARM_MOTOR_PORT 10
+#define CLIMBER_ARM_ENCODER_PORT 15
+#define CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS 1.5f
 
 /**
  * Shooter
@@ -161,8 +166,6 @@
 //auto constants
 
 #define LOGFILE_NAME "/U/robotLog"
-
-#define COLLECTOR_ROTATION_TOLERANCE 5
 
 #define CHEVAL_ENCODER_TICKS 0
 #define MOAT_ENCODER_TICKS 0
