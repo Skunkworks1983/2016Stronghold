@@ -6,6 +6,5 @@
 AutoBase *AutoBase::doMoat()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doMoat");
-
 	return cmd;
 }
