@@ -16,5 +16,8 @@ AutoBase *AutoBase::doPortC()
 }
 
 
-
-
+/*lower collector,
+ * move forward
+ * raise collector
+ * move forward/drive through
+*/
