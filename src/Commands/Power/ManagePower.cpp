@@ -1,13 +1,11 @@
 #include <Commands/Power/ManagePower.h>
 #include <DriverStation.h>
-#include <RobotMap.h>
+#include <Services/MotorManager.h>
+#include <SmartDashboard/SmartDashboard.h>
+#include <TuningValues.h>
 
-ManagePower::ManagePower(MotorManager * managerArg) {
-
-	manager = managerArg;
-
-	// Use Requires() here to declare subsystem dependencies
-	// eg. Requires(chassis);
+ManagePower::ManagePower() {
+	manager = MotorManager::getMotorManager();
 }
 
 // Called just before this Command runs the first time
@@ -18,6 +16,7 @@ void ManagePower::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void ManagePower::Execute() {
 	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
+	SmartDashboard::PutNumber("Battery Voltage", voltage);
 
 	if (voltage >= POWER_LEVEL_1) {	//SHIELDS ARE UP CAPPIN'
 		manager->setPriority(PRIORITY_ACCESSORIES);
@@ -35,8 +34,6 @@ void ManagePower::Execute() {
 
 	manager->setCForAll();
 	manager->setSpeedForAll();
-
-
 }
 
 // Make this return true when this Command no longer needs to run execute()

@@ -10,7 +10,9 @@
 class OI
 {
 private:
-	Joystick *leftStick, *rightStick, *op;
+	Joystick *gamepad;
+	Joystick *leftStick, *rightStick;
+	Joystick *op;
 public:
 	//breaching buttons
 	JoystickButton *portcullisBreach;

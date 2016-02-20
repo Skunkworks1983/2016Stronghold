@@ -1,29 +1,32 @@
-#ifndef ActivateRollers_H
-#define ActivateRollers_H
+#ifndef SpinUpShooter_H
+#define SpinUpShooter_H
 
 #include <CommandBase.h>
 #include <cstdbool>
-#include <ctime>
-#include <TuningValues.h>
-#include <RobotMap.h>
 
 class MotorManager;
 class SensorManager;
 
-class ActivateRollers: public CommandBase
+class SpinUpShooter: public CommandBase
 {
+
 private:
-	MotorManager * motorManager;
+	OI            * oi;
+	MotorManager  * motorManager;
 	SensorManager * sensorManager;
-	clock_t rollerTime;
 	float timeOut;
+
+
 public:
-	ActivateRollers(float timeOut);
+	SpinUpShooter(float timeOut, float speed);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
 	void End();
 	void Interrupted();
+	float speed;
+
+
 };
 
 #endif

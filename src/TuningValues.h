@@ -11,6 +11,10 @@
 #define PID_ID_CAMERA 4
 #define PID_ID_ROLLER 5
 
+#define LOWB_DISTANCE 1
+#define LOWB_SPEED 1
+#define LOWB_TURN 1
+
 /**
  * Sensor IDs
  */
@@ -23,6 +27,8 @@
 #define SENSOR_COLLECTOR_ROLLER_ENCODER_ID 5
 #define SENSOR_SHOOTER_ENCODER_1_ID 6
 #define SENSOR_SHOOTER_ENCODER_2_ID 7
+#define SENSOR_CLIMBER_WINCH_ENCODER 8
+#define SENSOR_CLIMBER_ARM_ENCODER 9
 
 /**
  * Cheval De Fris Constants

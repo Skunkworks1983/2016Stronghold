@@ -1,7 +1,6 @@
 #ifndef MOTOR_MANAGER_H
 #define MOTOR_MANAGER_H
 
-#include <Commands/Subsystem.h>
 #include <PIDController.h>
 #include <PIDOutput.h>
 #include <cstdbool>
@@ -21,6 +20,7 @@ enum Priority {
 	PRIORITY_ACCESSORIES,
 	PRIORITYS
 };
+
 enum ESubsystem {
 	DRIVEBASE,
 	WINCH,
@@ -29,6 +29,7 @@ enum ESubsystem {
 	ROLLER,
 	SHOOTER
 };
+
 class Motor {
 	friend class MotorManager;
 private:
@@ -66,10 +67,16 @@ private:
 	MotorManager();
 	~MotorManager();
 	MotorManager(const MotorManager &);
+
+	void initClimber();
+	void initDriveBase();
+	void initShooter();
+	void initCollector();
+
 	Priority allowedPriority;
 
-	std::vector<Motor*> motors;
-	std::map<int, PIDController*> pidControllerMap;
+	std::map<unsigned, Motor*> motors;
+	std::map<unsigned, PIDController*> pidControllerMap;
 
 	void addMotor(Priority priority, int Port, float maxCurrent, ESubsystem subsystem);
 

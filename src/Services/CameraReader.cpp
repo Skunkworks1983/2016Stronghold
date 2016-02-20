@@ -33,7 +33,7 @@ CameraReader *CameraReader::getCameraReader() {
 void CameraReader::startUp() {
 	int rc = pthread_create(&thread, NULL, update, (void*) this);
 	if (rc) {
-		std::cout << "Error:unable to create thread," << rc << std::endl;
+		//std::cout << "Error:unable to create thread," << rc << std::endl;
 	}
 }
 

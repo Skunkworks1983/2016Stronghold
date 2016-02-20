@@ -1,6 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
 
-AutoBase *AutoBase::doPortC(startingPosition sp, goalPosition gp)
+AutoBase *AutoBase::doPortC()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doPortC");
 	//cmd->AddSequential(new myCommand(myCommandParameters));

@@ -8,10 +8,10 @@ ChevDeFris::ChevDeFris(float speed, float distance, float shortdis){
 	Requires(collector);
 	this->speed = speed;
 	this->distance = distance;
-	this->dt = 0;
-	this->turning = 0;
+	this->dt = 0; // distance travel starts at 0, using encoder
+	this->turning = 0; //start turning from 0, encoder
 	this->firststop = false;
-	this->shortdis = shortdis;
+	this->shortdis = shortdis; //going for a short distance after firststop
 }
 void ChevDeFris::Initialize(){
 	drivebase->resetEncoder();

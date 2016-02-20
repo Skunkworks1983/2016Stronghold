@@ -1,6 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
 
-AutoBase *AutoBase::doRamP(startingPosition sp, goalPosition gp)
+AutoBase *AutoBase::doRamP()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doRamP");
 	//cmd->AddSequential(new myCommand(myCommandParameters));

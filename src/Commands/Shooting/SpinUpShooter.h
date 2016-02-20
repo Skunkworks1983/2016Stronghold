@@ -14,16 +14,16 @@ private:
 	OI            * oi;
 	MotorManager  * motorManager;
 	SensorManager * sensorManager;
-
+	float timeOut;
+	float speed;
 
 public:
-	SpinUpShooter();
+	SpinUpShooter(float timeOut, float speed);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
 	void End();
 	void Interrupted();
-	float speed;
 
 
 };
