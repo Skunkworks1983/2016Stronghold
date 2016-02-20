@@ -47,6 +47,26 @@ void MotorManager::initClimber() {
 	COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I, COLLECTOR_ROTATION_D,
 	COLLECTOR_ROTATION_F, false);
 
+	std::vector<Motor*> DrivebaseLeftMotors = std::vector<Motor*>();
+	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
+	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
+	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
+	MotorGroup * groupDrivebaseLeft = new MotorGroup(
+			DrivebaseLeftMotors);
+	createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID, PID_ID_DRIVEBASE_LEFT,
+			DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
+			DRIVEBASE_LEFT_F, false);
+
+	std::vector<Motor*> DrivebaseRightMotors = std::vector<Motor*>();
+	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
+	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
+	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
+	MotorGroup * groupDrivebaseRight = new MotorGroup(
+			DrivebaseRightMotors);
+	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID, PID_ID_DRIVEBASE_RIGHT,
+			DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
+			DRIVEBASE_RIGHT_F, false);
+
 	std::vector<Motor*> RollerMotors = std::vector<Motor*>();
 	RollerMotors.push_back(getMotor(COLLECTOR_ROLLER_MOTOR_1_PORT));
 	MotorGroup * groupRoller = new MotorGroup(RollerMotors);

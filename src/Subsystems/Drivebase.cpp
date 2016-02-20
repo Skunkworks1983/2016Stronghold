@@ -51,4 +51,3 @@ void Drivebase::setRightSpeed(double speed) {
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_RIGHTMOTOR_3_PORT,
 			-speed);
 }
-
