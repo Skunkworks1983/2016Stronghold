@@ -181,7 +181,7 @@ void MotorManager::initCollector() {
 	MotorGroup * groupRoller = new MotorGroup(rollerMotors);
 	createPID(groupRoller, COLLECTOR_ROLLER_ENCODER_PORT, PID_ID_ROLLER, 0.0075,
 			0, 0, 0, true);
->>>>>>> refs/remotes/origin/trunk
+
 }
 
 Motor * MotorManager::getMotor(unsigned ID) {

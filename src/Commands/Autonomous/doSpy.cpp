@@ -1,4 +1,5 @@
 #include <Commands/Autonomous/AutoBase.h>
+#include <Commands/MultiTool/CollectorMove.h>
 
 AutoBase *AutoBase::doSpy()
 {
