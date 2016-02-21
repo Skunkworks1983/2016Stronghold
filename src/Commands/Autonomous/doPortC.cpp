@@ -2,9 +2,7 @@
 
 AutoBase *AutoBase::doPortC()
 {
-	AutoBase *cmd = new AutoBase("Autonomous-doPortC");
-	//cmd->AddSequential(new myCommand(myCommandParameters));
-		//Add commands here
+	AutoBase *cmd = new AutoBase((char*)"Autonomous-doPortC");
 	return cmd;
 }
 

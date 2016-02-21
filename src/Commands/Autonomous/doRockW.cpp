@@ -3,9 +3,7 @@
 
 AutoBase *AutoBase::doRockW()
 {
-	AutoBase *cmd = new AutoBase("Autonomous-doRockW");
-	//cmd->AddSequential(new myCommand(myCommandParameters));
-		//Add commands here
+	AutoBase *cmd = new AutoBase((char*)"Autonomous-doRockW");
 	return cmd;
 }
 

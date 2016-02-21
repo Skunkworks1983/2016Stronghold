@@ -5,7 +5,7 @@
 
 AutoBase *AutoBase::doMoat()
 {
-	AutoBase *cmd = new AutoBase("Autonomous-doMoat");
+	AutoBase *cmd = new AutoBase((char*)"Autonomous-doMoat");
 
 	return cmd;
 }

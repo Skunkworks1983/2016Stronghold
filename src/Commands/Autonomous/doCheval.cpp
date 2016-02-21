@@ -5,7 +5,7 @@
 
 AutoBase *AutoBase::doCheval()
 {
-	AutoBase *cmd = new AutoBase("Autonomous-doCheval");
+	AutoBase *cmd = new AutoBase((char*) "Autonomous-doCheval"); //Done on every auto, deprecated automatic conversion from string to char*
 	cmd->AddSequential(new ChevDeFris(CHEV_SPEED, CHEV_DIST, CHEV_SHORTDIST));
 	return cmd;
 

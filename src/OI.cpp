@@ -30,6 +30,11 @@ OI::OI()
 	//climbing
 	rotateArm = new JoystickButton(op, OI_ROTATE_ARM_PORT);
 	engageWinch = new JoystickButton(op, OI_ENGAGE_WINCH_PORT);
+
+	//breaching
+	chevalBreach = new JoystickButton(op, OI_CHEVAL_BREACH_PORT);
+	portcullisBreach = new JoystickButton(op, OI_PORTCULLIS_BREACH_PORT);
+	generalBreach = new JoystickButton(op, OI_GENERAL_BREACH_PORT);
 }
 
 OI::~OI() {

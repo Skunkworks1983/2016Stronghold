@@ -5,8 +5,7 @@
 
 AutoBase *AutoBase::doRoughT()
 {
-	AutoBase *cmd = new AutoBase("Autonomous-doRoughT");
-
+	AutoBase *cmd = new AutoBase((char*)"Autonomous-doRoughT");
 	return cmd;
 }
 

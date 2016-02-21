@@ -2,8 +2,7 @@
 
 AutoBase *AutoBase::doSpy()
 {
-	AutoBase *cmd = new AutoBase("Autonomous-doSpy");
-	//cmd->AddSequential(new myCommand(myCommandParameters));
+	AutoBase *cmd = new AutoBase((char*)"Autonomous-doSpy");
 	return cmd;
 }
 

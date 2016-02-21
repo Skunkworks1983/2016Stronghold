@@ -9,15 +9,14 @@
 #include <cstdio>
 
 void Robot::RobotInit() {
-	char nothing[1024];
-	sprintf(nothing, "START OF NEW RUN \t START OF NEW RUN");
-	writeToLogFile(LOGFILE_NAME, nothing);
+	char startup[1024];
+	sprintf(startup, "START OF NEW RUN \t START OF NEW RUN");
+	writeToLogFile(LOGFILE_NAME, startup);
 	char str[1024];
 	sprintf(str, "RobotInit Called");
 	writeToLogFile(LOGFILE_NAME, str);
-	MotorManager::getMotorManager();
-	SensorManager::getSensorManager();
-	//SensorManager::getSensorManager()->initGyro();
+	motorManager = MotorManager::getMotorManager(); //Not sure why these were the other way, so I changed them to the
+	sensorManager = SensorManager::getSensorManager(); //way I know, change back if this isn't what you wanted.
 	CommandBase::init();
 	//lw = LiveWindow::GetInstance();
 	managePower = new ManagePower();
@@ -47,22 +46,20 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
-	if (count++ > 10) {
+	if (count++ > 10 && DEBUG) { //Every 10 iterations of Teleop, and only if the robot is in debug mode.
 		char str[1024];
 		sprintf(str, "LeftEnc %f RightEnc %f",
-				(double) SensorManager::getSensorManager()->getSensor(
+				(double) sensorManager->getSensor(
 				SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet(),
-				(double) SensorManager::getSensorManager()->getSensor(
+				(double) sensorManager->getSensor(
 				SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 		writeToLogFile(LOGFILE_NAME, str);
-		/*
-		 SmartDashboard::PutNumber("LeftDriveBaseEncoder",
-		 SensorManager::getSensorManager()->getSensor(
-		 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-		 SmartDashboard::PutNumber("RightDriveBaseEncoder",
-		 SensorManager::getSensorManager()->getSensor(
-		 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-		 */
+
+		SmartDashboard::PutNumber("LeftDriveBaseEncoder", sensorManager->getSensor(
+				SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
+		SmartDashboard::PutNumber("RightDriveBaseEncoder", sensorManager->getSensor(
+				SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+
 		count = 0;
 	}
 }

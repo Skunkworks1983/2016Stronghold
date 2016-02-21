@@ -4,9 +4,13 @@
 #include <IterativeRobot.h>
 
 class ManagePower;
+class MotorManager;
+class SensorManager;
 
 class Robot: public IterativeRobot {
 private:
+	MotorManager * motorManager;
+	SensorManager * sensorManager;
 	ManagePower *managePower;
 	int count;
 public:
