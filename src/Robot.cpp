@@ -1,6 +1,5 @@
+#include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Power/ManagePower.h>
-#include <Commands/Power/StallProtection.h>
 #include <Commands/Scheduler.h>
 #include <Robot.h>
 #include <RobotBase.h>
@@ -8,6 +7,7 @@
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
+#include <Subsystems/Collector.h>
 #include <TuningValues.h>
 #include <cstdio>
 
@@ -23,14 +23,13 @@ void Robot::RobotInit() {
 	//SensorManager::getSensorManager()->initGyro();
 	CommandBase::init();
 	//lw = LiveWindow::GetInstance();
-	managePower = new ManagePower();
+	/*managePower = new ManagePower();
 	managePower->Start();
 
 	StallProtection *stall = new StallProtection();
-	stall->Start();
+	stall->Start();*/
 
-	cmd = AutoBase::doRoughT();
-
+	//cmd = AutoBase::doRoughT();
 }
 
 
@@ -42,7 +41,9 @@ void Robot::AutonomousInit() {
 	char str[1024];
 	sprintf(str, "AutonomousInit Called");
 	writeToLogFile(LOGFILE_NAME, str);
-	cmd->Start();
+
+	CommandBase::collector->setRollerSpeed(Collector::rollerDirection::KBackward, .3);
+	//cmd->Start();
 }
 
 void Robot::AutonomousPeriodic() {
@@ -53,6 +54,8 @@ void Robot::TeleopInit() {
 	char str[1024];
 	sprintf(str, "TeleOp Called");
 	writeToLogFile(LOGFILE_NAME, str);
+
+	//MotorManager::getMotorManager()->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, .1);
 }
 
 void Robot::TeleopPeriodic() {
@@ -75,6 +78,7 @@ void Robot::TeleopPeriodic() {
 		 */
 		count = 0;
 	}
+	SmartDashboard::PutNumber("Encoder", SensorManager::getSensorManager()->getSensor(SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
 }
 
 void Robot::TestPeriodic() {

@@ -33,9 +33,9 @@ enum ESubsystem {
 class Motor {
 	friend class MotorManager;
 private:
-
+	bool reversed;
 public:
-	Motor(Priority prioArg, int portArg, float maxCurrent, ESubsystem parentSubsystem);
+	Motor(Priority prioArg, int portArg, float maxCurrent, ESubsystem parentSubsystem, bool reversed);
 	~Motor();
 	ESubsystem parentSubsystem;
 	CANTalon * talon;
@@ -47,6 +47,7 @@ public:
 	unsigned port;
 	float C;
 	void setC(Priority priority, float voltage );
+	bool isReversed();
 };
 
 class MotorGroup: public PIDOutput {
@@ -79,7 +80,7 @@ private:
 	std::map<unsigned, Motor*> motors;
 	std::map<unsigned, PIDController*> pidControllerMap;
 
-	void addMotor(Priority priority, int Port, float maxCurrent, ESubsystem subsystem);
+	void addMotor(Priority priority, int Port, float maxCurrent, ESubsystem subsystem, bool reverse = false);
 
 protected:
 	double GetPosition(unsigned ID);

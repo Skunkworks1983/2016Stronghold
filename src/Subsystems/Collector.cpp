@@ -25,12 +25,12 @@ void Collector::resetEncoder() {
 }
 
 void Collector::setRotatorSpeed(float rotatorSpeed) {
-	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, rotatorSpeed);
-	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_2_PORT, rotatorSpeed);
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, rotatorSpeed);
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, rotatorSpeed);
 }
 
 double Collector::getRotatorPosition() {
-	return sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
+	return sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT);
 }
 
 void Collector::setRollerSpeed(rollerDirection direction, float speed) {
@@ -50,7 +50,7 @@ void Collector::setRollerSpeed(rollerDirection direction, float speed) {
 }
 
 void Collector::setKickerSpeed(double kickerSpeed) {
-	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, kickerSpeed);
+	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, kickerSpeed);
 
 }
 

@@ -2,10 +2,9 @@
 #define ActivateRollers_H
 
 #include <CommandBase.h>
+#include <Subsystems/Collector.h>
 #include <cstdbool>
 #include <ctime>
-#include <TuningValues.h>
-#include <RobotMap.h>
 
 class MotorManager;
 class SensorManager;
@@ -17,8 +16,9 @@ private:
 	SensorManager * sensorManager;
 	clock_t rollerTime;
 	float timeOut;
+	Collector::rollerDirection dir;
 public:
-	ActivateRollers(float timeOut);
+	ActivateRollers(Collector::rollerDirection dir, float timeOut = 0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

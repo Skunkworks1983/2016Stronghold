@@ -15,7 +15,7 @@ CollectorUp::CollectorUp(float currentTurnPos, double turnPos, float speed)
 void CollectorUp::Initialize()
 {
 	collector->resetEncoder();
-	MotorManager::getMotorManager()->setPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT, turnPos);
+	MotorManager::getMotorManager()->setPosition(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, turnPos);
 	//MotorManager::getMotorManager()->setSpeed(COLLECTOR_MOTOR_PORT, speed);
 }
 
@@ -23,9 +23,9 @@ void CollectorUp::Initialize()
 void CollectorUp::Execute()
 {
 	//SensorManager::getSensorManager()->GetSpeed(COLLECTOR_MOTOR_PORT);
-	currentTurnPos = SensorManager::getSensorManager()->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
+	currentTurnPos = SensorManager::getSensorManager()->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT);
 	if (turnPos-currentTurnPos < EPSILON){
-		MotorManager::getMotorManager()->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, 0);
+		MotorManager::getMotorManager()->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, 0);
 		//disable enable pid instead.
 
 	}
@@ -45,8 +45,8 @@ bool CollectorUp::IsFinished()
 // Called once after isFinished returns true
 void CollectorUp::End()
 {
-	MotorManager::getMotorManager()->setSpeed(COLLECTOR_ROTATOR_MOTOR_1_PORT, 0);
-	MotorManager::getMotorManager()->setSpeed(COLLECTOR_ROTATOR_MOTOR_2_PORT, 0);
+	MotorManager::getMotorManager()->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, 0);
+	MotorManager::getMotorManager()->setSpeed(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, 0);
 }
 
 // Called when another command which requires one or more of the same

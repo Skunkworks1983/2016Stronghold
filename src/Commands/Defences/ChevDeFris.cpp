@@ -30,8 +30,8 @@ void ChevDeFris::Execute(){
 		collector->setRotatorPosition(0);
 	}
 	SensorManager * sensorManager = SensorManager::getSensorManager();
-	this->turning = sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT);
-	if ((sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - COLLECTOR_TURNDOWN) < EPSILON && (shortdis + distance) - dt > EPSILON)	{
+	this->turning = sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT);
+	if ((sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT) - COLLECTOR_TURNDOWN) < EPSILON && (shortdis + distance) - dt > EPSILON)	{
 		drivebase->setRightSpeed(speed);
 		drivebase->setLeftSpeed(speed);
 	}
@@ -40,7 +40,7 @@ void ChevDeFris::Execute(){
 				drivebase->setLeftSpeed(0);
 				collector->setRotatorPosition(COLLECTOR_TURNUP);
 			}
-				if ((sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - COLLECTOR_TURNUP) < EPSILON ){
+				if ((sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT) - COLLECTOR_TURNUP) < EPSILON ){
 						this->dt = drivebase->getRightDistance();
 							drivebase->setLeftSpeed(speed);
 							drivebase->setRightSpeed(speed);
