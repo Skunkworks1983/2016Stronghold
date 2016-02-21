@@ -12,7 +12,8 @@
 
 #include "../../navx-mxp/cpp/include/AHRS.h"
 
-Sensor::Sensor(unsigned CANTalonEncoderPort) {
+Sensor::Sensor(unsigned CANTalonEncoderPort, unsigned ID) :
+		ID(ID) {
 	Motor * motor = MotorManager::getMotorManager()->getMotor(
 			CANTalonEncoderPort);
 	if (motor != NULL) {
@@ -20,6 +21,7 @@ Sensor::Sensor(unsigned CANTalonEncoderPort) {
 		sprintf(str, "Created Sensor with talon on ID %d", CANTalonEncoderPort);
 		writeToLogFile(LOGFILE_NAME, str);
 		this->talon = motor->talon;
+		talon->SetEncPosition(0);
 	} else {
 		char str[1024];
 		sprintf(str, "MotorIs null!!! port: %d", CANTalonEncoderPort);
@@ -28,22 +30,25 @@ Sensor::Sensor(unsigned CANTalonEncoderPort) {
 	this->src = NULL;
 }
 
-Sensor::Sensor(PIDSource *src) {
+Sensor::Sensor(PIDSource *src, unsigned ID) :
+		ID(ID) {
 	this->talon = NULL;
 	this->src = src;
 }
 
-Sensor::Sensor(CANTalon *canTalon) {
+Sensor::Sensor(CANTalon *canTalon, unsigned ID) :
+		ID(ID) {
 	this->talon = canTalon;
 	this->src = NULL;
 }
 
 double Sensor::PIDGet() {
 	if (talon != NULL) {
-		char str[1024];
-		sprintf(str, "Talon is returning PIDGet");
-		writeToLogFile(LOGFILE_NAME, str);
-		return talon->PIDGet();
+		if (ID == SENSOR_DRIVE_BASE_LEFT_ENCODER_ID) {
+			return (double) talon->GetEncPosition();
+		} else {
+			return -(double) talon->GetEncPosition();
+		}
 	} else if (src != NULL) {
 		char str[1024];
 		sprintf(str, "PIDSource is returning PIDGet");
@@ -71,9 +76,9 @@ SensorManager::SensorManager() {
 #endif
 #if USE_DRIVEBASE
 	sensors[SENSOR_DRIVE_BASE_LEFT_ENCODER_ID] = new Sensor(
-	DRIVEBASE_LEFTMOTOR_2_PORT);
+	DRIVEBASE_LEFT_ENCODER_PORT, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID);
 	sensors[SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID] = new Sensor(
-	DRIVEBASE_RIGHTMOTOR_2_PORT);
+	DRIVEBASE_RIGHT_ENCODER_PORT, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID);
 #endif
 #if USE_COLLECTOR
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_COLLECTOR_ROTATION_ENCODER_ID, new Sensor(SENSOR_COLLECTOR_ROTATION_ENCODER_ID)));
@@ -134,30 +139,47 @@ void SensorManager::initGyro() {
 }
 
 float SensorManager::getYaw() {
-	return ahrs->GetYaw();
+	if (ahrs != NULL) {
+		return ahrs->GetYaw();
+	}
+	return 0.0;
 }
 
 float SensorManager::getPitch() {
-	return ahrs->GetPitch();
+	if (ahrs != NULL) {
+		return ahrs->GetPitch();
+	}
+	return 0.0;
 }
 
 float SensorManager::getRoll() {
-	return ahrs->GetAngle();
+	if (ahrs != NULL) {
+		return ahrs->GetAngle();
+	}
+	return 0.0;
 }
 
 float SensorManager::GetAccelX() {
-
-	return ahrs->GetWorldLinearAccelX();
+	if (ahrs != NULL) {
+		return ahrs->GetWorldLinearAccelX();
+	}
+	return 0.0;
 
 }
 
 float SensorManager::GetAccelY() {
-	return ahrs->GetWorldLinearAccelY();
+	if (ahrs != NULL) {
+		return ahrs->GetWorldLinearAccelY();
+	}
+	return 0.0;
 
 }
 
 float SensorManager::GetAccelZ() {
-	return ahrs->GetWorldLinearAccelZ();
+	if (ahrs != NULL) {
+		return ahrs->GetWorldLinearAccelZ();
+	}
+	return 0.0;
 
 }
 

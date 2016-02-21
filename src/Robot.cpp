@@ -1,4 +1,7 @@
+#include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Power/ManagePower.h>
+#include <Commands/Power/StallProtection.h>
+#include <Commands/Scheduler.h>
 #include <Robot.h>
 #include <RobotBase.h>
 #include <RobotMap.h>
@@ -22,6 +25,12 @@ void Robot::RobotInit() {
 	//lw = LiveWindow::GetInstance();
 	managePower = new ManagePower();
 	managePower->Start();
+
+	StallProtection *stall = new StallProtection();
+	stall->Start();
+
+	cmd = AutoBase::doRoughT();
+
 }
 
 
@@ -33,6 +42,7 @@ void Robot::AutonomousInit() {
 	char str[1024];
 	sprintf(str, "AutonomousInit Called");
 	writeToLogFile(LOGFILE_NAME, str);
+	cmd->Start();
 }
 
 void Robot::AutonomousPeriodic() {

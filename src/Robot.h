@@ -3,12 +3,15 @@
 
 #include <IterativeRobot.h>
 
+class AutoBase;
+
 class ManagePower;
 
 class Robot: public IterativeRobot {
 private:
 	ManagePower *managePower;
 	int count;
+	AutoBase *cmd;
 public:
 	void RobotInit();
 	void DisabledPeriodic();

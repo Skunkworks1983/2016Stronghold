@@ -16,10 +16,11 @@ class Sensor : public PIDSource{
 private:
 	CANTalon *talon;
 	PIDSource *src;
+	unsigned ID;
 public:
-	Sensor(unsigned CANTalonEncoderPort);
-	Sensor(CANTalon *canTalon);
-	Sensor(PIDSource *src);
+	Sensor(unsigned CANTalonEncoderPort, unsigned ID);
+	Sensor(CANTalon *canTalon, unsigned ID);
+	Sensor(PIDSource *src, unsigned ID);
 	virtual ~Sensor(){};
 	double PIDGet();
 };
