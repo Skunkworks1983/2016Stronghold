@@ -14,10 +14,8 @@
 MotorManager::MotorManager() {
 	allowedPriority = PRIORITY_ACCESSORIES;
 	char str[1024];
-	sprintf(str, "MotorManager Constructor Called");
+	sprintf(str, "MotorManager Constructor #%u", count++);
 	writeToLogFile(LOGFILE_NAME, str);
-
-	motors = std::map<unsigned, Motor*>();
 
 #if USE_DRIVEBASE
 	initDriveBase();
@@ -45,19 +43,6 @@ void MotorManager::initClimber() {
 	RS775_MAX_CURRENT, WINCH);
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_4_PORT,
 	RS775_MAX_CURRENT, WINCH);
-
-	std::vector<Motor*> winchMotors = std::vector<Motor*>();
-	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_1_PORT));
-	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_2_PORT));
-	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_3_PORT));
-	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_4_PORT));
-	MotorGroup * winchMotorGroup = new MotorGroup(winchMotors);
-
-	std::vector<Motor*> armMotors;
-	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
-	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
-	createPID(groupArmMotors, CLIMBER_ARM_ENCODER_PORT, PID_ID_ARM, 0.0075, 0,
-			0, 0, false);
 }
 
 void MotorManager::initDriveBase() {
@@ -74,29 +59,75 @@ void MotorManager::initDriveBase() {
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_3_PORT,
 	CIM_MAX_CURRENT, DRIVEBASE);
 
-	std::vector<Motor*> DrivebaseLeftMotors = std::vector<Motor*>();
-	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
-	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
-	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
-	MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
-	createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
-	PID_ID_DRIVEBASE_LEFT,
-	DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
-	DRIVEBASE_LEFT_F, false);
-
-	std::vector<Motor*> DrivebaseRightMotors = std::vector<Motor*>();
-	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
-	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
-	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
-	MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
-	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
-	PID_ID_DRIVEBASE_RIGHT,
-	DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
-	DRIVEBASE_RIGHT_F, false);
-
 	char str[1024];
 	sprintf(str, "Created DriveBase Motors");
 	writeToLogFile(LOGFILE_NAME, str);
+}
+
+void MotorManager::initShooter() {
+	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_1_PORT,
+	MINI_CIM_MAX_CURRENT, SHOOTER);
+	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_2_PORT,
+	MINI_CIM_MAX_CURRENT, SHOOTER);
+}
+
+void MotorManager::initCollector() {
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
+	COLLECTOR_ROLLER_MOTOR_1_PORT, RS775_MAX_CURRENT, ROLLER);
+
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
+	COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
+	false);
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
+	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
+	true);
+}
+
+void MotorManager::initPIDS() {
+#if USE_COLLECTOR
+	std::vector<Motor*> rotationCollectorMotors;
+	rotationCollectorMotors.push_back(
+			getMotor(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT));
+	rotationCollectorMotors.push_back(
+			getMotor(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT));
+
+	/*MotorGroup * groupCollectorRotation = new MotorGroup(
+	 rotationCollectorMotors);
+	 createPID(groupCollectorRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
+	 PID_ID_COLLECTOR,
+	 COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I, COLLECTOR_ROTATION_D,
+	 COLLECTOR_ROTATION_F, false);
+
+	 std::vector<Motor*> rollerMotors;
+	 rollerMotors.push_back(getMotor(COLLECTOR_ROLLER_MOTOR_1_PORT));
+
+	 MotorGroup * groupRoller = new MotorGroup(rollerMotors);
+	 createPID(groupRoller, COLLECTOR_ROLLER_ENCODER_PORT, PID_ID_ROLLER, 0.0075,
+	 0, 0, 0, true);*/
+
+#endif
+#if USE_DRIVEBASE
+
+	/*std::vector<Motor*> DrivebaseLeftMotors;
+	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
+	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
+	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
+	 MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
+	 createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
+	 PID_ID_DRIVEBASE_LEFT,
+	 DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
+	 DRIVEBASE_LEFT_F, false);
+
+	 std::vector<Motor*> DrivebaseRightMotors;
+	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
+	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
+	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
+	 MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
+	 createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+	 PID_ID_DRIVEBASE_RIGHT,
+	 DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
+	 DRIVEBASE_RIGHT_F, false);*/
+
 #if USE_GYRO
 	MotorGroup * groupGyroTurnMotors = new MotorGroup(driveBaseMotors);
 	createPID(groupGyroTurnMotors, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
@@ -110,66 +141,52 @@ void MotorManager::initDriveBase() {
 			MOVE_TOWARD_CAMERA_I, MOVE_TOWARD_CAMERA_D, MOVE_TOWARD_CAMERA_F,
 			false);
 #endif
-}
 
-void MotorManager::initShooter() {
-	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_1_PORT,
-	MINI_CIM_MAX_CURRENT, SHOOTER);
-	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_2_PORT,
-	MINI_CIM_MAX_CURRENT, SHOOTER);
+#endif
+#if USE_CLIMBER
+	std::vector<Motor*> winchMotors;
+	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_1_PORT));
+	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_2_PORT));
+	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_3_PORT));
+	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_4_PORT));
+	MotorGroup * winchMotorGroup = new MotorGroup(winchMotors);
 
-	std::vector<Motor*> shooterMotor1 = std::vector<Motor*>();
+	std::vector<Motor*> armMotors;
+	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
+	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
+	double p = 0.00012;
+	double i = 0;//0.000005;
+	double d = 0.00005;
+	double f = 0;
+	createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, p, i, d,
+			f, false);
+	//createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, CLIMBER_ARM_P, CLIMBER_ARM_I, CLIMBER_ARM_D, CLIMBER_ARM_F, false);
+#endif
+#if USE_SHOOTER
+	std::vector<Motor*> shooterMotor1;
 	shooterMotor1.push_back(getMotor(SHOOTER_MOTOR_1_PORT));
 	MotorGroup * groupShooterMotor1 = new MotorGroup(shooterMotor1);
 	createPID(groupShooterMotor1, SHOOTER_1_ENCODER_PORT, PID_ID_SHOOTER_1,
-	SHOOTER_1_P, SHOOTER_1_I, SHOOTER_1_D, SHOOTER_1_F, false);
+			SHOOTER_1_P, SHOOTER_1_I, SHOOTER_1_D, SHOOTER_1_F, false);
 
-	std::vector<Motor*> shooterMotor2 = std::vector<Motor*>();
+	std::vector<Motor*> shooterMotor2;
 	shooterMotor2.push_back(getMotor(SHOOTER_MOTOR_2_PORT));
 	MotorGroup * groupShooterMotor2 = new MotorGroup(shooterMotor2);
 	createPID(groupShooterMotor2, SHOOTER_2_ENCODER_PORT, PID_ID_SHOOTER_2,
-	SHOOTER_2_P, SHOOTER_2_I, SHOOTER_2_D, SHOOTER_2_F, false);
-}
-
-void MotorManager::initCollector() {
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-	COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
-	false);
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
-	true);
-
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-	COLLECTOR_ROLLER_MOTOR_1_PORT, RS775_MAX_CURRENT, ROLLER);
-
-	std::vector<Motor*> rotationCollectorMotors = std::vector<Motor*>();
-	rotationCollectorMotors.push_back(
-			getMotor(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT));
-	rotationCollectorMotors.push_back(
-			getMotor(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT));
-	MotorGroup * groupCollectorRotation = new MotorGroup(
-			rotationCollectorMotors);
-	createPID(groupCollectorRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
-	PID_ID_COLLECTOR,
-	COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I, COLLECTOR_ROTATION_D,
-	COLLECTOR_ROTATION_F, false);
-
-	/*std::vector<Motor*> rollerMotors = std::vector<Motor*>();
-	rollerMotors.push_back(getMotor(COLLECTOR_ROLLER_MOTOR_1_PORT));
-
-	MotorGroup * groupRoller = new MotorGroup(rollerMotors);
-	createPID(groupRoller, COLLECTOR_ROLLER_ENCODER_PORT, PID_ID_ROLLER, 0.0075,
-			0, 0, 0, true);
-			*/
+			SHOOTER_2_P, SHOOTER_2_I, SHOOTER_2_D, SHOOTER_2_F, false);
+#endif
 }
 
 Motor * MotorManager::getMotor(unsigned ID) {
 	if (ID < 0 || motors.count(ID) < 1) {
+		char str[1024];
+		sprintf(str, "Null motor at ID %u", ID);
+		writeToLogFile(LOGFILE_NAME, str);
 		return NULL;
 	}
-	char str[1024];
-	sprintf(str, "Returning getMotor(%d)", ID);
-	writeToLogFile(LOGFILE_NAME, str);
+	//char str[1024];
+	//sprintf(str, "Returning getMotor(%u)", ID);
+	//writeToLogFile(LOGFILE_NAME, str);
 	return motors[ID];
 }
 
@@ -186,6 +203,9 @@ void MotorManager::setPosition(unsigned pidID, float position) {
 void MotorManager::setSpeed(unsigned ID, float speed) {
 	if (motors[ID]->stoppedStartTime == 0) {
 
+		if (motors[ID]->isReversed()) {
+			speed = -speed;
+		}
 		motors[ID]->speed = speed;
 
 		if (motors[ID]->talon != NULL) {
@@ -326,10 +346,16 @@ Motor::~Motor() {
 void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 		unsigned pidID, float P, float I, float D, float F, bool isSpeedMode) {
 
-	if (pidControllerMap.count(pidID) < 1) {
-		PIDController * pidcontroller = new PIDController(P, I, D, F,
-				SensorManager::getSensorManager()->getSensor(PIDSourceID),
+	if (pidControllerMap.count(pidID) == 0) {
+		Sensor * sensor = SensorManager::getSensorManager()->getSensor(
+				PIDSourceID);
+		PIDController * pidcontroller = new PIDController(P, I, D, F, sensor,
 				group);
+		if (sensor->getLowRange() != sensor->getHighRange()) {
+			pidcontroller->SetInputRange(sensor->getLowRange(),
+					sensor->getHighRange());
+		}
+		pidcontroller->SetOutputRange(-1, 1);
 		if (isSpeedMode == true) {
 			pidcontroller->SetPIDSourceType(PIDSourceType::kRate);
 		} else {
@@ -337,7 +363,7 @@ void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 			pidControllerMap[pidID] = pidcontroller;
 		}
 	} else {
-		pidControllerMap[pidID]->Enable();
+		//pidControllerMap[pidID]->Enable();
 	}
 }
 

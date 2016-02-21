@@ -1,9 +1,10 @@
-#include <Commands/Defences/ChevDeFris.h>
-#include <Commands/Defences/GeneralBreach.h>
-#include <Commands/Defences/PortcullisAuto.h>
+#include <Commands/Climbing/RotateArm.h>
 #include <Commands/MultiTool/ActivateRollers.h>
+#include <Commands/MultiTool/CollectorMove.h>
 #include <OI.h>
+#include <SmartDashboard/SmartDashboard.h>
 #include <Subsystems/Collector.h>
+#include <TuningValues.h>
 #include <cmath>
 #include <cstdbool>
 
@@ -19,7 +20,8 @@ OI::OI()
 
 	//collector
 	collectBall = new JoystickButton(gamepad, OI_COLLECT_BALL_PORT);
-	collectorUp = new JoystickButton(op, OI_COLLECTOR_UP_PORT);
+	collectorUp = new JoystickButton(gamepad, 1);
+	collectorDown = new JoystickButton(gamepad, 2);
 
 	//aiming
 	aimAtGoal = new JoystickButton(op, OI_AIM_AT_GOAL_PORT);
@@ -30,7 +32,7 @@ OI::OI()
 	spinUpShooter = new JoystickButton(op, OI_SPIN_UP_SHOOTER_PORT);
 
 	//climbing
-	rotateArm = new JoystickButton(op, OI_ROTATE_ARM_PORT);
+	rotateArm = new JoystickButton(gamepad, 3);
 	engageWinch = new JoystickButton(op, OI_ENGAGE_WINCH_PORT);
 
 	registerButtonListener();
@@ -55,6 +57,7 @@ OI::~OI() {
 	delete spinUpShooter;
 	delete rotateArm;
 	delete engageWinch;
+	delete collectorDown;
 }
 
 double OI::getLeftStickY() {
@@ -88,6 +91,11 @@ void OI::registerButtonListener()
 //	spinUpShooter->WhenPressed(new);
 //	attachHook->WhenPressed(new);
 	//engageWinch->WhenPressed(new);
+	rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
+	SmartDashboard::PutData("Climber Down", new RotateArm(CLIMBER_ARM_DOWN_POSITION));
+
+	collectorDown->WhenPressed(new CollectorMove(1480));
+	collectorUp->WhenPressed(new CollectorMove(0));
 	collectBall->WhileHeld(new ActivateRollers(Collector::rollerDirection::KForward));
 	shootLow->WhileHeld(new ActivateRollers(Collector::rollerDirection::KBackward));
 }

@@ -75,6 +75,8 @@ private:
 	void initCollector();
 	void initArm();
 
+	unsigned count = 0;
+
 	Priority allowedPriority;
 
 	std::map<unsigned, Motor*> motors;
@@ -87,6 +89,8 @@ protected:
 	double GetSpeed(unsigned ID);
 public:
 	Motor *getMotor(unsigned ID);
+
+	void initPIDS();
 
 	void setPosition(unsigned pidID, float position);
 	void setSpeed(unsigned ID, float speed);

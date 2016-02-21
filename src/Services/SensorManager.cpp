@@ -12,8 +12,9 @@
 
 #include "../../navx-mxp/cpp/include/AHRS.h"
 
-Sensor::Sensor(unsigned CANTalonEncoderPort, unsigned ID) :
-		ID(ID) {
+Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
+		unsigned ID) :
+		ID(ID), lowRange(lowRange), highRange(highRange) {
 	Motor * motor = MotorManager::getMotorManager()->getMotor(
 			CANTalonEncoderPort);
 	if (motor != NULL) {
@@ -30,14 +31,14 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, unsigned ID) :
 	this->src = NULL;
 }
 
-Sensor::Sensor(PIDSource *src, unsigned ID) :
-		ID(ID) {
+Sensor::Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID) :
+		ID(ID), lowRange(lowRange), highRange(highRange) {
 	this->talon = NULL;
 	this->src = src;
 }
 
-Sensor::Sensor(CANTalon *canTalon, unsigned ID) :
-		ID(ID) {
+Sensor::Sensor(CANTalon *canTalon, float lowRange, float highRange, unsigned ID) :
+		ID(ID), lowRange(lowRange), highRange(highRange) {
 	this->talon = canTalon;
 	this->src = NULL;
 }
@@ -63,9 +64,8 @@ double Sensor::PIDGet() {
 }
 
 SensorManager::SensorManager() {
-	sensors = std::map<unsigned, Sensor*>();
 	char str[1024];
-	sprintf(str, "SensorManager Created");
+	sprintf(str, "SensorManager Created #%u", count++);
 	writeToLogFile(LOGFILE_NAME, str);
 #if USE_GYRO
 	initGyro();
@@ -76,128 +76,148 @@ SensorManager::SensorManager() {
 #endif
 #if USE_DRIVEBASE
 	sensors[SENSOR_DRIVE_BASE_LEFT_ENCODER_ID] = new Sensor(
-	DRIVEBASE_LEFT_ENCODER_PORT, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID);
+	DRIVEBASE_LEFT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID);
 	sensors[SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID] = new Sensor(
-	DRIVEBASE_RIGHT_ENCODER_PORT, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID);
+	DRIVEBASE_RIGHT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID);
 #endif
 #if USE_COLLECTOR
-		sensors[SENSOR_COLLECTOR_ROTATION_ENCODER_ID] = new Sensor(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, SENSOR_COLLECTOR_ROTATION_ENCODER_ID);
-/*sensors.insert(
- std::pair<unsigned, Sensor*>(SENSOR_COLLECTOR_ROLLER_ENCODER_ID,
- new Sensor(COLLECTOR_ROLLER_ENCODER_PORT,
- SENSOR_COLLECTOR_ROLLER_ENCODER_ID)));*/
+	sensors[SENSOR_COLLECTOR_ROTATION_ENCODER_ID] = new Sensor(
+	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT,
+	COLLECTOR_ROTATION_ENCODER_TOP_TICKS,
+	COLLECTOR_ROTATION_ENCODER_FLOOR_TICKS,
+	SENSOR_COLLECTOR_ROTATION_ENCODER_ID);
+	/*sensors.insert(
+	 std::pair<unsigned, Sensor*>(SENSOR_COLLECTOR_ROLLER_ENCODER_ID,
+	 new Sensor(COLLECTOR_ROLLER_ENCODER_PORT,
+	 SENSOR_COLLECTOR_ROLLER_ENCODER_ID)));*/
 #endif
 #if USE_SHOOTER
-sensors.insert(std::pair<int, Sensor*>(SENSOR_SHOOTER_ENCODER_1_ID, new Sensor(SENSOR_SHOOTER_ENCODER_1_ID)));
-sensors.insert(std::pair<int, Sensor*>(SENSOR_SHOOTER_ENCODER_2_ID, new Sensor(SENSOR_SHOOTER_ENCODER_2_ID)));
+	sensors.insert(std::pair<int, Sensor*>(SENSOR_SHOOTER_ENCODER_1_ID, new Sensor(SENSOR_SHOOTER_ENCODER_1_ID)));
+	sensors.insert(std::pair<int, Sensor*>(SENSOR_SHOOTER_ENCODER_2_ID, new Sensor(SENSOR_SHOOTER_ENCODER_2_ID)));
 #endif
 #if USE_CLIMBER
-sensors.insert(std::pair<int, Sensor*>(SENSOR_CLIMBER_WINCH_ENCODER, new Sensor(SENSOR_CLIMBER_WINCH_ENCODER)));
-sensors.insert(std::pair<int, Sensor*>(SENSOR_CLIMBER_ARM_ENCODER, new Sensor(SENSOR_CLIMBER_ARM_ENCODER)));
+	sensors[SENSOR_CLIMBER_WINCH_ENCODER] = new Sensor(
+	CLIMBER_WINCH_ENCODER_PORT,
+	CLIMBER_WINCH_DOWN_POSITION,
+	CLIMBER_WINCH_UP_POSITION,
+	SENSOR_CLIMBER_WINCH_ENCODER);
+
+	sensors[SENSOR_CLIMBER_ARM_ENCODER] = new Sensor(
+			CLIMBER_ARM_ENCODER_PORT,
+		CLIMBER_ARM_DOWN_POSITION,
+		CLIMBER_ARM_UP_POSITION,
+		SENSOR_CLIMBER_ARM_ENCODER);
 #endif
 }
 
 SensorManager::~SensorManager() {
-std::map<unsigned, Sensor*>::iterator it = sensors.begin();
-for (; it != sensors.end(); ++it) {
-	delete (*it).second;
-}
-sensors.clear();
-delete ahrs;
+	std::map<unsigned, Sensor*>::iterator it = sensors.begin();
+	for (; it != sensors.end(); ++it) {
+		delete (*it).second;
+	}
+	sensors.clear();
+	delete ahrs;
 }
 
 SensorManager* SensorManager::getSensorManager() {
-static SensorManager *instance = NULL;
-if (instance == NULL) {
-	instance = new SensorManager();
-}
-return instance;
+	static SensorManager *instance = NULL;
+	if (instance == NULL) {
+		instance = new SensorManager();
+	}
+	return instance;
 }
 
 void SensorManager::initGyro() {
-ahrsDead = false;
-try {
-	//ahrs = new AHRS(SPI::Port::kMXP);
-	ahrs = new AHRS(I2C::Port::kMXP);
-	ahrs->Reset();
-	counter = 0;
-	while (!ahrs->IsConnected()) {
-		//printf("AHRS NOT CONNECTED\n");
-		counter++;
-		if (counter > AHRS_CYCLE_TIMEOUT) {
-			std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
-			ahrsDead = true;
-			break;
+	ahrsDead = false;
+	try {
+		//ahrs = new AHRS(SPI::Port::kMXP);
+		ahrs = new AHRS(I2C::Port::kMXP);
+		ahrs->Reset();
+		counter = 0;
+		while (!ahrs->IsConnected()) {
+			//printf("AHRS NOT CONNECTED\n");
+			counter++;
+			if (counter > AHRS_CYCLE_TIMEOUT) {
+				std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
+				ahrsDead = true;
+				break;
+			}
 		}
+		//printf("Is the AHRS connected? %s", (ahrs->IsConnected() ? "Yes\n" : "no\n"));
+	} catch (std::exception * ex) {
+		std::string err_string = "Error instantiating navX MXP:  ";
+		std::cout << err_string;
+		err_string += ex->what();
+		std::cout << err_string;
+		std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
+		ahrsDead = true;
 	}
-	//printf("Is the AHRS connected? %s", (ahrs->IsConnected() ? "Yes\n" : "no\n"));
-} catch (std::exception * ex) {
-	std::string err_string = "Error instantiating navX MXP:  ";
-	std::cout << err_string;
-	err_string += ex->what();
-	std::cout << err_string;
-	std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
-	ahrsDead = true;
-}
 }
 
 float SensorManager::getYaw() {
-if (ahrs != NULL) {
-	return ahrs->GetYaw();
-}
-return 0.0;
+	if (ahrs != NULL) {
+		return ahrs->GetYaw();
+	}
+	return 0.0;
 }
 
 float SensorManager::getPitch() {
-if (ahrs != NULL) {
-	return ahrs->GetPitch();
-}
-return 0.0;
+	if (ahrs != NULL) {
+		return ahrs->GetPitch();
+	}
+	return 0.0;
 }
 
 float SensorManager::getRoll() {
-if (ahrs != NULL) {
-	return ahrs->GetAngle();
-}
-return 0.0;
+	if (ahrs != NULL) {
+		return ahrs->GetAngle();
+	}
+	return 0.0;
 }
 
 float SensorManager::GetAccelX() {
-if (ahrs != NULL) {
-	return ahrs->GetWorldLinearAccelX();
-}
-return 0.0;
+	if (ahrs != NULL) {
+		return ahrs->GetWorldLinearAccelX();
+	}
+	return 0.0;
 
 }
 
 float SensorManager::GetAccelY() {
-if (ahrs != NULL) {
-	return ahrs->GetWorldLinearAccelY();
-}
-return 0.0;
+	if (ahrs != NULL) {
+		return ahrs->GetWorldLinearAccelY();
+	}
+	return 0.0;
 
 }
 
 float SensorManager::GetAccelZ() {
-if (ahrs != NULL) {
-	return ahrs->GetWorldLinearAccelZ();
-}
-return 0.0;
+	if (ahrs != NULL) {
+		return ahrs->GetWorldLinearAccelZ();
+	}
+	return 0.0;
 
+}
+
+float Sensor::getLowRange() {
+	return lowRange;
+}
+float Sensor::getHighRange() {
+	return highRange;
 }
 
 double SensorManager::GetEncoderPosition(int ID) {
-return MotorManager::getMotorManager()->GetPosition(ID);
+	return MotorManager::getMotorManager()->GetPosition(ID);
 
 }
 double SensorManager::GetSpeed(int ID) {
-return MotorManager::getMotorManager()->GetSpeed(ID);
+	return MotorManager::getMotorManager()->GetSpeed(ID);
 }
 
 Sensor* SensorManager::getSensor(unsigned ID) {
-if (sensors.count(ID) != 0) {
-	return sensors[ID];
-} else {
-	return NULL;
-}
+	if (sensors.count(ID) != 0) {
+		return sensors[ID];
+	} else {
+		return NULL;
+	}
 }

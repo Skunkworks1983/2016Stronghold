@@ -22,6 +22,7 @@ public:
 	// collector buttons
 	JoystickButton *collectBall;
 	JoystickButton *collectorUp;
+	JoystickButton *collectorDown;
 
 	//aiming buttons
 	JoystickButton *aimAtGoal;
