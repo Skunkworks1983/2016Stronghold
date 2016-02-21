@@ -6,18 +6,27 @@
 #include "RobotMap.h"
 #include <vector>
 #include <DigitalInput.h>
+#include "Commands/Driving/DriveForward.h"
+#include "Commands/Driving/RotateTowardCameraTarget.h"
+#include "Commands/Driving/TurnDegree.h"
 
 class SensorManager;
 
 class AutoBase: public CommandGroup {
 private:
-
-	enum eGoalPos {
-		high, low
+	enum eGoalPos
+	{
+		high,
+		low
 	};
 
-	enum eStartPos {
-		spy, lowBar, posZero, posOne, posTwo, posThree
+	enum eStartPos
+	{	spy,
+		lowBar,
+		posZero,
+		posOne,
+		posTwo,
+		posThree
 	};
 
 	enum eObstacle {
@@ -30,17 +39,14 @@ private:
 		Obstacle_portcullis
 	};
 
-	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos,
-			eGoalPos goalPos);
-	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp,
-			eGoalPos *goal);
-
 	AutoBase();
 	AutoBase(char *style);
 	~AutoBase();
 public:
 	static AutoBase *getSelectedAuto();
 
+	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos, eGoalPos goalPos);
+	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp, eGoalPos *goal);
 	static AutoBase *doCheval(); //Cheval de Frise
 	static AutoBase *doMoat(); // the U-shape
 	static AutoBase *doRockW(); //Rock Wall

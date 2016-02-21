@@ -3,8 +3,7 @@
 AutoBase *AutoBase::doRamP()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doRamP");
-	//cmd->AddSequential(new myCommand(myCommandParameters));
-		//Add commands here
+	cmd->AddSequential(new DriveForward(7, 1.0));
 	return cmd;
 }
 

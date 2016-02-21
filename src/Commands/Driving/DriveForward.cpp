@@ -11,7 +11,7 @@ DriveForward::DriveForward(float distance, float speed) {
 	//ENCODER_TICKS_PER_REVOLUTION = 1000;//CHANGE
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
-	this->distance = distance;
+	this->distance = ((distance / DISTANCE_NUMBER));
 	this->speed = speed;
 	initialYaw = 0.0;
 	initialPosition = 0.0;
@@ -31,6 +31,7 @@ DriveForward::~DriveForward() {
 }
 
 void DriveForward::Initialize() {
+
 	initialYaw = sensorManager->getYaw();
 	drivebase->setLeftSpeed(speed);
 	drivebase->setRightSpeed(speed);
@@ -59,7 +60,8 @@ void DriveForward::Execute() {
 }
 
 bool DriveForward::IsFinished() {
-	if (((leftEncoder->PIDGet() + rightEncoder->PIDGet()) / 2) - initialPosition > distance) {
+	if (((leftEncoder->PIDGet() + rightEncoder->PIDGet()) / 2) - initialPosition
+			> distance) {
 		return true;
 	}/*
 	 if (sensorManager->GetEncoderPosition(DRIVEBASE_LEFTMOTOR_1_PORT)

@@ -2,6 +2,8 @@
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <cstdbool>
+
+
 //TODO: Find the conversion ratio for encoder ticks to degrees
 CollectorMove::CollectorMove(float target)
 {
@@ -23,7 +25,7 @@ motorManager->enablePID(PID_ID_COLLECTOR, target);
 
 bool CollectorMove::IsFinished()
 {
-	if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - target) <= COLLECTOR_ROTATION_TOLERANCE) {
+	if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_1_PORT) - target) <= COLLECTOR_ROTATOR_TOLERANCE) {
 		return true;
 	} else {
 		return false;

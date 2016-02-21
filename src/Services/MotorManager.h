@@ -72,6 +72,7 @@ private:
 	void initDriveBase();
 	void initShooter();
 	void initCollector();
+	void initArm();
 
 	Priority allowedPriority;
 

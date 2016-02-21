@@ -31,6 +31,9 @@ MotorManager::MotorManager() {
 #if USE_SHOOTER
 	initShooter();
 #endif
+#if USE_ARM
+	initArm();
+#endif
 }
 
 void MotorManager::initClimber() {
@@ -146,6 +149,15 @@ void MotorManager::initShooter() {
 	SHOOTER_2_P, SHOOTER_2_I, SHOOTER_2_D, SHOOTER_2_F, false);
 }
 
+void MotorManager::initArm () {
+
+	std::vector<Motor*> armMotors;
+	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
+	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
+	createPID(groupArmMotors,CLIMBER_ARM_ENCODER_PORT, PID_ID_ARM,  0.0075,0,0,0, false);
+
+}
+
 void MotorManager::initCollector() {
 	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
 	COLLECTOR_ROTATOR_MOTOR_1_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR);
@@ -169,6 +181,7 @@ void MotorManager::initCollector() {
 	MotorGroup * groupRoller = new MotorGroup(rollerMotors);
 	createPID(groupRoller, COLLECTOR_ROLLER_ENCODER_PORT, PID_ID_ROLLER, 0.0075,
 			0, 0, 0, true);
+
 }
 
 Motor * MotorManager::getMotor(unsigned ID) {
@@ -364,7 +377,6 @@ void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 void MotorManager::setPIDF(unsigned pidID, float P, float I, float D, float F) {
 	pidControllerMap[pidID]->SetPID(P, I, D, F);
 }
-
 void MotorManager::enablePID(unsigned pidID, float setPoint) {
 	pidControllerMap[pidID]->SetSetpoint(setPoint);
 	pidControllerMap[pidID]->Enable();

@@ -1,57 +1,48 @@
 #include <Commands/Climbing/RotateArm.h>
 #include <Subsystems/Climber.h>
+#include <TuningValues.h>
+#include <Services/MotorManager.h>
+#include <RobotMap.h>
 
-RotateArm::RotateArm(float rotateArmEncoderTicks, float speed, float currentArmPos)
+RotateArm::RotateArm(float angleDegrees)
 {
-	Requires(climber);
-	this->rotateArmEncoderTicks = rotateArmEncoderTicks;
-	this->armStartPos = 0;
-	this->armSpeed = speed;
-	this->currentArmPos = currentArmPos;
+	this->angleDegrees = angleDegrees;
 }
 
 RotateArm::~RotateArm(){
 
 }
-// Called just before this Command runs the first time
+
 void RotateArm::Initialize()
 {
-	this->rotateArmEncoderTicks = climber->getArmPos();
-	climber->setArmSpeed(armSpeed);
+	MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT, 1.0);
+	MotorManager::getMotorManager()->enablePID(PID_ID_ARM, angleDegrees*CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS);
+
 }
 
-// Called repeatedly when this Command is scheduled to run
 void RotateArm::Execute()
 {
-	currentArmPos = climber->getArmSpeed();
-	float totalTurn = currentArmPos - armStartPos;
-	if(totalTurn < rotateArmEncoderTicks){
-		climber->setArmSpeed(0);
-	}
+//get PID values
 }
 
-// Make this return true when this Command no longer needs to run execute()
 bool RotateArm::IsFinished()
 {
-	currentArmPos = climber->getArmSpeed();
-	float totalTurn = currentArmPos - armStartPos;
-	if(totalTurn < rotateArmEncoderTicks){
-		climber->setArmSpeed(0);
-		return true; }
-
-	return false;
+	/*if (angleDegrees == getpid){
+		return true;
+	}
+	else {
+		return false;
+	} */
 }
 
-// Called once after isFinished returns true
 void RotateArm::End()
 {
-	climber->setArmSpeed(0);
-
+	MotorManager::getMotorManager()->disablePID(angleDegrees*CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS);
+	MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT,0.0); //probably wrong
 }
 
-// Called when another command which requires one or more of the same
-// subsystems is scheduled to run
 void RotateArm::Interrupted()
 {
 	End();
 }
+
