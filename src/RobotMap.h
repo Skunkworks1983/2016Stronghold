@@ -1,23 +1,187 @@
 #ifndef ROBOTMAP_H
 #define ROBOTMAP_H
 
-#include "WPILib.h"
+#define ROBOT_NAME "VanillaThunder"
+
+#include "TuningValues.h"
+
+#define USE_DRIVEBASE 1
+#define USE_COLLECTOR 1
+#define USE_CLIMBER 1
+#define USE_SHOOTER 0
+#define USE_ARM 0
+
+#define USE_LOGGING 1
+
+#define USE_GYRO 0
+#define USE_CAMERA 0
+
+#define USE_GAMEPAD 0
+
+#define POWER_DISTRIBUTION_PANEL_PORT 0
+#define LOGFILE_NAME "/U/robotLog"
+
+#define DIP_CHANNEL_POSITION_START 0
+#define DIP_CHANNEL_POSITIONS 3
+#define DIP_CHANNEL_POSITION_END 	DIP_CHANNEL_POSITION_START 	+ DIP_CHANNEL_POSITIONS
+#define DIP_CHANNEL_OBSTACLE_START 	DIP_CHANNEL_POSITION_END
+#define DIP_CHANNEL_OBSTACLES 3
+#define DIP_CHANNEL_OBSTACLE_END 	DIP_CHANNEL_OBSTACLE_START 	+ DIP_CHANNEL_OBSTACLES
+#define DIP_CHANNEL_GOAL_START 		DIP_CHANNEL_OBSTACLE_END
+#define DIP_CHANNEL_GOALS 1
+#define DIP_CHANNEL_GOAL_END 		DIP_CHANNEL_GOAL_START 		+ DIP_CHANNEL_GOALS
+
+#define DIP_START DIP_CHANNEL_POSITION_START
+#define DIP_END   DIP_CHANNEL_GOAL_END
 
 /**
- * The RobotMap is a mapping from the ports sensors and actuators are wired into
- * to a variable name. This provides flexibility changing wiring, makes checking
- * the wiring easier and significantly reduces the number of magic numbers
- * floating around.
+ * Power
  */
- 
-// For example to map the left and right motors, you could define the
-// following variables to use with your drivetrain subsystem.
-//const int LEFTMOTOR = 1;
-//const int RIGHTMOTOR = 2;
 
-// If you are using multiple modules, make sure to define both the port
-// number and the module. For example you with a rangefinder:
-//const int RANGE_FINDER_PORT = 1;
-//const int RANGE_FINDER_MODULE = 1;
+#define POWER_BROWNOUT_VOLTAGE 7
+#define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
+#define POWER_VOLTAGE_WIDTH 1.5
+
+#define CIM_MAX_CURRENT 133
+#define MINI_CIM_MAX_CURRENT 86
+#define RS775_MAX_CURRENT 30
+
+#define OVER_MAX_TIME 1000000
+#define MAX_STOP_TIME 1000000
+
+/**
+ * OI
+ */
+
+#define OI_JOYSTICK_LEFT_PORT 0
+#define OI_JOYSTICK_RIGHT_PORT 1
+#define OI_OPERATOR_PORT 5
+
+#define OI_JOYSTICK_GAMEPAD 0
+
+/**
+ * DriveBase
+ */
+
+#define DRIVEBASE_LEFTMOTOR_1_PORT 0
+#define DRIVEBASE_LEFTMOTOR_2_PORT 1
+#define DRIVEBASE_LEFTMOTOR_3_PORT 2
+
+#define DRIVEBASE_RIGHTMOTOR_1_PORT 13
+#define DRIVEBASE_RIGHTMOTOR_2_PORT 14
+#define DRIVEBASE_RIGHTMOTOR_3_PORT 15
+
+#define DRIVEBASE_RIGHT_ENCODER_PORT 1
+#define DRIVEBASE_LEFT_ENCODER_PORT 13
+
+/**
+ * Collector
+ */
+
+#define COLLECTOR_ROTATOR_MOTOR_LEFT_PORT 3
+#define COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT 12
+
+#define COLLECTOR_ROLLER_MOTOR_1_PORT 11
+#define COLLECTOR_ROLLER_ENCODER_PORT 11
+
+#define COLLECTOR_KICKER_MOTOR_PORT 4
+
+#define COLLECTOR_ROTATOR_TOLERANCE 15
+
+/**
+ * Climber
+ */
+
+#define CLIMBER_WINCH_MOTOR_1_PORT 4
+#define CLIMBER_WINCH_MOTOR_2_PORT 5
+#define CLIMBER_WINCH_MOTOR_3_PORT 6
+#define CLIMBER_WINCH_MOTOR_4_PORT 7
+
+#define CLIMBER_WINCH_ENCODER_PORT 5
+
+#define CLIMBER_ARM_MOTOR_PORT 8
+#define CLIMBER_ARM_ENCODER_PORT CLIMBER_ARM_MOTOR_PORT
+#define CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS 1.5f
+
+/**
+ * Shooter
+ */
+
+#define SHOOTER_MOTOR_1_PORT 14
+#define SHOOTER_MOTOR_2_PORT 15
+
+#define SHOOTER_1_ENCODER_PORT 15
+#define SHOOTER_2_ENCODER_PORT 16
+
+
+/**
+ * OI Ports
+ */
+
+/**
+ * Breach Buttons
+ */
+
+#define OI_PORTCULLIS_BREACH_PORT 0
+#define OI_BUTTON_BREACH_PORT 2
+#define OI_CHEVAL_BREACH_PORT 1
+#define OI_GENERAL_BREACH_PORT 3
+
+/**
+ * Collecting Buttons
+ */
+
+#define OI_COLLECT_BALL_PORT 4
+#define OI_COLLECTOR_UP_PORT 5
+
+/*
+ * Aiming Buttons
+ */
+
+#define OI_AIM_AT_GOAL_PORT 6
+
+/**
+ * Shooting Buttons
+ */
+
+#define OI_SHOOT_LOW_PORT 7
+#define OI_SHOOT_HIGH_PORT 8
+#define OI_SPIN_UP_SHOOTER_PORT 9
+
+/**
+ * Climbing Buttons
+ */
+
+#define OI_ROTATE_ARM_PORT 10
+#define OI_ENGAGE_WINCH_PORT 11
+
+//auto constants
+
+#define LOGFILE_NAME "/U/robotLog"
+
+#define CHEVAL_ENCODER_TICKS 0
+#define MOAT_ENCODER_TICKS 0
+#define ROCKWALL_ENCODER_TICKS 0
+#define RAMPART_ENCODER_TICKS 0
+#define ROUGHTERRAIN_ENCODER_TICKS 0
+#define PORTCULLIS_ENCODER_TICKS 0
+#define SALLYPORT_ENCODER_TICKS 0
+#define LOWBAR_ENCODER_TICKS 0
+
+#define CHEVAL_SPEED 1
+#define MOAT_SPEED 1
+#define ROCKWALL_SPEED 1
+#define RAMPART_SPEED 1
+#define ROUGHTERRAIN_SPEED 1
+#define PORTCULLIS_SPEED 1
+#define SALLYPORT_SPEED 1
+#define LOWBAR_SPEED 1
+
+#define MOTOR_DIAMETER 8
+#define TICKS_REVOLUTION 360
+#define DISTANCE_NUMBER 0.19634
+
+#define DEBUG false //HOLY CRAP CHANGE THIS TO FALSE BEFORE RUNNING THE ROBOT FOR REAL. I'M NOT KIDDING.
+//ALSO AILIS WILL PERSONALLY GIVE YOU BODILY HARM IF YOU DONT CHANGE IT. THANKS.
 
 #endif
