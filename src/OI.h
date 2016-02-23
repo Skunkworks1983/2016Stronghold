@@ -19,6 +19,7 @@ public:
 	JoystickButton *chevalBreach;
 	JoystickButton *generalBreach;
 
+	JoystickButton *stopPID;
 	// collector buttons
 	JoystickButton *collectBall;
 	JoystickButton *collectorUp;
@@ -35,6 +36,7 @@ public:
 	//climbing buttons
 	JoystickButton *rotateArm;
 	JoystickButton *engageWinch;
+	JoystickButton *reverseWinch;
 
 	OI();
 	~OI();

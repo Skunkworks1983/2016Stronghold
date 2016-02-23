@@ -1,5 +1,5 @@
-#include <CommandBase.h>
-#include <Commands/Autonomous/AutoBase.h>
+#include <Commands/Power/ManagePower.h>
+#include <Commands/Power/StallProtection.h>
 #include <Commands/Scheduler.h>
 #include <Robot.h>
 #include <RobotBase.h>
@@ -7,7 +7,7 @@
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
-#include <Subsystems/Collector.h>
+#include <SmartDashboard/SmartDashboard.h>
 #include <TuningValues.h>
 #include <cstdio>
 
@@ -23,18 +23,13 @@ void Robot::RobotInit() {
 	MotorManager::getMotorManager()->initPIDS();
 	//SensorManager::getSensorManager()->initGyro();
 	CommandBase::init();
-	//lw = LiveWindow::GetInstance();
-	/*managePower = new ManagePower();
-	 managePower->Start();
+	//managePower = new ManagePower();
+	//managePower->Start();
 
-	 StallProtection *stall = new StallProtection();
-	 stall->Start();*/
+	//StallProtection *stall = new StallProtection();
+	//stall->Start();
 
 	//cmd = AutoBase::doRoughT();
-	SmartDashboard::PutNumber("P", COLLECTOR_ROTATION_P);
-	SmartDashboard::PutNumber("I", COLLECTOR_ROTATION_I);
-	SmartDashboard::PutNumber("D", COLLECTOR_ROTATION_D);
-
 }
 
 void Robot::DisabledPeriodic() {
@@ -42,9 +37,13 @@ void Robot::DisabledPeriodic() {
 }
 
 void Robot::AutonomousInit() {
+	Scheduler::GetInstance()->RemoveAll();
 	char str[1024];
 	sprintf(str, "AutonomousInit Called");
 	writeToLogFile(LOGFILE_NAME, str);
+	/*pidGyroTest = new PIDGyroTest();
+	 pidGyroTest->Start();
+	 TAKE OUT COMMENTS TO TEST GYRO*/
 
 	//CommandBase::collector->setRollerSpeed(Collector::rollerDirection::KBackward, .3);
 	//cmd->Start();
@@ -56,6 +55,7 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopInit() {
+	Scheduler::GetInstance()->RemoveAll();
 	char str[1024];
 	sprintf(str, "TeleOp Called");
 	writeToLogFile(LOGFILE_NAME, str);
@@ -70,33 +70,44 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
-	if (0 && count++ > 10) {
-		double left = SensorManager::getSensorManager()->getSensor(
-		SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
-		double right = SensorManager::getSensorManager()->getSensor(
-		SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
-		//char str[1024];
-		//sprintf(str, "LeftEnc %f RightEnc %f", left, right);
-		//writeToLogFile(LOGFILE_NAME, str);
-		/*
-		 SmartDashboard::PutNumber("LeftDriveBaseEncoder",
-		 SensorManager::getSensorManager()->getSensor(
-		 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-		 SmartDashboard::PutNumber("RightDriveBaseEncoder",
-		 SensorManager::getSensorManager()->getSensor(
-		 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-		 */
-		count = 0;
-	}
-	SmartDashboard::PutNumber("Encoder",
-			SensorManager::getSensorManager()->getSensor(
-			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
-	SmartDashboard::PutNumber("WinchEncoder",
-			SensorManager::getSensorManager()->getSensor(
-			SENSOR_CLIMBER_WINCH_ENCODER)->PIDGet());
-	SmartDashboard::PutNumber("ArmEncoder",
-			SensorManager::getSensorManager()->getSensor(
-			SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
+	/*if (0 && count++ > 10) {
+	 /*double left = SensorManager::getSensorManager()->getSensor(
+	 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
+	 double right = SensorManager::getSensorManager()->getSensor(
+	 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
+	 //char str[1024];
+	 //sprintf(str, "LeftEnc %f RightEnc %f", left, right);
+	 //writeToLogFile(LOGFILE_NAME, str);
+
+	 SmartDashboard::PutNumber("LeftDriveBaseEncoder",
+	 SensorManager::getSensorManager()->getSensor(
+	 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
+	 SmartDashboard::PutNumber("RightDriveBaseEncoder",
+	 SensorManager::getSensorManager()->getSensor(
+	 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+
+	 //Yeah remove that multiline above.
+	 double voltage = DriverStation::GetInstance().GetBatteryVoltage();
+	 writeToLogFile("roborioVoltage.csv", std::to_string(voltage), true);
+	 count = 0;
+	 }
+	 SmartDashboard::PutNumber("collectorRotate",
+	 SensorManager::getSensorManager()->getSensor(
+	 SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
+	 SmartDashboard::PutNumber("Encoder",
+	 SensorManager::getSensorManager()->getSensor(
+	 SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
+	 SmartDashboard::PutNumber("WinchEncoder",
+	 SensorManager::getSensorManager()->getSensor(
+	 SENSOR_CLIMBER_WINCH_ENCODER)->PIDGet());
+	 SmartDashboard::PutNumber("ArmEncoder",
+	 SensorManager::getSensorManager()->getSensor(
+	 SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());*/
+	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
+
+	char str[1024];
+	sprintf(str, "BatteryVoltage %f", voltage);
+	writeToLogFile(LOGFILE_NAME, str);
 
 }
 

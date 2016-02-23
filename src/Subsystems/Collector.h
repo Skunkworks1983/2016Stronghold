@@ -9,13 +9,13 @@ class SensorManager;
 class Collector: public Subsystem {
 private:
 	SensorManager * sensorManager;
-	MotorManager * motorManager;
+	MotorManager * motorManager;bool isDown = false;
 
 public:
 	enum rollerDirection {
 		KForward, KBackward, KStop
 	};
-
+	bool pidStopped;
 	Collector();
 	~Collector();
 	void InitDefaultCommand();

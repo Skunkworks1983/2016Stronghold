@@ -23,6 +23,8 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 		writeToLogFile(LOGFILE_NAME, str);
 		this->talon = motor->talon;
 		talon->SetEncPosition(0);
+		talon->SetPosition(0);
+		talon->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 	} else {
 		char str[1024];
 		sprintf(str, "MotorIs null!!! port: %d", CANTalonEncoderPort);

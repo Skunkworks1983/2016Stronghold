@@ -16,7 +16,7 @@
 #define USE_GYRO 0
 #define USE_CAMERA 0
 
-#define USE_GAMEPAD 1
+#define USE_GAMEPAD 0
 
 #define POWER_DISTRIBUTION_PANEL_PORT 0
 #define LOGFILE_NAME "/U/robotLog"
@@ -86,7 +86,7 @@
 
 #define COLLECTOR_KICKER_MOTOR_PORT 4
 
-#define COLLECTOR_ROTATOR_TOLERANCE 5
+#define COLLECTOR_ROTATOR_TOLERANCE 15
 
 /**
  * Climber

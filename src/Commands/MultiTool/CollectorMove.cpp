@@ -15,7 +15,7 @@ CollectorMove::CollectorMove(float targetDegrees)
 
 void CollectorMove::Initialize()
 {
-	motorManager->enablePID(PID_ID_COLLECTOR, -target);
+	motorManager->enablePID(PID_ID_COLLECTOR, target);
 }
 
 void CollectorMove::Execute()

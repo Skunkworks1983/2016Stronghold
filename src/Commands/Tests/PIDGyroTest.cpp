@@ -1,6 +1,6 @@
 #include <Commands/Tests/PIDGyroTest.h>
 #include <PIDController.h>
-#include <RobotMap.h>
+#include <Subsystems/Drivebase.h>
 
 PIDGyroTest::PIDGyroTest()
 {
@@ -51,11 +51,6 @@ double PIDGyroTest::PIDGet() {
 }
 
 void PIDGyroTest::PIDWrite(float output) {
-	motorManager->setSpeed(DRIVEBASE_LEFTMOTOR_1_PORT, -output);
-	motorManager->setSpeed(DRIVEBASE_LEFTMOTOR_2_PORT, -output);
-	motorManager->setSpeed(DRIVEBASE_LEFTMOTOR_3_PORT, -output);
-
-	motorManager->setSpeed(DRIVEBASE_RIGHTMOTOR_1_PORT, output);
-	motorManager->setSpeed(DRIVEBASE_RIGHTMOTOR_2_PORT, output);
-	motorManager->setSpeed(DRIVEBASE_RIGHTMOTOR_3_PORT, output);
+	drivebase->setLeftSpeed(output);
+	drivebase->setRightSpeed(-output);
 } //When we create the PID controller, we are going to need to set the input range from 0 to 360, and then we are going to need to call "setContinuous(true);" and set the output range from -1 to 1

@@ -36,13 +36,13 @@ void MotorManager::initClimber() {
 	RS775_MAX_CURRENT, ARM);
 
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_1_PORT,
-	RS775_MAX_CURRENT, WINCH);
+	RS775_MAX_CURRENT, WINCH, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_2_PORT,
-	RS775_MAX_CURRENT, WINCH);
+	RS775_MAX_CURRENT, WINCH, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_3_PORT,
-	RS775_MAX_CURRENT, WINCH);
+	RS775_MAX_CURRENT, WINCH, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_4_PORT,
-	RS775_MAX_CURRENT, WINCH);
+	RS775_MAX_CURRENT, WINCH, true);
 }
 
 void MotorManager::initDriveBase() {
@@ -91,13 +91,13 @@ void MotorManager::initPIDS() {
 	rotationCollectorMotors.push_back(
 			getMotor(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT));
 
-	/*MotorGroup * groupCollectorRotation = new MotorGroup(
-	 rotationCollectorMotors);
-	 createPID(groupCollectorRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
-	 PID_ID_COLLECTOR,
-	 COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I, COLLECTOR_ROTATION_D,
-	 COLLECTOR_ROTATION_F, false);
-
+	MotorGroup * groupCollectorRotation = new MotorGroup(
+			rotationCollectorMotors);
+	createPID(groupCollectorRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
+	PID_ID_COLLECTOR,
+	COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I, COLLECTOR_ROTATION_D,
+	COLLECTOR_ROTATION_F, false);
+	/*
 	 std::vector<Motor*> rollerMotors;
 	 rollerMotors.push_back(getMotor(COLLECTOR_ROLLER_MOTOR_1_PORT));
 
@@ -150,12 +150,14 @@ void MotorManager::initPIDS() {
 	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_3_PORT));
 	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_4_PORT));
 	MotorGroup * winchMotorGroup = new MotorGroup(winchMotors);
+	createPID(winchMotorGroup, SENSOR_CLIMBER_WINCH_ENCODER, PID_ID_WINCH,
+			CLIMBER_WINCH_P, CLIMBER_WINCH_I, CLIMBER_WINCH_D, CLIMBER_WINCH_F, false);
 
 	std::vector<Motor*> armMotors;
 	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
 	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
 	double p = 0.00012;
-	double i = 0;//0.000005;
+	double i = 0.000005;
 	double d = 0.00005;
 	double f = 0;
 	createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, p, i, d,
