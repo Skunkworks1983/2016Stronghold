@@ -7,9 +7,8 @@
 AutoBase *AutoBase::doRoughT()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doRoughT");
-
-	//cmd->AddSequential(new CollectorMove(UP));
-	cmd->AddSequential(new DriveForward(8, 1.0));
+	cmd->AddSequential(new CollectorMove(TOP));
+	cmd->AddSequential(new DriveForward(REACH_DEFENCE_DISTANCE, REACH_DEFENCE_SPEED));
 	return cmd;
 }
 

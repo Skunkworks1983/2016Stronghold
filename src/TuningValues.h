@@ -34,6 +34,10 @@
 #define SENSOR_CLIMBER_WINCH_ENCODER 8
 #define SENSOR_CLIMBER_ARM_ENCODER 9
 
+/**
+ * Encoder Positions
+ */
+
 #define COLLECTOR_ROTATION_ENCODER_FLOOR_TICKS -1100
 #define COLLECTOR_ROTATION_ENCODER_TOP_TICKS 0
 #define COLLECTOR_ROTATION_ENCODER_MID_TICKS -780
@@ -44,20 +48,8 @@
 #define CLIMBER_ARM_DOWN_POSITION 0
 #define CLIMBER_ARM_UP_POSITION 2800
 
-#define MOVE_TOWARD_CAMERA_P 1
-#define MOVE_TOWARD_CAMERA_I 0
-#define MOVE_TOWARD_CAMERA_D 0
-#define MOVE_TOWARD_CAMERA_F 0
-
-/**
- * Cheval De Fris Constants
- */
-#define CHEV_SPEED 0.5
-#define CHEV_SHORTDIST 3
-#define CHEV_DIST 5
-
-#define COLLECTOR_TURNUP 1
-#define COLLECTOR_TURNDOWN 0
+#define REACH_DEFENCE_DISTANCE 420	//TODO: find out this value at practice field
+#define REACH_DEFENCE_SPEED .3
 
 /**
  * Power Management
@@ -114,5 +106,9 @@
 #define CLIMBER_WINCH_D 0.0
 #define CLIMBER_WINCH_F 0.0
 
+#define MOVE_TOWARD_CAMERA_P .3
+#define MOVE_TOWARD_CAMERA_I 0
+#define MOVE_TOWARD_CAMERA_D 0
+#define MOVE_TOWARD_CAMERA_F 0
 
 #endif

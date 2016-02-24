@@ -130,9 +130,9 @@ SensorManager* SensorManager::getSensorManager() {
 }
 
 void SensorManager::initGyro() {
-	ahrsDead = false;
 	try {
-		//ahrs = new AHRS(SPI::Port::kMXP);
+		ahrsDead = false;
+		//ahrs = new AHRS(SPI::Port::kMXP); Any of the three work. Probably.
 		ahrs = new AHRS(I2C::Port::kMXP);
 		ahrs->Reset();
 		counter = 0;
@@ -153,6 +153,9 @@ void SensorManager::initGyro() {
 		std::cout << err_string;
 		std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
 		ahrsDead = true;
+	}
+	if(!ahrsDead) {
+		initialYaw = ahrs->GetYaw();
 	}
 }
 

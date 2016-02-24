@@ -38,6 +38,7 @@ private:
 	std::map<unsigned, Sensor*> sensors;
 	SensorManager();
 	~SensorManager();
+	int counter;
 	//Declare other sensor types later (Encoder, Vision, etc)
 
 public:
@@ -51,8 +52,9 @@ public:
 	float GetAccelY();
 	float GetAccelZ();
 	double GetEncoderPosition(int ID);
-	double GetSpeed(int ID);bool ahrsDead;
-	int counter;
+	double GetSpeed(int ID);
+	bool ahrsDead;
+	double initialYaw;
 	Sensor *getSensor(unsigned ID);
 };
 

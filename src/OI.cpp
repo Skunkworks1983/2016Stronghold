@@ -11,8 +11,7 @@
 #include <cmath>
 #include <cstdbool>
 
-OI::OI()
-{
+OI::OI() {
 #if USE_GAMEPAD
 	gamepad = new Joystick(OI_JOYSTICK_GAMEPAD);
 #else
@@ -25,6 +24,7 @@ OI::OI()
 	collectBall = new JoystickButton(gamepad, 5);
 	collectorUp = new JoystickButton(rightStick, 2);
 	collectorDown = new JoystickButton(rightStick, 1);
+	stopPID = new JoystickButton(rightStick, 3);
 
 	//aiming
 	aimAtGoal = new JoystickButton(gamepad, 6);
@@ -37,9 +37,8 @@ OI::OI()
 	//climbing
 	rotateArm = new JoystickButton(leftStick, 3);
 	engageWinch = new JoystickButton(leftStick, 2);
-
 	reverseWinch = new JoystickButton(leftStick, 4);
-	stopPID = new JoystickButton(rightStick, 3);
+
 	registerButtonListener();
 }
 
@@ -70,7 +69,7 @@ double OI::getLeftStickY() {
 #if USE_GAMEPAD
 	return -gamepad->GetY()*fabs(gamepad->GetY());
 #else
-	return -leftStick->GetY()*fabs(leftStick->GetY());
+	return -leftStick->GetY() * fabs(leftStick->GetY());
 #endif
 }
 
@@ -78,12 +77,11 @@ double OI::getRightStickY() {
 #if USE_GAMEPAD
 	return -gamepad->GetAxis(Joystick::AxisType::kThrottleAxis)*fabs(gamepad->GetAxis(Joystick::AxisType::kThrottleAxis));
 #else
-	return -rightStick->GetY()*fabs(rightStick->GetY());
+	return -rightStick->GetY() * fabs(rightStick->GetY());
 #endif
 }
 
-void OI::registerButtonListener()
-{
+void OI::registerButtonListener() {
 	//portcullisBreach->WhenPressed(new PortcullisAuto(0.1, 0, 0));
 	//change values later - Superior DeSilva)
 	//chevalBreach->WhenPressed(new ChevDeFris(0.1, 0, 0));
@@ -98,21 +96,23 @@ void OI::registerButtonListener()
 //	attachHook->WhenPressed(new);
 	//engageWinch->WhenPressed(new);
 	rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
-	SmartDashboard::PutData("Climber Down", new RotateArm(CLIMBER_ARM_DOWN_POSITION));
+	SmartDashboard::PutData("Climber Down",
+			new RotateArm(CLIMBER_ARM_DOWN_POSITION));
 
 	//engageWinch->WhenPressed(new RunWinchToSetPoint(CLIMBER_WINCH_UP_POSITION, .25));
 	engageWinch->WhileHeld(new RunWinch(.50));
 
 	reverseWinch->WhileHeld(new RunWinch(-.1));
 
-	shootLow->WhileHeld(new ActivateRollers(Collector::rollerDirection::KBackward));
-	collectorUp->WhenPressed(new CollectorMove(COLLECTOR_ROTATION_ENCODER_TOP_TICKS));
-	collectorDown->WhenPressed(new CollectorMove(COLLECTOR_ROTATION_ENCODER_FLOOR_TICKS));
-	collectorDown->WhileHeld(new ActivateRollers(Collector::rollerDirection::KForward));
+	shootLow->WhileHeld(
+			new ActivateRollers(Collector::rollerDirection::KBackward));
+	collectorUp->WhenPressed(new CollectorMove(TOP));
+	collectorDown->WhenPressed(new CollectorMove(FLOOR));
+	collectorDown->WhileHeld(
+			new ActivateRollers(Collector::rollerDirection::KForward));
 	stopPID->WhenPressed(new StopCollectorPID());
 }
 
-bool OI::isJoystickButtonPressed(int control, int button)
-{
+bool OI::isJoystickButtonPressed(int control, int button) {
 	return false;
 }

@@ -12,9 +12,9 @@
 #include <cstdio>
 
 void Robot::RobotInit() {
-	char nothing[1024];
-	sprintf(nothing, "START OF NEW RUN \t START OF NEW RUN");
-	writeToLogFile(LOGFILE_NAME, nothing);
+	char startup[1024];
+	sprintf(startup, "START OF NEW RUN \t START OF NEW RUN");
+	writeToLogFile(LOGFILE_NAME, startup);
 	char str[1024];
 	sprintf(str, "RobotInit Called");
 	writeToLogFile(LOGFILE_NAME, str);
@@ -22,7 +22,7 @@ void Robot::RobotInit() {
 	SensorManager::getSensorManager();
 	MotorManager::getMotorManager()->initPIDS();
 	//SensorManager::getSensorManager()->initGyro();
-	CommandBase::init();
+
 	//managePower = new ManagePower();
 	//managePower->Start();
 
@@ -70,45 +70,11 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
-	/*if (0 && count++ > 10) {
-	 /*double left = SensorManager::getSensorManager()->getSensor(
-	 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
-	 double right = SensorManager::getSensorManager()->getSensor(
-	 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
-	 //char str[1024];
-	 //sprintf(str, "LeftEnc %f RightEnc %f", left, right);
-	 //writeToLogFile(LOGFILE_NAME, str);
-
-	 SmartDashboard::PutNumber("LeftDriveBaseEncoder",
-	 SensorManager::getSensorManager()->getSensor(
-	 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-	 SmartDashboard::PutNumber("RightDriveBaseEncoder",
-	 SensorManager::getSensorManager()->getSensor(
-	 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-
-	 //Yeah remove that multiline above.
-	 double voltage = DriverStation::GetInstance().GetBatteryVoltage();
-	 writeToLogFile("roborioVoltage.csv", std::to_string(voltage), true);
-	 count = 0;
-	 }
-	 SmartDashboard::PutNumber("collectorRotate",
-	 SensorManager::getSensorManager()->getSensor(
-	 SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
-	 SmartDashboard::PutNumber("Encoder",
-	 SensorManager::getSensorManager()->getSensor(
-	 SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
-	 SmartDashboard::PutNumber("WinchEncoder",
-	 SensorManager::getSensorManager()->getSensor(
-	 SENSOR_CLIMBER_WINCH_ENCODER)->PIDGet());
-	 SmartDashboard::PutNumber("ArmEncoder",
-	 SensorManager::getSensorManager()->getSensor(
-	 SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());*/
 	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
 
 	char str[1024];
 	sprintf(str, "BatteryVoltage %f", voltage);
 	writeToLogFile(LOGFILE_NAME, str);
-
 }
 
 void Robot::TestPeriodic() {
