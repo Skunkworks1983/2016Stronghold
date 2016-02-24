@@ -3,6 +3,7 @@
 #include <Services/CameraReader.h>
 #include <Subsystems/Drivebase.h>
 #include <cstdio>
+#include <Services/Logger.h>
 
 RotateTowardCameraTarget::RotateTowardCameraTarget() {
 	Requires(drivebase);
@@ -10,6 +11,9 @@ RotateTowardCameraTarget::RotateTowardCameraTarget() {
 	MOVE_TOWARD_CAMERA_D, this, this);
 	controller->SetInputRange(-1,1);
 	lostTarget = false;
+	outputspeed = 0;
+	invalidCount = 0;
+	error = 0;
 }
 
 RotateTowardCameraTarget::~RotateTowardCameraTarget() {
@@ -55,12 +59,14 @@ void RotateTowardCameraTarget::PIDWrite(float output) {
 		drivebase->setRightSpeed(- output);
 	}else{
 		//printf("CAMERA READER READ IS INVALID\n");
+		writeToLogFile(LOGFILE_NAME, "CAMERA READER READ IS INVALID");
 	}
 }
 
 double RotateTowardCameraTarget::PIDGet() {
 	if (CameraReader::getCameraReader()->getLastX() == INVALID) {
 		//printf("CAMERA READER READ IS INVALID\n");
+		writeToLogFile(LOGFILE_NAME, "CAMERA READER READ IS INVALID");
 		//CameraReader::getCameraReader()->stopReading();
 		if(invalidCount++ > 20){
 			CameraReader::getCameraReader()->stopReading();

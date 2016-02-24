@@ -13,7 +13,7 @@ private:
 	double error, outputspeed;
 	unsigned invalidCount;
 	bool lostTarget;
-	int closeEnoughCount;
+	//int closeEnoughCount; Not currently used
 public:
 	RotateTowardCameraTarget();
 	virtual ~RotateTowardCameraTarget();

@@ -4,7 +4,7 @@
 
 AutoBase *AutoBase::doLowB()
 {
-	AutoBase *cmd = new AutoBase("Autonomous-doLowB");
+	AutoBase *cmd = new AutoBase((char*)"Autonomous-doLowB");
 	cmd->AddSequential(new DriveForward(5, 1));
 //	does it need to handle anything after driving forward?
 //	AddSequential(new TurnDegree(45)); //or until aligned with tower

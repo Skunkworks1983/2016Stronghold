@@ -12,8 +12,7 @@
 
 class SensorManager;
 
-class AutoBase: public CommandGroup
-{
+class AutoBase: public CommandGroup {
 private:
 	enum eGoalPos
 	{
@@ -30,8 +29,7 @@ private:
 		posThree
 	};
 
-	enum eObstacle
-	{
+	enum eObstacle {
 		Obstacle_lowBar,
 		Obstacle_cheval,
 		Obstacle_moat,
@@ -40,6 +38,12 @@ private:
 		Obstacle_rockwall,
 		Obstacle_portcullis
 	};
+
+	AutoBase();
+	AutoBase(char *style);
+	~AutoBase();
+public:
+	static AutoBase *getSelectedAuto();
 
 	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos, eGoalPos goalPos);
 	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp, eGoalPos *goal);
@@ -51,13 +55,6 @@ private:
 	static AutoBase *doPortC(); //Portcullis
 	static AutoBase *doSpy(); //Spy box
 	static AutoBase *doLowB(); // Low Bar
-
-	AutoBase();
-	AutoBase(char *style);
-	~AutoBase();
-public:
-	static AutoBase *getSelectedAuto();
-
 };
 
 #endif

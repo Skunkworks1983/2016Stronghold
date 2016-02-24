@@ -1,12 +1,17 @@
-#include <Commands/Defences/ChevDeFris.h>
-#include <Commands/Defences/GeneralBreach.h>
-#include <Commands/Defences/PortcullisAuto.h>
+#include <Commands/Climbing/RotateArm.h>
+#include <Commands/Climbing/RunWinch.h>
+#include <Commands/Climbing/RunWinchSetPoint.h>
+#include <Commands/MultiTool/ActivateRollers.h>
+#include <Commands/MultiTool/CollectorMove.h>
+#include <Commands/MultiTool/StopCollectorPID.h>
 #include <OI.h>
+#include <SmartDashboard/SmartDashboard.h>
+#include <Subsystems/Collector.h>
+#include <TuningValues.h>
 #include <cmath>
 #include <cstdbool>
 
-OI::OI()
-{
+OI::OI() {
 #if USE_GAMEPAD
 	gamepad = new Joystick(OI_JOYSTICK_GAMEPAD);
 #else
@@ -16,20 +21,25 @@ OI::OI()
 	op = new Joystick(OI_OPERATOR_PORT);
 
 	//collector
-	collectBall = new JoystickButton(op, OI_COLLECT_BALL_PORT);
-	collectorUp = new JoystickButton(op, OI_COLLECTOR_UP_PORT);
+	collectBall = new JoystickButton(gamepad, 5);
+	collectorUp = new JoystickButton(rightStick, 2);
+	collectorDown = new JoystickButton(rightStick, 1);
+	stopPID = new JoystickButton(rightStick, 3);
 
 	//aiming
-	aimAtGoal = new JoystickButton(op, OI_AIM_AT_GOAL_PORT);
+	aimAtGoal = new JoystickButton(gamepad, 6);
 
 	//shooting
-	shootLow = new JoystickButton(op, OI_SHOOT_LOW_PORT);
-	shootHigh = new JoystickButton(op, OI_SHOOT_HIGH_PORT);
-	spinUpShooter = new JoystickButton(op, OI_SPIN_UP_SHOOTER_PORT);
+	shootLow = new JoystickButton(leftStick, 1);
+	shootHigh = new JoystickButton(op, 8);
+	spinUpShooter = new JoystickButton(op, 9);
 
 	//climbing
-	rotateArm = new JoystickButton(op, OI_ROTATE_ARM_PORT);
-	engageWinch = new JoystickButton(op, OI_ENGAGE_WINCH_PORT);
+	rotateArm = new JoystickButton(leftStick, 3);
+	engageWinch = new JoystickButton(leftStick, 2);
+	reverseWinch = new JoystickButton(leftStick, 4);
+
+	registerButtonListener();
 }
 
 OI::~OI() {
@@ -51,13 +61,15 @@ OI::~OI() {
 	delete spinUpShooter;
 	delete rotateArm;
 	delete engageWinch;
+	delete collectorDown;
+	delete reverseWinch;
 }
 
 double OI::getLeftStickY() {
 #if USE_GAMEPAD
 	return -gamepad->GetY()*fabs(gamepad->GetY());
 #else
-	return leftStick->GetY()*fabs(leftStick->GetY());
+	return -leftStick->GetY() * fabs(leftStick->GetY());
 #endif
 }
 
@@ -65,17 +77,16 @@ double OI::getRightStickY() {
 #if USE_GAMEPAD
 	return -gamepad->GetAxis(Joystick::AxisType::kThrottleAxis)*fabs(gamepad->GetAxis(Joystick::AxisType::kThrottleAxis));
 #else
-	return rightStick->GetY()*fabs(rightStick->GetY());
+	return -rightStick->GetY() * fabs(rightStick->GetY());
 #endif
 }
 
-void OI::registerButtonListener()
-{
-	portcullisBreach->WhenPressed(new PortcullisAuto(0.1, 0, 0));
+void OI::registerButtonListener() {
+	//portcullisBreach->WhenPressed(new PortcullisAuto(0.1, 0, 0));
 	//change values later - Superior DeSilva)
-	chevalBreach->WhenPressed(new ChevDeFris(0.1, 0, 0));
+	//chevalBreach->WhenPressed(new ChevDeFris(0.1, 0, 0));
 	//change values later
-	generalBreach->WhenPressed(new GeneralBreach(0.1, 0));
+	//generalBreach->WhenPressed(new GeneralBreach(0.1, 0));
 	//collectBall->WhenPressed(new );
 	//collectorUp->WhenPressed(new );
 	//aimAtGoal->WhenPressed(new);
@@ -84,10 +95,24 @@ void OI::registerButtonListener()
 //	spinUpShooter->WhenPressed(new);
 //	attachHook->WhenPressed(new);
 	//engageWinch->WhenPressed(new);
+	rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
+	SmartDashboard::PutData("Climber Down",
+			new RotateArm(CLIMBER_ARM_DOWN_POSITION));
 
+	//engageWinch->WhenPressed(new RunWinchToSetPoint(CLIMBER_WINCH_UP_POSITION, .25));
+	engageWinch->WhileHeld(new RunWinch(.50));
+
+	reverseWinch->WhileHeld(new RunWinch(-.1));
+
+	shootLow->WhileHeld(
+			new ActivateRollers(Collector::rollerDirection::KBackward));
+	collectorUp->WhenPressed(new CollectorMove(TOP));
+	collectorDown->WhenPressed(new CollectorMove(FLOOR));
+	collectorDown->WhileHeld(
+			new ActivateRollers(Collector::rollerDirection::KForward));
+	stopPID->WhenPressed(new StopCollectorPID());
 }
 
-bool OI::isJoystickButtonPressed(int control, int button)
-{
+bool OI::isJoystickButtonPressed(int control, int button) {
 	return false;
 }

@@ -19,6 +19,7 @@ private:
 	SensorManager * sensorManager;
 	MotorManager * 	motorManager;
 	float			errorOffset;		//Current enc position - initial enc position
+	Sensor *leftEncoder, *rightEncoder;
 	//Todo: Check if ahrsDead and ignore all orient calls if it is
 	void            setDistance(float distance, float speed);
 public:

@@ -6,7 +6,6 @@
 #include <Subsystems/Climber.h>
 #include <Subsystems/Collector.h>
 #include <Subsystems/Drivebase.h>
-#include <Subsystems/Shooter.h>
 
 
 // Initialize a single static instance of all of your subsystems to NULL
