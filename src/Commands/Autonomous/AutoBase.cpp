@@ -1,5 +1,8 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <cstdbool>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 AutoBase::AutoBase() {
 	AutoBase("AutoBase-Blank");
@@ -11,6 +14,26 @@ AutoBase::AutoBase(char *style) :
 }
 
 AutoBase::~AutoBase() {
+}
+
+AutoBase *AutoBase::readFromTextFile(std::string file) {
+	char* title;
+	std::string line;
+	std::ifstream myfile(file);
+	if (myfile.is_open()) {
+		while (getline(myfile, line)) {
+
+			std::cout << line << '\n';
+		}
+		myfile.close();
+	}
+
+	else
+		std::cout << "Unable to open file";
+
+	AutoBase *auto_base = new AutoBase(title);
+
+	return auto_base;
 }
 
 AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
@@ -52,7 +75,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 	case high:
 		switch (startPos) {
 		case spy: //drive forward
-			auto_base->AddSequential(new DriveForward(3.5,driveSpeed ));
+			auto_base->AddSequential(new DriveForward(3.5, driveSpeed));
 			auto_base->AddSequential(new TurnDegree(-135));
 			auto_base->AddSequential(new DriveForward(1, driveSpeed));
 			auto_base->AddSequential(new TurnDegree(-20));

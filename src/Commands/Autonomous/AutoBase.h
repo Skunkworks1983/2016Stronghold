@@ -45,6 +45,7 @@ private:
 public:
 	static AutoBase *getSelectedAuto();
 
+	static AutoBase *readFromTextFile(std::string);
 	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos, eGoalPos goalPos);
 	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp, eGoalPos *goal);
 	static AutoBase *doCheval(); //Cheval de Frise

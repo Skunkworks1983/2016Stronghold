@@ -25,6 +25,7 @@ public:
 	JoystickButton *collectorUp;
 	JoystickButton *collectorDown;
 
+	JoystickButton *holdAgainst;
 	//aiming buttons
 	JoystickButton *aimAtGoal;
 
@@ -42,7 +43,7 @@ public:
 	~OI();
 	double getLeftStickY();
 	double getRightStickY();
-	void registerButtonListener();
+	void registerButtonListeners();
 	bool isJoystickButtonPressed(int control, int button);
 };
 
