@@ -108,26 +108,26 @@ void MotorManager::initPIDS() {
 #endif
 #if USE_DRIVEBASE
 
-	std::vector<Motor*> DrivebaseLeftMotors;
-	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
-	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
-	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
-	MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
-	createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
-	PID_ID_DRIVEBASE_LEFT,
-	DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
-	DRIVEBASE_LEFT_F, false);
+	/*std::vector<Motor*> DrivebaseLeftMotors;
+	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
+	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
+	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
+	 MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
+	 createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
+	 PID_ID_DRIVEBASE_LEFT,
+	 DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
+	 DRIVEBASE_LEFT_F, false);
 
-	std::vector<Motor*> DrivebaseRightMotors;
-	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
-	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
-	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
-	MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
+	 std::vector<Motor*> DrivebaseRightMotors;
+	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
+	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
+	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
+	 MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
 
-	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
-	PID_ID_DRIVEBASE_RIGHT,
-	DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
-	DRIVEBASE_RIGHT_F, false);
+	 createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+	 PID_ID_DRIVEBASE_RIGHT,
+	 DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
+	 DRIVEBASE_RIGHT_F, false);*/
 
 #if USE_GYRO
 	//MotorGroup * groupGyroTurnMotors = new MotorGroup(driveBaseMotors);

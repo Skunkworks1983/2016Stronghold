@@ -10,14 +10,18 @@
 TurnRightEncoder::TurnRightEncoder(double degrees) :
 		degrees(degrees) {
 	Requires(drivebase);
+	initialLeft = 0;
+	initialRight = 0;
 }
 
 TurnRightEncoder::~TurnRightEncoder() {
 }
 
 void TurnRightEncoder::Initialize() {
-	initial = SensorManager::getSensorManager()->getSensor(
+	initialLeft = SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
+	initialRight = SensorManager::getSensorManager()->getSensor(
+	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
 	double speed = .5;
 	drivebase->setLeftSpeed(speed);
 	drivebase->setRightSpeed(-speed);
@@ -31,10 +35,10 @@ bool TurnRightEncoder::IsFinished() {
 	double end = 3000;
 	return fabs(
 			(fabs(SensorManager::getSensorManager()->getSensor(
-			SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet())
+			SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet() - initialLeft)
 					+ fabs(SensorManager::getSensorManager()->getSensor(
-					SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet())) / 2
-					- initial) > end * (degrees / 360.0);
+					SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet() - initialRight))
+					/ 2) > end * (degrees / 360.0);
 }
 
 void TurnRightEncoder::End() {

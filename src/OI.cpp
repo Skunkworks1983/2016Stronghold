@@ -71,7 +71,7 @@ OI::~OI() {
 
 double OI::getLeftStickY() {
 #if USE_GAMEPAD
-	return -gamepad->GetY()*fabs(gamepad->GetY());
+	return -gamepad->GetY() * fabs(gamepad->GetY());
 #else
 	return -leftStick->GetY() * fabs(leftStick->GetY());
 #endif
@@ -79,7 +79,8 @@ double OI::getLeftStickY() {
 
 double OI::getRightStickY() {
 #if USE_GAMEPAD
-	return -gamepad->GetAxis(Joystick::AxisType::kThrottleAxis)*fabs(gamepad->GetAxis(Joystick::AxisType::kThrottleAxis));
+	return -gamepad->GetAxis(Joystick::AxisType::kThrottleAxis)
+			* fabs(gamepad->GetAxis(Joystick::AxisType::kThrottleAxis));
 #else
 	return -rightStick->GetY() * fabs(rightStick->GetY());
 #endif
@@ -89,30 +90,26 @@ void OI::registerButtonListeners() {
 	char str[1024];
 	sprintf(str, "RegisterButtonListeners called");
 	writeToLogFile(LOGFILE_NAME, str);
+	int c = 0;
 	rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
-	SmartDashboard::PutData("Climber Down",
-			new RotateArm(CLIMBER_ARM_DOWN_POSITION));
 
 	//engageWinch->WhenPressed(new RunWinchToSetPoint(CLIMBER_WINCH_UP_POSITION, .25));
 	engageWinch->WhileHeld(new RunWinch(.50));
 
-	engageWinch->WhileHeld(new RunWinch(.50));
-
 	reverseWinch->WhileHeld(new RunWinch(-.1));
 
-	shootLow->WhileHeld(
-			new ActivateRollers(Collector::rollerDirection::KBackward));
+	shootLow->WhileHeld(new ActivateRollers(Collector::rollerDirection::KBackward));
+
 	collectorUp->WhenPressed(new CollectorMove(TOP));
+
 	collectorDown->WhenPressed(new CollectorMove(FLOOR));
+
 	collectorDown->WhileHeld(new ActivateRollers(Collector::rollerDirection::KForward));
-	stopPID->WhenPressed(new StopCollectorPID());
 
+	stopPID->WhenPressed(new StopCollectorPID());
 	//holdAgainst->WhenPressed(new HoldAgainstTower(-.2));
-
-	collectorDown->WhenPressed(new CollectorMove(FLOOR));
-	collectorDown->WhileHeld(
-			new ActivateRollers(Collector::rollerDirection::KForward));
-	stopPID->WhenPressed(new StopCollectorPID());
+	sprintf(str, "RegisterButtonListeners Ended");
+	writeToLogFile(LOGFILE_NAME, str);
 }
 
 bool OI::isJoystickButtonPressed(int control, int button) {

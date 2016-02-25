@@ -13,10 +13,10 @@
 
 #define USE_LOGGING 1
 
-#define USE_GYRO 1
+#define USE_GYRO 0
 #define USE_CAMERA 0
 
-#define USE_GAMEPAD 1
+#define USE_GAMEPAD 0
 
 #define POWER_DISTRIBUTION_PANEL_PORT 0
 #define LOGFILE_NAME "/U/robotLog"
@@ -71,9 +71,8 @@
 #define DRIVEBASE_RIGHTMOTOR_2_PORT 14
 #define DRIVEBASE_RIGHTMOTOR_3_PORT 15
 
-#define DRIVEBASE_RIGHT_ENCODER_PORT 2 //CAN switched it to 2, orig is 1
-
-#define DRIVEBASE_LEFT_ENCODER_PORT 13
+#define DRIVEBASE_RIGHT_ENCODER_PORT 13 //CAN switched it to 2, orig is 1
+#define DRIVEBASE_LEFT_ENCODER_PORT 2
 
 /**
  * Collector

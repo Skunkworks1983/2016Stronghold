@@ -8,7 +8,8 @@ class TurnRightEncoder: public CommandBase
 {
 private:
 	double degrees;
-	double initial;
+	double initialLeft;
+	double initialRight;
 public:
 	TurnRightEncoder(double degrees); //number of degrees to turn, speed at which to turn
 	virtual ~TurnRightEncoder();

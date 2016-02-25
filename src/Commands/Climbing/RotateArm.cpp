@@ -6,8 +6,7 @@
 #include <TuningValues.h>
 #include <cstdio>
 
-RotateArm::RotateArm(float target) {
-	this->target = target;
+RotateArm::RotateArm(float target) :target(target) {
 }
 
 RotateArm::~RotateArm() {
