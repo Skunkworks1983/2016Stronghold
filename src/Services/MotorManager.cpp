@@ -123,6 +123,7 @@ void MotorManager::initPIDS() {
 	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
 	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
 	 MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
+
 	 createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
 	 PID_ID_DRIVEBASE_RIGHT,
 	 DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
@@ -156,8 +157,9 @@ void MotorManager::initPIDS() {
 	std::vector<Motor*> armMotors;
 	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
 	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
-	double p = 0.00012;
-	double i = 0.000005;
+	double p = 0.000014;
+	//double p = .00007;
+	double i = 0.000004;
 	double d = 0.00005;
 	double f = 0;
 	createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, p, i, d,
@@ -200,6 +202,10 @@ MotorManager::~MotorManager() {
 
 void MotorManager::setPosition(unsigned pidID, float position) {
 
+}
+
+void MotorManager::resetPID(unsigned ID){
+	pidControllerMap[ID]->Reset();
 }
 
 void MotorManager::setSpeed(unsigned ID, float speed) {

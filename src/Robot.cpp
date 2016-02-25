@@ -1,13 +1,12 @@
-#include <Commands/Power/ManagePower.h>
-#include <Commands/Power/StallProtection.h>
+#include <Commands/Driving/TurnRightEncoder.h>
 #include <Commands/Scheduler.h>
+#include <DriverStation.h>
 #include <Robot.h>
 #include <RobotBase.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
-#include <SmartDashboard/SmartDashboard.h>
 #include <TuningValues.h>
 #include <cstdio>
 
@@ -21,6 +20,8 @@ void Robot::RobotInit() {
 	MotorManager::getMotorManager();
 	SensorManager::getSensorManager();
 	MotorManager::getMotorManager()->initPIDS();
+
+	CommandBase::init();
 	//SensorManager::getSensorManager()->initGyro();
 
 	//managePower = new ManagePower();
@@ -44,14 +45,17 @@ void Robot::AutonomousInit() {
 	/*pidGyroTest = new PIDGyroTest();
 	 pidGyroTest->Start();
 	 TAKE OUT COMMENTS TO TEST GYRO*/
-
-	//CommandBase::collector->setRollerSpeed(Collector::rollerDirection::KBackward, .3);
-	//cmd->Start();
-	//MotorManager::getMotorManager()->enablePID(PID_ID_COLLECTOR, COLLECTOR_ROTATION_ENCODER_TOP_TICKS);
 }
 
 void Robot::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
+	char str[1024];
+		sprintf(str, "leftEncoder %f, rightEncoder %f",
+				SensorManager::getSensorManager()->getSensor(
+				SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet(),
+				SensorManager::getSensorManager()->getSensor(
+				SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+		writeToLogFile(LOGFILE_NAME, str);
 }
 
 void Robot::TeleopInit() {
@@ -72,9 +76,18 @@ void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
 	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
 
+	//char str[1024];
+	//sprintf(str, "BatteryVoltage %f", voltage);
+	//writeToLogFile(LOGFILE_NAME, str);
+
 	char str[1024];
-	sprintf(str, "BatteryVoltage %f", voltage);
+	sprintf(str, "leftEncoder %f, rightEncoder %f",
+			SensorManager::getSensorManager()->getSensor(
+			SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet(),
+			SensorManager::getSensorManager()->getSensor(
+			SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 	writeToLogFile(LOGFILE_NAME, str);
+
 }
 
 void Robot::TestPeriodic() {

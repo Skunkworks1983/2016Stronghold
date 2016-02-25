@@ -42,6 +42,9 @@ Sensor::Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID) :
 Sensor::Sensor(CANTalon *canTalon, float lowRange, float highRange, unsigned ID) :
 		ID(ID), lowRange(lowRange), highRange(highRange) {
 	this->talon = canTalon;
+	talon->SetEncPosition(0);
+	talon->SetPosition(0);
+	talon->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 	this->src = NULL;
 }
 
@@ -105,10 +108,10 @@ SensorManager::SensorManager() {
 	SENSOR_CLIMBER_WINCH_ENCODER);
 
 	sensors[SENSOR_CLIMBER_ARM_ENCODER] = new Sensor(
-			CLIMBER_ARM_ENCODER_PORT,
-		CLIMBER_ARM_DOWN_POSITION,
-		CLIMBER_ARM_UP_POSITION,
-		SENSOR_CLIMBER_ARM_ENCODER);
+	CLIMBER_ARM_ENCODER_PORT,
+	CLIMBER_ARM_DOWN_POSITION,
+	CLIMBER_ARM_UP_POSITION,
+	SENSOR_CLIMBER_ARM_ENCODER);
 #endif
 }
 
@@ -154,7 +157,7 @@ void SensorManager::initGyro() {
 		std::cout << "AHRS DEAD, DEFAULTING TO ENCODER\n";
 		ahrsDead = true;
 	}
-	if(!ahrsDead) {
+	if (!ahrsDead) {
 		initialYaw = ahrs->GetYaw();
 	}
 }
