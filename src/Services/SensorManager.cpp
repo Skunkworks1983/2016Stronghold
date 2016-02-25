@@ -40,12 +40,11 @@ Sensor::Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID) :
 }
 
 Sensor::Sensor(CANTalon *canTalon, float lowRange, float highRange, unsigned ID) :
-		ID(ID), lowRange(lowRange), highRange(highRange) {
-	this->talon = canTalon;
+		talon(canTalon), src(NULL), ID(ID), lowRange(lowRange), highRange(
+				highRange) {
 	talon->SetEncPosition(0);
 	talon->SetPosition(0);
 	talon->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-	this->src = NULL;
 }
 
 double Sensor::PIDGet() {
@@ -74,7 +73,8 @@ SensorManager::SensorManager() {
 	writeToLogFile(LOGFILE_NAME, str);
 #if USE_GYRO
 	initGyro();
-	sensors.insert(std::pair<int, Sensor*>(SENSOR_GYRO_ID, new Sensor(ahrs)));
+	//sensors.insert(std::pair<int, Sensor*>(SENSOR_GYRO_ID, new Sensor(ahrs)));
+	//todo: FIX THIS
 #endif
 #if USE_CAMERA
 	sensors.insert(std::pair<int, Sensor*>(SENSOR_CAMERA_ID, new Sensor(CameraReader::getCameraReader())));
@@ -133,6 +133,7 @@ SensorManager* SensorManager::getSensorManager() {
 }
 
 void SensorManager::initGyro() {
+	std::cout << "Reached initGyro" << std::endl;
 	try {
 		ahrsDead = false;
 		//ahrs = new AHRS(SPI::Port::kMXP); Any of the three work. Probably.
@@ -148,7 +149,8 @@ void SensorManager::initGyro() {
 				break;
 			}
 		}
-		//printf("Is the AHRS connected? %s", (ahrs->IsConnected() ? "Yes\n" : "no\n"));
+		printf("Is the AHRS connected? %s",
+				(ahrs->IsConnected() ? "Yes\n" : "no\n"));
 	} catch (std::exception * ex) {
 		std::string err_string = "Error instantiating navX MXP:  ";
 		std::cout << err_string;
