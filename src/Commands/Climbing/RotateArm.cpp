@@ -1,57 +1,54 @@
 #include <Commands/Climbing/RotateArm.h>
-#include <Subsystems/Climber.h>
+#include <RobotMap.h>
+#include <Services/Logger.h>
+#include <Services/MotorManager.h>
+#include <Subsystems/Drivebase.h>
+#include <TuningValues.h>
+#include <cstdio>
 
-RotateArm::RotateArm(float rotateArmEncoderTicks, float speed, float currentArmPos)
-{
-	Requires(climber);
-	this->rotateArmEncoderTicks = rotateArmEncoderTicks;
-	this->armStartPos = 0;
-	this->armSpeed = speed;
-	this->currentArmPos = currentArmPos;
+RotateArm::RotateArm(float target) :target(target) {
 }
 
-RotateArm::~RotateArm(){
+RotateArm::~RotateArm() {
 
 }
-// Called just before this Command runs the first time
-void RotateArm::Initialize()
-{
-	this->rotateArmEncoderTicks = climber->getArmPos();
-	climber->setArmSpeed(armSpeed);
+
+void RotateArm::Initialize() {
+	MotorManager::getMotorManager()->resetPID(PID_ID_ARM);
+	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT, .35);
+	char str[1024];
+	sprintf(str, "RotateArm Initialize called with target %f", target);
+	writeToLogFile(LOGFILE_NAME, str);
+	MotorManager::getMotorManager()->enablePID(PID_ID_ARM, target);
 }
 
-// Called repeatedly when this Command is scheduled to run
-void RotateArm::Execute()
-{
-	currentArmPos = climber->getArmSpeed();
-	float totalTurn = currentArmPos - armStartPos;
-	if(totalTurn < rotateArmEncoderTicks){
-		climber->setArmSpeed(0);
-	}
+void RotateArm::Execute() {
+	//get PID values
+	//char str[1024];
+	//sprintf(str, "ArmPower %f", MotorManager::getMotorManager()->get);
+	//writeToLogFile(LOGFILE_NAME, str);
 }
 
-// Make this return true when this Command no longer needs to run execute()
-bool RotateArm::IsFinished()
-{
-	currentArmPos = climber->getArmSpeed();
-	float totalTurn = currentArmPos - armStartPos;
-	if(totalTurn < rotateArmEncoderTicks){
-		climber->setArmSpeed(0);
-		return true; }
-
+bool RotateArm::IsFinished() {
+	/*if (target == getpid){
+	 return true;
+	 }
+	 else {
+	 return false;
+	 } */
 	return false;
 }
 
-// Called once after isFinished returns true
-void RotateArm::End()
-{
-	climber->setArmSpeed(0);
-
+void RotateArm::End() {
+	char str[1024];
+	sprintf(str, "RotateArm END called with target %f", target);
+	writeToLogFile(LOGFILE_NAME, str);
+	//MotorManager::getMotorManager()->disablePID(target*CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS);
+	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT,0.0); //probably wrong
+	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 }
 
-// Called when another command which requires one or more of the same
-// subsystems is scheduled to run
-void RotateArm::Interrupted()
-{
+void RotateArm::Interrupted() {
 	End();
 }
+

@@ -7,24 +7,21 @@
 class MotorManager;
 class SensorManager;
 
-class SpinUpShooter: public CommandBase
-{
+class SpinUpShooter: public CommandBase {
 
 private:
-	OI            * oi;
-	MotorManager  * motorManager;
+	OI * oi;
+	MotorManager * motorManager;
 	SensorManager * sensorManager;
-
-
-public:
-	SpinUpShooter();
-	void Initialize();
-	void Execute();
-	bool IsFinished();
-	void End();
-	void Interrupted();
+	float timeOut;
 	float speed;
 
+public:
+	SpinUpShooter(float timeOut, float speed);
+	void Initialize();
+	void Execute();bool IsFinished();
+	void End();
+	void Interrupted();
 
 };
 

@@ -5,42 +5,24 @@
 
 ActivateKicker::ActivateKicker()
 {
-	kickTime = 0;
-	kickerActivated = false;
-	kickerDone = false;
+	timeOut = 0.5;
 	collector = CommandBase::collector;
 	motorManager = MotorManager::getMotorManager();
 }
 
 void ActivateKicker::Initialize()
 {
-	kickTime = 0;
-	kickerActivated = false;
+	collector->setKickerSpeed(1);
+	SetTimeout(timeOut);
 }
 
 void ActivateKicker::Execute()
 {
-	if (kickerActivated == false){
-		collector->setKickerSpeed(1);
-		kickerActivated = true;
-	} else {
-		if (kickTime == 0){
-			kickTime = clock();
-		}
-		if (clock() == kickTime + (CLOCKS_PER_SEC * 0.5)) {
-			collector->setKickerSpeed(0);
-			kickerDone = true;
-		}
-	}
 
 }
 
 bool ActivateKicker::IsFinished() {
-	if (kickerDone == true) {
-		return true;
-	} else {
-		return false;
-	}
+return false;
 }
 
 // Called once after isFinished returns true

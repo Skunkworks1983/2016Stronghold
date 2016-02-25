@@ -1,7 +1,6 @@
 #ifndef MOTOR_MANAGER_H
 #define MOTOR_MANAGER_H
 
-#include <Commands/Subsystem.h>
 #include <PIDController.h>
 #include <PIDOutput.h>
 #include <cstdbool>
@@ -11,6 +10,7 @@
 class CANTalon;
 class PIDController;
 class Encoder;
+class StallProtection;
 
 enum Priority {
 	PRIORITY_FIRST,
@@ -20,19 +20,34 @@ enum Priority {
 	PRIORITY_ACCESSORIES,
 	PRIORITYS
 };
+
+enum ESubsystem {
+	DRIVEBASE,
+	WINCH,
+	ARM,
+	COLLECTOR_ROTATOR,
+	ROLLER,
+	SHOOTER
+};
+
 class Motor {
 	friend class MotorManager;
 private:
-
+	bool reversed;
 public:
-	Motor(Priority prioArg, int portArg);
+	Motor(Priority prioArg, int portArg, float maxCurrent, ESubsystem parentSubsystem, bool reversed);
 	~Motor();
+	ESubsystem parentSubsystem;
 	CANTalon * talon;
-	float      speed;
-	Priority   motorPriority;
-	unsigned    	   port;
+	float speed;
+	float maxCurrent;
+	long long int overCurrentStartTime;
+	long long int stoppedStartTime;
+	Priority motorPriority;
+	unsigned port;
 	float C;
 	void setC(Priority priority, float voltage );
+	bool isReversed();
 };
 
 class MotorGroup: public PIDOutput {
@@ -42,21 +57,32 @@ public:
 	MotorGroup(std::vector<Motor*> motorgroup);
 	virtual ~MotorGroup();
 	void PIDWrite(float output);
+	int getPID(Motor motor);
 };
 
 class MotorManager {
 	friend class SensorManager;
+	friend class StallProtection;
 	friend class Motor;
 private:
 	MotorManager();
 	~MotorManager();
 	MotorManager(const MotorManager &);
+
+	void initClimber();
+	void initDriveBase();
+	void initShooter();
+	void initCollector();
+	void initArm();
+
+	unsigned count = 0;
+
 	Priority allowedPriority;
 
-	std::vector<Motor*> motors;
-	std::map<int, PIDController*> pidControllerMap;
+	std::map<unsigned, Motor*> motors;
+	std::map<unsigned, PIDController*> pidControllerMap;
 
-	void addMotor(Priority priority, int Port);
+	void addMotor(Priority priority, int Port, float maxCurrent, ESubsystem subsystem, bool reverse = false);
 
 protected:
 	double GetPosition(unsigned ID);
@@ -64,6 +90,9 @@ protected:
 public:
 	Motor *getMotor(unsigned ID);
 
+	void initPIDS();
+
+	void resetPID(unsigned ID);
 	void setPosition(unsigned pidID, float position);
 	void setSpeed(unsigned ID, float speed);
 	void setSpeedForAll();
@@ -77,7 +106,9 @@ public:
 	void createPID(MotorGroup * group, unsigned PIDSourceID, unsigned pidID, float P, float I, float D, float F, bool isSpeedMode);
 	void setPIDF(unsigned pidID, float P, float I, float D, float F);
 	void enablePID(unsigned pidID, float setPoint);
+	void enablePID(unsigned pidID);
 	void disablePID(unsigned pidID);
+	bool isPIDEnabled(unsigned pidID);
 
 	static MotorManager * getMotorManager();
 };

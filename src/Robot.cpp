@@ -1,50 +1,92 @@
-#include <CommandBase.h>
+#include <Commands/Driving/TurnRightEncoder.h>
 #include <Commands/Scheduler.h>
-#include <IterativeRobot.h>
-#include <LiveWindow/LiveWindow.h>
+#include <DriverStation.h>
+#include <Robot.h>
 #include <RobotBase.h>
+#include <RobotMap.h>
+#include <Services/Logger.h>
+#include <Services/MotorManager.h>
+#include <Services/SensorManager.h>
+#include <TuningValues.h>
+#include <cstdio>
+#include <Commands/Autonomous/AutoBase.h>
 
+void Robot::RobotInit() {
+	char startup[1024];
+	sprintf(startup, "START OF NEW RUN \t START OF NEW RUN");
+	writeToLogFile(LOGFILE_NAME, startup);
+	char str[1024];
+	sprintf(str, "RobotInit Called");
+	writeToLogFile(LOGFILE_NAME, str);
+	MotorManager::getMotorManager();
+	SensorManager::getSensorManager();
+	MotorManager::getMotorManager()->initPIDS();
 
-class Robot: public IterativeRobot {
-private:
-	LiveWindow *lw;
+	CommandBase::init();
+	//SensorManager::getSensorManager()->initGyro();
 
-	void RobotInit()
-	{
-		CommandBase::init();
-		lw = LiveWindow::GetInstance();
-	}
+	//managePower = new ManagePower();
+	//managePower->Start();
 
-	void DisabledPeriodic()
-	{
-		Scheduler::GetInstance()->Run();
-	}
+	//StallProtection *stall = new StallProtection();
+	//stall->Start();
 
-	void AutonomousInit()
-	{
+	cmd = AutoBase::doLowB();
+}
 
-	}
+void Robot::DisabledPeriodic() {
+}
 
-	void AutonomousPeriodic()
-	{
-		Scheduler::GetInstance()->Run();
-	}
+void Robot::AutonomousInit() {
+	Scheduler::GetInstance()->RemoveAll();
+	char str[1024];
+	sprintf(str, "AutonomousInit Called");
+	writeToLogFile(LOGFILE_NAME, str);
 
-	void TeleopInit()
-	{
+	cmd->Start();
+}
 
-	}
+void Robot::AutonomousPeriodic() {
+	Scheduler::GetInstance()->Run();
 
-	void TeleopPeriodic()
-	{
-		Scheduler::GetInstance()->Run();
-	}
+	/*double left = SensorManager::getSensorManager()->getSensor(
+	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
+	double right = SensorManager::getSensorManager()->getSensor(
+	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
 
-	void TestPeriodic()
-	{
-		lw->Run();
-	}
-};
+	char str[1024];
+	sprintf(str, "LeftEncoder %f, RightEncoder %f", left, right);
+	writeToLogFile(LOGFILE_NAME, str);*/
+}
+
+void Robot::TeleopInit() {
+	Scheduler::GetInstance()->RemoveAll();
+	char str[1024];
+	sprintf(str, "TeleOp Called");
+	writeToLogFile(LOGFILE_NAME, str);
+}
+
+void Robot::TeleopPeriodic() {
+	Scheduler::GetInstance()->Run();
+	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
+
+	//char str[1024];
+	//sprintf(str, "BatteryVoltage %f", voltage);
+	//writeToLogFile(LOGFILE_NAME, str);
+
+	char str[1024];
+	sprintf(str, "leftEncoder %f, rightEncoder %f",
+			SensorManager::getSensorManager()->getSensor(
+			SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet(),
+			SensorManager::getSensorManager()->getSensor(
+			SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+	writeToLogFile(LOGFILE_NAME, str);
+
+}
+
+void Robot::TestPeriodic() {
+	//lw->Run();
+}
 
 START_ROBOT_CLASS(Robot);
 

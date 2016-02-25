@@ -10,17 +10,22 @@
 class OI
 {
 private:
-	Joystick *leftStick, *rightStick, *op;
+	Joystick *gamepad;
+	Joystick *leftStick, *rightStick;
+	Joystick *op;
 public:
 	//breaching buttons
 	JoystickButton *portcullisBreach;
 	JoystickButton *chevalBreach;
 	JoystickButton *generalBreach;
 
+	JoystickButton *stopPID;
 	// collector buttons
 	JoystickButton *collectBall;
 	JoystickButton *collectorUp;
+	JoystickButton *collectorDown;
 
+	JoystickButton *holdAgainst;
 	//aiming buttons
 	JoystickButton *aimAtGoal;
 
@@ -32,12 +37,13 @@ public:
 	//climbing buttons
 	JoystickButton *rotateArm;
 	JoystickButton *engageWinch;
+	JoystickButton *reverseWinch;
 
 	OI();
 	~OI();
 	double getLeftStickY();
 	double getRightStickY();
-	void registerButtonListener();
+	void registerButtonListeners();
 	bool isJoystickButtonPressed(int control, int button);
 };
 

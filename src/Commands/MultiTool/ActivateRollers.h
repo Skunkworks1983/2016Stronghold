@@ -2,6 +2,7 @@
 #define ActivateRollers_H
 
 #include <CommandBase.h>
+#include <Subsystems/Collector.h>
 #include <cstdbool>
 #include <ctime>
 
@@ -14,8 +15,10 @@ private:
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
 	clock_t rollerTime;
+	float timeOut;
+	Collector::rollerDirection dir;
 public:
-	ActivateRollers();
+	ActivateRollers(Collector::rollerDirection dir, float timeOut = 0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

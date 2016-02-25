@@ -3,12 +3,14 @@
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 
-SpinUpShooter::SpinUpShooter()
+SpinUpShooter::SpinUpShooter(float timeOut, float speed)
 {
 
 	oi = new OI();
 	motorManager = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
+
+	this->timeOut = timeOut;
 
 
 
@@ -19,11 +21,14 @@ void SpinUpShooter::Initialize()
 {
 
 
+SetTimeout(timeOut);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void SpinUpShooter::Execute()
 {
+motorManager->enablePID(PID_ID_SHOOTER_1, speed);
+motorManager->enablePID(PID_ID_SHOOTER_1, speed);
 
 }
 

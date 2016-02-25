@@ -3,7 +3,11 @@
 #define SRC_SERVICES_LOGGER_H_
 
 #include <string>
+#include <WPILib.h>
+#include <HAL/cpp/priority_mutex.h>
 
-void writeToLogFile (std::string fileName, std::string message);
+static priority_mutex * loggerMutex = NULL;
+static bool loggerDied = false;
+void writeToLogFile (const std::string &fileName,const std::string &message, bool csv = false);
 
 #endif /* SRC_SERVICES_LOGGER_H_ */
