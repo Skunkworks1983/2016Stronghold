@@ -24,6 +24,10 @@ public:
 #include <TuningValues.h>
 #include <RobotMap.h>
 
+enum CollectorPosition{
+	TOP, FLOOR, MID
+};
+
 class CollectorMove: public CommandBase
 {
 private:
@@ -31,7 +35,7 @@ private:
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
 public:
-	CollectorMove(float target);
+	CollectorMove(CollectorPosition pos);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

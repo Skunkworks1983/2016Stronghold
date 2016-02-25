@@ -64,7 +64,6 @@ bool PortcullisAuto::IsFinished(){
 void PortcullisAuto::End(){
 	drivebase->setLeftSpeed(0);
 	drivebase->setRightSpeed(0);
-	CollectorMove(0);
 }
 
 void PortcullisAuto::Interrupted(){

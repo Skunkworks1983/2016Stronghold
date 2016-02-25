@@ -2,18 +2,14 @@
 #define DRIVEBASE_H
 
 #include <Commands/Subsystem.h>
-#include <Services/MotorManager.h>
 
 class MotorManager;
 
 class Drivebase: public Subsystem
 {
-private:
-	// It's desirable that everything possible under private except
-	// for methods that implement subsystem capabilities
-	MotorManager * motorManager;
-
 public:
+	bool stopHold = false;
+	bool holdAgainstTower = false;
 	Drivebase();
 	~Drivebase();
 	void InitDefaultCommand();

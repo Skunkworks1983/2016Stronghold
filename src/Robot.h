@@ -3,6 +3,8 @@
 
 #include <IterativeRobot.h>
 
+class AutoBase;
+
 class ManagePower;
 class MotorManager;
 class SensorManager;
@@ -13,6 +15,7 @@ private:
 	SensorManager * sensorManager;
 	ManagePower *managePower;
 	int count;
+	AutoBase *cmd;
 public:
 	void RobotInit();
 	void DisabledPeriodic();

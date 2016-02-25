@@ -1,4 +1,5 @@
 #include <Commands/Power/ManagePower.h>
+#include <ControllerPower.h>
 #include <DriverStation.h>
 #include <Services/MotorManager.h>
 #include <SmartDashboard/SmartDashboard.h>
@@ -16,6 +17,7 @@ void ManagePower::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void ManagePower::Execute() {
 	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
+	//double voltage = DriverStation::GetInstance()::ControllerPower::GetInputVoltage();
 	SmartDashboard::PutNumber("Battery Voltage", voltage);
 
 	if (voltage >= POWER_LEVEL_1) {	//SHIELDS ARE UP CAPPIN'
