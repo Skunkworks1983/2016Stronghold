@@ -50,20 +50,33 @@ void DriveForward::Execute() {
 	 drivebase->setLeftSpeed(((1 / 15) * errorOffset + 1) * speed); //Same but tilted to the right
 	 drivebase->setRightSpeed(speed);
 	 }*/
-	char str[1024];
+	/*char str[1024];
 	sprintf(str, "LeftEnc %f RightEnc %f",
-			(double) SensorManager::getSensorManager()->getSensor(
-			SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet(),
-			(double) SensorManager::getSensorManager()->getSensor(
-			SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-	writeToLogFile(LOGFILE_NAME, str);
+			(double) SensorManager::getSensorManager()->GetEncoderPosition(
+			DRIVEBASE_LEFT_ENCODER_PORT),
+			(double) SensorManager::getSensorManager()->GetEncoderPosition(
+			DRIVEBASE_RIGHT_ENCODER_PORT));
+	writeToLogFile(LOGFILE_NAME, str);*/
 }
 
 bool DriveForward::IsFinished() {
-	if (((leftEncoder->PIDGet() + rightEncoder->PIDGet()) / 2) - initialPosition
+	double left = SensorManager::getSensorManager()->getSensor(
+				SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
+		double right = SensorManager::getSensorManager()->getSensor(
+				SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
+
+	double difference = ((left + right) / 2) - initialPosition;
+	char str[1024];
+	sprintf(str, "Difference: %f, Distance: %f", difference, distance);
+	writeToLogFile(LOGFILE_NAME, str);
+	if (difference > distance) {
+			return true;
+		}
+	/*if (((leftEncoder->PIDGet() + rightEncoder->PIDGet()) / 2) - initialPosition
 			> distance) {
 		return true;
-	}/*
+	}*/
+	/*
 	 if (sensorManager->GetEncoderPosition(DRIVEBASE_LEFTMOTOR_1_PORT)
 	 >= distance) {
 	 //PID drivebase back to error of 0 (not yet implemented, waiting on MotorManager updates)

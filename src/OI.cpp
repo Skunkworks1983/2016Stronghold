@@ -100,7 +100,7 @@ void OI::registerButtonListener() {
 			new RotateArm(CLIMBER_ARM_DOWN_POSITION));
 
 	//engageWinch->WhenPressed(new RunWinchToSetPoint(CLIMBER_WINCH_UP_POSITION, .25));
-	engageWinch->WhileHeld(new RunWinch(.50));
+	/*engageWinch->WhileHeld(new RunWinch(.50));
 
 	reverseWinch->WhileHeld(new RunWinch(-.1));
 
@@ -110,7 +110,7 @@ void OI::registerButtonListener() {
 	collectorDown->WhenPressed(new CollectorMove(FLOOR));
 	collectorDown->WhileHeld(
 			new ActivateRollers(Collector::rollerDirection::KForward));
-	stopPID->WhenPressed(new StopCollectorPID());
+	stopPID->WhenPressed(new StopCollectorPID());*/ //Winch stuff, PLEASE UNCOMMENT
 }
 
 bool OI::isJoystickButtonPressed(int control, int button) {
