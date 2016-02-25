@@ -13,6 +13,7 @@
 class RunWinch : public CommandBase{
 private:
 	float speed;
+	int counter = 0;
 public:
 	RunWinch(float setPoint);
 	~RunWinch();

@@ -16,7 +16,8 @@ private:
 	CANTalon *talon;
 	PIDSource *src;
 	unsigned ID;
-	float lowRange, highRange;
+	float lowRange;
+	float highRange;
 public:
 	Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 			unsigned ID);

@@ -1,15 +1,15 @@
-#include <Commands/Power/ManagePower.h>
-#include <Commands/Power/StallProtection.h>
+#include <Commands/Driving/TurnRightEncoder.h>
 #include <Commands/Scheduler.h>
+#include <DriverStation.h>
 #include <Robot.h>
 #include <RobotBase.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
-#include <SmartDashboard/SmartDashboard.h>
 #include <TuningValues.h>
 #include <cstdio>
+#include <Commands/Autonomous/AutoBase.h>
 
 void Robot::RobotInit() {
 	char startup[1024];
@@ -21,6 +21,8 @@ void Robot::RobotInit() {
 	MotorManager::getMotorManager();
 	SensorManager::getSensorManager();
 	MotorManager::getMotorManager()->initPIDS();
+
+	CommandBase::init();
 	//SensorManager::getSensorManager()->initGyro();
 
 	//managePower = new ManagePower();
@@ -29,11 +31,10 @@ void Robot::RobotInit() {
 	//StallProtection *stall = new StallProtection();
 	//stall->Start();
 
-	//cmd = AutoBase::doRoughT();
+	cmd = AutoBase::doLowB();
 }
 
 void Robot::DisabledPeriodic() {
-	Scheduler::GetInstance()->Run();
 }
 
 void Robot::AutonomousInit() {
@@ -41,17 +42,21 @@ void Robot::AutonomousInit() {
 	char str[1024];
 	sprintf(str, "AutonomousInit Called");
 	writeToLogFile(LOGFILE_NAME, str);
-	/*pidGyroTest = new PIDGyroTest();
-	 pidGyroTest->Start();
-	 TAKE OUT COMMENTS TO TEST GYRO*/
 
-	//CommandBase::collector->setRollerSpeed(Collector::rollerDirection::KBackward, .3);
-	//cmd->Start();
-	//MotorManager::getMotorManager()->enablePID(PID_ID_COLLECTOR, COLLECTOR_ROTATION_ENCODER_TOP_TICKS);
+	cmd->Start();
 }
 
 void Robot::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
+
+	/*double left = SensorManager::getSensorManager()->getSensor(
+	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
+	double right = SensorManager::getSensorManager()->getSensor(
+	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
+
+	char str[1024];
+	sprintf(str, "LeftEncoder %f, RightEncoder %f", left, right);
+	writeToLogFile(LOGFILE_NAME, str);*/
 }
 
 void Robot::TeleopInit() {
@@ -59,22 +64,24 @@ void Robot::TeleopInit() {
 	char str[1024];
 	sprintf(str, "TeleOp Called");
 	writeToLogFile(LOGFILE_NAME, str);
-
-	/*MotorManager::getMotorManager()->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT,
-	 .1);
-	 MotorManager::getMotorManager()->setSpeed(
-	 COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, .1);
-	 */
-	//MotorManager::getMotorManager()->enablePID(PID_ID_COLLECTOR, COLLECTOR_ROTATION_ENCODER_FLOOR_TICKS);
 }
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
 	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
 
+	//char str[1024];
+	//sprintf(str, "BatteryVoltage %f", voltage);
+	//writeToLogFile(LOGFILE_NAME, str);
+
 	char str[1024];
-	sprintf(str, "BatteryVoltage %f", voltage);
+	sprintf(str, "leftEncoder %f, rightEncoder %f",
+			SensorManager::getSensorManager()->getSensor(
+			SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet(),
+			SensorManager::getSensorManager()->getSensor(
+			SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 	writeToLogFile(LOGFILE_NAME, str);
+
 }
 
 void Robot::TestPeriodic() {

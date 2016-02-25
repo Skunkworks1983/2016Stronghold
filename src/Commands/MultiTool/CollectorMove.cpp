@@ -1,7 +1,9 @@
 #include <Commands/MultiTool/CollectorMove.h>
+#include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <cstdbool>
+#include <cstdio>
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
 CollectorMove::CollectorMove(CollectorPosition pos) {
@@ -26,16 +28,20 @@ void CollectorMove::Initialize() {
 }
 
 void CollectorMove::Execute() {
+	double enc =
+			sensorManager->getSensor(SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet();
+	char str[1024];
+	sprintf(str, "EncoderPosition: %f, Target: %f", enc, target);
+	writeToLogFile(LOGFILE_NAME, str);
 }
 
 bool CollectorMove::IsFinished() {
-	return true;
-	/*
-	 if (fabs(sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT) - target) <= COLLECTOR_ROTATOR_TOLERANCE) {
-	 return true;
-	 } else {
-	 return false;
-	 }*/
+	if (fabs(sensorManager->getSensor(SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet() - target)
+			< 50) {
+		return true;
+	}
+	return false;
+
 }
 
 void CollectorMove::End() {
@@ -44,5 +50,5 @@ void CollectorMove::End() {
 }
 
 void CollectorMove::Interrupted() {
-
+	End();
 }

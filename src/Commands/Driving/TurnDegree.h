@@ -22,12 +22,13 @@ class SensorManager;
 class TurnDegree: public CommandBase, public PIDOutput, public PIDSource
 {
 private:
-	double degree;
+	float degree;
 	//double speed; See cpp
 	bool ahrsDead;
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
-	PIDController * pidController;
+	float initialYaw;
+	float epsilon;
 public:
 	TurnDegree(double degree); //number of degrees to turn, speed at which to turn
 	virtual ~TurnDegree();

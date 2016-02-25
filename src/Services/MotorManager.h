@@ -92,6 +92,7 @@ public:
 
 	void initPIDS();
 
+	void resetPID(unsigned ID);
 	void setPosition(unsigned pidID, float position);
 	void setSpeed(unsigned ID, float speed);
 	void setSpeedForAll();

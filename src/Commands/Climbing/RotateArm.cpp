@@ -2,11 +2,11 @@
 #include <RobotMap.h>
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
+#include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
 #include <cstdio>
 
-RotateArm::RotateArm(float target) {
-	this->target = target;
+RotateArm::RotateArm(float target) :target(target) {
 }
 
 RotateArm::~RotateArm() {
@@ -14,7 +14,8 @@ RotateArm::~RotateArm() {
 }
 
 void RotateArm::Initialize() {
-	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT, 1.0);
+	MotorManager::getMotorManager()->resetPID(PID_ID_ARM);
+	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT, .35);
 	char str[1024];
 	sprintf(str, "RotateArm Initialize called with target %f", target);
 	writeToLogFile(LOGFILE_NAME, str);
@@ -23,6 +24,9 @@ void RotateArm::Initialize() {
 
 void RotateArm::Execute() {
 	//get PID values
+	//char str[1024];
+	//sprintf(str, "ArmPower %f", MotorManager::getMotorManager()->get);
+	//writeToLogFile(LOGFILE_NAME, str);
 }
 
 bool RotateArm::IsFinished() {
@@ -37,11 +41,11 @@ bool RotateArm::IsFinished() {
 
 void RotateArm::End() {
 	char str[1024];
-		sprintf(str, "RotateArm END called with target %f", target);
-		writeToLogFile(LOGFILE_NAME, str);
+	sprintf(str, "RotateArm END called with target %f", target);
+	writeToLogFile(LOGFILE_NAME, str);
 	//MotorManager::getMotorManager()->disablePID(target*CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS);
 	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT,0.0); //probably wrong
-		MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
+	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 }
 
 void RotateArm::Interrupted() {
