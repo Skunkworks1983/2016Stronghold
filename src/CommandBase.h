@@ -1,16 +1,15 @@
 #ifndef COMMAND_BASE_H
 #define COMMAND_BASE_H
 
-#include <string>
-#include "Commands/Command.h"
-#include "OI.h"
-#include "WPILib.h"
+#include <Commands/Command.h>
 
-/**
- * The base for all commands. All atomic commands should subclass CommandBase.
- * CommandBase stores creates and stores each control system. To access a
- * subsystem elsewhere in your code in your code use CommandBase.examplesubsystem
- */
+// Redeclare static classes
+class Drivebase;
+class Collector;
+class OI;
+class Shooter;
+class Climber;
+
 class CommandBase: public Command
 {
 public:
@@ -19,6 +18,10 @@ public:
 	static void init();
 	// Create a single static instance of all of your subsystems
 	static OI *oi;
+	static Drivebase *drivebase;
+	static Collector *collector;
+	static Shooter *shooter;
+	static Climber *climber;
 };
 
 #endif
