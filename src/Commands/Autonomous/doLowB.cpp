@@ -24,5 +24,6 @@ AutoBase *AutoBase::doLowB()
 	cmd->AddSequential(new TurnRightEncoder(58));
 	cmd->AddSequential(new DriveForward(7.5, .25));
 	cmd->AddSequential(new ActivateRollers(Collector::rollerDirection::KBackward, 1000));
+
 	return cmd;
 }
