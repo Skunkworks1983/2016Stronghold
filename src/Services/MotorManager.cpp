@@ -53,11 +53,11 @@ void MotorManager::initDriveBase() {
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_3_PORT,
 	CIM_MAX_CURRENT, DRIVEBASE);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_1_PORT,
-	CIM_MAX_CURRENT, DRIVEBASE);
+	CIM_MAX_CURRENT, DRIVEBASE, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_2_PORT,
-	CIM_MAX_CURRENT, DRIVEBASE);
+	CIM_MAX_CURRENT, DRIVEBASE, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_3_PORT,
-	CIM_MAX_CURRENT, DRIVEBASE);
+	CIM_MAX_CURRENT, DRIVEBASE, true);
 
 	char str[1024];
 	sprintf(str, "Created DriveBase Motors");
@@ -109,29 +109,42 @@ void MotorManager::initPIDS() {
 #if USE_DRIVEBASE
 
 	std::vector<Motor*> DrivebaseLeftMotors;
-	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
-	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
-	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
-	MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
-	createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
-	PID_ID_DRIVEBASE_LEFT,
-	DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
-	DRIVEBASE_LEFT_F, false);
+	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
+	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
+	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
+	 MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
+	 createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
+	 PID_ID_DRIVEBASE_LEFT,
+	 DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
+	 DRIVEBASE_LEFT_F, false);
 
-	std::vector<Motor*> DrivebaseRightMotors;
-	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
-	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
-	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
-	MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
-
-	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
-	PID_ID_DRIVEBASE_RIGHT,
-	DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
-	DRIVEBASE_RIGHT_F, false);
-
+	 std::vector<Motor*> DrivebaseRightMotors;
+	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
+	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
+	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
+	 MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
+	 createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+	 PID_ID_DRIVEBASE_RIGHT,
+	 DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
+	 DRIVEBASE_RIGHT_F, false);
 #if USE_GYRO
-	//MotorGroup * groupGyroTurnMotors = new MotorGroup(driveBaseMotors);
-	//createPID(groupGyroTurnMotors, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,TURN_GYRO_P, TURN_GYRO_I, TURN_GYRO_D, TURN_GYRO_F, false);
+	 std::vector<Motor*> DrivebaseRot;
+	 DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
+	 DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
+	 DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
+	 DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
+	 DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
+	 DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
+	 MotorGroup * groupDrivebaseRot = new MotorGroup(DrivebaseRot);
+	 createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+	 PID_ID_DRIVEBASE_ROT,
+	 DRIVEBASE_ROT_P, DRIVEBASE_ROT_I, DRIVEBASE_ROT_D,
+	 DRIVEBASE_ROT_F, false);
+
+	MotorGroup * gyroRightMotors = new MotorGroup(DrivebaseRightMotors);
+	MotorGroup * gryoLeftMotors = new MotorGroup(DrivebaseLeftMotors);
+	createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
+			TURN_GYRO_P, TURN_GYRO_I, TURN_GYRO_D, TURN_GYRO_F, false);
 #endif
 
 #if USE_CAMERA

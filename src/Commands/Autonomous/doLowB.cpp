@@ -16,6 +16,8 @@ AutoBase *AutoBase::doLowB()
 
 	cmd->AddSequential(new DriveForward(5, 0.33));
 
+	cmd->AddSequential(new TurnDegree(30));
+
 //	AddSequential(LowGoalCommandGroup());
 	return cmd;
 }
