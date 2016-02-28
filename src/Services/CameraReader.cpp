@@ -59,10 +59,10 @@ void *CameraReader::update(void *d) {
 		camera_reader->len = recv(camera_reader->mysocket, (char *) &msg,
 				sizeof(msg), 0);
 		camera_reader->mutex->lock();
-		if (msg.posX != INVALID) {
-			camera_reader->lastX = 2 * (msg.posX / 640.0) - 1;
-			camera_reader->lastY = 2 * (msg.posY / 480.0) - 1;
-		}
+		//if (msg.posX != INVALID) {
+			//camera_reader->lastX = 2 * (msg.posX / 640.0) - 1;
+			//camera_reader->lastY = 2 * (msg.posY / 480.0) - 1;
+		//}
 		camera_reader->mutex->unlock();
 	}
 }

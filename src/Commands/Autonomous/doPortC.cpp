@@ -7,10 +7,10 @@
 AutoBase *AutoBase::doPortC()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doPortC");
-	cmd->AddSequential(new CollectorMove(FLOOR));
+	cmd->AddSequential(new CollectorMove(cLowBar));
 	cmd->AddSequential(new DriveForward(REACH_DEFENCE_DISTANCE, REACH_DEFENCE_SPEED));
 	cmd->AddSequential(new DriveForward(PORT_DISTANCE, PORT_SPEED));
-	cmd->AddParallel(new CollectorMove(TOP));
+	cmd->AddParallel(new CollectorMove(cTOP));
 
 	return cmd;
 }

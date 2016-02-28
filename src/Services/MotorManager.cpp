@@ -93,9 +93,13 @@ void MotorManager::initPIDS() {
 
 	MotorGroup * groupCollectorRotation = new MotorGroup(
 			rotationCollectorMotors);
+
+	double p = .00015;
+	double i = 0.0;
+	double d = 0.000025;
+
 	createPID(groupCollectorRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
-	PID_ID_COLLECTOR,
-	COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I, COLLECTOR_ROTATION_D,
+	PID_ID_COLLECTOR, p, i, d,
 	COLLECTOR_ROTATION_F, false);
 	/*
 	 std::vector<Motor*> rollerMotors;
@@ -109,43 +113,43 @@ void MotorManager::initPIDS() {
 #if USE_DRIVEBASE
 
 	std::vector<Motor*> DrivebaseLeftMotors;
-	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
-	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
-	 DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
-	 MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
-	 createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
-	 PID_ID_DRIVEBASE_LEFT,
-	 DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
-	 DRIVEBASE_LEFT_F, false);
+	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
+	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
+	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
+	MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
+	createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
+	PID_ID_DRIVEBASE_LEFT,
+	DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
+	DRIVEBASE_LEFT_F, false);
 
-	 std::vector<Motor*> DrivebaseRightMotors;
-	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
-	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
-	 DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
-	 MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
+	std::vector<Motor*> DrivebaseRightMotors;
+	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
+	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
+	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
+	MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
 
-	 createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
-	 PID_ID_DRIVEBASE_RIGHT,
-	 DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
-	 DRIVEBASE_RIGHT_F, false);
+	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+	PID_ID_DRIVEBASE_RIGHT,
+	DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
+	DRIVEBASE_RIGHT_F, false);
 
-	 createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
-	 PID_ID_DRIVEBASE_RIGHT,
-	 DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
-	 DRIVEBASE_RIGHT_F, false);
+	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+	PID_ID_DRIVEBASE_RIGHT,
+	DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
+	DRIVEBASE_RIGHT_F, false);
 #if USE_GYRO
-	 std::vector<Motor*> DrivebaseRot;
-	 DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
-	 DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
-	 DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
-	 DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
-	 DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
-	 DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
-	 MotorGroup * groupDrivebaseRot = new MotorGroup(DrivebaseRot);
-	 createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
-	 PID_ID_DRIVEBASE_ROT,
-	 DRIVEBASE_ROT_P, DRIVEBASE_ROT_I, DRIVEBASE_ROT_D,
-	 DRIVEBASE_ROT_F, false);
+	std::vector<Motor*> DrivebaseRot;
+	DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
+	DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
+	DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
+	DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
+	DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
+	DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
+	MotorGroup * groupDrivebaseRot = new MotorGroup(DrivebaseRot);
+	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+			PID_ID_DRIVEBASE_ROT,
+			DRIVEBASE_ROT_P, DRIVEBASE_ROT_I, DRIVEBASE_ROT_D,
+			DRIVEBASE_ROT_F, false);
 
 	MotorGroup * gyroRightMotors = new MotorGroup(DrivebaseRightMotors);
 	MotorGroup * gryoLeftMotors = new MotorGroup(DrivebaseLeftMotors);
@@ -175,14 +179,9 @@ void MotorManager::initPIDS() {
 	std::vector<Motor*> armMotors;
 	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
 	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
-	double p = 0.000014;
-	//double p = .00007;
-	double i = 0.000004;
-	double d = 0.00005;
-	double f = 0;
-	createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, p, i, d,
-			f, false);
-	//createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, CLIMBER_ARM_P, CLIMBER_ARM_I, CLIMBER_ARM_D, CLIMBER_ARM_F, false);
+
+	createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM,
+	CLIMBER_ARM_P, CLIMBER_ARM_I, CLIMBER_ARM_D, CLIMBER_ARM_F, false);
 #endif
 #if USE_SHOOTER
 	std::vector<Motor*> shooterMotor1;
@@ -255,10 +254,8 @@ void MotorManager::setSpeedForAll() {
 }
 
 void MotorManager::setPID(unsigned ID, double P, double I, double D) {
-	if (motors[ID]->talon != NULL) {
-		motors[ID]->talon->SetPID(P, I, D);
-	} else {
-
+	if (pidControllerMap.count(ID) != 0) {
+		pidControllerMap[ID]->SetPID(P, I, D);
 	}
 }
 
@@ -327,11 +324,8 @@ void MotorManager::setCForAll() {
 }
 
 MotorManager * MotorManager::getMotorManager() {
-	static MotorManager *motorManager = NULL;
-	if (motorManager == NULL) {
-		motorManager = new MotorManager();
-	}
-	return motorManager;
+	static MotorManager *instance = new MotorManager();
+	return instance;
 }
 
 void MotorManager::addMotor(Priority priority, int Port, float maxCurrent,
@@ -419,6 +413,14 @@ MotorGroup::~MotorGroup() {
 	}
 	delete &motorList;
 }
+
+PIDController *MotorManager::getPID(unsigned pidID){
+	if(pidControllerMap.count(pidID) != 0){
+		return NULL;
+	}
+	return pidControllerMap[pidID];
+}
+
 
 void MotorGroup::PIDWrite(float output) {
 	std::vector<Motor*>::iterator it = motorList.begin();

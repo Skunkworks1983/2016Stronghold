@@ -11,7 +11,7 @@ AutoBase *AutoBase::doLowB()
 {
 	AutoBase *cmd = new AutoBase((char*)"Autonomous-doLowB");
 	std::cout << "Reached doLowB after AutoBase cmd pointer creation" << std::endl;
-	cmd->AddSequential(new CollectorMove(FLOOR));
+	cmd->AddSequential(new CollectorMove(cLowBar));
 	cmd->AddSequential(new DriveForward(5, 0.25));	//Reach the defence
 //	does it need to handle anything after driving forward?
 //	AddSequential(new TurnDegree(45)); //or until aligned with tower

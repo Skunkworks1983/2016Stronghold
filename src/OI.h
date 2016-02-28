@@ -7,44 +7,41 @@
 #include <RobotMap.h>
 #include <Buttons/JoystickButton.h>
 
-class OI
-{
+class OI {
 private:
 	Joystick *gamepad;
 	Joystick *leftStick, *rightStick;
 	Joystick *op;
-public:
-	//breaching buttons
-	JoystickButton *portcullisBreach;
-	JoystickButton *chevalBreach;
-	JoystickButton *generalBreach;
 
-	JoystickButton *stopPID;
-	// collector buttons
-	JoystickButton *collectBall;
-	JoystickButton *collectorUp;
+	JoystickButton *collect;
 	JoystickButton *collectorDown;
+	JoystickButton *collectorUp;
+	JoystickButton *collectorPass;
+	JoystickButton *collector45;
+	JoystickButton *lowFire;
+	JoystickButton *lowArm;
+	JoystickButton *lowAim;
+	JoystickButton *highFire;
+	JoystickButton *highAim;
+	JoystickButton *highAimPosition1;
+	JoystickButton *highAimPosition2;
+	JoystickButton *highLineUp;
+	JoystickButton *climberArmsUp;
+	JoystickButton *winchEngage;
+	JoystickButton *manualOveride;
+	JoystickButton *manualWinchReverse;
+	JoystickButton *manualCollectorDown;
+	JoystickButton *manualCollectorUp;
+	JoystickButton *portcullis;
 
-	JoystickButton *holdAgainst;
-	//aiming buttons
-	JoystickButton *aimAtGoal;
-
-	//shooting buttons
-	JoystickButton *shootLow;
-	JoystickButton *shootHigh;
-	JoystickButton *spinUpShooter;
-
-	//climbing buttons
-	JoystickButton *rotateArm;
-	JoystickButton *engageWinch;
-	JoystickButton *reverseWinch;
-
+public:
 	OI();
 	~OI();
 	double getLeftStickY();
 	double getRightStickY();
 	void registerButtonListeners();
-	bool isJoystickButtonPressed(int control, int button);
+	bool isJoystickButtonPressed(int control,
+			int button);
 };
 
 #endif

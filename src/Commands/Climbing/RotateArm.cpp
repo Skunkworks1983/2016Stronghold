@@ -9,9 +9,7 @@
 RotateArm::RotateArm(float target) :target(target) {
 }
 
-RotateArm::~RotateArm() {
-
-}
+RotateArm::~RotateArm() {}
 
 void RotateArm::Initialize() {
 	MotorManager::getMotorManager()->resetPID(PID_ID_ARM);

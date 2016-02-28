@@ -25,14 +25,14 @@ public:
 #include <RobotMap.h>
 
 enum CollectorPosition{
-	TOP, FLOOR, MID
+	cTOP, cLowBar, cCollect, c45
 };
 
 class CollectorMove: public CommandBase
 {
 private:
-	float target;
-	MotorManager * motorManager;
+	float           target;
+	MotorManager *  motorManager;
 	SensorManager * sensorManager;
 public:
 	CollectorMove(CollectorPosition pos);

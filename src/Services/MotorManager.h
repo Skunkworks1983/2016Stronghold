@@ -110,6 +110,7 @@ public:
 	void enablePID(unsigned pidID);
 	void disablePID(unsigned pidID);
 	bool isPIDEnabled(unsigned pidID);
+	PIDController *getPID(unsigned pidID);
 
 	static MotorManager * getMotorManager();
 };

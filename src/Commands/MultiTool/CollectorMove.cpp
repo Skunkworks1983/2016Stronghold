@@ -4,18 +4,23 @@
 #include <Services/SensorManager.h>
 #include <cstdbool>
 #include <cstdio>
+#define COLLECTOR_MOVE_TOLERANCE 100
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
 CollectorMove::CollectorMove(CollectorPosition pos) {
+	Requires(collector);
 	switch (pos) {
-	case TOP:
+	case cTOP:
 		target = COLLECTOR_ROTATION_ENCODER_TOP_TICKS;
 		break;
-	case FLOOR:
-		target = COLLECTOR_ROTATION_ENCODER_FLOOR_TICKS;
+	case cLowBar:
+		target = COLLECTOR_ROTATION_ENCODER_LOWB_TICKS;
 		break;
-	case MID:
-		target = COLLECTOR_ROTATION_ENCODER_MID_TICKS;
+	case cCollect:
+		target = COLLECTOR_ROTATION_ENCODER_COLLECT_TICKS;
+		break;
+	case c45:
+		target = COLLECTOR_ROTATION_ENCODER_45_TICKS;
 		break;
 	}
 
@@ -24,31 +29,37 @@ CollectorMove::CollectorMove(CollectorPosition pos) {
 }
 
 void CollectorMove::Initialize() {
+	//Scheduler::GetInstance()->Remove(collector->GetCurrentCommand());
+
+	motorManager->disablePID(PID_ID_COLLECTOR);
 	motorManager->enablePID(PID_ID_COLLECTOR, target);
+	char str[1024];
+	sprintf(str, "CollectorMove Initialize target %f", target);
+	writeToLogFile(LOGFILE_NAME, str);
+	SmartDashboard::PutNumber("target", target);
 }
 
 void CollectorMove::Execute() {
-	double enc =
-			sensorManager->getSensor(SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet();
-	char str[1024];
-	sprintf(str, "EncoderPosition: %f, Target: %f", enc, target);
-	writeToLogFile(LOGFILE_NAME, str);
 }
 
 bool CollectorMove::IsFinished() {
-	if (fabs(sensorManager->getSensor(SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet() - target)
-			< 50) {
-		return true;
-	}
-	return false;
+	SmartDashboard::PutNumber("error",
+			fabs(SensorManager::getSensorManager()->getSensor(
+			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet() - target));
+	return fabs(SensorManager::getSensorManager()->getSensor(
+	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet() - target)
+			< COLLECTOR_MOVE_TOLERANCE || MotorManager::getMotorManager()->getPID(PID_ID_COLLECTOR)->GetSetpoint() != target;
 
 }
 
 void CollectorMove::End() {
-	//collector->setRotatorSpeed(0.0);
-	//MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
+	SmartDashboard::PutBoolean("CollectorMoveRunning", false);
+	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
+	char str[1024];
+	sprintf(str, "CollectorMove END Called for target %f", target);
+	writeToLogFile(LOGFILE_NAME, str);
 }
 
 void CollectorMove::Interrupted() {
-	End();
+	End(); //MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
 }

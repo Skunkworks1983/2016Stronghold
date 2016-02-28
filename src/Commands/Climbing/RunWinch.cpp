@@ -1,6 +1,7 @@
 #include <Commands/Climbing/RunWinch.h>
 #include <RobotMap.h>
 #include <Services/MotorManager.h>
+#include <Subsystems/Climber.h>
 #include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
 #include <cstdbool>
