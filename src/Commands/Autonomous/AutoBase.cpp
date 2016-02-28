@@ -1,9 +1,12 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <cstdbool>
+<<<<<<< Updated upstream
 #include <fstream>
 #include <iostream>
 #include <string>
 
+=======
+>>>>>>> Stashed changes
 AutoBase::AutoBase() {
 	AutoBase("AutoBase-Blank");
 }
@@ -75,18 +78,17 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 	case high:
 		switch (startPos) {
 		case spy: //drive forward
+<<<<<<< Updated upstream
+=======
+
+			break;
+		case lowBar: // drive slightly left then line up for goal
+>>>>>>> Stashed changes
 			auto_base->AddSequential(new DriveForward(3.5, driveSpeed));
 			auto_base->AddSequential(new TurnDegree(-135));
 			auto_base->AddSequential(new DriveForward(1, driveSpeed));
 			auto_base->AddSequential(new TurnDegree(-20));
-			auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-			break;
-		case lowBar: // drive slightly left then line up for goal
-			auto_base->AddSequential(new DriveForward(5, driveSpeed));
-			auto_base->AddSequential(new TurnDegree(45));
-			auto_base->AddSequential(new DriveForward(3.49, driveSpeed));
-			auto_base->AddSequential(new TurnDegree(5));
-			auto_base->AddSequential(new DriveForward(0.5, driveSpeed));
+			auto_base->AddSequential(new DriveForward(2.5, driveSpeed));;
 			break;
 		case posZero: // drive left then line up for goal
 			auto_base->AddSequential(new TurnDegree(-20));

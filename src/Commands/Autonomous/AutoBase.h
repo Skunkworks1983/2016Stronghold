@@ -56,6 +56,17 @@ public:
 	static AutoBase *doPortC(); //Portcullis
 	static AutoBase *doSpy(); //Spy box
 	static AutoBase *doLowB(); // Low Bar
+<<<<<<< Updated upstream
+=======
+
+
+	AutoBase();
+	AutoBase(char *style);
+	~AutoBase();
+public:
+	static AutoBase *getSelectedAuto();
+
+>>>>>>> Stashed changes
 };
 
 #endif

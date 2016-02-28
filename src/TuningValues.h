@@ -55,9 +55,9 @@
 /**
  * Power Management
  */
-#define POWER_LEVEL_1 11
-#define POWER_LEVEL_2 10
-#define POWER_LEVEL_3 9
+#define POWER_LEVEL_1 12
+#define POWER_LEVEL_2 11
+#define POWER_LEVEL_3 10
 
 #define POWER_BROWNOUT_VOLTAGE 7
 #define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
