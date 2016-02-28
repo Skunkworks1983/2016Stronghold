@@ -23,25 +23,16 @@ void ManagePower::UpdateVoltagages(){
 
 // Called repeatedly when this Command is scheduled to run
 void ManagePower::Execute() {
-<<<<<<< Updated upstream
-	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
-	//double voltage = DriverStation::GetInstance()::ControllerPower::GetInputVoltage();
-	SmartDashboard::PutNumber("Battery Voltage", voltage);
-=======
 	this->UpdateVoltagages();
->>>>>>> Stashed changes
 
 	if (m_voltage >= POWER_LEVEL_1) {	//SHIELDS ARE UP CAPPIN'
 		manager->setPriority(PRIORITY_ACCESSORIES);
-
 	} else if (m_voltage >= POWER_LEVEL_2) {	//CUT THE SECONDARY PHASERS
 		manager->setPriority(PRIORITY_SECONDARY_ACTUATORS);
 
 	} else if (m_voltage >= POWER_LEVEL_3) {	//THE PRIMARY PHASERS ARE ALL WE GOT
 		manager->setPriority(PRIORITY_PRIMARY_ACTUATORS);
-	}
-
-	else {	//CAPPIN' THE SHIPS RUNNIN' ON IMPULSE ONLY
+	} else {	//CAPPIN' THE SHIPS RUNNIN' ON IMPULSE ONLY
 		manager->setPriority(PRIORITY_DRIVEBASE);
 	}
 
