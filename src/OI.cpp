@@ -1,3 +1,5 @@
+#include <Commands/Climbing/RunWinch.h>
+#include <Commands/Climbing/SafeRotateArm.h>
 #include <Commands/Driving/HoldAgainstTower.h>
 #include <Commands/MultiTool/ActivateRollers.h>
 #include <Commands/MultiTool/CollectorMove.h>
@@ -7,6 +9,7 @@
 #include <OI.h>
 #include <Services/Logger.h>
 #include <Subsystems/Collector.h>
+#include <TuningValues.h>
 #include <cmath>
 #include <cstdbool>
 #include <cstdio>
