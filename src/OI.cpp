@@ -20,11 +20,13 @@ OI::OI() {
 #endif
 	op = new Joystick(OI_JOYSTICK_OPERATOR_PORT);
 
+	//driverbuttons
 	stopCollectorPID = new JoystickButton(leftStick, 3);
+	holdAgainstTower = new JoystickButton(leftStick, 2);
 	driverCollectorDown = new JoystickButton(rightStick, 1);
 	driverCollectorUp = new JoystickButton(rightStick, 2);
-	holdAgainstTower = new JoystickButton(leftStick, 2);
 
+	//operatorbuttons
 	collect = new JoystickButton(op, 8);
 	collectorDown = new JoystickButton(op, 7);
 	collectorUp = new JoystickButton(op, 6);
@@ -105,13 +107,19 @@ void OI::registerButtonListeners() {
 	sprintf(str, "RegisterButtonListeners called");
 	writeToLogFile(LOGFILE_NAME, str);
 
+	/**
+	 * Driver Buttons
+	 */
 	driverCollectorDown->WhileHeld(new ActivateRollers(Collector::KForward));
 	driverCollectorDown->WhenPressed(new CollectorMove(cCollect));
 	driverCollectorDown->WhenReleased(new StopCollectorPID());
-	holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
-
-	stopCollectorPID->WhenPressed(new StopCollectorPID());
 	driverCollectorUp->WhenPressed(new CollectorMove(cTOP));
+	holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
+	stopCollectorPID->WhenPressed(new StopCollectorPID());
+
+	/**
+	 * Operator Buttons
+	 */
 
 	collect->WhileHeld(new ActivateRollers(Collector::KForward));
 	collect->WhileHeld(new StopCollectorPID());
@@ -131,8 +139,8 @@ void OI::registerButtonListeners() {
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetCollectorEncoder());
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
-	/* climberArmsUp->WhenPressed(new SafeRotateArm(CLIMBER_ARM_UP_POSITION));
-	 winchEngage->WhileHeld(new RunWinch(.25));*/
+	climberArmsUp->WhenPressed(new SafeRotateArm(CLIMBER_ARM_UP_POSITION));
+	winchEngage->WhileHeld(new RunWinch(.25));
 	//manualOveride;	no effect currently
 	//manualWinchReverse->WhileHeld(new RunWinch(-.1));*/
 	manualCollectorDown->WhileHeld(new ManualCollectorMove(-.2));
@@ -158,5 +166,3 @@ bool OI::isJoystickButtonPressed(int control, int button) {
 	}
 	return false;
 }
-
-//ayy lmao W O R K P L S
