@@ -5,12 +5,13 @@
 
 class MotorManager;
 class SensorManager;
+class DigitalInput;
 
 class Collector: public Subsystem {
 private:
 	SensorManager * sensorManager;
 	MotorManager * motorManager;bool isDown = false;
-
+	DigitalInput *breakBeam;
 public:
 	enum rollerDirection {
 		KForward, KBackward, KStop
@@ -30,4 +31,7 @@ public:
 	void activateShooter(bool active); //parameterize this and also put actual things into this!
 	void activateCollector(bool active); //put actual things into this!
 
+	float getRotatorDegrees();
+
+	bool getBreakBeam();
 };

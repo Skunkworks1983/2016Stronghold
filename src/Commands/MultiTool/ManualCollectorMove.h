@@ -1,5 +1,5 @@
-#ifndef SpinUpShooter_H
-#define SpinUpShooter_H
+#ifndef MANUAL_COLLECTOR_MOVE_H
+#define MANUAL_COLLECTOR_MOVE_H
 
 #include <CommandBase.h>
 #include <cstdbool>
@@ -7,18 +7,18 @@
 class MotorManager;
 class SensorManager;
 
-class SpinUpShooter: public CommandBase {
-
+class ManualCollectorMove: public CommandBase
+{
 private:
+	float speed;
+	float timeout;
 	MotorManager * motorManager;
 	SensorManager * sensorManager;
-	float timeOut;
-	float speed;
-
 public:
-	SpinUpShooter(float timeOut, float speed);
+	ManualCollectorMove(float speed, float timeout = 0);
 	void Initialize();
-	void Execute();bool IsFinished();
+	void Execute();
+	bool IsFinished();
 	void End();
 	void Interrupted();
 

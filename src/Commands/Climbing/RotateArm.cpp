@@ -1,25 +1,35 @@
 #include <Commands/Climbing/RotateArm.h>
+#include <PIDController.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
-#include <Subsystems/Drivebase.h>
+#include <Services/SensorManager.h>
+#include <Subsystems/Climber.h>
 #include <TuningValues.h>
 #include <cstdio>
 
-RotateArm::RotateArm(float target) :target(target) {
+RotateArm::RotateArm(float target) :
+		target(target) {
+	Requires(climber);
 }
 
 RotateArm::~RotateArm() {
-
 }
 
 void RotateArm::Initialize() {
-	MotorManager::getMotorManager()->resetPID(PID_ID_ARM);
-	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT, .35);
 	char str[1024];
 	sprintf(str, "RotateArm Initialize called with target %f", target);
 	writeToLogFile(LOGFILE_NAME, str);
+	/*if (MotorManager::getMotorManager()->getPID(PID_ID_ARM)->IsEnabled()) {
+		End();
+		return;
+	}*/
+//	if (SensorManager::getSensorManager()->getSensor(SENSOR_CLIMBER_ARM_ENCODER)->PIDGet()
+//			< 500) {
+//		MotorManager::getMotorManager()->resetPID(PID_ID_ARM);
+//	}
 	MotorManager::getMotorManager()->enablePID(PID_ID_ARM, target);
+	//climber->setSetpoint(target);
 }
 
 void RotateArm::Execute() {
@@ -43,8 +53,6 @@ void RotateArm::End() {
 	char str[1024];
 	sprintf(str, "RotateArm END called with target %f", target);
 	writeToLogFile(LOGFILE_NAME, str);
-	//MotorManager::getMotorManager()->disablePID(target*CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS);
-	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT,0.0); //probably wrong
 	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 }
 

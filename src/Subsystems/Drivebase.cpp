@@ -13,13 +13,8 @@ Drivebase::~Drivebase() {
 }
 
 void Drivebase::InitDefaultCommand() {
-	// Set the default command for a subsystem here.
-	//SetDefaultCommand(new MySpecialCommand());
 	SetDefaultCommand(new TankDrive());
 }
-
-// Put methods for controlling this subsystem
-// here. Call these from Commands.
 
 void Drivebase::resetEncoder() {
 

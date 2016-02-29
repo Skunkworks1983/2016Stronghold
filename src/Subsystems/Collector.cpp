@@ -1,19 +1,18 @@
+#include <DigitalInput.h>
 #include <RobotMap.h>
-#include <Subsystems/Collector.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
+#include <Subsystems/Collector.h>
 
-//TODO: set position of collector
-//TODO: set speed
 Collector::Collector() :
 		Subsystem("Collector") {
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
-
+	breakBeam = new DigitalInput(COLLECTOR_BREAK_BEAM_PORT);
 }
 
 Collector::~Collector() {
-
+	delete breakBeam;
 }
 
 void Collector::InitDefaultCommand() {
@@ -24,13 +23,17 @@ void Collector::resetEncoder() {
 	// motorManager->resetRollerEncoder(0.0);
 }
 
+bool Collector::getBreakBeam() {
+	return !breakBeam->Get();
+}
+
 void Collector::setRotatorSpeed(float rotatorSpeed) {
 	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, rotatorSpeed);
 	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, rotatorSpeed);
 }
 
 double Collector::getRotatorPosition() {
-	return sensorManager->GetEncoderPosition(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT);
+	return sensorManager->getSensor(SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet();
 }
 
 void Collector::setRollerSpeed(rollerDirection direction, float speed) {
@@ -51,23 +54,30 @@ void Collector::setRollerSpeed(rollerDirection direction, float speed) {
 
 void Collector::setKickerSpeed(double kickerSpeed) {
 	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, kickerSpeed);
-
 }
 
 void Collector::activateKicker(bool active) {
-	if (active == true) {
+	if (active) {
 
 	}
 }
+
 float Collector::getRollerSpeed() {
 //needs code!
 	return 0.0;
-	}
-void Collector::setRotatorPosition(float position){
+}
+
+void Collector::setRotatorPosition(float position) {
 
 }
 
-void Collector::activateCollector(bool active){
+float Collector::getRotatorDegrees() {
+	return SensorManager::getSensorManager()->getSensor(
+	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()
+			/ COLLECTOR_ROTATION_TICKS_PER_DEGREE;
+}
+
+void Collector::activateCollector(bool active) {
 
 }
 

@@ -10,7 +10,7 @@ StopCollectorPID::StopCollectorPID() {
 
 void StopCollectorPID::Initialize() {
 	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
-	collector->pidStopped = true;
+	//collector->pidStopped = true;
 }
 
 void StopCollectorPID::Execute() {

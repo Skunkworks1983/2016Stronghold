@@ -16,7 +16,7 @@ void TankDrive::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void TankDrive::Execute() {
 	if (!drivebase->holdAgainstTower) {
-		drivebase->setLeftSpeed(oi->getLeftStickY());
+		drivebase->setLeftSpeed(-oi->getLeftStickY());	//TODO: possibly move this sign flop into subsystem
 		drivebase->setRightSpeed(oi->getRightStickY());
 	}
 }

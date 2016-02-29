@@ -17,18 +17,19 @@ private:
 	PIDSource *src;
 	unsigned ID;
 	float lowRange;
-	float highRange;
+	float highRange;bool reversed;
 public:
 	Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
-			unsigned ID);
-	Sensor(CANTalon *canTalon, float lowRange, float highRange, unsigned ID);
-	Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID);
-	virtual ~Sensor() {
-	}
-	;
+			unsigned ID, bool reversed = false);
+	Sensor(CANTalon *canTalon, float lowRange, float highRange, unsigned ID,
+			bool reversed = false);
+	Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID,
+			bool reversed = false);
 	double PIDGet();
 	float getLowRange();
 	float getHighRange();
+	int getAbsolutePosition();
+	void resetEncoder();
 };
 
 class SensorManager {
@@ -53,8 +54,7 @@ public:
 	float GetAccelY();
 	float GetAccelZ();
 	double GetEncoderPosition(int ID);
-	double GetSpeed(int ID);
-	bool ahrsDead;
+	double GetSpeed(int ID);bool ahrsDead;
 	double initialYaw;
 	Sensor *getSensor(unsigned ID);
 };

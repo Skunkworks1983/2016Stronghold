@@ -16,6 +16,8 @@ private:
 	ManagePower *managePower;
 	int count;
 	AutoBase *cmd;
+	Accelerometer *acc;
+	Command *rollerForward, *rollerBackward;
 public:
 	void RobotInit();
 	void DisabledPeriodic();

@@ -5,15 +5,9 @@
 
 SpinUpShooter::SpinUpShooter(float timeOut, float speed)
 {
-
-	oi = new OI();
 	motorManager = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
-
 	this->timeOut = timeOut;
-
-
-
 }
 
 // Called just before this Command runs the first time

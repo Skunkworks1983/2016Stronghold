@@ -5,7 +5,7 @@
 AutoBase *AutoBase::doSpy()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doSpy");
-	cmd->AddSequential(new CollectorMove(FLOOR));
+	cmd->AddSequential(new CollectorMove(cLowBar));
 	cmd->AddSequential(new DriveForward(8, 1.0f));
 
 	return cmd;

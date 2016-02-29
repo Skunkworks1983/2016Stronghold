@@ -4,11 +4,22 @@
 #include <CommandBase.h>
 #include <cstdbool>
 
+
+
 class MotorManager;
 
 class ManagePower: public CommandBase {
 private:
-	MotorManager * manager;
+	// Data
+	MotorManager *      manager;
+
+	double  m_voltage;
+
+
+
+	// Helpers
+	void UpdateVoltagages();
+
 public:
 	ManagePower();
 	void Initialize();

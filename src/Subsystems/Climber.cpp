@@ -1,26 +1,47 @@
+#include <CANSpeedController.h>
+#include <CANTalon.h>
+#include <PIDController.h>
 #include <RobotMap.h>
 #include <Services/MotorManager.h>
-#include <Services/SensorManager.h>
+#include <Servo.h>
 #include <Subsystems/Climber.h>
+#include <TuningValues.h>
 
 Climber::Climber() :
-		Subsystem("Climber")
-{
+		Subsystem("Climber") {
+	servo = new Servo(CLIMBER_SERVO_PORT);
+
+	/*armMotor = new CANTalon(CLIMBER_ARM_MOTOR_PORT);
+	armMotor->Reset();
+	armMotor->SetEncPosition(0);
+	armMotor->SetPIDSourceType(PIDSourceType::kDisplacement);
+	armMotor->SetControlMode(CANTalon::ControlMode::kPosition);
+	armMotor->SetPID(CLIMBER_ARM_P, CLIMBER_ARM_I,
+	CLIMBER_ARM_D);*/
+}
+
+Climber::~Climber() {
 
 }
 
-Climber::~Climber(){
+void Climber::InitDefaultCommand() {
 
 }
 
-
-void Climber::InitDefaultCommand()
-{
-
+void Climber::setServoAngle(float angle) {
+	servo->SetAngle(angle);
 }
 
+float Climber::getServoAngle() {
+	return servo->GetAngle();
+}
 
-void Climber::setWinchSpeed(float winchSpeed){
+void Climber::setServoSpeed(float speed) {
+	servo->Set(speed);
+	//servo->SetSpeed(speed);
+}
+
+void Climber::setWinchSpeed(float winchSpeed) {
 	MotorManager* motorManager = MotorManager::getMotorManager();
 	motorManager->setSpeed(CLIMBER_WINCH_MOTOR_1_PORT, winchSpeed);
 	motorManager->setSpeed(CLIMBER_WINCH_MOTOR_2_PORT, winchSpeed);
@@ -28,24 +49,12 @@ void Climber::setWinchSpeed(float winchSpeed){
 	motorManager->setSpeed(CLIMBER_WINCH_MOTOR_4_PORT, winchSpeed);
 }
 
-float Climber::getWinchSpeed(){
-	return SensorManager::getSensorManager()->GetSpeed(CLIMBER_WINCH_MOTOR_1_PORT);
+void Climber::setSetpoint(float position) {
+	armMotor->SetSetpoint(position);
+	//armMotor->Set(position);
+	armMotor->EnableControl();
 }
 
-void Climber::setArmSpeed(float armSpeed){
-	MotorManager*motorManager = MotorManager::getMotorManager();
-	motorManager->setSpeed(CLIMBER_ARM_MOTOR_PORT, armSpeed);
+void Climber::disablePID() {
+	armMotor->Disable();
 }
-
-float Climber::getArmSpeed(){
-		return SensorManager::getSensorManager()->GetSpeed(CLIMBER_ARM_MOTOR_PORT);
-}
-
-float Climber::getWinchPos(){
-	return SensorManager::getSensorManager()->GetEncoderPosition(CLIMBER_WINCH_MOTOR_1_PORT);
-}
-
-float Climber::getArmPos(){
-	return SensorManager::getSensorManager()->GetEncoderPosition(CLIMBER_ARM_MOTOR_PORT);
-}
-
