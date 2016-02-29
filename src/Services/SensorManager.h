@@ -29,6 +29,7 @@ public:
 	float getLowRange();
 	float getHighRange();
 	int getAbsolutePosition();
+	void resetEncoder();
 };
 
 class SensorManager {

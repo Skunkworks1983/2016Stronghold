@@ -10,7 +10,8 @@
 class OI {
 private:
 	Joystick *gamepad;
-	Joystick *leftStick, *rightStick;
+	Joystick *leftStick;
+	Joystick *rightStick;
 	Joystick *op;
 
 	JoystickButton *collect;
@@ -33,6 +34,11 @@ private:
 	JoystickButton *manualCollectorDown;
 	JoystickButton *manualCollectorUp;
 	JoystickButton *portcullis;
+
+	JoystickButton *stopCollectorPID;
+	JoystickButton *driverCollectorDown;
+	JoystickButton *driverCollectorUp;
+	JoystickButton *holdAgainstTower;
 
 public:
 	OI();

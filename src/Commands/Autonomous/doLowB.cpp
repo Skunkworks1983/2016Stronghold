@@ -3,7 +3,6 @@
 #include <Commands/Driving/TurnRightEncoder.h>
 #include <Commands/MultiTool/ActivateRollers.h>
 #include <Commands/MultiTool/CollectorMove.h>
-#include <Commands/MultiTool/StopCollectorPID.h>
 #include <Subsystems/Collector.h>
 #include <iostream>
 

@@ -1,8 +1,7 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/DriveForward.h>
-#include <Commands/Driving/TurnDegree.h>
-#include <Services/SensorManager.h>
 #include <Commands/MultiTool/CollectorMove.h>
+#include <TuningValues.h>
 
 AutoBase *AutoBase::doRoughT()
 {

@@ -6,7 +6,7 @@
  */
 
 #include <Commands/Defences/PortcullisAuto.h>
-#include <Commands/MultiTool/CollectorMove.h>
+#include <Commands/MultiTool/ResetCollectorEncoder.h>
 #include <Subsystems/Collector.h>
 #include <Subsystems/Drivebase.h>
 #include <cmath>

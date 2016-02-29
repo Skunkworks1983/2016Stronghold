@@ -55,7 +55,7 @@ void Robot::AutonomousInit() {
 
 	//cmd->Start();
 	//rollerForward->Start();
-	//CommandBase::climber->setServoAngle(0);
+	CommandBase::climber->setServoAngle(0);
 
 }
 
@@ -73,6 +73,9 @@ void Robot::AutonomousPeriodic() {
 
 	SmartDashboard::PutBoolean("BreakBeam",
 			CommandBase::collector->getBreakBeam());
+
+	//SmartDashboard::PutNumber("AbsoluteRollerEncoder", Sensor);
+
 }
 
 void Robot::TeleopInit() {
@@ -86,7 +89,6 @@ void Robot::TeleopInit() {
 	//rollerBackward->Start();
 	//CommandBase::climber->setServoSpeed(-255);
 	//CommandBase::climber->setServoAngle(0);
-
 }
 
 void Robot::TeleopPeriodic() {
@@ -100,6 +102,10 @@ void Robot::TeleopPeriodic() {
 			SensorManager::getSensorManager()->getSensor(
 			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
 	SmartDashboard::PutBoolean("CollectorMoveRunning", true);
+
+	SmartDashboard::PutNumber("ArmEncoder",
+				SensorManager::getSensorManager()->getSensor(
+						SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
 }
 
 void Robot::TestPeriodic() {

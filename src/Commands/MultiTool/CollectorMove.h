@@ -1,22 +1,6 @@
 #ifndef CollectorMove_H
 #define CollectorMove_H
 
-/*#include "../CommandBase.h"
-#include "WPILib.h"
-
-class CollectorMove: public CommandBase
-{
-public:
-	CollectorMove();
-	void Initialize();
-	void Execute();
-	bool IsFinished();
-	void End();
-	void Interrupted();
-};
-
-#endif
-*/
 #include <CommandBase.h>
 #include <PIDOutput.h>
 #include <PIDSource.h>
@@ -34,6 +18,7 @@ private:
 	float           target;
 	MotorManager *  motorManager;
 	SensorManager * sensorManager;
+	unsigned 		id;
 public:
 	CollectorMove(CollectorPosition pos);
 	void Initialize();

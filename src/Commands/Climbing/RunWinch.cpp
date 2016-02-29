@@ -14,7 +14,7 @@ RunWinch::~RunWinch() {
 }
 void RunWinch::Initialize() {
 	counter = 0;
-	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
+	//MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 	MotorManager::getMotorManager()->setSpeed(CLIMBER_WINCH_MOTOR_1_PORT, speed);
 	MotorManager::getMotorManager()->setSpeed(CLIMBER_WINCH_MOTOR_2_PORT, speed);
 	MotorManager::getMotorManager()->setSpeed(CLIMBER_WINCH_MOTOR_3_PORT,speed);	//correct
@@ -22,7 +22,7 @@ void RunWinch::Initialize() {
 }
 
 void RunWinch::Execute() {
-	if(counter++ > 100){
+	if(counter++ > 50){
 		drivebase->stopHold = true;
 		MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 	}

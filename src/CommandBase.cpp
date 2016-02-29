@@ -25,8 +25,6 @@ CommandBase::CommandBase() :
 }
 
 void CommandBase::init() {
-	// Create a single static instance of all of your subsystems. The following
-	// line should be repeated for each subsystem in the project.
 	oi = new OI();
 #if USE_DRIVEBASE
 	drivebase = new Drivebase();

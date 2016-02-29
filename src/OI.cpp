@@ -1,13 +1,12 @@
-#include <Commands/Climbing/RunWinch.h>
-#include <Commands/Climbing/SafeRotateArm.h>
-#include <Commands/Driving/RotateTowardCameraTarget.h>
+#include <Commands/Driving/HoldAgainstTower.h>
 #include <Commands/MultiTool/ActivateRollers.h>
 #include <Commands/MultiTool/CollectorMove.h>
 #include <Commands/MultiTool/ManualCollectorMove.h>
+#include <Commands/MultiTool/ResetCollectorEncoder.h>
+#include <Commands/MultiTool/StopCollectorPID.h>
 #include <OI.h>
 #include <Services/Logger.h>
 #include <Subsystems/Collector.h>
-#include <TuningValues.h>
 #include <cmath>
 #include <cstdbool>
 #include <cstdio>
@@ -20,6 +19,11 @@ OI::OI() {
 	rightStick = new Joystick(OI_JOYSTICK_RIGHT_PORT);
 #endif
 	op = new Joystick(OI_JOYSTICK_OPERATOR_PORT);
+
+	stopCollectorPID = new JoystickButton(leftStick, 3);
+	driverCollectorDown = new JoystickButton(rightStick, 1);
+	driverCollectorUp = new JoystickButton(rightStick, 2);
+	holdAgainstTower = new JoystickButton(leftStick, 2);
 
 	collect = new JoystickButton(op, 8);
 	collectorDown = new JoystickButton(op, 7);
@@ -72,6 +76,11 @@ OI::~OI() {
 	delete manualCollectorDown;
 	delete manualCollectorUp;
 	delete portcullis;
+
+	delete stopCollectorPID;
+	delete driverCollectorDown;
+	delete driverCollectorUp;
+	delete holdAgainstTower;
 }
 
 double OI::getLeftStickY() {
@@ -96,9 +105,22 @@ void OI::registerButtonListeners() {
 	sprintf(str, "RegisterButtonListeners called");
 	writeToLogFile(LOGFILE_NAME, str);
 
-	//collect->WhileHeld(new ActivateRollers(Collector::KForward));
-	/*collectorDown->WhenPressed(new CollectorMove(cCollect));
+	driverCollectorDown->WhileHeld(new ActivateRollers(Collector::KForward));
+	driverCollectorDown->WhenPressed(new CollectorMove(cCollect));
+	driverCollectorDown->WhenReleased(new StopCollectorPID());
+	holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
+
+	stopCollectorPID->WhenPressed(new StopCollectorPID());
+	driverCollectorUp->WhenPressed(new CollectorMove(cTOP));
+
+	collect->WhileHeld(new ActivateRollers(Collector::KForward));
+	collect->WhileHeld(new StopCollectorPID());
+	collectorDown->WhenPressed(new CollectorMove(cCollect));
+	collectorDown->WhenReleased(new StopCollectorPID());
+
 	collectorUp->WhenPressed(new CollectorMove(cTOP));
+	collectorUp->WhenReleased(new StopCollectorPID());
+
 	collectorPass->WhileHeld(new ActivateRollers(Collector::KBackward));
 	collector45->WhenPressed(new CollectorMove(c45));
 	lowFire->WhenPressed(new ActivateRollers(Collector::KBackward));
@@ -107,15 +129,15 @@ void OI::registerButtonListeners() {
 	//highFire->WhenPressed();
 	//highAim;
 	//highAimPosition1;
-	//highAimPosition2;
-	highLineUp->WhenPressed(new RotateTowardCameraTarget());*/
-	climberArmsUp->WhileHeld(new SafeRotateArm(CLIMBER_ARM_UP_POSITION));
-	//winchEngage->WhileHeld(new RunWinch(.5));
+	highLineUp->WhenPressed(new ResetCollectorEncoder());
+	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
+	/* climberArmsUp->WhenPressed(new SafeRotateArm(CLIMBER_ARM_UP_POSITION));
+	 winchEngage->WhileHeld(new RunWinch(.25));*/
 	//manualOveride;	no effect currently
-	manualWinchReverse->WhileHeld(new RunWinch(-.1));
-	/*manualCollectorDown->WhileHeld(new ManualCollectorMove(-.2));
+	//manualWinchReverse->WhileHeld(new RunWinch(-.1));*/
+	manualCollectorDown->WhileHeld(new ManualCollectorMove(-.2));
 	manualCollectorUp->WhileHeld(new ManualCollectorMove(.2));
-	portcullis->WhileHeld(new ActivateRollers(Collector::KBackward));*/
+	portcullis->WhileHeld(new ActivateRollers(Collector::KBackward));
 
 	sprintf(str, "RegisterButtonListeners Ended");
 	writeToLogFile(LOGFILE_NAME, str);
@@ -136,3 +158,5 @@ bool OI::isJoystickButtonPressed(int control, int button) {
 	}
 	return false;
 }
+
+//ayy lmao W O R K P L S

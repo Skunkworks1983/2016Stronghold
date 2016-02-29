@@ -26,7 +26,6 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 		talon->SetPosition(0);
 		talon->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 		talon->GetAnalogIn();
-		;
 		talon->GetPulseWidthPosition();
 	} else {
 		char str[1024];
@@ -37,14 +36,20 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 }
 
 Sensor::Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID,
-		bool reversed) :
+bool reversed) :
 		ID(ID), lowRange(lowRange), highRange(highRange), reversed(reversed) {
 	this->talon = NULL;
 	this->src = src;
 }
 
+void Sensor::resetEncoder() {
+	if (this->talon != NULL) {
+		this->talon->SetEncPosition(0);
+	}
+}
+
 Sensor::Sensor(CANTalon *canTalon, float lowRange, float highRange, unsigned ID,
-		bool reversed) :
+bool reversed) :
 		talon(canTalon), src(NULL), ID(ID), lowRange(lowRange), highRange(
 				highRange), reversed(reversed) {
 	talon->SetEncPosition(0);
@@ -100,6 +105,10 @@ SensorManager::SensorManager() {
 	COLLECTOR_ROTATION_ENCODER_TOP_TICKS,
 	COLLECTOR_ROTATION_ENCODER_COLLECT_TICKS,
 	SENSOR_COLLECTOR_ROTATION_ENCODER_ID);
+
+	sensors[SENSOR_COLLECTOR_ROLLER_ENCODER_ID] = new Sensor(
+	COLLECTOR_ROLLER_ENCODER_PORT, 0, 0,
+	SENSOR_COLLECTOR_ROLLER_ENCODER_ID);
 	/*sensors.insert(
 	 std::pair<unsigned, Sensor*>(SENSOR_COLLECTOR_ROLLER_ENCODER_ID,
 	 new Sensor(COLLECTOR_ROLLER_ENCODER_PORT,
@@ -120,7 +129,7 @@ SensorManager::SensorManager() {
 	CLIMBER_ARM_ENCODER_PORT,
 	CLIMBER_ARM_DOWN_POSITION,
 	CLIMBER_ARM_UP_POSITION,
-	SENSOR_CLIMBER_ARM_ENCODER);
+	SENSOR_CLIMBER_ARM_ENCODER, true);
 #endif
 }
 

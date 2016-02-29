@@ -3,12 +3,15 @@
 
 #include <Commands/Subsystem.h>
 
+class CANTalon;
+
 class Servo;
 
 class Climber: public Subsystem
 {
 private:
 	Servo *servo;
+	CANTalon *armMotor;
 public:
 	Climber();
 	~Climber();
@@ -18,6 +21,8 @@ public:
 	void setServoSpeed(float speed);
 	void setWinchSpeed(float winchSpeed);
 	void InitDefaultCommand();
+	void setSetpoint(float position);
+	void disablePID();
 };
 
 #endif
