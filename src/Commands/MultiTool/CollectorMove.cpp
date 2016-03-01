@@ -9,13 +9,11 @@
 
 #define COLLECTOR_MOVE_TOLERANCE 100
 
-static unsigned counter = 0;
-
 //TODO: Find the conversion ratio for encoder ticks to degrees
 CollectorMove::CollectorMove(CollectorPosition pos) {
 	Requires(collector);
-
 	SetInterruptible(true);
+	test = 0;
 	switch (pos) {
 	case cTOP:
 		target = COLLECTOR_ROTATION_ENCODER_TOP_TICKS;
@@ -30,21 +28,18 @@ CollectorMove::CollectorMove(CollectorPosition pos) {
 		target = COLLECTOR_ROTATION_ENCODER_45_TICKS;
 		break;
 	}
-
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
 }
 
 void CollectorMove::Initialize() {
-	//Scheduler::GetInstance()->Remove(collector->GetCurrentCommand());
-
+	collector->registerCommand(this);
 	//motorManager->disablePID(PID_ID_COLLECTOR);
 	motorManager->enablePID(PID_ID_COLLECTOR, target);
 	char str[1024];
 	sprintf(str, "CollectorMove Initialize target %f", target);
 	writeToLogFile(LOGFILE_NAME, str);
 	SmartDashboard::PutNumber("target", target);
-	id = ++counter;
 }
 
 void CollectorMove::Execute() {
@@ -57,11 +52,12 @@ bool CollectorMove::IsFinished() {
 
 	//bool notSameTarget = MotorManager::getMotorManager()->getPID(PID_ID_COLLECTOR)->GetSetpoint() != target;
 
-	bool closeEnough = fabs(SensorManager::getSensorManager()->getSensor(
-			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet() - target)
-					< COLLECTOR_MOVE_TOLERANCE;
-	return true;
-	//return closeEnough;
+	bool closeEnough = fabs(
+			SensorManager::getSensorManager()->getSensor(
+			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()
+					- target) < COLLECTOR_MOVE_TOLERANCE;
+	//return true;
+	return closeEnough;
 }
 
 void CollectorMove::End() {
@@ -70,6 +66,7 @@ void CollectorMove::End() {
 	char str[1024];
 	sprintf(str, "CollectorMove END Called for target %f", target);
 	writeToLogFile(LOGFILE_NAME, str);
+	collector->deregisterCommand(this);
 }
 
 void CollectorMove::Interrupted() {

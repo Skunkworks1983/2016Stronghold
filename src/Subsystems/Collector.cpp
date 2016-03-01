@@ -1,14 +1,21 @@
+#include <Commands/Command.h>
+#include <Commands/Scheduler.h>
 #include <DigitalInput.h>
 #include <RobotMap.h>
+#include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <Subsystems/Collector.h>
+#include <TuningValues.h>
+#include <cstdio>
 
 Collector::Collector() :
 		Subsystem("Collector") {
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
 	breakBeam = new DigitalInput(COLLECTOR_BREAK_BEAM_PORT);
+
+	lastCommand = NULL;
 }
 
 Collector::~Collector() {
@@ -17,6 +24,38 @@ Collector::~Collector() {
 
 void Collector::InitDefaultCommand() {
 
+}
+
+void Collector::registerCommand(Command *cmd) {
+	if (lastCommand == NULL) {
+		writeToLogFile(LOGFILE_NAME, "lastCommand = cmd");
+		lastCommand = cmd;
+	} else {
+		if (lastCommand->IsRunning()) {
+			lastCommand->Cancel();
+			//Scheduler::GetInstance()->Remove(lastCommand);
+		}
+		//lastCommand->Deregister
+		lastCommand = cmd;
+		writeToLogFile(LOGFILE_NAME, "After");
+	}
+	char str[1024];
+	sprintf(str, "Command %d registered", cmd != NULL ? cmd->GetID() : -420);
+	writeToLogFile(LOGFILE_NAME, str);
+}
+
+void Collector::deregisterCommand(Command *cmd) {
+	char str[1024];
+	sprintf(str, "Command %d DEREGISTERED", cmd != NULL ? cmd->GetID() : -420);
+	writeToLogFile(LOGFILE_NAME, str);
+	if (lastCommand == cmd) {
+		if (lastCommand != NULL) {
+			if (lastCommand->IsRunning()) {
+				lastCommand->Cancel();
+				//Scheduler::GetInstance()->Remove(lastCommand);
+			}
+		}
+	}
 }
 
 void Collector::resetEncoder() {

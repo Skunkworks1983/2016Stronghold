@@ -53,7 +53,7 @@ void RotateArm::End() {
 	char str[1024];
 	sprintf(str, "RotateArm END called with target %f", target);
 	writeToLogFile(LOGFILE_NAME, str);
-	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
+	//MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 }
 
 void RotateArm::Interrupted() {

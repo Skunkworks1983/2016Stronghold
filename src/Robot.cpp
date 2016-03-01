@@ -36,11 +36,8 @@ void Robot::RobotInit() {
 
 	//StallProtection *stall = new StallProtection();
 	//stall->Start();
-	acc = new BuiltInAccelerometer(Accelerometer::kRange_16G);
+	//acc = new BuiltInAccelerometer(Accelerometer::kRange_16G);
 	cmd = AutoBase::doLowB();
-	rollerForward = new ActivateRollers(Collector::KForward);
-	rollerBackward = new ActivateRollers(Collector::KBackward, 1000);
-
 }
 
 void Robot::DisabledPeriodic() {
@@ -104,11 +101,16 @@ void Robot::TeleopPeriodic() {
 	SmartDashboard::PutBoolean("CollectorMoveRunning", true);
 
 	SmartDashboard::PutNumber("ArmEncoder",
-				SensorManager::getSensorManager()->getSensor(
-						SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
+			SensorManager::getSensorManager()->getSensor(
+			SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
+	/*char str[1024];
+	sprintf(str, "ArmEncoder %f", SensorManager::getSensorManager()->getSensor(
+	SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
+	writeToLogFile(LOGFILE_NAME, str);*/
 }
 
 void Robot::TestPeriodic() {
+	CommandBase::climber->setServoAngle(130);
 }
 
 START_ROBOT_CLASS(Robot);

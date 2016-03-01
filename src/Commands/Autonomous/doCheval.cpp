@@ -14,6 +14,7 @@
 //TODO: rework this logic slightly
 AutoBase *AutoBase::doCheval() {
 	AutoBase*cmd = new AutoBase("Autonomous-doCheval");
+	cmd->AddSequential(new DriveForward(5, 0.25));	//Reach the defence
 	cmd->AddSequential(new CollectorMove(cLowBar));
 	cmd->AddSequential(new DriveForward(CHEV_SHORTDIST, CHEV_SPEED));
 	cmd->AddSequential(new CollectorMove(cTOP));

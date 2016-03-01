@@ -64,6 +64,7 @@ public:
 class MotorGroup: public PIDOutput {
 private:
 	std::vector<Motor*> motorList;
+	int c;
 public:
 	MotorGroup(std::vector<Motor*> motorgroup);
 	virtual ~MotorGroup();

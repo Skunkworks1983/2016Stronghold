@@ -26,12 +26,13 @@ bool HoldAgainstTower::IsFinished() {
 	char str[1024];
 	sprintf(str, "stopHold %u", drivebase->stopHold);
 	writeToLogFile(LOGFILE_NAME, str);
-	return drivebase->stopHold;
+	return true;
+	//return drivebase->stopHold;
 }
 
 void HoldAgainstTower::End() {
-	drivebase->setLeftSpeed(0);
-	drivebase->setRightSpeed(0);
+	/*drivebase->setLeftSpeed(0);
+	drivebase->setRightSpeed(0);*/
 	char str[1024];
 	sprintf(str, "HoldAgainstTower ended");
 	writeToLogFile(LOGFILE_NAME, str);

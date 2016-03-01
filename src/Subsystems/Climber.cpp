@@ -1,23 +1,16 @@
-#include <CANSpeedController.h>
 #include <CANTalon.h>
-#include <PIDController.h>
+#include <Commands/Command.h>
 #include <RobotMap.h>
+#include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Servo.h>
 #include <Subsystems/Climber.h>
-#include <TuningValues.h>
+#include <Subsystems/Collector.h>
+#include <cstdio>
 
 Climber::Climber() :
 		Subsystem("Climber") {
 	servo = new Servo(CLIMBER_SERVO_PORT);
-
-	/*armMotor = new CANTalon(CLIMBER_ARM_MOTOR_PORT);
-	armMotor->Reset();
-	armMotor->SetEncPosition(0);
-	armMotor->SetPIDSourceType(PIDSourceType::kDisplacement);
-	armMotor->SetControlMode(CANTalon::ControlMode::kPosition);
-	armMotor->SetPID(CLIMBER_ARM_P, CLIMBER_ARM_I,
-	CLIMBER_ARM_D);*/
 }
 
 Climber::~Climber() {
@@ -38,7 +31,6 @@ float Climber::getServoAngle() {
 
 void Climber::setServoSpeed(float speed) {
 	servo->Set(speed);
-	//servo->SetSpeed(speed);
 }
 
 void Climber::setWinchSpeed(float winchSpeed) {
@@ -49,11 +41,43 @@ void Climber::setWinchSpeed(float winchSpeed) {
 	motorManager->setSpeed(CLIMBER_WINCH_MOTOR_4_PORT, winchSpeed);
 }
 
+void Climber::registerCommand(Command *cmd) {
+	if (lastCommand == NULL) {
+		writeToLogFile(LOGFILE_NAME, "lastCommand = cmd");
+		lastCommand = cmd;
+	} else {
+		if (lastCommand->IsRunning()) {
+			lastCommand->Cancel();
+		}
+		lastCommand = cmd;
+		writeToLogFile(LOGFILE_NAME, "After");
+	}
+	char str[1024];
+	sprintf(str, "Command %d registered", cmd != NULL ? cmd->GetID() : -420);
+	writeToLogFile(LOGFILE_NAME, str);
+}
+
+void Climber::deregisterCommand(Command *cmd) {
+	char str[1024];
+	sprintf(str, "Command %d DEREGISTERED", cmd != NULL ? cmd->GetID() : -420);
+	writeToLogFile(LOGFILE_NAME, str);
+	if (lastCommand == cmd) {
+		if (lastCommand != NULL) {
+			if (lastCommand->IsRunning()) {
+				lastCommand->Cancel();
+				//Scheduler::GetInstance()->Remove(lastCommand);
+			}
+		}
+	}
+}
+
+
 void Climber::setSetpoint(float position) {
 	armMotor->SetSetpoint(position);
-	//armMotor->Set(position);
 	armMotor->EnableControl();
 }
+
+
 
 void Climber::disablePID() {
 	armMotor->Disable();
