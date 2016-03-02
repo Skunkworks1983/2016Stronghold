@@ -15,7 +15,7 @@ MotorManager::MotorManager() {
 	allowedPriority = PRIORITY_ACCESSORIES;
 	char str[1024];
 	sprintf(str, "MotorManager Constructor #%u", count++);
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Info);
 
 #if USE_DRIVEBASE
 	initDriveBase();
@@ -115,7 +115,7 @@ void MotorManager::initDriveBase() {
 
 	char str[1024];
 	sprintf(str, "Created DriveBase Motors");
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Info);
 }
 
 void MotorManager::initShooter() {
@@ -260,12 +260,12 @@ Motor * MotorManager::getMotor(unsigned ID) {
 	if (ID < 0 || motors.count(ID) < 1) {
 		char str[1024];
 		sprintf(str, "Null motor at ID %u", ID);
-		writeToLogFile(LOGFILE_NAME, str);
+		Logger::getLogger()->log(str, Info);
 		return NULL;
 	}
 	//char str[1024];
 	//sprintf(str, "Returning getMotor(%u)", ID);
-	//writeToLogFile(LOGFILE_NAME, str);
+	//Logger::getLogger()->log(str, Info);
 	return motors[ID];
 }
 
@@ -409,7 +409,7 @@ Motor::Motor(Priority prioArg, int portArg, float maxCurrent,
 	} else {
 		char str[1024];
 		sprintf(str, "Talon assignment failed on Port %d", port);
-		writeToLogFile(LOGFILE_NAME, str);
+		Logger::getLogger()->log(str, Info);
 	}
 	C = 1;
 }

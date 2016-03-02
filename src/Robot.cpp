@@ -20,10 +20,10 @@
 void Robot::RobotInit() {
 	char startup[1024];
 	sprintf(startup, "START OF NEW RUN \t START OF NEW RUN");
-	writeToLogFile(LOGFILE_NAME, startup);
+	Logger::getLogger()->log(startup, Info);
 	char str[1024];
 	sprintf(str, "RobotInit Called");
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Info);
 	MotorManager::getMotorManager();
 	SensorManager::getSensorManager();
 	MotorManager::getMotorManager()->initPIDS();
@@ -48,12 +48,7 @@ void Robot::AutonomousInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	char str[1024];
 	sprintf(str, "AutonomousInit Called");
-	writeToLogFile(LOGFILE_NAME, str);
-
-	//cmd->Start();
-	//rollerForward->Start();
-	CommandBase::climber->setServoAngle(0);
-
+	Logger::getLogger()->log(str, Info);
 }
 
 void Robot::AutonomousPeriodic() {
@@ -77,22 +72,21 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {
 	Scheduler::GetInstance()->RemoveAll();
-	/*char str[1024];
-	 sprintf(str, "TeleOp Called");
-	 writeToLogFile(LOGFILE_NAME, str);
-	 sprintf(str,
-	 "BatteryVoltage, leftStick, rightStick, AccelXAxis, AccelYAxis, AccelZAxis ");
-	 writeToLogFile(LOGFILE_NAME, str);*/
-	//rollerBackward->Start();
-	//CommandBase::climber->setServoSpeed(-255);
-	//CommandBase::climber->setServoAngle(0);
+	char str[1024];
+	sprintf(str, "TeleOp Called");
+	Logger::getLogger()->log(str, Info);
 }
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
 	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
 
-	SmartDashboard::PutNumber("RotationEncoderRelative",
+	//char str[1024];
+	//sprintf(str, "BatteryVoltage %f", voltage);
+	//Logger::getLogger()->log(str, Info);
+
+	char str[1024];
+	sprintf(str, "leftEncoder %f, rightEncoder %f",
 			SensorManager::getSensorManager()->getSensor(
 			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
 	SmartDashboard::PutNumber("RotationEncoderRelative",

@@ -59,14 +59,14 @@ void RotateTowardCameraTarget::PIDWrite(float output) {
 		drivebase->setRightSpeed(- output);
 	}else{
 		//printf("CAMERA READER READ IS INVALID\n");
-		writeToLogFile(LOGFILE_NAME, "CAMERA READER READ IS INVALID");
+		Logger::getLogger()->log("CAMERA READER READ IS INVALID", Info);
 	}
 }
 
 double RotateTowardCameraTarget::PIDGet() {
 	if (CameraReader::getCameraReader()->getLastX() == INVALID) {
 		//printf("CAMERA READER READ IS INVALID\n");
-		writeToLogFile(LOGFILE_NAME, "CAMERA READER READ IS INVALID");
+		Logger::getLogger()->log("CAMERA READER READ IS INVALID", Info);
 		//CameraReader::getCameraReader()->stopReading();
 		if(invalidCount++ > 20){
 			CameraReader::getCameraReader()->stopReading();

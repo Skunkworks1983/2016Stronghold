@@ -18,27 +18,35 @@ void RotateArm::Initialize() {
 
 	char str[1024];
 	sprintf(str, "RotateArm Initialize called with target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
-
-	//MotorManager::getMotorManager()->resetPID(PID_ID_ARM);
-
+	Logger::getLogger()->log(str, Info);
 	MotorManager::getMotorManager()->enablePID(PID_ID_ARM, target);
 }
 
 void RotateArm::Execute() {
-
+	//get PID values
+	//char str[1024];
+	//sprintf(str, "ArmPower %f", MotorManager::getMotorManager()->get);
+	//Logger::getLogger()->log(str, Info);
 }
 
 bool RotateArm::IsFinished() {
-	return fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()) > target;
+	/*if (target == getpid){
+	 return true;
+	 }
+	 else {
+	 return false;
+	 } */
+	return false;
 }
 
 void RotateArm::End() {
 	climber->deregisterCommand(this);
 	char str[1024];
 	sprintf(str, "RotateArm END called with target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Info);
+	//MotorManager::getMotorManager()->disablePID(target*CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS);
+	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT,0.0); //probably wrong
+	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 }
 
 void RotateArm::Interrupted() {

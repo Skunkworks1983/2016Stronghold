@@ -20,7 +20,7 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 	if (motor != NULL) {
 		char str[1024];
 		sprintf(str, "Created Sensor with talon on ID %d", CANTalonEncoderPort);
-		writeToLogFile(LOGFILE_NAME, str);
+		Logger::getLogger()->log(str, Info);
 		this->talon = motor->talon;
 		talon->SetEncPosition(0);
 		talon->SetPosition(0);
@@ -30,7 +30,7 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 	} else {
 		char str[1024];
 		sprintf(str, "MotorIs null!!! port: %d", CANTalonEncoderPort);
-		writeToLogFile(LOGFILE_NAME, str);
+		Logger::getLogger()->log(str, Info);
 	}
 	this->src = NULL;
 }
@@ -67,12 +67,12 @@ double Sensor::PIDGet() {
 	} else if (src != NULL) {
 		char str[1024];
 		sprintf(str, "PIDSource is returning PIDGet");
-		writeToLogFile(LOGFILE_NAME, str);
+		Logger::getLogger()->log(str, Info);
 		return src->PIDGet();
 	} else {
 		char str[1024];
 		sprintf(str, "Sensor is returning a 0.0 because talon && src are NULL");
-		writeToLogFile(LOGFILE_NAME, str);
+		Logger::getLogger()->log(str, Info);
 		return 0.0;
 	}
 }
@@ -84,7 +84,7 @@ int Sensor::getAbsolutePosition() {
 SensorManager::SensorManager() {
 	char str[1024];
 	sprintf(str, "SensorManager Created #%u", count++);
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Info);
 #if USE_GYRO
 	initGyro();
 	//sensors.insert(std::pair<int, Sensor*>(SENSOR_GYRO_ID, new Sensor(ahrs)));

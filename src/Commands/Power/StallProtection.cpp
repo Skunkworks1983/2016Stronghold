@@ -33,7 +33,7 @@ void StallProtection::Execute() {
 					char str[1024];
 					sprintf(str, "StallProtection Called ID: %u ",
 							(*it).second->port);
-					writeToLogFile(LOGFILE_NAME, str);
+					Logger::getLogger()->log(str, Info);
 					motor->overCurrentStartTime = 0;
 					motor->talon->Set(0);
 					motor->stoppedStartTime = GetFPGATime();

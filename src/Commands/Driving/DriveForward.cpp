@@ -18,6 +18,10 @@ DriveForward::DriveForward(float distance, float speed) {
 	initialPosition = 0.0;
 	errorOffset = 0.0;
 
+	char str[1024];
+	sprintf(str, "Inside DriveForward Constructor");
+	Logger::getLogger()->log(str, Info);
+
 	leftEncoder = SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID);
 	rightEncoder = SensorManager::getSensorManager()->getSensor(
@@ -40,7 +44,7 @@ void DriveForward::Initialize() {
 	initialPosition = (initialLeft + initialRight) / 2;
 	char str[1024];
 	sprintf(str, "DriveForward Initialize Called");
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Info);
 }
 
 void DriveForward::Execute() {
@@ -69,9 +73,13 @@ void DriveForward::Execute() {
 	 drivebase->setLeftSpeed(((1 / 15) * errorOffset + 1) * speed); //Same but tilted to the right
 	 drivebase->setRightSpeed(speed);
 	 }*/
-	char str[1024];
-	sprintf(str, "left: %f, right: %f", left, right);
-	writeToLogFile(LOGFILE_NAME, str);
+	/*char str[1024];
+	sprintf(str, "LeftEnc %f RightEnc %f",
+			(double) SensorManager::getSensorManager()->GetEncoderPosition(
+			DRIVEBASE_LEFT_ENCODER_PORT),
+			(double) SensorManager::getSensorManager()->GetEncoderPosition(
+			DRIVEBASE_RIGHT_ENCODER_PORT));
+	Logger::getLogger()->log(str, Info);*/
 }
 
 bool DriveForward::IsFinished() {
@@ -83,7 +91,7 @@ bool DriveForward::IsFinished() {
 	double difference = ((left + right) / 2) - initialPosition;
 	char str[1024];
 	sprintf(str, "Difference: %f, Distance: %f", difference, distance);
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Info);
 	if (difference > distance) {
 		return true;
 	}
