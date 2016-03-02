@@ -23,7 +23,9 @@ void RunWinch::Initialize() {
 
 void RunWinch::Execute() {
 	if(counter++ > 50){
-		drivebase->stopHold = true;
+		//drivebase->stopHold = true;
+		drivebase->setLeftSpeed(0);
+		drivebase->setRightSpeed(0);
 		MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 	}
 }

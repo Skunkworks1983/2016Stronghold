@@ -18,7 +18,7 @@ private:
 	float           target;
 	MotorManager *  motorManager;
 	SensorManager * sensorManager;
-	unsigned 		id;
+	int test;
 public:
 	CollectorMove(CollectorPosition pos);
 	void Initialize();

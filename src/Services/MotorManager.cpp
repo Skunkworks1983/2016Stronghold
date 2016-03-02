@@ -34,6 +34,7 @@ MotorManager::MotorManager() {
 PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
 		PIDOutput *output) {
 	ptr = new PIDController(p, i, d, f, source, output);
+
 	char str[1024];
 	sprintf(str, "Created PIDWrapper with %f, %f, %f", p, i, d);
 	writeToLogFile(LOGFILE_NAME, str);
@@ -78,6 +79,10 @@ void PIDWrapper::SetPIDSourceType(PIDSourceType pidSource) {
 
 bool PIDWrapper::IsEnabled() {
 	return ptr->IsEnabled();
+}
+
+void PIDWrapper::Reset() {
+	ptr->Reset();
 }
 
 void MotorManager::initClimber() {
@@ -145,8 +150,8 @@ void MotorManager::initPIDS() {
 
 	createPID(groupCollectorRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
 	PID_ID_COLLECTOR, COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I,
-			COLLECTOR_ROTATION_D,
-			COLLECTOR_ROTATION_F, false);
+	COLLECTOR_ROTATION_D,
+	COLLECTOR_ROTATION_F, false);
 	/*
 	 std::vector<Motor*> rollerMotors;
 	 rollerMotors.push_back(getMotor(COLLECTOR_ROLLER_MOTOR_1_PORT));
@@ -231,7 +236,7 @@ void MotorManager::initPIDS() {
 	double d = 0.0; //0.00005;
 
 	createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, p, i, d,
-			CLIMBER_ARM_F, false);
+	CLIMBER_ARM_F, false);
 
 	/*createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM,
 	 CLIMBER_ARM_P, CLIMBER_ARM_I, CLIMBER_ARM_D, CLIMBER_ARM_F, false);*/
@@ -275,7 +280,7 @@ void MotorManager::setPosition(unsigned pidID, float position) {
 }
 
 void MotorManager::resetPID(unsigned ID) {
-	//pidControllerMap[ID]->Reset();
+	pidControllerMap[ID]->Reset();
 }
 
 void MotorManager::setSpeed(unsigned ID, float speed) {
@@ -400,6 +405,7 @@ Motor::Motor(Priority prioArg, int portArg, float maxCurrent,
 
 	if (SensorBase::CheckPWMChannel(port)) {	//TODO: make sure this works
 		talon = new CANTalon(port);
+		talon->SetSafetyEnabled(false);
 	} else {
 		char str[1024];
 		sprintf(str, "Talon assignment failed on Port %d", port);
@@ -470,6 +476,7 @@ void MotorManager::disablePID(unsigned pidID) {
 }
 MotorGroup::MotorGroup(std::vector<Motor*> motorgroup) {
 	this->motorList = motorgroup;
+	c = 0;
 }
 
 MotorGroup::~MotorGroup() {
@@ -486,8 +493,21 @@ PIDWrapper *MotorManager::getPID(unsigned pidID) {
 	return NULL;
 }
 
+float MotorGroup::getLastOutput(){
+	return lastOutput;
+}
+
+float MotorGroup::getLastCurrent(){
+	return lastOutput;
+}
+
 void MotorGroup::PIDWrite(float output) {
 	std::vector<Motor*>::iterator it = motorList.begin();
+
+	lastOutput = output;
+	if (motorList.front() != NULL && motorList.front()->talon != NULL) {
+		lastCurrent = motorList.front()->talon->GetOutputCurrent();
+	}
 
 	for (; it != motorList.end(); ++it) {
 		/*if ((*it)->stoppedStartTime == 0) {

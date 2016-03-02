@@ -115,22 +115,22 @@ void OI::registerButtonListeners() {
 	 */
 	driverCollectorDown->WhileHeld(new ActivateRollers(Collector::KForward));
 	driverCollectorDown->WhenPressed(new CollectorMove(cCollect));
-	driverCollectorDown->WhenReleased(new StopCollectorPID());
+	//driverCollectorDown->WhenReleased(new StopCollectorPID());
 	driverCollectorUp->WhenPressed(new CollectorMove(cTOP));
 	holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
-	stopCollectorPID->WhenPressed(new StopCollectorPID());
+	//stopCollectorPID->WhenPressed(new StopCollectorPID());
 
 	/**
 	 * Operator Buttons
 	 */
 
 	collect->WhileHeld(new ActivateRollers(Collector::KForward));
-	collect->WhileHeld(new StopCollectorPID());
+	//collect->WhileHeld(new StopCollectorPID());
 	collectorDown->WhenPressed(new CollectorMove(cCollect));
-	collectorDown->WhenReleased(new StopCollectorPID());
+	//collectorDown->WhenReleased(new StopCollectorPID());
 
 	collectorUp->WhenPressed(new CollectorMove(cTOP));
-	collectorUp->WhenReleased(new StopCollectorPID());
+	//collectorUp->WhenReleased(new StopCollectorPID());
 
 	collectorPass->WhileHeld(new ActivateRollers(Collector::KBackward));
 	collector45->WhenPressed(new CollectorMove(c45));
@@ -143,7 +143,7 @@ void OI::registerButtonListeners() {
 	highLineUp->WhenPressed(new ResetCollectorEncoder());
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
 	climberArmsUp->WhenPressed(new SafeRotateArm(CLIMBER_ARM_UP_POSITION));
-	winchEngage->WhileHeld(new RunWinch(.25));
+	winchEngage->WhileHeld(new RunWinch(.75));
 	//manualOveride;	no effect currently
 	//manualWinchReverse->WhileHeld(new RunWinch(-.1));*/
 	manualCollectorDown->WhileHeld(new ManualCollectorMove(-.2));

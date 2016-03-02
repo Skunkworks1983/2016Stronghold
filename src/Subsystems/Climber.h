@@ -7,15 +7,17 @@ class CANTalon;
 
 class Servo;
 
-class Climber: public Subsystem
-{
+class Climber: public Subsystem {
 private:
 	Servo *servo;
 	CANTalon *armMotor;
+	Command *lastCommand;
 public:
 	Climber();
 	~Climber();
 
+	void registerCommand(Command *cmd);
+	void deregisterCommand(Command *cmd);
 	void setServoAngle(float angle);
 	float getServoAngle();
 	void setServoSpeed(float speed);

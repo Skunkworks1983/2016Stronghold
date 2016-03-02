@@ -40,6 +40,7 @@ void writeToLogFile(const std::string &fileName, const std::string &message,
 
 			strftime(timer, 32, "%c", timeinfo); //Puts the time in human-friendly format
 			logFile<<"["<<timer<<"] "<< ROBOT_NAME << " "<< message<<std::endl; //Write to log file
+			logFile.flush();
 		}
 		catch(/*std::ifstream::failure *e*/...) {} //Not sure what the exact error is, but will not die when no flashdrive
 	}

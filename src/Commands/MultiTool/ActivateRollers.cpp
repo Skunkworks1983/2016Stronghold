@@ -17,7 +17,7 @@ void ActivateRollers::Initialize()
 	if(timeOut != 0){
 		SetTimeout(timeOut);
 	}
-	collector->setRollerSpeed(dir, .85);
+	collector->setRollerSpeed(dir, 1.0);
 }
 
 void ActivateRollers::Execute(){
