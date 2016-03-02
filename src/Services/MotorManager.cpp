@@ -81,6 +81,10 @@ bool PIDWrapper::IsEnabled() {
 	return ptr->IsEnabled();
 }
 
+void PIDWrapper::Reset() {
+	ptr->Reset();
+}
+
 void MotorManager::initClimber() {
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT,
 	RS775_MAX_CURRENT, ARM);
@@ -276,7 +280,7 @@ void MotorManager::setPosition(unsigned pidID, float position) {
 }
 
 void MotorManager::resetPID(unsigned ID) {
-	//pidControllerMap[ID]->Reset();
+	pidControllerMap[ID]->Reset();
 }
 
 void MotorManager::setSpeed(unsigned ID, float speed) {
@@ -489,14 +493,20 @@ PIDWrapper *MotorManager::getPID(unsigned pidID) {
 	return NULL;
 }
 
+float MotorGroup::getLastOutput(){
+	return lastOutput;
+}
+
+float MotorGroup::getLastCurrent(){
+	return lastOutput;
+}
+
 void MotorGroup::PIDWrite(float output) {
 	std::vector<Motor*>::iterator it = motorList.begin();
 
-	if (c++ > 10) {
-		char str[1024];
-		sprintf(str, "PIDWrite %f Amperage %f", output, motorList[0]->talon->GetOutputCurrent());
-		writeToLogFile(LOGFILE_NAME, str);
-		c = 0;
+	lastOutput = output;
+	if (motorList.front() != NULL && motorList.front()->talon != NULL) {
+		lastCurrent = motorList.front()->talon->GetOutputCurrent();
 	}
 
 	for (; it != motorList.end(); ++it) {

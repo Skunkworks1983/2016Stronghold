@@ -6,8 +6,8 @@
 
 SafeRotateArm::SafeRotateArm(float target)
 {
-	//AddSequential(new HoldAgainstTower(.2));
-	//AddSequential(new CollectorMove(CollectorPosition::cCollect));
+	AddSequential(new HoldAgainstTower(.2));
+	AddSequential(new CollectorMove(CollectorPosition::cCollect));
 	AddSequential(new MoveServo(MoveServo::OUT));
 	AddSequential(new RotateArm(target));
 }

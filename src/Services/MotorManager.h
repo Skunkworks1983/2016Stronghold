@@ -39,6 +39,7 @@ public:
 	void SetOutputRange(float minimumOutput, float maximumOutput);
 	void SetPIDSourceType(PIDSourceType pidSource);
 	bool IsEnabled();
+	void Reset();
 };
 
 class Motor {
@@ -65,11 +66,15 @@ class MotorGroup: public PIDOutput {
 private:
 	std::vector<Motor*> motorList;
 	int c;
+	float lastOutput;
+	float lastCurrent;
 public:
 	MotorGroup(std::vector<Motor*> motorgroup);
 	virtual ~MotorGroup();
 	void PIDWrite(float output);
 	int getPID(Motor motor);
+	float getLastOutput();
+	float getLastCurrent();
 };
 
 class MotorManager {

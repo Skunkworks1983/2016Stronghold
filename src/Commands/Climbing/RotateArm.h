@@ -11,7 +11,6 @@ private:
 	float target; //set position it will turn
 public:
 	RotateArm(float targetTicks);
-	~RotateArm();
 	void Initialize();
 	void Execute();
 	bool IsFinished();
