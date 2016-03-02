@@ -8,8 +8,6 @@ class MotorManager;
 class Drivebase: public Subsystem
 {
 public:
-	bool stopHold = false;
-	bool holdAgainstTower = false;
 	Drivebase();
 	~Drivebase();
 	void InitDefaultCommand();

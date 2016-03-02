@@ -11,7 +11,7 @@ class MotorManager;
 class ManagePower: public CommandBase {
 private:
 	// Data
-	MotorManager *      manager;
+	MotorManager *      manager = NULL;
 
 	double  m_voltage;
 

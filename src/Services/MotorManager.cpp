@@ -231,9 +231,9 @@ void MotorManager::initPIDS() {
 	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
 	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
 
-	double p = 0.00030;
-	double i = 0.000017;
-	double d = 0.0; //0.00005;
+	const double p = 0.00015;
+	const double i = 0.000017;
+	const double d = 0.0; //0.00005;
 
 	createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, p, i, d,
 	CLIMBER_ARM_F, false);
@@ -474,6 +474,7 @@ void MotorManager::disablePID(unsigned pidID) {
 	writeToLogFile(LOGFILE_NAME, str);
 	pidControllerMap[pidID]->Disable();
 }
+
 MotorGroup::MotorGroup(std::vector<Motor*> motorgroup) {
 	this->motorList = motorgroup;
 	c = 0;
@@ -493,21 +494,24 @@ PIDWrapper *MotorManager::getPID(unsigned pidID) {
 	return NULL;
 }
 
-float MotorGroup::getLastOutput(){
+float MotorGroup::getLastOutput() {
 	return lastOutput;
 }
 
-float MotorGroup::getLastCurrent(){
+float MotorGroup::getLastCurrent() {
 	return lastOutput;
 }
 
 void MotorGroup::PIDWrite(float output) {
 	std::vector<Motor*>::iterator it = motorList.begin();
 
-	lastOutput = output;
-	if (motorList.front() != NULL && motorList.front()->talon != NULL) {
+	//lastOutput = output;
+	/*if (motorList.front() != NULL && motorList.front()->talon != NULL) {
 		lastCurrent = motorList.front()->talon->GetOutputCurrent();
 	}
+	char str[1024];
+	sprintf(str, "Output %f Current %f", output, lastCurrent);
+	writeToLogFile(LOGFILE_NAME, str);*/
 
 	for (; it != motorList.end(); ++it) {
 		/*if ((*it)->stoppedStartTime == 0) {

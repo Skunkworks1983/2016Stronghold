@@ -90,23 +90,26 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
-	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
 
 	SmartDashboard::PutNumber("RotationEncoderRelative",
 			SensorManager::getSensorManager()->getSensor(
 			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
-	SmartDashboard::PutNumber("RotationEncoderRelative",
+	SmartDashboard::PutNumber("RotationEncoderAbsolute",
 			SensorManager::getSensorManager()->getSensor(
-			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
-	SmartDashboard::PutBoolean("CollectorMoveRunning", true);
+			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->getAbsolutePosition());
 
 	SmartDashboard::PutNumber("ArmEncoder",
 			SensorManager::getSensorManager()->getSensor(
 			SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
-	/*char str[1024];
-	sprintf(str, "ArmEncoder %f", SensorManager::getSensorManager()->getSensor(
-	SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
-	writeToLogFile(LOGFILE_NAME, str);*/
+
+	SmartDashboard::PutNumber("ClimberArmAbsolute",
+			SensorManager::getSensorManager()->getSensor(
+			SENSOR_CLIMBER_ARM_ENCODER)->getAbsolutePosition());
+
+//	char str[1024];
+//	sprintf(str, "ArmEncoder %f", SensorManager::getSensorManager()->getSensor(
+//	SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
+//	writeToLogFile(LOGFILE_NAME, str);
 }
 
 void Robot::TestPeriodic() {

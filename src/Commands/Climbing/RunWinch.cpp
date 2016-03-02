@@ -6,8 +6,11 @@
 #include <TuningValues.h>
 #include <cstdbool>
 
-RunWinch::RunWinch(float speed) :
-		CommandBase("RunWinch"), speed(speed) {
+RunWinch::RunWinch(float speed, float timeout) :
+		CommandBase("RunWinch"), speed(speed), timeout(timeout) {
+	if(timeout != 0){
+		SetTimeout(timeout);
+	}
 }
 RunWinch::~RunWinch() {
 
@@ -30,7 +33,7 @@ void RunWinch::Execute() {
 	}
 }
 bool RunWinch::IsFinished() {
-	return false;
+	return IsTimedOut();
 }
 void RunWinch::Interrupted() {
 	End();

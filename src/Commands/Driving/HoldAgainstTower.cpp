@@ -14,7 +14,6 @@ void HoldAgainstTower::Initialize() {
 	char str[1024];
 	sprintf(str, "HoldAgainstTower Started");
 	writeToLogFile(LOGFILE_NAME, str);
-	drivebase->holdAgainstTower = true;
 }
 
 void HoldAgainstTower::Execute() {
@@ -23,11 +22,7 @@ void HoldAgainstTower::Execute() {
 }
 
 bool HoldAgainstTower::IsFinished() {
-	char str[1024];
-	sprintf(str, "stopHold %u", drivebase->stopHold);
-	writeToLogFile(LOGFILE_NAME, str);
 	return true;
-	//return drivebase->stopHold;
 }
 
 void HoldAgainstTower::End() {

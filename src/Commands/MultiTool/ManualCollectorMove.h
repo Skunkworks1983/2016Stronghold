@@ -12,8 +12,8 @@ class ManualCollectorMove: public CommandBase
 private:
 	float speed;
 	float timeout;
-	MotorManager * motorManager;
-	SensorManager * sensorManager;
+	MotorManager * motorManager = NULL;
+	SensorManager * sensorManager = NULL;
 public:
 	ManualCollectorMove(float speed, float timeout = 0);
 	void Initialize();

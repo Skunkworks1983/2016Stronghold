@@ -17,11 +17,6 @@ DriveForward::DriveForward(float distance, float speed) {
 	initialYaw = 0.0;
 	initialPosition = 0.0;
 	errorOffset = 0.0;
-
-	leftEncoder = SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID);
-	rightEncoder = SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID);
 }
 
 DriveForward::~DriveForward() {

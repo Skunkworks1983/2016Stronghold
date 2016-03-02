@@ -12,8 +12,8 @@ class SensorManager;
 class ActivateRollers: public CommandBase
 {
 private:
-	MotorManager * motorManager;
-	SensorManager * sensorManager;
+	MotorManager * motorManager = NULL;
+	SensorManager * sensorManager = NULL;
 	clock_t rollerTime;
 	float timeOut;
 	Collector::rollerDirection dir;

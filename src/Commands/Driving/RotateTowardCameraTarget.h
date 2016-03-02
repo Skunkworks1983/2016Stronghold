@@ -9,7 +9,7 @@
 
 class RotateTowardCameraTarget : public CommandBase, public PIDOutput, public PIDSource{
 private:
-	PIDController *controller;
+	PIDController *controller  = NULL;
 	double error, outputspeed;
 	unsigned invalidCount;
 	bool lostTarget;

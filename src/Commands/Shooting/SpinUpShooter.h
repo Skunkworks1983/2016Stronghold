@@ -10,8 +10,8 @@ class SensorManager;
 class SpinUpShooter: public CommandBase {
 
 private:
-	MotorManager * motorManager;
-	SensorManager * sensorManager;
+	MotorManager * motorManager = NULL;
+	SensorManager * sensorManager = NULL;
 	float timeOut;
 	float speed;
 

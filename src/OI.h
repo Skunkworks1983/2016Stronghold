@@ -9,44 +9,43 @@
 
 class OI {
 private:
-	Joystick *gamepad;
-	Joystick *leftStick;
-	Joystick *rightStick;
-	Joystick *op;
+	Joystick *gamepad = NULL;
+	Joystick *leftStick = NULL;
+	Joystick *rightStick = NULL;
+	Joystick *op = NULL;
 
-	JoystickButton *collect;
-	JoystickButton *collectorDown;
-	JoystickButton *collectorUp;
-	JoystickButton *collectorPass;
-	JoystickButton *collector45;
-	JoystickButton *lowFire;
-	JoystickButton *lowArm;
-	JoystickButton *lowAim;
-	JoystickButton *highFire;
-	JoystickButton *highAim;
-	JoystickButton *highAimPosition1;
-	JoystickButton *highAimPosition2;
-	JoystickButton *highLineUp;
-	JoystickButton *climberArmsUp;
-	JoystickButton *winchEngage;
-	JoystickButton *manualOveride;
-	JoystickButton *manualWinchReverse;
-	JoystickButton *manualCollectorDown;
-	JoystickButton *manualCollectorUp;
-	JoystickButton *portcullis;
+	JoystickButton *collect = NULL;
+	JoystickButton *collectorDown = NULL;
+	JoystickButton *collectorUp = NULL;
+	JoystickButton *collectorPass = NULL;
+	JoystickButton *collector45 = NULL;
+	JoystickButton *lowFire = NULL;
+	JoystickButton *lowArm = NULL;
+	JoystickButton *lowAim = NULL;
+	JoystickButton *highFire = NULL;
+	JoystickButton *highAim = NULL;
+	JoystickButton *highAimPosition1 = NULL;
+	JoystickButton *highAimPosition2 = NULL;
+	JoystickButton *highLineUp = NULL;
+	JoystickButton *climberArmsUp = NULL;
+	JoystickButton *winchEngage = NULL;
+	JoystickButton *manualOveride = NULL;
+	JoystickButton *manualWinchReverse = NULL;
+	JoystickButton *manualCollectorDown = NULL;
+	JoystickButton *manualCollectorUp = NULL;
+	JoystickButton *portcullis = NULL;
 
-	JoystickButton *stopCollectorPID;
-	JoystickButton *driverCollectorDown;
-	JoystickButton *driverCollectorUp;
-	JoystickButton *holdAgainstTower;
+	JoystickButton *stopCollectorPID = NULL;
+	JoystickButton *driverCollectorDown = NULL;
+	JoystickButton *driverCollectorUp = NULL;
+	JoystickButton *holdAgainstTower = NULL;
 
 public:
 	OI();
 	~OI();
 	double getLeftStickY();
 	double getRightStickY();
-	void registerButtonListeners();
-	bool isJoystickButtonPressed(int control,
+	void registerButtonListeners();bool isJoystickButtonPressed(int control,
 			int button);
 };
 

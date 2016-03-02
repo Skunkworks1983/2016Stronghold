@@ -1,15 +1,13 @@
+#include <Commands/Climbing/MoveServo.h>
 #include <Commands/Climbing/RunWinch.h>
 #include <Commands/Climbing/SafeRotateArm.h>
 #include <Commands/Driving/HoldAgainstTower.h>
 #include <Commands/MultiTool/ActivateRollers.h>
 #include <Commands/MultiTool/CollectorMove.h>
-#include <Commands/MultiTool/ManualCollectorMove.h>
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
-#include <Commands/MultiTool/StopCollectorPID.h>
 #include <OI.h>
 #include <Services/Logger.h>
 #include <Subsystems/Collector.h>
-#include <TuningValues.h>
 #include <cmath>
 #include <cstdbool>
 #include <cstdio>
@@ -142,12 +140,13 @@ void OI::registerButtonListeners() {
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetCollectorEncoder());
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
-	climberArmsUp->WhenPressed(new SafeRotateArm(CLIMBER_ARM_UP_POSITION));
+	const double climber_arm_up_debug = 3000;
+	climberArmsUp->WhenPressed(new SafeRotateArm(climber_arm_up_debug));
 	winchEngage->WhileHeld(new RunWinch(.75));
 	//manualOveride;	no effect currently
-	//manualWinchReverse->WhileHeld(new RunWinch(-.1));*/
-	manualCollectorDown->WhileHeld(new ManualCollectorMove(-.2));
-	manualCollectorUp->WhileHeld(new ManualCollectorMove(.2));
+	manualWinchReverse->WhileHeld(new RunWinch(-.1));
+	manualCollectorDown->WhenPressed(new MoveServo(MoveServo::eServoPosition::OUT));
+	manualCollectorUp->WhenPressed(new MoveServo(MoveServo::eServoPosition::IN));
 	portcullis->WhileHeld(new ActivateRollers(Collector::KBackward));
 
 	sprintf(str, "RegisterButtonListeners Ended");

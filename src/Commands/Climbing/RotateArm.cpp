@@ -10,7 +10,7 @@
 
 RotateArm::RotateArm(float target) :
 		target(target) {
-	Requires(climber);
+	//Requires(climber);
 }
 
 void RotateArm::Initialize() {
@@ -31,7 +31,7 @@ void RotateArm::Execute() {
 
 bool RotateArm::IsFinished() {
 	return fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()) > target;
+	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()) > target - 250;
 }
 
 void RotateArm::End() {

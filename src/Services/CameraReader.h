@@ -23,7 +23,7 @@ private:
 	struct sockaddr_in dest;
 	long counter = 0;
 	char buffer[MAXRCVLEN + 1]; /* +1 so we can add null terminator */
-	priority_mutex *mutex;
+	priority_mutex *mutex = NULL;
 
 	static CameraReader *reader;
 	bool reading = false;

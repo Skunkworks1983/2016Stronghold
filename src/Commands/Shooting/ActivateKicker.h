@@ -11,8 +11,8 @@ class ActivateKicker: public CommandBase
 {
 private:
 //	SensorManager * sensorManager; //not being used for anything, but could be useful?
-	MotorManager * motorManager;
-	Collector * collector;
+	MotorManager * motorManager = NULL;
+	Collector * collector = NULL;
 	float timeOut;
 public:
 	ActivateKicker();

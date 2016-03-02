@@ -13,8 +13,8 @@ class Encoder;
 
 class Sensor: public PIDSource {
 private:
-	CANTalon *talon;
-	PIDSource *src;
+	CANTalon *talon = NULL;
+	PIDSource *src = NULL;
 	unsigned ID;
 	float lowRange;
 	float highRange;bool reversed;
@@ -36,7 +36,7 @@ class SensorManager {
 	friend class MotorManager;
 private:
 	unsigned count = 0;
-	AHRS * ahrs;
+	AHRS * ahrs = NULL;
 	std::map<unsigned, Sensor*> sensors;
 	SensorManager();
 	~SensorManager();

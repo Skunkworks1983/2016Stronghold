@@ -11,11 +11,11 @@ class SensorManager;
 
 class Robot: public IterativeRobot {
 private:
-	MotorManager * motorManager;
-	SensorManager * sensorManager;
-	ManagePower *managePower;
+	MotorManager * motorManager  = NULL;
+	SensorManager * sensorManager  = NULL;
+	ManagePower *managePower  = NULL;
 	int count;
-	AutoBase *cmd;
+	AutoBase *cmd  = NULL;
 public:
 	void RobotInit();
 	void DisabledPeriodic();
