@@ -1,9 +1,7 @@
-#include <BuiltInAccelerometer.h>
+#include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/MultiTool/ActivateRollers.h>
 #include <Commands/Scheduler.h>
-#include <DriverStation.h>
-#include <interfaces/Accelerometer.h>
+#include <DigitalInput.h>
 #include <Robot.h>
 #include <RobotBase.h>
 #include <RobotMap.h>
@@ -11,11 +9,11 @@
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <SmartDashboard/SmartDashboard.h>
-#include <Subsystems/Climber.h>
 #include <Subsystems/Collector.h>
 #include <TuningValues.h>
 #include <cstdbool>
 #include <cstdio>
+#include <vector>
 
 void Robot::RobotInit() {
 	char startup[1024];
@@ -37,7 +35,7 @@ void Robot::RobotInit() {
 	//StallProtection *stall = new StallProtection();
 	//stall->Start();
 	//acc = new BuiltInAccelerometer(Accelerometer::kRange_16G);
-	cmd = AutoBase::doLowB();
+	cmd = AutoBase::getSelectedAuto();
 }
 
 void Robot::DisabledPeriodic() {
@@ -50,10 +48,7 @@ void Robot::AutonomousInit() {
 	sprintf(str, "AutonomousInit Called");
 	writeToLogFile(LOGFILE_NAME, str);
 
-	//cmd->Start();
-	//rollerForward->Start();
-	CommandBase::climber->setServoAngle(0);
-
+	cmd->Start();
 }
 
 void Robot::AutonomousPeriodic() {
@@ -110,10 +105,11 @@ void Robot::TeleopPeriodic() {
 //	sprintf(str, "ArmEncoder %f", SensorManager::getSensorManager()->getSensor(
 //	SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
 //	writeToLogFile(LOGFILE_NAME, str);
+
 }
 
 void Robot::TestPeriodic() {
-	CommandBase::climber->setServoAngle(130);
+
 }
 
 START_ROBOT_CLASS(Robot);

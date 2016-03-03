@@ -14,7 +14,7 @@ void TankDrive::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void TankDrive::Execute() {
-		drivebase->setLeftSpeed(-oi->getLeftStickY());	//TODO: possibly move this sign flop into subsystem
+		drivebase->setLeftSpeed(oi->getLeftStickY());	//TODO: possibly move this sign flop into subsystem
 		drivebase->setRightSpeed(oi->getRightStickY());
 
 }

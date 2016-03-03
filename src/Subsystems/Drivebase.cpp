@@ -41,9 +41,9 @@ void Drivebase::setLeftSpeed(double speed) {
 
 void Drivebase::setRightSpeed(double speed) {
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_RIGHTMOTOR_1_PORT,
-			-speed);
+			speed);
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_RIGHTMOTOR_2_PORT,
-			-speed);
+			speed);
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_RIGHTMOTOR_3_PORT,
-			-speed);
+			speed);
 }

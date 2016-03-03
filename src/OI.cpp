@@ -90,7 +90,7 @@ double OI::getLeftStickY() {
 #if USE_GAMEPAD
 	return gamepad->GetY() * fabs(gamepad->GetY());
 #else
-	return leftStick->GetY() * fabs(leftStick->GetY());
+	return -leftStick->GetY() * fabs(leftStick->GetY());
 #endif
 }
 
@@ -99,7 +99,7 @@ double OI::getRightStickY() {
 	return gamepad->GetAxis(Joystick::AxisType::kThrottleAxis)
 	* fabs(gamepad->GetAxis(Joystick::AxisType::kThrottleAxis));
 #else
-	return rightStick->GetY() * fabs(rightStick->GetY());
+	return -rightStick->GetY() * fabs(rightStick->GetY());
 #endif
 }
 

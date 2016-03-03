@@ -40,9 +40,9 @@ void DriveForward::Initialize() {
 
 void DriveForward::Execute() {
 	double left = fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet() - initialLeft) + 1;
+	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet() - initialLeft);
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet() - initialRight) + 1;
+	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet() - initialRight);
 
 	// Ignore for first ticks
 	left = left > 200 ? left : 200;
@@ -77,7 +77,7 @@ bool DriveForward::IsFinished() {
 
 	double difference = ((left + right) / 2) - initialPosition;
 	char str[1024];
-	sprintf(str, "Difference: %f, Distance: %f", difference, distance);
+	sprintf(str, "Difference: %f, target: %f", difference, distance);
 	writeToLogFile(LOGFILE_NAME, str);
 	if (difference > distance) {
 		return true;

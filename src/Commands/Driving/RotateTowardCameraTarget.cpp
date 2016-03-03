@@ -5,14 +5,14 @@
 #include <cstdio>
 #include <Services/Logger.h>
 
+#define ERROR_TOLERANCE .1
+
 RotateTowardCameraTarget::RotateTowardCameraTarget() {
 	Requires(drivebase);
 	controller = new PIDController(MOVE_TOWARD_CAMERA_P, MOVE_TOWARD_CAMERA_I,
-	MOVE_TOWARD_CAMERA_D, this, this);
+	MOVE_TOWARD_CAMERA_D, CameraReader::getCameraReader(), this);
 	controller->SetInputRange(-1,1);
-	lostTarget = false;
 	outputspeed = 0;
-	invalidCount = 0;
 	error = 0;
 }
 
@@ -24,7 +24,6 @@ void RotateTowardCameraTarget::Initialize() {
 	CameraReader::getCameraReader()->startReading();
 	controller->SetSetpoint(0.0);
 	controller->Enable();
-	lostTarget = false;
 }
 
 void RotateTowardCameraTarget::Execute() {
@@ -34,7 +33,7 @@ void RotateTowardCameraTarget::Execute() {
 }
 
 bool RotateTowardCameraTarget::IsFinished() {
-	return lostTarget;
+	return fabs(controller->GetError()) < ERROR_TOLERANCE;
 }
 
 void RotateTowardCameraTarget::Interrupted() {
@@ -47,10 +46,9 @@ void RotateTowardCameraTarget::End() {
 }
 
 void RotateTowardCameraTarget::PIDWrite(float output) {
-	if (CameraReader::getCameraReader()->getLastX() != INVALID) {
+	if (!CameraReader::getCameraReader()->isLastInvalid()) {
 		int range = 1;
 		if (output < -range || output > range) {
-			//printf("Output outside of range !(%d < %f < %d)", -range, output, range);
 			return;
 		}
 
@@ -61,21 +59,4 @@ void RotateTowardCameraTarget::PIDWrite(float output) {
 		//printf("CAMERA READER READ IS INVALID\n");
 		writeToLogFile(LOGFILE_NAME, "CAMERA READER READ IS INVALID");
 	}
-}
-
-double RotateTowardCameraTarget::PIDGet() {
-	if (CameraReader::getCameraReader()->getLastX() == INVALID) {
-		//printf("CAMERA READER READ IS INVALID\n");
-		writeToLogFile(LOGFILE_NAME, "CAMERA READER READ IS INVALID");
-		//CameraReader::getCameraReader()->stopReading();
-		if(invalidCount++ > 20){
-			CameraReader::getCameraReader()->stopReading();
-			controller->Disable();
-			End();
-		}
-	}else{
-		invalidCount = 0;
-	}
-	error = CameraReader::getCameraReader()->getLastX();
-	return CameraReader::getCameraReader()->getLastX();
 }
