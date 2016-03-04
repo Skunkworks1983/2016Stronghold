@@ -11,5 +11,5 @@ SafeRotateArm::SafeRotateArm(float target)
 	//AddSequential(new CollectorMove(CollectorPosition::cCollect));
 	AddSequential(new MoveServo(MoveServo::OUT));
 	AddSequential(new RotateArm(target));
-	AddSequential(new RunWinch(.5, .25));
+	//AddSequential(new RunWinch(.5, .25));
 }

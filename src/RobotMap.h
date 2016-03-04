@@ -2,6 +2,7 @@
 #define ROBOTMAP_H
 
 #define ROBOT_NAME "VanillaThunder"
+#define PRACTICEBOT 0
 
 #include "TuningValues.h"
 
@@ -67,7 +68,11 @@
 #define DRIVEBASE_RIGHTMOTOR_3_PORT 15
 
 #define DRIVEBASE_RIGHT_ENCODER_PORT 13 //CAN switched it to 2, orig is 1
+#if PRACTICEBOT
 #define DRIVEBASE_LEFT_ENCODER_PORT 2
+#else
+#define DRIVEBASE_LEFT_ENCODER_PORT 1
+#endif
 
 /**
  * Collector

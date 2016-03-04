@@ -231,7 +231,7 @@ void MotorManager::initPIDS() {
 	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
 	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
 
-	const double p = 0.00015;
+	const double p = 0.000135;
 	const double i = 0.000017;
 	const double d = 0.0; //0.00005;
 
@@ -507,11 +507,11 @@ void MotorGroup::PIDWrite(float output) {
 
 	//lastOutput = output;
 	/*if (motorList.front() != NULL && motorList.front()->talon != NULL) {
-		lastCurrent = motorList.front()->talon->GetOutputCurrent();
-	}
-	char str[1024];
-	sprintf(str, "Output %f Current %f", output, lastCurrent);
-	writeToLogFile(LOGFILE_NAME, str);*/
+	 lastCurrent = motorList.front()->talon->GetOutputCurrent();
+	 }
+	 char str[1024];
+	 sprintf(str, "Output %f Current %f", output, lastCurrent);
+	 writeToLogFile(LOGFILE_NAME, str);*/
 
 	for (; it != motorList.end(); ++it) {
 		/*if ((*it)->stoppedStartTime == 0) {

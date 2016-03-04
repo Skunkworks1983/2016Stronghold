@@ -49,11 +49,11 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_cheval:
-		auto_base->AddSequential(AutoBase::doCheval());
+		//auto_base->AddSequential(AutoBase::doCheval());
 		break;
 
 	case Obstacle_moat:
-		auto_base->AddSequential(AutoBase::doMoat());
+		//auto_base->AddSequential(AutoBase::doMoat());
 		break;
 
 	case Obstacle_rough:
@@ -61,15 +61,15 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_ramppart:
-		auto_base->AddSequential(AutoBase::doRamP());
+		//auto_base->AddSequential(AutoBase::doRamP());
 		break;
 
 	case Obstacle_rockwall:
-		auto_base->AddSequential(AutoBase::doRockW());
+		//auto_base->AddSequential(AutoBase::doRockW());
 		break;
 
 	case Obstacle_portcullis:
-		auto_base->AddSequential(AutoBase::doPortC());
+		//auto_base->AddSequential(AutoBase::doPortC());
 		break;
 	}
 	/*const float driveSpeed = .5;

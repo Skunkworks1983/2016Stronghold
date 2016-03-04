@@ -113,10 +113,8 @@ void OI::registerButtonListeners() {
 	 */
 	driverCollectorDown->WhileHeld(new ActivateRollers(Collector::KForward));
 	driverCollectorDown->WhenPressed(new CollectorMove(cCollect));
-	//driverCollectorDown->WhenReleased(new StopCollectorPID());
 	driverCollectorUp->WhenPressed(new CollectorMove(cTOP));
-	holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
-	//stopCollectorPID->WhenPressed(new StopCollectorPID());
+	//holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
 
 	/**
 	 * Operator Buttons
@@ -140,7 +138,7 @@ void OI::registerButtonListeners() {
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetCollectorEncoder());
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
-	const double climber_arm_up_debug = 3000;
+	const double climber_arm_up_debug = 3125;
 	climberArmsUp->WhenPressed(new SafeRotateArm(climber_arm_up_debug));
 	winchEngage->WhileHeld(new RunWinch(.75));
 	//manualOveride;	no effect currently

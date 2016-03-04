@@ -7,7 +7,7 @@
 #include <cstdbool>
 #include <cstdio>
 
-#define COLLECTOR_MOVE_TOLERANCE 100
+#define COLLECTOR_MOVE_TOLERANCE 250
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
 CollectorMove::CollectorMove(CollectorPosition pos) {

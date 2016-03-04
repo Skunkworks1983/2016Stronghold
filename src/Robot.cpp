@@ -40,6 +40,8 @@ void Robot::RobotInit() {
 
 void Robot::DisabledPeriodic() {
 	Scheduler::GetInstance()->RemoveAll();
+	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
+	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
 }
 
 void Robot::AutonomousInit() {
@@ -62,9 +64,6 @@ void Robot::AutonomousPeriodic() {
 	 char str[1024];
 	 sprintf(str, "LeftEncoder %f, RightEncoder %f", left, right);
 	 writeToLogFile(LOGFILE_NAME, str);*/
-
-	SmartDashboard::PutBoolean("BreakBeam",
-			CommandBase::collector->getBreakBeam());
 
 	//SmartDashboard::PutNumber("AbsoluteRollerEncoder", Sensor);
 

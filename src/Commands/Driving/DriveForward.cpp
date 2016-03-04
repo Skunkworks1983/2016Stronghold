@@ -34,7 +34,7 @@ void DriveForward::Initialize() {
 
 	initialPosition = (initialLeft + initialRight) / 2;
 	char str[1024];
-	sprintf(str, "DriveForward Initialize Called");
+	sprintf(str, "DriveForward Initialize Called initialLeft %f initialRight %f ", initialLeft, initialRight);
 	writeToLogFile(LOGFILE_NAME, str);
 }
 
