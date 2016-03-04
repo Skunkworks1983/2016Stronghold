@@ -37,28 +37,28 @@ PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
 
 	char str[1024];
 	sprintf(str, "Created PIDWrapper with %f, %f, %f", p, i, d);
-	writeToLogFile(LOGFILE_NAME, str);
+	writeToLogFile(LOGFILE_PIDS, str);
 }
 
 void PIDWrapper::Enable() {
 	ptr->Enable();
 	char str[1024];
 	sprintf(str, "PIDWrapper Enabled");
-	writeToLogFile(LOGFILE_NAME, str);
+	writeToLogFile(LOGFILE_PIDS, str);
 }
 
 void PIDWrapper::Disable() {
 	ptr->Disable();
 	char str[1024];
 	sprintf(str, "PIDWrapper Enabled");
-	writeToLogFile(LOGFILE_NAME, str);
+	writeToLogFile(LOGFILE_PIDS, str);
 }
 
 void PIDWrapper::SetSetpoint(float setpoint) {
 	ptr->SetSetpoint(setpoint);
 	char str[1024];
 	sprintf(str, "PIDWrapper SetSetpoint");
-	writeToLogFile(LOGFILE_NAME, str);
+	writeToLogFile(LOGFILE_PIDS, str);
 }
 
 void PIDWrapper::SetPID(float p, float i, float d, float f) {

@@ -163,6 +163,7 @@
 //auto constants
 
 #define LOGFILE_NAME "/U/robotLog"
+#define LOGFILE_PIDS "/U/pids"
 
 #define CHEVAL_ENCODER_TICKS 0
 #define MOAT_ENCODER_TICKS 0

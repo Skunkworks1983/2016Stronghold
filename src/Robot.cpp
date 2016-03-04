@@ -1,7 +1,8 @@
 #include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Scheduler.h>
-#include <DigitalInput.h>
+#include <DriverStation.h>
+#include <OI.h>
 #include <Robot.h>
 #include <RobotBase.h>
 #include <RobotMap.h>
@@ -9,11 +10,8 @@
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <SmartDashboard/SmartDashboard.h>
-#include <Subsystems/Collector.h>
 #include <TuningValues.h>
-#include <cstdbool>
 #include <cstdio>
-#include <vector>
 
 void Robot::RobotInit() {
 	char startup[1024];
@@ -66,39 +64,42 @@ void Robot::AutonomousPeriodic() {
 	 writeToLogFile(LOGFILE_NAME, str);*/
 
 	//SmartDashboard::PutNumber("AbsoluteRollerEncoder", Sensor);
-
 }
 
 void Robot::TeleopInit() {
 	Scheduler::GetInstance()->RemoveAll();
-	/*char str[1024];
-	 sprintf(str, "TeleOp Called");
-	 writeToLogFile(LOGFILE_NAME, str);
-	 sprintf(str,
-	 "BatteryVoltage, leftStick, rightStick, AccelXAxis, AccelYAxis, AccelZAxis ");
-	 writeToLogFile(LOGFILE_NAME, str);*/
-	//rollerBackward->Start();
-	//CommandBase::climber->setServoSpeed(-255);
-	//CommandBase::climber->setServoAngle(0);
+	char str[1024];
+	sprintf(str, "TeleOp Called");
+	writeToLogFile(LOGFILE_NAME, str);
+
+	sprintf(str, "BatteryVoltage, leftStick, rightStick");
+	writeToLogFile(LOGFILE_NAME, str);
 }
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
 
-	SmartDashboard::PutNumber("RotationEncoderRelative",
-			SensorManager::getSensorManager()->getSensor(
-			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
-	SmartDashboard::PutNumber("RotationEncoderAbsolute",
-			SensorManager::getSensorManager()->getSensor(
-			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->getAbsolutePosition());
+//	SmartDashboard::PutNumber("RotationEncoderRelative",
+//			SensorManager::getSensorManager()->getSensor(
+//			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet());
+//	SmartDashboard::PutNumber("RotationEncoderAbsolute",
+//			SensorManager::getSensorManager()->getSensor(
+//			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->getAbsolutePosition());
+//
+//	SmartDashboard::PutNumber("ArmEncoder",
+//			SensorManager::getSensorManager()->getSensor(
+//			SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
+//
+//	SmartDashboard::PutNumber("ClimberArmAbsolute",
+//			SensorManager::getSensorManager()->getSensor(
+//			SENSOR_CLIMBER_ARM_ENCODER)->getAbsolutePosition());
 
-	SmartDashboard::PutNumber("ArmEncoder",
-			SensorManager::getSensorManager()->getSensor(
-			SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
+	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
 
-	SmartDashboard::PutNumber("ClimberArmAbsolute",
-			SensorManager::getSensorManager()->getSensor(
-			SENSOR_CLIMBER_ARM_ENCODER)->getAbsolutePosition());
+	char str[1024];
+	sprintf(str, "%f,%f,%f", voltage, CommandBase::oi->getLeftStickY(),
+			CommandBase::oi->getRightStickY());
+	writeToLogFile(LOGFILE_NAME, str);
 
 //	char str[1024];
 //	sprintf(str, "ArmEncoder %f", SensorManager::getSensorManager()->getSensor(
