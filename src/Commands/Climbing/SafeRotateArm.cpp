@@ -7,8 +7,8 @@
 
 SafeRotateArm::SafeRotateArm(float target)
 {
-	//AddSequential(new HoldAgainstTower(.2));
-	//AddSequential(new CollectorMove(CollectorPosition::cCollect));
+	//AddParallel(new HoldAgainstTower(.2));
+	AddParallel(new CollectorMove(CollectorPosition::cCollect));
 	AddSequential(new MoveServo(MoveServo::OUT));
 	AddSequential(new RotateArm(target));
 	//AddSequential(new RunWinch(.5, .25));
