@@ -134,6 +134,10 @@ float CameraReader::getLastRightY() {
 	return tempLast;
 }
 
+bool CameraReader::isBallInCollector(){
+	return ballInCollector;
+}
+
 double CameraReader::PIDGet() {
 	switch (currentMode) {
 	case LEFTGOAL:
