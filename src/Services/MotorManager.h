@@ -27,7 +27,7 @@ enum ESubsystem {
 
 class PIDWrapper {
 private:
-	PIDController *ptr;
+	PIDController *ptr = NULL;
 	float setpoint;
 public:
 	PIDWrapper(float p, float i, float d, float f, PIDSource *source, PIDOutput *output);
@@ -51,7 +51,7 @@ public:
 			ESubsystem parentSubsystem, bool reversed);
 	~Motor();
 	ESubsystem parentSubsystem;
-	CANTalon * talon;
+	CANTalon * talon = NULL;
 	float speed;
 	float maxCurrent;
 	long long int overCurrentStartTime;

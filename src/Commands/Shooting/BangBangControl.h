@@ -11,8 +11,8 @@ private:
 	double desiredSpeed;
 	float currentSpeed;
 	double timeActivated;
-	MotorManager * motorManager;
-	SensorManager * sensorManager;
+	MotorManager * motorManager = NULL;
+	SensorManager * sensorManager = NULL;
 public:
 	BangBangControl(double desiredSpeed, double timeActivated);
 	~BangBangControl();

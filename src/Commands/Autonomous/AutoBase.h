@@ -1,14 +1,8 @@
 #ifndef AutoBase_H
 #define AutoBase_H
 
-#include "Commands/CommandGroup.h"
-#include "WPILib.h"
-#include "RobotMap.h"
-#include <vector>
-#include <DigitalInput.h>
-#include "Commands/Driving/DriveForward.h"
-#include "Commands/Driving/RotateTowardCameraTarget.h"
-#include "Commands/Driving/TurnDegree.h"
+#include <Commands/CommandGroup.h>
+#include <string>
 
 class SensorManager;
 
@@ -44,6 +38,7 @@ public:
 	static AutoBase *readFromTextFile(std::string);
 	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos, eGoalPos goalPos);
 	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp, eGoalPos *goal);
+	static void readDIPSwitchedObstacle(eObstacle *obstacle);
 	static AutoBase *doCheval(); //Cheval de Frise
 	static AutoBase *doMoat(); // the U-shape
 	static AutoBase *doRockW(); //Rock Wall
@@ -52,6 +47,7 @@ public:
 	static AutoBase *doPortC(); //Portcullis
 	static AutoBase *doSpy(); //Spy box
 	static AutoBase *doLowB(); // Low Bar
+	static AutoBase *doLowBarandScore(); // Low Bar and score
 
 	AutoBase();
 	AutoBase(char *style);
@@ -59,4 +55,3 @@ public:
 };
 
 #endif
-;

@@ -1,15 +1,13 @@
+#include <Commands/Climbing/MoveServo.h>
 #include <Commands/Climbing/RunWinch.h>
 #include <Commands/Climbing/SafeRotateArm.h>
 #include <Commands/Driving/HoldAgainstTower.h>
 #include <Commands/MultiTool/ActivateRollers.h>
 #include <Commands/MultiTool/CollectorMove.h>
-#include <Commands/MultiTool/ManualCollectorMove.h>
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
-#include <Commands/MultiTool/StopCollectorPID.h>
 #include <OI.h>
 #include <Services/Logger.h>
 #include <Subsystems/Collector.h>
-#include <TuningValues.h>
 #include <cmath>
 #include <cstdbool>
 #include <cstdio>
@@ -92,7 +90,7 @@ double OI::getLeftStickY() {
 #if USE_GAMEPAD
 	return gamepad->GetY() * fabs(gamepad->GetY());
 #else
-	return leftStick->GetY() * fabs(leftStick->GetY());
+	return -leftStick->GetY() * fabs(leftStick->GetY());
 #endif
 }
 
@@ -101,7 +99,7 @@ double OI::getRightStickY() {
 	return gamepad->GetAxis(Joystick::AxisType::kThrottleAxis)
 	* fabs(gamepad->GetAxis(Joystick::AxisType::kThrottleAxis));
 #else
-	return rightStick->GetY() * fabs(rightStick->GetY());
+	return -rightStick->GetY() * fabs(rightStick->GetY());
 #endif
 }
 
@@ -123,10 +121,8 @@ void OI::registerButtonListeners() {
 	 */
 	driverCollectorDown->WhileHeld(new ActivateRollers(Collector::KForward));
 	driverCollectorDown->WhenPressed(new CollectorMove(cCollect));
-	//driverCollectorDown->WhenReleased(new StopCollectorPID());
 	driverCollectorUp->WhenPressed(new CollectorMove(cTOP));
-	holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
-	//stopCollectorPID->WhenPressed(new StopCollectorPID());
+	//holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
 
 	/**
 	 * Operator Buttons
@@ -150,12 +146,13 @@ void OI::registerButtonListeners() {
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetCollectorEncoder());
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
-	climberArmsUp->WhenPressed(new SafeRotateArm(CLIMBER_ARM_UP_POSITION));
+	const double climber_arm_up_debug = 3125;
+	climberArmsUp->WhenPressed(new SafeRotateArm(climber_arm_up_debug));
 	winchEngage->WhileHeld(new RunWinch(.75));
 	//manualOveride;	no effect currently
-	//manualWinchReverse->WhileHeld(new RunWinch(-.1));*/
-	manualCollectorDown->WhileHeld(new ManualCollectorMove(-.2));
-	manualCollectorUp->WhileHeld(new ManualCollectorMove(.2));
+	manualWinchReverse->WhileHeld(new RunWinch(-.1));
+	manualCollectorDown->WhenPressed(new MoveServo(MoveServo::eServoPosition::OUT));
+	manualCollectorUp->WhenPressed(new MoveServo(MoveServo::eServoPosition::IN));
 	portcullis->WhileHeld(new ActivateRollers(Collector::KBackward));
 
 	sprintf(str, "RegisterButtonListeners Ended");

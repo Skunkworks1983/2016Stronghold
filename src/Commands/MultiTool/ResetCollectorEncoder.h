@@ -9,7 +9,7 @@ class SensorManager;
 class ResetCollectorEncoder: public CommandBase
 {
 private:
-	SensorManager * sensorManager;
+	SensorManager * sensorManager = NULL;
 public:
 	ResetCollectorEncoder();
 	void Initialize();

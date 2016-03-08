@@ -9,13 +9,9 @@
 AutoBase *AutoBase::doLowB()
 {
 	AutoBase *cmd = new AutoBase((char*)"Autonomous-doLowB");
-	std::cout << "Reached doLowB after AutoBase cmd pointer creation" << std::endl;
 	cmd->AddSequential(new CollectorMove(cLowBar));
-	cmd->AddSequential(new DriveForward(5, 0.25));	//Reach the defence
-	cmd->AddSequential(new DriveForward(11.7, 0.25));	//breach the defence
-	cmd->AddSequential(new TurnRightEncoder(58));
-	cmd->AddSequential(new DriveForward(7.5, .25));
-	cmd->AddSequential(new ActivateRollers(Collector::rollerDirection::KBackward, 1000));
+	cmd->AddSequential(new DriveForward(5, 0.35));	//Reach the defence
+	cmd->AddSequential(new DriveForward(6, 0.35));	//breach the defence
 
 	return cmd;
 }

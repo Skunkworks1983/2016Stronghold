@@ -9,9 +9,9 @@ class Servo;
 
 class Climber: public Subsystem {
 private:
-	Servo *servo;
-	CANTalon *armMotor;
-	Command *lastCommand;
+	Servo *servo = NULL;
+	CANTalon *armMotor = NULL;
+	Command *lastCommand = NULL;
 public:
 	Climber();
 	~Climber();

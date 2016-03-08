@@ -9,7 +9,7 @@
 class StallProtection: public CommandBase
 {
 private:
-	MotorManager * motorManager;
+	MotorManager * motorManager = NULL;
 public:
 	StallProtection();
 	void Initialize();

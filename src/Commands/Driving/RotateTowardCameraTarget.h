@@ -7,23 +7,23 @@
 #include <PIDSource.h>
 #include <cstdbool>
 
-class RotateTowardCameraTarget : public CommandBase, public PIDOutput, public PIDSource{
+class RotateTowardCameraTarget: public CommandBase, public PIDOutput {
 private:
-	PIDController *controller;
-	double error, outputspeed;
-	unsigned invalidCount;
-	bool lostTarget;
-	//int closeEnoughCount; Not currently used
+	PIDController *controller = NULL;
+	double error = 0.0;
+	double outputspeed = 0.0;
+	float speedTranslate = 0.0;
+	float distance = 0.0;
+	double initialPosition = 0.0;
+	unsigned invalidCount = 0;
 public:
-	RotateTowardCameraTarget();
+	RotateTowardCameraTarget(float speedTranslate = 0, float distance = 0);
 	virtual ~RotateTowardCameraTarget();
 	void Initialize();
-	void Execute();
-	bool IsFinished();
+	void Execute();bool IsFinished();
 	void Interrupted();
 	void End();
 	void PIDWrite(float output);
-	double PIDGet();
 };
 
 #endif

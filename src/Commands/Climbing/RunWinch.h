@@ -14,8 +14,9 @@ class RunWinch : public CommandBase{
 private:
 	float speed;
 	int counter = 0;
+	float timeout;
 public:
-	RunWinch(float setPoint);
+	RunWinch(float setPoint, float timeout = 0);
 	~RunWinch();
 	void Initialize();
 	void Execute();

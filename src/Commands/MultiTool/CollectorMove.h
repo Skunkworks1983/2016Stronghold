@@ -16,8 +16,8 @@ class CollectorMove: public CommandBase
 {
 private:
 	float           target;
-	MotorManager *  motorManager;
-	SensorManager * sensorManager;
+	MotorManager *  motorManager = NULL;
+	SensorManager * sensorManager = NULL;
 	int test;
 public:
 	CollectorMove(CollectorPosition pos);

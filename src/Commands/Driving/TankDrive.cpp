@@ -10,15 +10,13 @@ TankDrive::TankDrive() {
 
 // Called just before this Command runs the first time
 void TankDrive::Initialize() {
-	drivebase->holdAgainstTower = false;
 }
 
 // Called repeatedly when this Command is scheduled to run
 void TankDrive::Execute() {
-	if (!drivebase->holdAgainstTower) {
-		drivebase->setLeftSpeed(-oi->getLeftStickY());	//TODO: possibly move this sign flop into subsystem
+		drivebase->setLeftSpeed(oi->getLeftStickY());	//TODO: possibly move this sign flop into subsystem
 		drivebase->setRightSpeed(oi->getRightStickY());
-	}
+
 }
 
 // Make this return true when this Command no longer needs to run execute()

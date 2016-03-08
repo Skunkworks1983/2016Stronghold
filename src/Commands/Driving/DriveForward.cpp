@@ -17,69 +17,32 @@ DriveForward::DriveForward(float distance, float speed) {
 	initialYaw = 0.0;
 	initialPosition = 0.0;
 	errorOffset = 0.0;
-
-	char str[1024];
-	sprintf(str, "Inside DriveForward Constructor");
-	Logger::getLogger()->log(str, Info);
-
-	leftEncoder = SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID);
-	rightEncoder = SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID);
 }
 
 DriveForward::~DriveForward() {
 }
 
 void DriveForward::Initialize() {
-
-	//initialYaw = sensorManager->getYaw();
-	//drivebase->setLeftSpeed(speed);
-	//drivebase->setRightSpeed(speed);
 	initialLeft = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
 	initialRight = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	initialPosition = (initialLeft + initialRight) / 2;
 	char str[1024];
-	sprintf(str, "DriveForward Initialize Called");
+	sprintf(str,
+			"DriveForward Initialize Called initialLeft %f initialRight %f ",
+			initialLeft, initialRight);
 	Logger::getLogger()->log(str, Info);
 }
 
 void DriveForward::Execute() {
 	double left = fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet() - initialLeft) + 1;
+	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet() - initialLeft);
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet() - initialRight) + 1;
+	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet() - initialRight);
 
-	// Ignore for first ticks
-	left = left > 200 ? left : 200;
-	right = right > 200 ? right : 200;
-
-	//double leftSpeed = speed * (pow(right, 2) / pow(left,2));
-	double leftSpeed = speed * (right / left);
-
-	//double rightSpeed = speed * (pow(left,2) / pow(right,2));
-	double rightSpeed = speed * (left / right);
-	drivebase->setLeftSpeed(leftSpeed);
-	//drivebase->setRightSpeed(speed);
-	drivebase->setRightSpeed(rightSpeed);
-	/*errorOffset = initialYaw - sensorManager->getYaw();
-	 if (errorOffset <= 0) { //If its tilting to the left
-	 drivebase->setLeftSpeed(speed);
-	 drivebase->setRightSpeed((-1 * (1 / 15) * errorOffset + 1) * speed); //At 15 degree error to the left, no forward motion, just pivot
-	 } else if (errorOffset >= 0) { //If its tilting to the right
-	 drivebase->setLeftSpeed(((1 / 15) * errorOffset + 1) * speed); //Same but tilted to the right
-	 drivebase->setRightSpeed(speed);
-	 }*/
-	/*char str[1024];
-	sprintf(str, "LeftEnc %f RightEnc %f",
-			(double) SensorManager::getSensorManager()->GetEncoderPosition(
-			DRIVEBASE_LEFT_ENCODER_PORT),
-			(double) SensorManager::getSensorManager()->GetEncoderPosition(
-			DRIVEBASE_RIGHT_ENCODER_PORT));
-	Logger::getLogger()->log(str, Info);*/
+	drivebase->setLeftSpeed(speed);
+	drivebase->setRightSpeed(speed);
 }
 
 bool DriveForward::IsFinished() {
@@ -88,25 +51,10 @@ bool DriveForward::IsFinished() {
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	double difference = ((left + right) / 2) - initialPosition;
-	char str[1024];
-	sprintf(str, "Difference: %f, Distance: %f", difference, distance);
-	Logger::getLogger()->log(str, Info);
-	if (difference > distance) {
-		return true;
-	}
-	/*if (((leftEncoder->PIDGet() + rightEncoder->PIDGet()) / 2) - initialPosition
-	 > distance) {
-	 return true;
-	 }*/
-	/*
-	 if (sensorManager->GetEncoderPosition(DRIVEBASE_LEFTMOTOR_1_PORT)
-	 >= distance) {
-	 //PID drivebase back to error of 0 (not yet implemented, waiting on MotorManager updates)
-	 return true;
-	 }*/
-	return false;
+	bool leftPast = fabs(left - initialLeft) > distance;
+	bool rightPast = fabs(right - initialRight) > distance;
 
+	return leftPast || rightPast;
 }
 
 void DriveForward::End() {

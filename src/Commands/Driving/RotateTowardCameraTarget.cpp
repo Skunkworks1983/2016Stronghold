@@ -1,18 +1,23 @@
 #include <Commands/Driving/RotateTowardCameraTarget.h>
 #include <RobotMap.h>
 #include <Services/CameraReader.h>
-#include <Subsystems/Drivebase.h>
-#include <cstdio>
 #include <Services/Logger.h>
+#include <Services/SensorManager.h>
+#include <SmartDashboard/SmartDashboard.h>
+#include <Subsystems/Drivebase.h>
+#include <TuningValues.h>
+#include <cmath>
 
-RotateTowardCameraTarget::RotateTowardCameraTarget() {
+#define ERROR_TOLERANCE .1
+
+RotateTowardCameraTarget::RotateTowardCameraTarget(float speedTranslate,
+		float distance) :
+		speedTranslate(speedTranslate), distance(distance) {
 	Requires(drivebase);
 	controller = new PIDController(MOVE_TOWARD_CAMERA_P, MOVE_TOWARD_CAMERA_I,
-	MOVE_TOWARD_CAMERA_D, this, this);
-	controller->SetInputRange(-1,1);
-	lostTarget = false;
+	MOVE_TOWARD_CAMERA_D, CameraReader::getCameraReader(), this);
+	controller->SetInputRange(-1, 1);
 	outputspeed = 0;
-	invalidCount = 0;
 	error = 0;
 }
 
@@ -24,17 +29,36 @@ void RotateTowardCameraTarget::Initialize() {
 	CameraReader::getCameraReader()->startReading();
 	controller->SetSetpoint(0.0);
 	controller->Enable();
-	lostTarget = false;
+
+	double initialLeft = fabs(SensorManager::getSensorManager()->getSensor(
+	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
+	double initialRight = fabs(SensorManager::getSensorManager()->getSensor(
+	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+
+	initialPosition = (initialLeft + initialRight) / 2;
+
 }
 
 void RotateTowardCameraTarget::Execute() {
-	//*twiddle thumbs*
 	SmartDashboard::PutNumber("Error", error);
 	SmartDashboard::PutNumber("output", outputspeed);
 }
 
 bool RotateTowardCameraTarget::IsFinished() {
-	return lostTarget;
+	double left = fabs(SensorManager::getSensorManager()->getSensor(
+	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
+	double right = fabs(SensorManager::getSensorManager()->getSensor(
+	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+
+	double difference = ((left + right) / 2) - initialPosition;
+
+	if (distance > 0) {
+		return fabs(difference) < distance;
+	}
+	if (speedTranslate == 0) {
+		return fabs(controller->GetError()) < ERROR_TOLERANCE;
+	}
+	return false;
 }
 
 void RotateTowardCameraTarget::Interrupted() {
@@ -47,35 +71,17 @@ void RotateTowardCameraTarget::End() {
 }
 
 void RotateTowardCameraTarget::PIDWrite(float output) {
-	if (CameraReader::getCameraReader()->getLastX() != INVALID) {
+	if (!CameraReader::getCameraReader()->isLastInvalid()) {
 		int range = 1;
 		if (output < -range || output > range) {
-			//printf("Output outside of range !(%d < %f < %d)", -range, output, range);
 			return;
 		}
 
 		outputspeed = output;
+
 		drivebase->setLeftSpeed(output);
 		drivebase->setRightSpeed(- output);
 	}else{
-		//printf("CAMERA READER READ IS INVALID\n");
 		Logger::getLogger()->log("CAMERA READER READ IS INVALID", Info);
 	}
-}
-
-double RotateTowardCameraTarget::PIDGet() {
-	if (CameraReader::getCameraReader()->getLastX() == INVALID) {
-		//printf("CAMERA READER READ IS INVALID\n");
-		Logger::getLogger()->log("CAMERA READER READ IS INVALID", Info);
-		//CameraReader::getCameraReader()->stopReading();
-		if(invalidCount++ > 20){
-			CameraReader::getCameraReader()->stopReading();
-			controller->Disable();
-			End();
-		}
-	}else{
-		invalidCount = 0;
-	}
-	error = CameraReader::getCameraReader()->getLastX();
-	return CameraReader::getCameraReader()->getLastX();
 }

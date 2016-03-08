@@ -30,13 +30,8 @@ void RotateArm::Execute() {
 }
 
 bool RotateArm::IsFinished() {
-	/*if (target == getpid){
-	 return true;
-	 }
-	 else {
-	 return false;
-	 } */
-	return false;
+	return fabs(SensorManager::getSensorManager()->getSensor(
+	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()) > target - 250;
 }
 
 void RotateArm::End() {

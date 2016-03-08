@@ -25,8 +25,8 @@ private:
 	float degree;
 	//double speed; See cpp
 	bool ahrsDead;
-	MotorManager * motorManager;
-	SensorManager * sensorManager;
+	MotorManager * motorManager = NULL;
+	SensorManager * sensorManager = NULL;
 	float initialYaw;
 	float epsilon;
 public:

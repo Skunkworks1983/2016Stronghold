@@ -2,6 +2,7 @@
 #define ROBOTMAP_H
 
 #define ROBOT_NAME "VanillaThunder"
+#define PRACTICEBOT 0
 
 #include "TuningValues.h"
 
@@ -20,7 +21,7 @@
 
 #define POWER_DISTRIBUTION_PANEL_PORT 0
 
-#define DIP_CHANNEL_POSITION_START 0
+#define DIP_CHANNEL_POSITION_START 1
 #define DIP_CHANNEL_POSITIONS 3
 #define DIP_CHANNEL_POSITION_END 	DIP_CHANNEL_POSITION_START 	+ DIP_CHANNEL_POSITIONS
 #define DIP_CHANNEL_OBSTACLE_START 	DIP_CHANNEL_POSITION_END
@@ -67,7 +68,11 @@
 #define DRIVEBASE_RIGHTMOTOR_3_PORT 15
 
 #define DRIVEBASE_RIGHT_ENCODER_PORT 13 //CAN switched it to 2, orig is 1
+#if PRACTICEBOT
 #define DRIVEBASE_LEFT_ENCODER_PORT 2
+#else
+#define DRIVEBASE_LEFT_ENCODER_PORT 1
+#endif
 
 /**
  * Collector
@@ -158,6 +163,7 @@
 //auto constants
 
 #define LOGFILE_NAME "/U/robotLog"
+#define LOGFILE_PIDS "/U/pids"
 
 #define CHEVAL_ENCODER_TICKS 0
 #define MOAT_ENCODER_TICKS 0

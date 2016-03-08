@@ -7,7 +7,7 @@
 MoveServo::MoveServo(eServoPosition pos) :
 		CommandBase("MoveServo"), pos(pos) {
 	Requires(climber);
-	SetTimeout(1);
+	SetTimeout(.5);
 }
 
 void MoveServo::Initialize() {

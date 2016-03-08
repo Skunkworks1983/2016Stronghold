@@ -11,6 +11,7 @@
 Climber::Climber() :
 		Subsystem("Climber") {
 	servo = new Servo(CLIMBER_SERVO_PORT);
+	lastCommand = NULL;
 }
 
 Climber::~Climber() {

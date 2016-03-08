@@ -9,17 +9,16 @@ class DigitalInput;
 
 class Collector: public Subsystem {
 private:
-	SensorManager * sensorManager;
-	MotorManager * motorManager;
+	SensorManager * sensorManager = NULL;
+	MotorManager * motorManager = NULL;
 	bool isDown = false;
-	DigitalInput *breakBeam;
+	DigitalInput *breakBeam = NULL;
 
-	Command *lastCommand;
+	Command *lastCommand = NULL;
 public:
 	enum rollerDirection {
 		KForward, KBackward, KStop
 	};
-	bool pidStopped;
 	Collector();
 	~Collector();
 	void InitDefaultCommand();
