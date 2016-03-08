@@ -109,14 +109,14 @@ void OI::registerButtonListeners() {
 	char str[1024];
 	sprintf(str, "RegisterButtonListeners called");
 	Logger::getLogger()->log(str, Info);
-	rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
+	/*rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
 	SmartDashboard::PutData("Climber Down",
 			new RotateArm(CLIMBER_ARM_DOWN_POSITION));
 
 	//engageWinch->WhenPressed(new RunWinchToSetPoint(CLIMBER_WINCH_UP_POSITION, .25));
 	engageWinch->WhileHeld(new RunWinch(.50));
 
-	engageWinch->WhileHeld(new RunWinch(.50));
+	engageWinch->WhileHeld(new RunWinch(.50));*/
 
 	/**
 	 * Driver Buttons
@@ -159,7 +159,7 @@ void OI::registerButtonListeners() {
 	portcullis->WhileHeld(new ActivateRollers(Collector::KBackward));
 
 	sprintf(str, "RegisterButtonListeners Ended");
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 }
 
 bool OI::isJoystickButtonPressed(int control, int button) {

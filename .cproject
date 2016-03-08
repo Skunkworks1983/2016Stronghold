@@ -46,7 +46,7 @@
 								<option id="gnu.cpp.link.option.paths.1566479969" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Debug/src/Subsystems}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${WPILIB}/cpp/current/lib&quot;"/>
-									<listOptionValue builtIn="false" value="/home/user/navx-mxp-libs/roborio/cpp/lib"/>
+									<listOptionValue builtIn="false" value="&quot;/home/user/navx-mxp-libs/roborio/cpp/lib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\navx-mxp\cpp\lib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Users\Public\Documents\navx-mxp\cpp\lib&quot;"/>
 								</option>
@@ -148,10 +148,10 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="Simulate">
+		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/2016Stronghold"/>
 		</configuration>
-		<configuration configurationName="Debug">
+		<configuration configurationName="Simulate">
 			<resource resourceType="PROJECT" workspacePath="/2016Stronghold"/>
 		</configuration>
 	</storageModule>

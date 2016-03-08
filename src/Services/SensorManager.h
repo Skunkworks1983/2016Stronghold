@@ -15,6 +15,7 @@ class Sensor: public PIDSource {
 private:
 	CANTalon *talon;
 	PIDSource *src;
+	AHRS * ahrs;
 	unsigned ID;
 	float lowRange;
 	float highRange;bool reversed;
@@ -25,6 +26,7 @@ public:
 			bool reversed = false);
 	Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID,
 			bool reversed = false);
+	Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID, bool reversed = false);
 	double PIDGet();
 	float getLowRange();
 	float getHighRange();

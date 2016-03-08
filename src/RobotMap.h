@@ -13,7 +13,7 @@
 
 #define USE_LOGGING 1
 
-#define USE_GYRO 0
+#define USE_GYRO 1
 #define USE_CAMERA 0
 
 #define USE_GAMEPAD 0

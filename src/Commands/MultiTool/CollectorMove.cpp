@@ -38,7 +38,7 @@ void CollectorMove::Initialize() {
 	motorManager->enablePID(PID_ID_COLLECTOR, target);
 	char str[1024];
 	sprintf(str, "CollectorMove Initialize target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 	SmartDashboard::PutNumber("target", target);
 }
 
@@ -65,13 +65,13 @@ void CollectorMove::End() {
 	//MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
 	char str[1024];
 	sprintf(str, "CollectorMove END Called for target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 	collector->deregisterCommand(this);
 }
 
 void CollectorMove::Interrupted() {
 	char str[1024];
 	sprintf(str, "CollectorMove INTERRUPTED Called for target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 	End(); //MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
 }

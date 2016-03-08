@@ -33,6 +33,7 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 		Logger::getLogger()->log(str, Info);
 	}
 	this->src = NULL;
+	this->ahrs = NULL;
 }
 
 Sensor::Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID,
@@ -40,7 +41,12 @@ bool reversed) :
 		ID(ID), lowRange(lowRange), highRange(highRange), reversed(reversed) {
 	this->talon = NULL;
 	this->src = src;
+	this->ahrs = NULL;
 }
+
+Sensor::Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID, bool reversed):
+		ahrs(ahrs), lowRange(lowRange), highRange(highRange), ID(ID), reversed(reversed), src(NULL), talon(NULL)
+{}
 
 void Sensor::resetEncoder() {
 	if (this->talon != NULL) {
@@ -86,7 +92,15 @@ SensorManager::SensorManager() {
 	sprintf(str, "SensorManager Created #%u", count++);
 	Logger::getLogger()->log(str, Info);
 #if USE_GYRO
+	//Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID, bool reversed = false);
+
 	initGyro();
+	sensors[SENSOR_GYRO_ID] = new Sensor(
+	ahrs,
+	-180, //REMOVE MAGIC NUMBER
+	180, //DITTO
+	SENSOR_GYRO_ID
+	);
 	//sensors.insert(std::pair<int, Sensor*>(SENSOR_GYRO_ID, new Sensor(ahrs)));
 	//todo: FIX THIS
 #endif
@@ -148,6 +162,7 @@ SensorManager* SensorManager::getSensorManager() {
 }
 
 void SensorManager::initGyro() {
+	Logger::getLogger()->log("Initializing Gyro", Debug);
 	std::cout << "Reached initGyro" << std::endl;
 	try {
 		ahrsDead = false;

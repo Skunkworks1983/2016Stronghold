@@ -61,7 +61,7 @@ void Robot::AutonomousPeriodic() {
 
 	 char str[1024];
 	 sprintf(str, "LeftEncoder %f, RightEncoder %f", left, right);
-	 writeToLogFile(LOGFILE_NAME, str);*/
+	 Logger::getLogger()->log(str, Debug);*/
 
 	SmartDashboard::PutBoolean("BreakBeam",
 			CommandBase::collector->getBreakBeam());
@@ -75,6 +75,7 @@ void Robot::TeleopInit() {
 	char str[1024];
 	sprintf(str, "TeleOp Called");
 	Logger::getLogger()->log(str, Info);
+	//Logger::getLogger()->log(std::to_string(SensorManager::getSensorManager()->getYaw()), Debug);
 }
 
 void Robot::TeleopPeriodic() {
@@ -100,7 +101,7 @@ void Robot::TeleopPeriodic() {
 	/*char str[1024];
 	sprintf(str, "ArmEncoder %f", SensorManager::getSensorManager()->getSensor(
 	SENSOR_CLIMBER_ARM_ENCODER)->PIDGet());
-	writeToLogFile(LOGFILE_NAME, str);*/
+	Logger::getLogger()->log(str, Debug);*/
 }
 
 void Robot::TestPeriodic() {

@@ -37,28 +37,28 @@ PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
 
 	char str[1024];
 	sprintf(str, "Created PIDWrapper with %f, %f, %f", p, i, d);
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 }
 
 void PIDWrapper::Enable() {
 	ptr->Enable();
 	char str[1024];
 	sprintf(str, "PIDWrapper Enabled");
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 }
 
 void PIDWrapper::Disable() {
 	ptr->Disable();
 	char str[1024];
 	sprintf(str, "PIDWrapper Enabled");
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 }
 
 void PIDWrapper::SetSetpoint(float setpoint) {
 	ptr->SetSetpoint(setpoint);
 	char str[1024];
 	sprintf(str, "PIDWrapper SetSetpoint");
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 }
 
 void PIDWrapper::SetPID(float p, float i, float d, float f) {
@@ -442,7 +442,7 @@ void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 		pidControllerMap[pidID] = pidcontroller;
 		char str[1024];
 		sprintf(str, "Created PIDController with ID %u", pidID);
-		writeToLogFile(LOGFILE_NAME, str);
+		Logger::getLogger()->log(str, Debug);
 	} else {
 		//pidControllerMap[pidID]->Enable();
 	}
@@ -456,7 +456,7 @@ void MotorManager::enablePID(unsigned pidID, float setPoint) {
 	char str[1024];
 	sprintf(str, "enablePID called on %u with setpoint %f count = %d", pidID,
 			setPoint, pidControllerMap.count(pidID));
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 	pidControllerMap[pidID]->SetSetpoint(setPoint);
 	if (!pidControllerMap[pidID]->IsEnabled()) {
 		pidControllerMap[pidID]->Enable();
@@ -471,7 +471,7 @@ void MotorManager::disablePID(unsigned pidID) {
 	char str[1024];
 	sprintf(str, "disablePID called on %u count = %d", pidID,
 			pidControllerMap.count(pidID));
-	writeToLogFile(LOGFILE_NAME, str);
+	Logger::getLogger()->log(str, Debug);
 	pidControllerMap[pidID]->Disable();
 }
 MotorGroup::MotorGroup(std::vector<Motor*> motorgroup) {
