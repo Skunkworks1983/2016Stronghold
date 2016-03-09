@@ -75,7 +75,14 @@ double Sensor::PIDGet() {
 		sprintf(str, "PIDSource is returning PIDGet");
 		Logger::getLogger()->log(str, Info);
 		return src->PIDGet();
-	} else {
+	} else if(ahrs != NULL) {
+		char str[1024];
+		sprintf(str, "PIDSource returning ahrs GetYaw(), Gryo: %f", ahrs->GetYaw());
+		Logger::getLogger()->log(str, Info);
+		return ahrs->GetYaw();
+	}
+	  else {
+
 		char str[1024];
 		sprintf(str, "Sensor is returning a 0.0 because talon && src are NULL");
 		Logger::getLogger()->log(str, Info);

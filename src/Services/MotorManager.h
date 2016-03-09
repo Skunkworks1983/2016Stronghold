@@ -37,6 +37,7 @@ public:
 	void SetPID(float p, float i, float d, float f = 0);
 	void SetInputRange(float minimumInput, float maximumInput);
 	void SetOutputRange(float minimumOutput, float maximumOutput);
+	void SetContinuous(bool isContinuous);
 	void SetPIDSourceType(PIDSourceType pidSource);
 	bool IsEnabled();
 	void Reset();
@@ -69,12 +70,19 @@ private:
 	float lastOutput;
 	float lastCurrent;
 public:
+	std::vector<Motor*> & getMotorList();
 	MotorGroup(std::vector<Motor*> motorgroup);
 	virtual ~MotorGroup();
 	void PIDWrite(float output);
 	int getPID(Motor motor);
 	float getLastOutput();
 	float getLastCurrent();
+};
+
+class DrivebaseMotorGroup: public MotorGroup {
+public:
+	DrivebaseMotorGroup(std::vector<Motor*> motorgroup);
+	void PIDWrite(float output);
 };
 
 class MotorManager {
@@ -122,7 +130,7 @@ public:
 
 	void setPID(unsigned ID, double P, double I, double D);
 	void createPID(MotorGroup * group, unsigned PIDSourceID, unsigned pidID,
-			float P, float I, float D, float F, bool isSpeedMode);
+			float P, float I, float D, float F, bool isSpeedMode, bool isContinuous = false);
 	void setPIDF(unsigned pidID, float P, float I, float D, float F);
 	void enablePID(unsigned pidID, float setPoint);
 	void enablePID(unsigned pidID);

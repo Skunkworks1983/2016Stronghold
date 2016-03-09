@@ -2,6 +2,9 @@
 #define ROBOT_H_
 
 #include <IterativeRobot.h>
+#include <stddef.h>
+
+class TurnDegree;
 
 class AutoBase;
 
@@ -16,8 +19,10 @@ private:
 	ManagePower *managePower  = NULL;
 	int count;
 	AutoBase *cmd  = NULL;
+	TurnDegree * turnDegree;
 public:
 	void RobotInit();
+	void DisabledInit();
 	void DisabledPeriodic();
 	void TeleopInit();
 	void TeleopPeriodic();

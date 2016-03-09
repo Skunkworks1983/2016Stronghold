@@ -73,6 +73,10 @@ void PIDWrapper::SetOutputRange(float minimumOutput, float maximumOutput) {
 	ptr->SetOutputRange(minimumOutput, maximumOutput);
 }
 
+void PIDWrapper::SetContinuous(bool isContinuous) {
+	ptr->SetContinuous(isContinuous);
+}
+
 void PIDWrapper::SetPIDSourceType(PIDSourceType pidSource) {
 	ptr->SetPIDSourceType(pidSource);
 }
@@ -188,6 +192,7 @@ void MotorManager::initPIDS() {
 	PID_ID_DRIVEBASE_RIGHT,
 	DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
 	DRIVEBASE_RIGHT_F, false);
+
 #if USE_GYRO
 	std::vector<Motor*> DrivebaseRot;
 	DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
@@ -196,16 +201,17 @@ void MotorManager::initPIDS() {
 	DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
 	DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
 	DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
-	MotorGroup * groupDrivebaseRot = new MotorGroup(DrivebaseRot);
-	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
-			PID_ID_DRIVEBASE_ROT,
-			DRIVEBASE_ROT_P, DRIVEBASE_ROT_I, DRIVEBASE_ROT_D,
-			DRIVEBASE_ROT_F, false);
+	MotorGroup * groupDrivebaseRot = new DrivebaseMotorGroup(DrivebaseRot);
 
-	MotorGroup * gyroRightMotors = new MotorGroup(DrivebaseRightMotors);
-	MotorGroup * gryoLeftMotors = new MotorGroup(DrivebaseLeftMotors);
+	//MotorGroup * gyroRightMotors = new MotorGroup(DrivebaseRightMotors);
+	//MotorGroup * gryoLeftMotors = new MotorGroup(DrivebaseLeftMotors);
+	double p = 1.0/180.0;
+	double i = 0.0;
+	double d = 0.0;
 	createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
-			TURN_GYRO_P, TURN_GYRO_I, TURN_GYRO_D, TURN_GYRO_F, false);
+				p, i, d, TURN_GYRO_F, false, true);
+	/*createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
+			TURN_GYRO_P, TURN_GYRO_I, TURN_GYRO_D, TURN_GYRO_F, false, true);*/
 #endif
 
 #if USE_CAMERA
@@ -423,7 +429,7 @@ Motor::~Motor() {
 }
 
 void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
-		unsigned pidID, float P, float I, float D, float F, bool isSpeedMode) {
+		unsigned pidID, float P, float I, float D, float F, bool isSpeedMode, bool isContinuous) {
 
 	if (pidControllerMap.count(pidID) == 0) {
 		Sensor * sensor = SensorManager::getSensorManager()->getSensor(
@@ -439,6 +445,7 @@ void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 		} else {
 			pidcontroller->SetPIDSourceType(PIDSourceType::kDisplacement);
 		}
+		pidcontroller->SetContinuous(isContinuous);
 		pidControllerMap[pidID] = pidcontroller;
 		char str[1024];
 		sprintf(str, "Created PIDController with ID %u", pidID);
@@ -478,6 +485,17 @@ void MotorManager::disablePID(unsigned pidID) {
 MotorGroup::MotorGroup(std::vector<Motor*> motorgroup) {
 	this->motorList = motorgroup;
 	c = 0;
+}
+
+std::vector<Motor*> & MotorGroup::getMotorList() {
+	return motorList;
+}
+
+DrivebaseMotorGroup::DrivebaseMotorGroup(std::vector<Motor*> motorgroup) :
+		MotorGroup(motorgroup){
+	if(motorgroup.size() != 6) {
+		throw;
+	}
 }
 
 MotorGroup::~MotorGroup() {
@@ -524,3 +542,31 @@ void MotorGroup::PIDWrite(float output) {
 		}
 	}
 }
+
+void DrivebaseMotorGroup::PIDWrite(float output) {
+	char str[1024];
+	sprintf(str, "Output: %f", output);
+	Logger::getLogger()->log(str, Info);
+	std::vector<Motor*> motorList = MotorGroup::getMotorList();
+	std::vector<Motor*>::iterator it = motorList.begin();
+
+	//lastOutput = output;
+	/*if (motorList.front() != NULL && motorList.front()->talon != NULL) {
+	 lastCurrent = motorList.front()->talon->GetOutputCurrent();
+	 }
+	 char str[1024];
+	 sprintf(str, "Output %f Current %f", output, lastCurrent);
+	 writeToLogFile(LOGFILE_NAME, str);*/
+
+	for (; it != motorList.end(); ++it) {
+		/*if ((*it)->stoppedStartTime == 0) {
+		 (*it)->talon->Set(output * (*it)->C);
+		 }
+		 (*it)->speed = output;*/
+		if ((*it)->talon != NULL) {
+			(*it)->talon->Set((output /** (*it)->C*/));
+			//So we stop breaking the motor
+		}
+	}
+}
+

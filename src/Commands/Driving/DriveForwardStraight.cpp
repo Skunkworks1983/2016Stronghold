@@ -8,14 +8,14 @@
 
 DriveForwardStraight::DriveForwardStraight(float distance, float speed) {
 	Requires(drivebase);
-	//WHEEL_DIAMETER = 8;					//CHANGE (maybe)
-	//ENCODER_TICKS_PER_REVOLUTION = 1000;//CHANGE
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
 	this->distance = ((distance / DISTANCE_NUMBER));
 	this->speed = speed;
 	initialYaw = 0.0;
 	initialPosition = 0.0;
+	initialLeft = 0.0;
+	initialRight = 0.0;
 	errorOffset = 0.0;
 }
 
@@ -44,10 +44,10 @@ void DriveForwardStraight::Initialize() {
 void DriveForwardStraight::Execute() {
 	if(USE_GYRO_TURN) {
 		errorOffset = initialYaw - sensorManager->getYaw();
-		int leftSpeed = ((1 / 15) * errorOffset + 1) * speed;
-		int rightSpeed = (-1 * (1 / 15) * errorOffset + 1) * speed;
+		double leftSpeed = ((1 / 15) * errorOffset + 1) * speed;
+		double rightSpeed = (-1 * (1 / 15) * errorOffset + 1) * speed;
 		char str[1024];
-		sprintf(str, "Gyro: %i, Left: %f, Right: %f", sensorManager->getYaw(), leftSpeed, rightSpeed);
+		sprintf(str, "Gyro: %f, Left: %f, Right: %f", sensorManager->getYaw(), leftSpeed, rightSpeed);
 		Logger::getLogger()->log(str, Info);
 		 if (errorOffset <= 0) { //If its tilting to the left
 			 drivebase->setLeftSpeed(speed);
@@ -72,7 +72,6 @@ void DriveForwardStraight::Execute() {
 		//double rightSpeed = speed * (pow(left,2) / pow(right,2));
 		double rightSpeed = speed * (left / right);
 		drivebase->setLeftSpeed(leftSpeed);
-		//drivebase->setRightSpeed(speed);
 		drivebase->setRightSpeed(rightSpeed);
 
 		char str[1024];
@@ -94,16 +93,6 @@ bool DriveForwardStraight::IsFinished() {
 	if (difference > distance && !CONTINUOUS_TEST) { //Temp constant for testing if the gyro straight works
 		return true;
 	}
-	/*if (((leftEncoder->PIDGet() + rightEncoder->PIDGet()) / 2) - initialPosition
-	 > distance) {
-	 return true;
-	 }*/
-	/*
-	 if (sensorManager->GetEncoderPosition(DRIVEBASE_LEFTMOTOR_1_PORT)
-	 >= distance) {
-	 //PID drivebase back to error of 0 (not yet implemented, waiting on MotorManager updates)
-	 return true;
-	 }*/
 	return false;
 }
 

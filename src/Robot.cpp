@@ -1,15 +1,11 @@
-#include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
+#include <Commands/Driving/TurnDegree.h>
 #include <Commands/Scheduler.h>
-#include <DriverStation.h>
-#include <OI.h>
 #include <Robot.h>
 #include <RobotBase.h>
-#include <RobotMap.h>
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
-#include <SmartDashboard/SmartDashboard.h>
 #include <TuningValues.h>
 #include <cstdio>
 
@@ -30,16 +26,21 @@ void Robot::RobotInit() {
 	//managePower = new ManagePower();
 	//managePower->Start();
 
+	turnDegree = new TurnDegree(90);
+
 	//StallProtection *stall = new StallProtection();
 	//stall->Start();
 	//acc = new BuiltInAccelerometer(Accelerometer::kRange_16G);
 	cmd = AutoBase::getSelectedAuto();
 }
 
-void Robot::DisabledPeriodic() {
+void Robot::DisabledInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
+}
+
+void Robot::DisabledPeriodic() {
 }
 
 void Robot::AutonomousInit() {
@@ -47,8 +48,8 @@ void Robot::AutonomousInit() {
 	char str[1024];
 	sprintf(str, "AutonomousInit Called");
 	Logger::getLogger()->log(str, Info);
-
-	cmd->Start();
+	turnDegree->Start();
+	//cmd->Start(); ADD BACK
 }
 
 void Robot::AutonomousPeriodic() {
