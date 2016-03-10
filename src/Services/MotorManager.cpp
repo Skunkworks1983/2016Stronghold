@@ -188,11 +188,6 @@ void MotorManager::initPIDS() {
 	DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
 	DRIVEBASE_RIGHT_F, false);
 
-	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
-	PID_ID_DRIVEBASE_RIGHT,
-	DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
-	DRIVEBASE_RIGHT_F, false);
-
 #if USE_GYRO
 	std::vector<Motor*> DrivebaseRot;
 	DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
@@ -205,13 +200,13 @@ void MotorManager::initPIDS() {
 
 	//MotorGroup * gyroRightMotors = new MotorGroup(DrivebaseRightMotors);
 	//MotorGroup * gryoLeftMotors = new MotorGroup(DrivebaseLeftMotors);
-	double p = 1.0/180.0;
+	double p = 1.0 / 180.0;
 	double i = 0.0;
 	double d = 0.0;
-	createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
-				p, i, d, TURN_GYRO_F, false, true);
+	createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE, p, i, d,
+			TURN_GYRO_F, false, true);
 	/*createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
-			TURN_GYRO_P, TURN_GYRO_I, TURN_GYRO_D, TURN_GYRO_F, false, true);*/
+	 TURN_GYRO_P, TURN_GYRO_I, TURN_GYRO_D, TURN_GYRO_F, false, true);*/
 #endif
 
 #if USE_CAMERA
@@ -237,9 +232,9 @@ void MotorManager::initPIDS() {
 	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
 	MotorGroup * groupArmMotors = new MotorGroup(armMotors);
 
-	const double p = 0.000135;
-	const double i = 0.000017;
-	const double d = 0.0; //0.00005;
+	p = 0.000135;
+	i = 0.000017;
+	d = 0.0; //0.00005;
 
 	createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, p, i, d,
 	CLIMBER_ARM_F, false);
@@ -429,7 +424,8 @@ Motor::~Motor() {
 }
 
 void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
-		unsigned pidID, float P, float I, float D, float F, bool isSpeedMode, bool isContinuous) {
+		unsigned pidID, float P, float I, float D, float F, bool isSpeedMode,
+		bool isContinuous) {
 
 	if (pidControllerMap.count(pidID) == 0) {
 		Sensor * sensor = SensorManager::getSensorManager()->getSensor(
@@ -447,6 +443,7 @@ void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 		}
 		pidcontroller->SetContinuous(isContinuous);
 		pidControllerMap[pidID] = pidcontroller;
+		pidcontroller->Disable();
 		char str[1024];
 		sprintf(str, "Created PIDController with ID %u", pidID);
 		Logger::getLogger()->log(str, Debug);
@@ -492,8 +489,8 @@ std::vector<Motor*> & MotorGroup::getMotorList() {
 }
 
 DrivebaseMotorGroup::DrivebaseMotorGroup(std::vector<Motor*> motorgroup) :
-		MotorGroup(motorgroup){
-	if(motorgroup.size() != 6) {
+		MotorGroup(motorgroup) {
+	if (motorgroup.size() != 6) {
 		throw;
 	}
 }

@@ -2,7 +2,7 @@
 #define ROBOTMAP_H
 
 #define ROBOT_NAME "VanillaThunder"
-#define PRACTICEBOT 0
+#define PRACTICEBOT 1
 
 #include "TuningValues.h"
 
