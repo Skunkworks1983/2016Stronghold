@@ -26,7 +26,6 @@ private:
 	void initClimber();
 	void initDriveBase();
 	void initShooter();
-	void initCollector();
 	void initArm();
 
 	unsigned count = 0;

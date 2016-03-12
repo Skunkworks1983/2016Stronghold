@@ -12,6 +12,7 @@ BangBangControl::BangBangControl(double desiredSpeed, double timeActivated) {
 	this->timeActivated = timeActivated;
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
+	currentSpeed = 0;
 }
 
 BangBangControl::~BangBangControl() {
@@ -23,18 +24,7 @@ void BangBangControl::Initialize() {
 }
 
 void BangBangControl::Execute() {
-	currentSpeed = 0;
-	unsigned workingEncoders = 0;
-	if (shooter->getLeftShooterSpeed() > 0) {
-		currentSpeed += shooter->getLeftShooterSpeed();
-		workingEncoders++;
-	}
-	if (shooter->getRightShooterSpeed() > 0) {
-		currentSpeed += shooter->getRightShooterSpeed();
-		workingEncoders++;
-	}
-	if (workingEncoders != 0) {
-		currentSpeed /= 2;
+	if (shooter->getShooterSpeed() != 0) {
 		shooter->setShooterSpeed(
 				currentSpeed < desiredSpeed ? BANG_BANG_FULL : BANG_BANG_NONE);
 	} else {

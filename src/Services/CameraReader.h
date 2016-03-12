@@ -31,7 +31,7 @@ private:
 
 	static CameraReader *reader;
 	bool reading = false;
-	bool ballInCollector = false;
+	bool ballInShooter = false;
 	float lastLeftX = 0;
 	float lastLeftY = 0;
 	float lastMidX = 0;
@@ -60,7 +60,7 @@ public:
 
 	bool isLastInvalid();
 
-	bool isBallInCollector();
+	bool isBallInShooter();
 
 	double PIDGet();
 };

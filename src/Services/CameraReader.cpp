@@ -134,8 +134,8 @@ float CameraReader::getLastRightY() {
 	return tempLast;
 }
 
-bool CameraReader::isBallInCollector(){
-	return ballInCollector;
+bool CameraReader::isBallInShooter(){
+	return ballInShooter;
 }
 
 double CameraReader::PIDGet() {

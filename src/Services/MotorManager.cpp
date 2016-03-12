@@ -21,7 +21,7 @@ MotorManager::MotorManager() {
 	initDriveBase();
 #endif
 #if USE_COLLECTOR
-	initCollector();
+	initShooter();
 #endif
 #if USE_CLIMBER
 	initClimber();
@@ -69,32 +69,29 @@ void MotorManager::initShooter() {
 	MINI_CIM_MAX_CURRENT, SHOOTER);
 	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_2_PORT,
 	MINI_CIM_MAX_CURRENT, SHOOTER);
-}
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
+		COLLECTOR_ROLLER_MOTOR_1_PORT, RS775_MAX_CURRENT, ROLLER);
 
-void MotorManager::initCollector() {
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-	COLLECTOR_ROLLER_MOTOR_1_PORT, RS775_MAX_CURRENT, ROLLER);
-
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-	COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
-	false);
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
-	true);
+		addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
+		COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
+		false);
+		addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
+		COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
+		true);
 }
 
 void MotorManager::initPIDS() {
 #if USE_COLLECTOR
-	std::vector<Motor*> rotationCollectorMotors;
-	rotationCollectorMotors.push_back(
+	std::vector<Motor*> rotationShooterMotors;
+	rotationShooterMotors.push_back(
 			getMotor(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT));
-	rotationCollectorMotors.push_back(
+	rotationShooterMotors.push_back(
 			getMotor(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT));
 
-	MotorGroup * groupCollectorRotation = new MotorGroup(
-			rotationCollectorMotors);
+	MotorGroup * groupShooterRotation = new MotorGroup(
+			rotationShooterMotors);
 
-	createPID(groupCollectorRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
+	createPID(groupShooterRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
 	PID_ID_COLLECTOR, COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I,
 	COLLECTOR_ROTATION_D,
 	COLLECTOR_ROTATION_F, false);

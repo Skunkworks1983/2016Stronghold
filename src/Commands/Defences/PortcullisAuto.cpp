@@ -7,13 +7,13 @@
 
 #include <Commands/Defences/PortcullisAuto.h>
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter.h>
 #include <Subsystems/Drivebase.h>
 #include <cmath>
 
 PortcullisAuto::PortcullisAuto(float speed, float distance, float turnup){
 	Requires(drivebase);
-	Requires(collector);
+	Requires(shooter);
 	this->speed = speed;
 	this->distance = distance;
 	this->turnup = turnup;
@@ -42,7 +42,7 @@ void PortcullisAuto::Execute(){
 		drivebase->setRightSpeed(0);
 		drivebase->setLeftSpeed(0);
 	}
-//	CollectorMove(turnup);
+//	ShooterMove(turnup);
 	if ((turnup - turn) < EPSILON){
 
 	}

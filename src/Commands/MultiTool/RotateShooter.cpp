@@ -1,4 +1,4 @@
-#include <Commands/MultiTool/CollectorMove.h>
+#include <Commands/MultiTool/RotateShooter.h>
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
@@ -10,8 +10,8 @@
 #define COLLECTOR_MOVE_TOLERANCE 250
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
-CollectorMove::CollectorMove(CollectorPosition pos) {
-	Requires(collector);
+RotateShooter::RotateShooter(ShooterPosition pos) {
+	Requires(shooter);
 	SetInterruptible(true);
 	test = 0;
 	switch (pos) {
@@ -32,8 +32,8 @@ CollectorMove::CollectorMove(CollectorPosition pos) {
 	motorManager = MotorManager::getMotorManager();
 }
 
-void CollectorMove::Initialize() {
-	collector->registerCommand(this);
+void RotateShooter::Initialize() {
+	shooter->registerCommand(this);
 	//motorManager->disablePID(PID_ID_COLLECTOR);
 	motorManager->enablePID(PID_ID_COLLECTOR, target);
 	char str[1024];
@@ -42,10 +42,10 @@ void CollectorMove::Initialize() {
 	SmartDashboard::PutNumber("target", target);
 }
 
-void CollectorMove::Execute() {
+void RotateShooter::Execute() {
 }
 
-bool CollectorMove::IsFinished() {
+bool RotateShooter::IsFinished() {
 	SmartDashboard::PutNumber("error",
 			fabs(SensorManager::getSensorManager()->getSensor(
 			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet() - target));
@@ -60,16 +60,16 @@ bool CollectorMove::IsFinished() {
 	return closeEnough;
 }
 
-void CollectorMove::End() {
+void RotateShooter::End() {
 	SmartDashboard::PutBoolean("CollectorMoveRunning", false);
 	//MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
 	char str[1024];
 	sprintf(str, "CollectorMove END Called for target %f", target);
 	Logger::getLogger()->log(str, Debug);
-	collector->deregisterCommand(this);
+	shooter->deregisterCommand(this);
 }
 
-void CollectorMove::Interrupted() {
+void RotateShooter::Interrupted() {
 	char str[1024];
 	sprintf(str, "CollectorMove INTERRUPTED Called for target %f", target);
 	Logger::getLogger()->log(str, Debug);

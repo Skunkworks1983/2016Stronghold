@@ -5,7 +5,7 @@
 #include <Services/MotorManager.h>
 #include <Servo.h>
 #include <Subsystems/Climber.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter.h>
 #include <cstdio>
 
 Climber::Climber() :
@@ -66,7 +66,6 @@ void Climber::deregisterCommand(Command *cmd) {
 		if (lastCommand != NULL) {
 			if (lastCommand->IsRunning()) {
 				lastCommand->Cancel();
-				//Scheduler::GetInstance()->Remove(lastCommand);
 			}
 		}
 	}

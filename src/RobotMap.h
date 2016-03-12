@@ -7,9 +7,8 @@
 #include "TuningValues.h"
 
 #define USE_DRIVEBASE 1
-#define USE_COLLECTOR 1
 #define USE_CLIMBER 1
-#define USE_SHOOTER 0
+#define USE_SHOOTER 1
 #define USE_ARM 0
 
 #define USE_LOGGING 1
@@ -75,7 +74,7 @@
 #endif
 
 /**
- * Collector
+ * Shooter
  */
 
 #define COLLECTOR_ROTATOR_MOTOR_LEFT_PORT 3

@@ -6,12 +6,12 @@
 
 class SensorManager;
 
-class ResetCollectorEncoder: public CommandBase
+class ResetShooterRotationEncoder: public CommandBase
 {
 private:
 	SensorManager * sensorManager = NULL;
 public:
-	ResetCollectorEncoder();
+	ResetShooterRotationEncoder();
 	void Initialize();
 	void Execute();
 	bool IsFinished();

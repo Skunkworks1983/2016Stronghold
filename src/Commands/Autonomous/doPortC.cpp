@@ -1,6 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/DriveForward.h>
-#include <Commands/MultiTool/CollectorMove.h>
+#include <Commands/MultiTool/RotateShooter.h>
 #include <TuningValues.h>
 
 #define PORT_DISTANCE 0
@@ -8,17 +8,17 @@
 AutoBase *AutoBase::doPortC()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doPortC");
-	cmd->AddSequential(new CollectorMove(cLowBar));
+	cmd->AddSequential(new RotateShooter(cLowBar));
 	cmd->AddSequential(new DriveForward(REACH_DEFENCE_DISTANCE, REACH_DEFENCE_SPEED));
 	cmd->AddSequential(new DriveForward(PORT_DISTANCE, PORT_SPEED));
-	cmd->AddParallel(new CollectorMove(cTOP));
+	cmd->AddParallel(new RotateShooter(cTOP));
 
 	return cmd;
 }
 
 
-/*lower collector,
+/*lower shooter,
  * move forward
- * raise collector
+ * raise shooter
  * move forward/drive through
 */

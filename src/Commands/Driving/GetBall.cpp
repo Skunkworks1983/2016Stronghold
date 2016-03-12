@@ -7,7 +7,7 @@
 
 #include <Commands/Driving/GetBall.h>
 #include <Services/CameraReader.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter.h>
 #include <cstdbool>
 
 GetBall::GetBall(float speedTranslate) :
@@ -21,8 +21,8 @@ void GetBall::Execute() {
 
 }
 bool GetBall::IsFinished() {
-	return collector->getBreakBeam()
-			|| CameraReader::getCameraReader()->isBallInCollector();
+	return shooter->getBreakBeam()
+			|| CameraReader::getCameraReader()->isBallInShooter();
 }
 void GetBall::End() {
 

@@ -1,18 +1,18 @@
-#ifndef CollectorMove_H
-#define CollectorMove_H
+#ifndef ShooterMove_H
+#define ShooterMove_H
 
 #include <CommandBase.h>
 #include <PIDOutput.h>
 #include <PIDSource.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter.h>
 #include <TuningValues.h>
 #include <RobotMap.h>
 
-enum CollectorPosition{
+enum ShooterPosition{
 	cTOP, cLowBar, cCollect, c45
 };
 
-class CollectorMove: public CommandBase
+class RotateShooter: public CommandBase
 {
 private:
 	float           target;
@@ -20,7 +20,7 @@ private:
 	SensorManager * sensorManager = NULL;
 	int test;
 public:
-	CollectorMove(CollectorPosition pos);
+	RotateShooter(ShooterPosition pos);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
