@@ -1,89 +1,18 @@
 #ifndef MOTOR_MANAGER_H
 #define MOTOR_MANAGER_H
 
-#include <PIDController.h>
-#include <PIDOutput.h>
+#include <Services/Motor.h>
+#include <Services/PIDWrapper.h>
 #include <cstdbool>
 #include <map>
-#include <vector>
+
+class MotorGroup;
 
 class CANTalon;
 class PIDController;
 class Encoder;
 class StallProtection;
-
-enum Priority {
-	PRIORITY_FIRST,
-	PRIORITY_DRIVEBASE = PRIORITY_FIRST,
-	PRIORITY_PRIMARY_ACTUATORS,
-	PRIORITY_SECONDARY_ACTUATORS,
-	PRIORITY_ACCESSORIES,
-	PRIORITYS
-};
-
-enum ESubsystem {
-	DRIVEBASE, WINCH, ARM, COLLECTOR_ROTATOR, ROLLER, SHOOTER
-};
-
-class PIDWrapper {
-private:
-	PIDController *ptr = NULL;
-	float setpoint;
-public:
-	PIDWrapper(float p, float i, float d, float f, PIDSource *source, PIDOutput *output);
-	void Enable();
-	void Disable();
-	void SetSetpoint(float setpoint);
-	void SetPID(float p, float i, float d, float f = 0);
-	void SetInputRange(float minimumInput, float maximumInput);
-	void SetOutputRange(float minimumOutput, float maximumOutput);
-	void SetContinuous(bool isContinuous);
-	void SetPIDSourceType(PIDSourceType pidSource);
-	bool IsEnabled();
-	void Reset();
-};
-
-class Motor {
-	friend class MotorManager;
-private:
-	bool reversed;
-public:
-	Motor(Priority prioArg, int portArg, float maxCurrent,
-			ESubsystem parentSubsystem, bool reversed);
-	~Motor();
-	ESubsystem parentSubsystem;
-	CANTalon * talon = NULL;
-	float speed;
-	float maxCurrent;
-	long long int overCurrentStartTime;
-	long long int stoppedStartTime;
-	Priority motorPriority;
-	unsigned port;
-	float C;
-	void setC(Priority priority, float voltage);bool isReversed();
-};
-
-class MotorGroup: public PIDOutput {
-private:
-	std::vector<Motor*> motorList;
-	int c;
-	float lastOutput;
-	float lastCurrent;
-public:
-	std::vector<Motor*> & getMotorList();
-	MotorGroup(std::vector<Motor*> motorgroup);
-	virtual ~MotorGroup();
-	void PIDWrite(float output);
-	int getPID(Motor motor);
-	float getLastOutput();
-	float getLastCurrent();
-};
-
-class DrivebaseMotorGroup: public MotorGroup {
-public:
-	DrivebaseMotorGroup(std::vector<Motor*> motorgroup);
-	void PIDWrite(float output);
-};
+class Motor;
 
 class MotorManager {
 	friend class SensorManager;

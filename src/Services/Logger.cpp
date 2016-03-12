@@ -55,6 +55,7 @@ void Logger::log(std::string message, ELogLevel logLevel) {
 
 void *Logger::write(void * d) {
 	Logger * logger = (Logger*) d;
+	static unsigned checkVal = 0;
 	while(!logger->loggerDied) {
 		std::ofstream logFile;
 		logFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -66,7 +67,7 @@ void *Logger::write(void * d) {
 				LogMessage message = logger->pull_message();
 				uint64_t timestamp = (message.time.tv_sec * 1000) + (message.time.tv_usec/1000);
 
-				logFile << "[" << timestamp << "] " << ROBOT_NAME << " " << message.level << " " << message.message << std::endl; //Write to log file
+				logFile << "[" << checkVal++ << "] " << ROBOT_NAME << " " << message.level << " " << message.message << std::endl; //Write to log file
 			}
 
 			logFile.close();

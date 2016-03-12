@@ -29,6 +29,7 @@ private:
 	SensorManager * sensorManager = NULL;
 	float initialYaw;
 	float epsilon;
+	unsigned onCount = 0;
 public:
 	TurnDegree(double degree); //number of degrees to turn, speed at which to turn
 	virtual ~TurnDegree();

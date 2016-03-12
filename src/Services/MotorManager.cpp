@@ -3,13 +3,13 @@
 #include <PIDSource.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
+#include <Services/MotorGroup.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <TuningValues.h>
-#include <cmath>
 #include <cstdio>
-#include <iterator>
 #include <utility>
+#include <vector>
 
 MotorManager::MotorManager() {
 	allowedPriority = PRIORITY_ACCESSORIES;
@@ -29,64 +29,6 @@ MotorManager::MotorManager() {
 #if USE_SHOOTER
 	initShooter();
 #endif
-}
-
-PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
-		PIDOutput *output) {
-	ptr = new PIDController(p, i, d, f, source, output);
-
-	char str[1024];
-	sprintf(str, "Created PIDWrapper with %f, %f, %f", p, i, d);
-	Logger::getLogger()->log(str, Debug);
-}
-
-void PIDWrapper::Enable() {
-	ptr->Enable();
-	char str[1024];
-	sprintf(str, "PIDWrapper Enabled");
-	Logger::getLogger()->log(str, Debug);
-}
-
-void PIDWrapper::Disable() {
-	ptr->Disable();
-	char str[1024];
-	sprintf(str, "PIDWrapper Enabled");
-	Logger::getLogger()->log(str, Debug);
-}
-
-void PIDWrapper::SetSetpoint(float setpoint) {
-	ptr->SetSetpoint(setpoint);
-	char str[1024];
-	sprintf(str, "PIDWrapper SetSetpoint");
-	Logger::getLogger()->log(str, Debug);
-}
-
-void PIDWrapper::SetPID(float p, float i, float d, float f) {
-	ptr->SetPID(p, i, d, f);
-}
-
-void PIDWrapper::SetInputRange(float minimumInput, float maximumInput) {
-	ptr->SetInputRange(minimumInput, maximumInput);
-}
-
-void PIDWrapper::SetOutputRange(float minimumOutput, float maximumOutput) {
-	ptr->SetOutputRange(minimumOutput, maximumOutput);
-}
-
-void PIDWrapper::SetContinuous(bool isContinuous) {
-	ptr->SetContinuous(isContinuous);
-}
-
-void PIDWrapper::SetPIDSourceType(PIDSourceType pidSource) {
-	ptr->SetPIDSourceType(pidSource);
-}
-
-bool PIDWrapper::IsEnabled() {
-	return ptr->IsEnabled();
-}
-
-void PIDWrapper::Reset() {
-	ptr->Reset();
 }
 
 void MotorManager::initClimber() {
@@ -172,10 +114,10 @@ void MotorManager::initPIDS() {
 	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
 	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
 	MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
-	createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
-	PID_ID_DRIVEBASE_LEFT,
-	DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
-	DRIVEBASE_LEFT_F, false);
+	/*createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
+	 PID_ID_DRIVEBASE_LEFT,
+	 DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
+	 DRIVEBASE_LEFT_F, false);*/
 
 	std::vector<Motor*> DrivebaseRightMotors;
 	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
@@ -183,28 +125,32 @@ void MotorManager::initPIDS() {
 	DrivebaseRightMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
 	MotorGroup * groupDrivebaseRight = new MotorGroup(DrivebaseRightMotors);
 
-	createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
-	PID_ID_DRIVEBASE_RIGHT,
-	DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
-	DRIVEBASE_RIGHT_F, false);
+	std::vector<Motor*> DrivebaseMotors;
+	DrivebaseMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
+	DrivebaseMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
+	DrivebaseMotors.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
+	DrivebaseMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
+	DrivebaseMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
+	DrivebaseMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
+	DrivebaseMotorGroup *drivebaseMotorGroup = new DrivebaseMotorGroup(
+			DrivebaseMotors);
 
+	/*createPID(groupDrivebaseRight, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+	 PID_ID_DRIVEBASE_RIGHT,
+	 DRIVEBASE_RIGHT_P, DRIVEBASE_RIGHT_I, DRIVEBASE_RIGHT_D,
+	 DRIVEBASE_RIGHT_F, false);
+	 */
 #if USE_GYRO
-	std::vector<Motor*> DrivebaseRot;
-	DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_1_PORT));
-	DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_2_PORT));
-	DrivebaseRot.push_back(getMotor(DRIVEBASE_RIGHTMOTOR_3_PORT));
-	DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_1_PORT));
-	DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
-	DrivebaseRot.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
-	MotorGroup * groupDrivebaseRot = new DrivebaseMotorGroup(DrivebaseRot);
-
 	//MotorGroup * gyroRightMotors = new MotorGroup(DrivebaseRightMotors);
 	//MotorGroup * gryoLeftMotors = new MotorGroup(DrivebaseLeftMotors);
-	double p = 1.0 / 180.0;
-	double i = 0.0;
-	double d = 0.0;
-	createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE, p, i, d,
-			TURN_GYRO_F, false, true);
+	double p = 1.0 / 120.0;
+	double i = 1.0 / 1500.0;
+	double d = 1.0 / 500.0;
+	double f = 0.0;
+	//createPID(groupDrivebaseLeft, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE_LEFT, -p,-i, -d, -f, false, true);
+
+	createPID(drivebaseMotorGroup, SENSOR_GYRO_ID, PID_ID_DRIVEBASE_ROT, p, i,
+			d, f, false, true);
 	/*createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
 	 TURN_GYRO_P, TURN_GYRO_I, TURN_GYRO_D, TURN_GYRO_F, false, true);*/
 #endif
@@ -353,24 +299,6 @@ void MotorManager::setPriority(Priority priorityArg) {
 
 }
 
-void Motor::setC(Priority priorityArg, float voltage) {
-
-	if (motorPriority == PRIORITY_FIRST) {
-		if (voltage > POWER_BROWNOUT_VOLTAGE + POWER_DRIVEBASE_VOLTAGE_WIDTH) {
-			this->C = 1;
-		} else {
-			this->C = pow(
-					(((voltage - POWER_BROWNOUT_VOLTAGE)
-							/ (POWER_DRIVEBASE_VOLTAGE_WIDTH))), 2);
-		}
-	} else if (this->motorPriority >= priorityArg) {
-		this->C = pow(
-				(((voltage - POWER_BROWNOUT_VOLTAGE)
-						/ (motorPriority * POWER_VOLTAGE_WIDTH))), 2);
-	}
-
-}
-
 void MotorManager::setCForAll() {
 	std::map<unsigned, Motor*>::iterator ptr = motors.begin();
 	std::map<unsigned, Motor*>::iterator end = motors.end();
@@ -392,35 +320,6 @@ void MotorManager::addMotor(Priority priority, int Port, float maxCurrent,
 	Motor * motor = new Motor(priority, Port, maxCurrent, parentSubsystem,
 			reversed);
 	motors.insert(std::pair<int, Motor*>(Port, motor));
-}
-
-Motor::Motor(Priority prioArg, int portArg, float maxCurrent,
-		ESubsystem parentSubsystem, bool reversed) :
-		reversed(reversed), maxCurrent(maxCurrent), parentSubsystem(
-				parentSubsystem) {
-	overCurrentStartTime = 0;
-	stoppedStartTime = 0;
-	port = portArg;
-	speed = 0;
-	motorPriority = prioArg;
-
-	if (SensorBase::CheckPWMChannel(port)) {	//TODO: make sure this works
-		talon = new CANTalon(port);
-		talon->SetSafetyEnabled(false);
-	} else {
-		char str[1024];
-		sprintf(str, "Talon assignment failed on Port %d", port);
-		Logger::getLogger()->log(str, Info);
-	}
-	C = 1;
-}
-
-bool Motor::isReversed() {
-	return reversed;
-}
-
-Motor::~Motor() {
-
 }
 
 void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
@@ -453,7 +352,9 @@ void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 }
 
 void MotorManager::setPIDF(unsigned pidID, float P, float I, float D, float F) {
-	pidControllerMap[pidID]->SetPID(P, I, D, F);
+	if (pidControllerMap.count(pidID) >= 1) {
+		pidControllerMap[pidID]->SetPID(P, I, D, F);
+	}
 }
 
 void MotorManager::enablePID(unsigned pidID, float setPoint) {
@@ -461,14 +362,19 @@ void MotorManager::enablePID(unsigned pidID, float setPoint) {
 	sprintf(str, "enablePID called on %u with setpoint %f count = %d", pidID,
 			setPoint, pidControllerMap.count(pidID));
 	Logger::getLogger()->log(str, Debug);
-	pidControllerMap[pidID]->SetSetpoint(setPoint);
-	if (!pidControllerMap[pidID]->IsEnabled()) {
-		pidControllerMap[pidID]->Enable();
+
+	if (pidControllerMap.count(pidID) >= 1) {
+		pidControllerMap[pidID]->SetSetpoint(setPoint);
+		if (!pidControllerMap[pidID]->IsEnabled()) {
+			pidControllerMap[pidID]->Enable();
+		}
 	}
 }
 
 void MotorManager::enablePID(unsigned pidID) {
-	pidControllerMap[pidID]->Enable();
+	if (pidControllerMap.count(pidID) >= 1) {
+		pidControllerMap[pidID]->Enable();
+	}
 }
 
 void MotorManager::disablePID(unsigned pidID) {
@@ -476,30 +382,9 @@ void MotorManager::disablePID(unsigned pidID) {
 	sprintf(str, "disablePID called on %u count = %d", pidID,
 			pidControllerMap.count(pidID));
 	Logger::getLogger()->log(str, Debug);
-	pidControllerMap[pidID]->Disable();
-}
-
-MotorGroup::MotorGroup(std::vector<Motor*> motorgroup) {
-	this->motorList = motorgroup;
-	c = 0;
-}
-
-std::vector<Motor*> & MotorGroup::getMotorList() {
-	return motorList;
-}
-
-DrivebaseMotorGroup::DrivebaseMotorGroup(std::vector<Motor*> motorgroup) :
-		MotorGroup(motorgroup) {
-	if (motorgroup.size() != 6) {
-		throw;
+	if (pidControllerMap.count(pidID) >= 1) {
+		pidControllerMap[pidID]->Disable();
 	}
-}
-
-MotorGroup::~MotorGroup() {
-	for (unsigned i = 0; i < motorList.size(); i++) {
-		delete motorList[i];
-	}
-	delete &motorList;
 }
 
 PIDWrapper *MotorManager::getPID(unsigned pidID) {
@@ -508,62 +393,3 @@ PIDWrapper *MotorManager::getPID(unsigned pidID) {
 	}
 	return NULL;
 }
-
-float MotorGroup::getLastOutput() {
-	return lastOutput;
-}
-
-float MotorGroup::getLastCurrent() {
-	return lastOutput;
-}
-
-void MotorGroup::PIDWrite(float output) {
-	std::vector<Motor*>::iterator it = motorList.begin();
-
-	//lastOutput = output;
-	/*if (motorList.front() != NULL && motorList.front()->talon != NULL) {
-	 lastCurrent = motorList.front()->talon->GetOutputCurrent();
-	 }
-	 char str[1024];
-	 sprintf(str, "Output %f Current %f", output, lastCurrent);
-	 writeToLogFile(LOGFILE_NAME, str);*/
-
-	for (; it != motorList.end(); ++it) {
-		/*if ((*it)->stoppedStartTime == 0) {
-		 (*it)->talon->Set(output * (*it)->C);
-		 }
-		 (*it)->speed = output;*/
-		if ((*it)->talon != NULL) {
-			(*it)->talon->Set(
-					((*it)->isReversed() ? -1 : 1) * output /** (*it)->C*/);
-		}
-	}
-}
-
-void DrivebaseMotorGroup::PIDWrite(float output) {
-	char str[1024];
-	sprintf(str, "Output: %f", output);
-	Logger::getLogger()->log(str, Info);
-	std::vector<Motor*> motorList = MotorGroup::getMotorList();
-	std::vector<Motor*>::iterator it = motorList.begin();
-
-	//lastOutput = output;
-	/*if (motorList.front() != NULL && motorList.front()->talon != NULL) {
-	 lastCurrent = motorList.front()->talon->GetOutputCurrent();
-	 }
-	 char str[1024];
-	 sprintf(str, "Output %f Current %f", output, lastCurrent);
-	 writeToLogFile(LOGFILE_NAME, str);*/
-
-	for (; it != motorList.end(); ++it) {
-		/*if ((*it)->stoppedStartTime == 0) {
-		 (*it)->talon->Set(output * (*it)->C);
-		 }
-		 (*it)->speed = output;*/
-		if ((*it)->talon != NULL) {
-			(*it)->talon->Set((output /** (*it)->C*/));
-			//So we stop breaking the motor
-		}
-	}
-}
-

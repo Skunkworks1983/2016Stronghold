@@ -44,9 +44,17 @@ bool reversed) :
 	this->ahrs = NULL;
 }
 
-Sensor::Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID, bool reversed):
-		ahrs(ahrs), lowRange(lowRange), highRange(highRange), ID(ID), reversed(reversed), src(NULL), talon(NULL)
-{}
+Sensor::Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID,
+bool reversed) :
+		ahrs(ahrs), lowRange(lowRange), highRange(highRange), ID(ID), reversed(
+				reversed), src(NULL), talon(NULL) {
+	if (ahrs != NULL) {
+		ahrs->SetPIDSourceType(PIDSourceType::kDisplacement);
+		ahrs->ZeroYaw();
+		ahrs->Reset();
+		ahrs->ResetDisplacement();
+	}
+}
 
 void Sensor::resetEncoder() {
 	if (this->talon != NULL) {
@@ -70,21 +78,22 @@ double Sensor::PIDGet() {
 		} else {
 			return (double) talon->GetEncPosition();
 		}
+	} else if (ahrs != NULL) {
+//		char str[1024];
+//		sprintf(str, "PIDSource returning ahrs GetYaw(), Gryo: %f",
+//				ahrs->GetYaw());
+//		Logger::getLogger()->log(str, Info);
+		return ahrs->GetYaw() - SensorManager::getSensorManager()->initialYaw;
 	} else if (src != NULL) {
 		char str[1024];
 		sprintf(str, "PIDSource is returning PIDGet");
 		Logger::getLogger()->log(str, Info);
 		return src->PIDGet();
-	} else if(ahrs != NULL) {
+	} else {
 		char str[1024];
-		sprintf(str, "PIDSource returning ahrs GetYaw(), Gryo: %f", ahrs->GetYaw());
-		Logger::getLogger()->log(str, Info);
-		return ahrs->GetYaw();
-	}
-	  else {
-
-		char str[1024];
-		sprintf(str, "Sensor is returning a 0.0 because talon && src are NULL");
+		sprintf(str,
+				"%s:%d Sensor is returning a 0.0 because talon && src are NULL",
+				__PRETTY_FUNCTION__, __LINE__);
 		Logger::getLogger()->log(str, Info);
 		return 0.0;
 	}
@@ -102,12 +111,9 @@ SensorManager::SensorManager() {
 	//Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID, bool reversed = false);
 
 	initGyro();
-	sensors[SENSOR_GYRO_ID] = new Sensor(
-	ahrs,
-	-180, //REMOVE MAGIC NUMBER
-	180, //DITTO
-	SENSOR_GYRO_ID
-	);
+	sensors[SENSOR_GYRO_ID] = new Sensor(ahrs, -180, //REMOVE MAGIC NUMBER
+			180, //DITTO
+			SENSOR_GYRO_ID);
 	//sensors.insert(std::pair<int, Sensor*>(SENSOR_GYRO_ID, new Sensor(ahrs)));
 	//todo: FIX THIS
 #endif
@@ -118,7 +124,8 @@ SensorManager::SensorManager() {
 	sensors[SENSOR_DRIVE_BASE_LEFT_ENCODER_ID] = new Sensor(
 	DRIVEBASE_LEFT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID);
 	sensors[SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID] = new Sensor(
-	DRIVEBASE_RIGHT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID, true);
+	DRIVEBASE_RIGHT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+	true);
 #endif
 #if USE_COLLECTOR
 	sensors[SENSOR_COLLECTOR_ROTATION_ENCODER_ID] = new Sensor(

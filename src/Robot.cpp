@@ -38,6 +38,9 @@ void Robot::DisabledInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
+	MotorManager::getMotorManager()->disablePID(PID_ID_DRIVEBASE_ROT);
+	//MotorManager::getMotorManager()->disablePID(PID_ID_TURN_DEGREE_RIGHT);
+
 }
 
 void Robot::DisabledPeriodic() {
@@ -76,6 +79,9 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
+	char str[1024];
+	sprintf(str, "gyro angle: %f", SensorManager::getSensorManager()->getSensor(SENSOR_GYRO_ID)->PIDGet());
+	Logger::getLogger()->log(str, Info);
 }
 
 void Robot::TestPeriodic() {

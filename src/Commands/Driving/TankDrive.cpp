@@ -1,10 +1,9 @@
 #include <Commands/Driving/TankDrive.h>
+#include <DriverStation.h>
 #include <OI.h>
 #include <Subsystems/Drivebase.h>
 
 TankDrive::TankDrive() {
-	// Use Requires() here to declare subsystem dependencies
-	// eg. Requires(chassis);
 	Requires(drivebase);
 }
 
@@ -14,8 +13,10 @@ void TankDrive::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void TankDrive::Execute() {
+	if(DriverStation::GetInstance().IsOperatorControl()){
 		drivebase->setLeftSpeed(oi->getLeftStickY());	//TODO: possibly move this sign flop into subsystem
 		drivebase->setRightSpeed(oi->getRightStickY());
+	}
 
 }
 

@@ -44,7 +44,6 @@
 									<listOptionValue builtIn="false" value="wpi"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1566479969" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Debug/src/Subsystems}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${WPILIB}/cpp/current/lib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;/home/user/navx-mxp-libs/roborio/cpp/lib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\navx-mxp\cpp\lib&quot;"/>
