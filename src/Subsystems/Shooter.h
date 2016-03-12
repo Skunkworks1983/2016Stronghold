@@ -6,13 +6,23 @@
 
 class Shooter: public Subsystem {
 private:
+	DigitalInput *frontLimitSwitch;
+	DigitalInput *backLimitSwitch;
+	DigitalInput *breakBeam;
 public:
 	Shooter();
 	~Shooter();
+	bool getFrontSensor();
+	bool getBackSensor();
+	bool getBreakBeam();
+
 	void InitDefaultCommand();
-	void activateShooter(bool active);
+	float getLeftShooterSpeed();
+	float getRightShooterSpeed();
+
 	void setShooterSpeed(float speed);
-	float getSpeed();
+	void setRightShooterSpeed(float speedRight);
+	void setLeftShooterSpeed(float speedRight);
 };
 
 #endif

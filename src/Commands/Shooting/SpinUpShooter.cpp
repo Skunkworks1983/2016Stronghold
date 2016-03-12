@@ -14,15 +14,12 @@ SpinUpShooter::SpinUpShooter(float timeOut, float speed)
 void SpinUpShooter::Initialize()
 {
 
-
-SetTimeout(timeOut);
+	SetTimeout(timeOut);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void SpinUpShooter::Execute()
 {
-motorManager->enablePID(PID_ID_SHOOTER_1, speed);
-motorManager->enablePID(PID_ID_SHOOTER_1, speed);
 
 }
 

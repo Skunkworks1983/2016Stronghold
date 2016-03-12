@@ -107,14 +107,6 @@ void OI::registerButtonListeners() {
 	char str[1024];
 	sprintf(str, "RegisterButtonListeners called");
 	Logger::getLogger()->log(str, Info);
-	/*rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
-	SmartDashboard::PutData("Climber Down",
-			new RotateArm(CLIMBER_ARM_DOWN_POSITION));
-
-	//engageWinch->WhenPressed(new RunWinchToSetPoint(CLIMBER_WINCH_UP_POSITION, .25));
-	engageWinch->WhileHeld(new RunWinch(.50));
-
-	engageWinch->WhileHeld(new RunWinch(.50));*/
 
 	/**
 	 * Driver Buttons
@@ -129,12 +121,9 @@ void OI::registerButtonListeners() {
 	 */
 
 	collect->WhileHeld(new ActivateRollers(Collector::KForward));
-	//collect->WhileHeld(new StopCollectorPID());
 	collectorDown->WhenPressed(new CollectorMove(cCollect));
-	//collectorDown->WhenReleased(new StopCollectorPID());
 
 	collectorUp->WhenPressed(new CollectorMove(cTOP));
-	//collectorUp->WhenReleased(new StopCollectorPID());
 
 	collectorPass->WhileHeld(new ActivateRollers(Collector::KBackward));
 	collector45->WhenPressed(new CollectorMove(c45));
