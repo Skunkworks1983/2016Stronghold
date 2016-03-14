@@ -1,12 +1,16 @@
+#include <CANTalon.h>
 #include <Commands/Command.h>
 #include <DigitalInput.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
+#include <Services/Motor.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <Subsystems/Shooter.h>
 #include <TuningValues.h>
 #include <cstdio>
+
+#define SHOOTER_SPEED 54.0 - 2
 
 Shooter::Shooter() :
 		Subsystem("Shooter") {
@@ -26,6 +30,15 @@ void Shooter::InitDefaultCommand() {
 
 }
 
+void Shooter::setUpToSpeed(bool upToSpeed) {
+	this->upToSpeed = upToSpeed;
+}
+
+bool Shooter::isUpToSpeed() {
+	//return getRightShooterSpeed() > SHOOTER_SPEED	&& getLeftShooterSpeed() > SHOOTER_SPEED;
+	return upToSpeed;
+}
+
 float Shooter::getShooterSpeed() {
 	float currentSpeed = 0;
 	unsigned workingEncoders = 0;
@@ -39,7 +52,7 @@ float Shooter::getShooterSpeed() {
 	}
 	if (workingEncoders != 0) {
 		currentSpeed /= 2;
-	}else{
+	} else {
 		currentSpeed = 0;
 	}
 	return currentSpeed;
@@ -76,15 +89,15 @@ void Shooter::deregisterCommand(Command *cmd) {
 
 void Shooter::setRollerSpeed(rollerDirection direction, float speed) {
 	switch (direction) {
-		case KForward:
+	case KForward:
 		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, speed);
 		break;
 
-		case KBackward:
+	case KBackward:
 		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, -speed);
 		break;
 
-		case KStop:
+	case KStop:
 		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, 0.0);
 		break;
 	}
@@ -113,8 +126,8 @@ double Shooter::getRotatorPosition() {
 
 float Shooter::getRotatorDegrees() {
 	return SensorManager::getSensorManager()->getSensor(
-			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()
-	/ COLLECTOR_ROTATION_TICKS_PER_DEGREE;
+	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()
+			/ COLLECTOR_ROTATION_TICKS_PER_DEGREE;
 }
 
 void Shooter::setShooterSpeed(float speed) {
@@ -123,19 +136,31 @@ void Shooter::setShooterSpeed(float speed) {
 }
 
 void Shooter::setRightShooterSpeed(float speedRight) {
-	MotorManager::getMotorManager()->setSpeed(SHOOTER_MOTOR_2_PORT, speedRight);
+	MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_1_PORT)->setSpeed(
+			-speedRight);
 }
 
 void Shooter::setLeftShooterSpeed(float speedLeft) {
-	MotorManager::getMotorManager()->setSpeed(SHOOTER_MOTOR_1_PORT, speedLeft);
+	MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_2_PORT)->setSpeed(
+			-speedLeft);
 }
 
+//rotation per second
 float Shooter::getLeftShooterSpeed() {
-	return SensorManager::getSensorManager()->getSensor(
-			SENSOR_SHOOTER_ENCODER_1_ID)->PIDGet();
+	return 10 * (SensorManager::getSensorManager()->getSensor(
+	SENSOR_SHOOTER_ENCODER_2_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
 }
 
+//rotation per second
 float Shooter::getRightShooterSpeed() {
-	return SensorManager::getSensorManager()->getSensor(
-			SENSOR_SHOOTER_ENCODER_2_ID)->PIDGet();
+	return 10 * (SensorManager::getSensorManager()->getSensor(
+	SENSOR_SHOOTER_ENCODER_1_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
+}
+
+float Shooter::getLeftShooterMotorPower() {
+	return MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_2_PORT)->talon->Get();
+}
+
+float Shooter::getRightShooterMotorPower() {
+	return MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_1_PORT)->talon->Get();
 }

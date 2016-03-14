@@ -2,6 +2,7 @@
 #include <I2C.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
+#include <Services/Motor.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <TuningValues.h>
@@ -99,8 +100,17 @@ double Sensor::PIDGet() {
 	}
 }
 
+//ticks per 100 ms
+double Sensor::getSpeed() {
+	//from CANTalon.cpp  * The speed units will be in the sensor's native ticks per 100ms.*
+	if (talon != NULL) {
+		return talon->GetSpeed() * (reversed ? -1 : 1);
+	}
+	return 0.0;
+}
+
 int Sensor::getAbsolutePosition() {
-	return talon->GetPulseWidthPosition();
+	return talon->GetPulseWidthPosition() * (reversed ? -1 : 1);
 }
 
 SensorManager::SensorManager() {
@@ -129,9 +139,9 @@ SensorManager::SensorManager() {
 #endif
 #if USE_SHOOTER
 	sensors[SENSOR_SHOOTER_ENCODER_1_ID] = new Sensor(
-	SHOOTER_1_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_1_ID);
+	SHOOTER_1_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_1_ID, true);
 	sensors[SENSOR_SHOOTER_ENCODER_2_ID] = new Sensor(
-	SHOOTER_2_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_2_ID);
+	SHOOTER_2_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_2_ID, false);
 
 	sensors[SENSOR_COLLECTOR_ROTATION_ENCODER_ID] = new Sensor(
 	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT,
@@ -275,4 +285,8 @@ Sensor* SensorManager::getSensor(unsigned ID) {
 	} else {
 		return NULL;
 	}
+}
+
+AHRS* SensorManager::getGyro(){
+	return ahrs;
 }

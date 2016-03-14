@@ -8,15 +8,14 @@
 #include <TuningValues.h>
 #include <RobotMap.h>
 
-enum ShooterPosition{
-	cTOP, cLowBar, cCollect, c45
+enum ShooterPosition {
+	cTOP, cCollect, c45
 };
 
-class RotateShooter: public CommandBase
-{
+class RotateShooter: public CommandBase {
 private:
-	float           target;
-	MotorManager *  motorManager = NULL;
+	float target;
+	MotorManager * motorManager = NULL;
 	SensorManager * sensorManager = NULL;
 	int test;
 public:

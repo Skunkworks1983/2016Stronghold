@@ -5,7 +5,7 @@
 AutoBase *AutoBase::doLowB()
 {
 	AutoBase *cmd = new AutoBase((char*)"Autonomous-doLowB");
-	cmd->AddSequential(new RotateShooter(cLowBar));
+	cmd->AddSequential(new RotateShooter(cCollect));
 	cmd->AddSequential(new DriveForward(5, 0.35));	//Reach the defence
 	cmd->AddSequential(new DriveForward(6, 0.35));	//breach the defence
 

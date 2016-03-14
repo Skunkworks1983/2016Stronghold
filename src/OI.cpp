@@ -4,6 +4,10 @@
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunCollector.h>
+#include <Commands/MultiTool/RunNewCollector.h>
+#include <Commands/Shooting/ArmShot.h>
+#include <Commands/Shooting/AutoRunCollector.h>
+#include <Commands/Shooting/RunShooter.h>
 #include <OI.h>
 #include <Services/Logger.h>
 #include <Subsystems/Shooter.h>
@@ -21,8 +25,8 @@ OI::OI() {
 	op = new Joystick(OI_JOYSTICK_OPERATOR_PORT);
 
 	//driverbuttons
-	stopShooterPID = new JoystickButton(leftStick, 3);
-	holdAgainstTower = new JoystickButton(leftStick, 2);
+	stopShooterPID = new JoystickButton(leftStick, 2);
+	holdAgainstTower = new JoystickButton(leftStick, 1);
 	driverShooterDown = new JoystickButton(rightStick, 1);
 	driverShooterUp = new JoystickButton(rightStick, 2);
 
@@ -36,9 +40,9 @@ OI::OI() {
 	lowArm = new JoystickButton(op, 2);
 	lowAim = new JoystickButton(op, 3);
 	highFire = new JoystickButton(op, 17);
-	highAim = new JoystickButton(op, 18);
-	highAimPosition1 = new JoystickButton(op, 19);
-	highAimPosition2 = new JoystickButton(op, 20);
+	highArm = new JoystickButton(op, 18);
+	highArmPosition1 = new JoystickButton(op, 19);
+	highArmPosition2 = new JoystickButton(op, 20);
 	highLineUp = new JoystickButton(op, 23);
 	climberArmsUp = new JoystickButton(op, 10);
 	winchEngage = new JoystickButton(op, 11);
@@ -47,8 +51,8 @@ OI::OI() {
 	manualShooterDown = new JoystickButton(op, 22);
 	manualShooterUp = new JoystickButton(op, 24);
 	portcullis = new JoystickButton(op, 12);
-
-	registerButtonListeners();
+//ayy lmao you register my buttons ;)
+	registerButtonListeners(/* woah look at dat chees*/);
 }
 
 OI::~OI() {
@@ -67,9 +71,9 @@ OI::~OI() {
 	delete lowArm;
 	delete lowAim;
 	delete highFire;
-	delete highAim;
-	delete highAimPosition1;
-	delete highAimPosition2;
+	delete highArm;
+	delete highArmPosition1;
+	delete highArmPosition2;
 	delete highLineUp;
 	delete climberArmsUp;
 	delete winchEngage;
@@ -110,26 +114,31 @@ void OI::registerButtonListeners() {
 	/**
 	 * Driver Buttons
 	 */
-	driverShooterDown->WhileHeld(new RunCollector(Shooter::KForward));
+	driverShooterDown->WhileHeld(new RunNewCollector());
 	driverShooterDown->WhenPressed(new RotateShooter(cCollect));
 	driverShooterUp->WhenPressed(new RotateShooter(cTOP));
-	//holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
+	//holdAgainstTower->WhileHeld(new HoldAgainstTower(-.3));
 
 	/**
 	 * Operator Buttons
 	 */
 
-	collect->WhileHeld(new RunCollector(Shooter::KForward));
+	collect->WhileHeld(new RunNewCollector());
 	shooterDown->WhenPressed(new RotateShooter(cCollect));
 
 	shooterUp->WhenPressed(new RotateShooter(cTOP));
 
-	shooterPass->WhileHeld(new RunCollector(Shooter::KBackward));
+	shooterPass->WhileHeld(new RunCollector(Shooter::KForward));
 	shooter45->WhenPressed(new RotateShooter(c45));
-	lowFire->WhenPressed(new RunCollector(Shooter::KBackward));
+
+	lowFire->WhileHeld(new AutoRunCollector());
 	//lowArm->WhenPressed();	//no need for this at the moment
-	lowAim->WhenPressed(new RotateShooter(cLowBar));
-	//highFire->WhenPressed();
+	lowAim->WhenPressed(new RotateShooter(cCollect));
+	//highArm->WhenPressed(new RunShooter(1.0));
+	highArm->ToggleWhenPressed(new ArmShot());
+	highArmPosition1->ToggleWhenPressed(new ArmShot());
+	highArmPosition2->ToggleWhenPressed(new RunShooter(.65));
+	highFire->ToggleWhenPressed(new RunCollector(Shooter::KForward, 1.0, .5));
 	//highAim;
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetShooterRotationEncoder());

@@ -19,6 +19,8 @@ private:
 	DigitalInput *breakBeam;
 
 	Command *lastCommand = NULL;
+
+	bool upToSpeed = false;
 public:
 	enum rollerDirection {
 		KForward, KBackward, KStop
@@ -29,6 +31,7 @@ public:
 
 	void InitDefaultCommand();
 
+	void setUpToSpeed(bool upToSpeed);bool isUpToSpeed();
 
 	void registerCommand(Command *cmd);
 	void deregisterCommand(Command *cmd);
@@ -50,6 +53,9 @@ public:
 	void setShooterSpeed(float speed);
 	void setRightShooterSpeed(float speedRight);
 	void setLeftShooterSpeed(float speedRight);
+
+	float getLeftShooterMotorPower();
+	float getRightShooterMotorPower();
 };
 
 #endif

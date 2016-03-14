@@ -69,41 +69,19 @@ void MotorManager::initShooter() {
 	MINI_CIM_MAX_CURRENT, SHOOTER);
 	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_2_PORT,
 	MINI_CIM_MAX_CURRENT, SHOOTER);
-	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-		COLLECTOR_ROLLER_MOTOR_1_PORT, RS775_MAX_CURRENT, ROLLER);
 
-		addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-		COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
-		false);
-		addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-		COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
-		true);
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
+	COLLECTOR_ROLLER_MOTOR_1_PORT, RS775_MAX_CURRENT, ROLLER);
+
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
+	COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
+	false);
+	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
+	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
+	true);
 }
 
 void MotorManager::initPIDS() {
-#if USE_COLLECTOR
-	std::vector<Motor*> rotationShooterMotors;
-	rotationShooterMotors.push_back(
-			getMotor(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT));
-	rotationShooterMotors.push_back(
-			getMotor(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT));
-
-	MotorGroup * groupShooterRotation = new MotorGroup(
-			rotationShooterMotors);
-
-	createPID(groupShooterRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
-	PID_ID_COLLECTOR, COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I,
-	COLLECTOR_ROTATION_D,
-	COLLECTOR_ROTATION_F, false);
-	/*
-	 std::vector<Motor*> rollerMotors;
-	 rollerMotors.push_back(getMotor(COLLECTOR_ROLLER_MOTOR_1_PORT));
-
-	 MotorGroup * groupRoller = new MotorGroup(rollerMotors);
-	 createPID(groupRoller, COLLECTOR_ROLLER_ENCODER_PORT, PID_ID_ROLLER, 0.0075,
-	 0, 0, 0, true);*/
-
-#endif
 #if USE_DRIVEBASE
 
 	std::vector<Motor*> DrivebaseLeftMotors;
@@ -186,18 +164,30 @@ void MotorManager::initPIDS() {
 	 CLIMBER_ARM_P, CLIMBER_ARM_I, CLIMBER_ARM_D, CLIMBER_ARM_F, false);*/
 #endif
 #if USE_SHOOTER
-	std::vector<Motor*> shooterMotor1;
-	shooterMotor1.push_back(getMotor(SHOOTER_MOTOR_1_PORT));
-	MotorGroup * groupShooterMotor1 = new MotorGroup(shooterMotor1);
-	createPID(groupShooterMotor1, SHOOTER_1_ENCODER_PORT, PID_ID_SHOOTER_1,
-			SHOOTER_1_P, SHOOTER_1_I, SHOOTER_1_D, SHOOTER_1_F, false);
+	std::vector<Motor*> rotationShooterMotors;
+	rotationShooterMotors.push_back(
+			getMotor(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT));
+	rotationShooterMotors.push_back(
+			getMotor(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT));
 
-	std::vector<Motor*> shooterMotor2;
-	shooterMotor2.push_back(getMotor(SHOOTER_MOTOR_2_PORT));
-	MotorGroup * groupShooterMotor2 = new MotorGroup(shooterMotor2);
-	createPID(groupShooterMotor2, SHOOTER_2_ENCODER_PORT, PID_ID_SHOOTER_2,
-			SHOOTER_2_P, SHOOTER_2_I, SHOOTER_2_D, SHOOTER_2_F, false);
+	MotorGroup * groupShooterRotation = new MotorGroup(rotationShooterMotors);
+
+	createPID(groupShooterRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
+	PID_ID_COLLECTOR, COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I,
+	COLLECTOR_ROTATION_D,
+	COLLECTOR_ROTATION_F, false);
+	/*
+	 std::vector<Motor*> rollerMotors;
+	 rollerMotors.push_back(getMotor(COLLECTOR_ROLLER_MOTOR_1_PORT));
+
+	 MotorGroup * groupRoller = new MotorGroup(rollerMotors);
+	 createPID(groupRoller, COLLECTOR_ROLLER_ENCODER_PORT, PID_ID_ROLLER, 0.0075,
+	 0, 0, 0, true);*/
 #endif
+
+	char str[1024];
+	sprintf(str, "Created PIDS");
+	Logger::getLogger()->log(str, Info);
 }
 
 Motor * MotorManager::getMotor(unsigned ID) {

@@ -36,6 +36,7 @@ public:
 	Priority motorPriority;
 	unsigned port;
 	float C;
+	void setSpeed(float speed);
 	void setC(Priority priority, float voltage);bool isReversed();
 };
 

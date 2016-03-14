@@ -17,6 +17,7 @@ private:
 	Shooter::rollerDirection dir;
 	float speed;
 	float timeOut;
+	bool already_on  =false;
 public:
 	RunCollector(Shooter::rollerDirection dir, float speed = COLLECT_SPEED, float timeOut = 0);
 	void Initialize();

@@ -13,7 +13,10 @@ void TankDrive::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void TankDrive::Execute() {
-	if(DriverStation::GetInstance().IsOperatorControl()){
+	if(oi->getLeftStickY() > .5){
+		drivebase->setHold(false);
+	}
+	if(DriverStation::GetInstance().IsOperatorControl() && !drivebase->isHolding()){
 		drivebase->setLeftSpeed(oi->getLeftStickY());	//TODO: possibly move this sign flop into subsystem
 		drivebase->setRightSpeed(oi->getRightStickY());
 	}

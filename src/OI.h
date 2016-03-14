@@ -23,9 +23,9 @@ private:
 	JoystickButton *lowArm = NULL;
 	JoystickButton *lowAim = NULL;
 	JoystickButton *highFire = NULL;
-	JoystickButton *highAim = NULL;
-	JoystickButton *highAimPosition1 = NULL;
-	JoystickButton *highAimPosition2 = NULL;
+	JoystickButton *highArm = NULL;
+	JoystickButton *highArmPosition1 = NULL;
+	JoystickButton *highArmPosition2 = NULL;
 	JoystickButton *highLineUp = NULL;
 	JoystickButton *climberArmsUp = NULL;
 	JoystickButton *winchEngage = NULL;

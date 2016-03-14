@@ -1,21 +1,30 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/DriveForward.h>
+#include <Commands/Driving/RotateTowardCameraTarget.h>
 #include <Commands/Driving/TurnRightEncoder.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunCollector.h>
+#include <Commands/Shooting/AutoRunCollector.h>
+#include <Commands/Shooting/PIDShot.h>
+#include <Commands/Shooting/RampToSpeed.h>
+#include <Commands/TimeOut.h>
 #include <Subsystems/Shooter.h>
-#include <iostream>
 
-AutoBase *AutoBase::doLowBarandScore()
-{
-	AutoBase *cmd = new AutoBase((char*)"Autonomous-doLowB");
-	std::cout << "Reached doLowB after AutoBase cmd pointer creation" << std::endl;
-	cmd->AddSequential(new RotateShooter(cLowBar));
-	cmd->AddSequential(new DriveForward(5, 0.25));	//Reach the defence
-	cmd->AddSequential(new DriveForward(11.7, 0.25));	//breach the defence
-	cmd->AddSequential(new TurnRightEncoder(58));
-	cmd->AddSequential(new DriveForward(7.5, .25));
-	cmd->AddSequential(new RunCollector(Shooter::rollerDirection::KBackward, 1000));
+AutoBase *AutoBase::doLowBarandScore() {
+	AutoBase *cmd = new AutoBase((char*) "Autonomous-doLowB");
+	cmd->AddSequential(new RotateShooter(cCollect));
+	cmd->AddSequential(new DriveForward(-5, -0.4));	//Reach the defence
+	cmd->AddSequential(new DriveForward(-11.02, -0.4));	//breach the defence
+	cmd->AddParallel(new RotateShooter(cTOP));
+	cmd->AddSequential(new TurnRightEncoder(70));
 
+	const double shooter_batter_speed = 52.44;
+	cmd->AddSequential(new RunCollector(Shooter::KBackward, 1.0, .1));
+	cmd->AddSequential(new RampToSpeed(shooter_batter_speed * .5));
+	cmd->AddParallel(new PIDShot(shooter_batter_speed + 1.0, shooter_batter_speed - 2.0));
+	cmd->AddSequential(new DriveForward(-3, -0.4));
+	cmd->AddParallel(new RotateTowardCameraTarget(-.4, -1600));
+	cmd->AddSequential(new AutoRunCollector());
+	cmd->AddSequential(new TimeOut(15));
 	return cmd;
 }

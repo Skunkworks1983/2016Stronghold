@@ -15,12 +15,16 @@ private:
 	float speedTranslate = 0.0;
 	float distance = 0.0;
 	double initialPosition = 0.0;
+	double initialRight;
+	double initialLeft;
 	unsigned invalidCount = 0;
+	unsigned pidcounter = 0;
 public:
 	RotateTowardCameraTarget(float speedTranslate = 0, float distance = 0);
 	virtual ~RotateTowardCameraTarget();
 	void Initialize();
-	void Execute();bool IsFinished();
+	void Execute();
+	bool IsFinished();
 	void Interrupted();
 	void End();
 	void PIDWrite(float output);

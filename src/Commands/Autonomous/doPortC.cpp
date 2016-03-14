@@ -8,7 +8,7 @@
 AutoBase *AutoBase::doPortC()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doPortC");
-	cmd->AddSequential(new RotateShooter(cLowBar));
+	cmd->AddSequential(new RotateShooter(cCollect));
 	cmd->AddSequential(new DriveForward(REACH_DEFENCE_DISTANCE, REACH_DEFENCE_SPEED));
 	cmd->AddSequential(new DriveForward(PORT_DISTANCE, PORT_SPEED));
 	cmd->AddParallel(new RotateShooter(cTOP));

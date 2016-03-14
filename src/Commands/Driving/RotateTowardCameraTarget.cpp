@@ -19,6 +19,8 @@ RotateTowardCameraTarget::RotateTowardCameraTarget(float speedTranslate,
 	controller->SetInputRange(-1, 1);
 	outputspeed = 0;
 	error = 0;
+	initialRight = 0.0;
+	initialLeft = 0.0;
 }
 
 RotateTowardCameraTarget::~RotateTowardCameraTarget() {
@@ -30,9 +32,9 @@ void RotateTowardCameraTarget::Initialize() {
 	controller->SetSetpoint(0.0);
 	controller->Enable();
 
-	double initialLeft = fabs(SensorManager::getSensorManager()->getSensor(
+	initialLeft = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-	double initialRight = fabs(SensorManager::getSensorManager()->getSensor(
+	initialRight = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
 	initialPosition = (initialLeft + initialRight) / 2;
@@ -45,20 +47,29 @@ void RotateTowardCameraTarget::Execute() {
 }
 
 bool RotateTowardCameraTarget::IsFinished() {
+//	double left = fabs(SensorManager::getSensorManager()->getSensor(
+//	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
+//	double right = fabs(SensorManager::getSensorManager()->getSensor(
+//	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+//
+//	double difference = ((left + right) / 2) - initialPosition;
+//
+//	if (distance > 0) {
+//		return fabs(difference) < distance;
+//	}
+//	if (speedTranslate == 0) {
+//		return fabs(controller->GetError()) < ERROR_TOLERANCE;
+//	}
+//	return false;
 	double left = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	double difference = ((left + right) / 2) - initialPosition;
+	bool leftPast = fabs(left - initialLeft) > fabs(distance);
+	bool rightPast = fabs(right - initialRight) > fabs(distance);
 
-	if (distance > 0) {
-		return fabs(difference) < distance;
-	}
-	if (speedTranslate == 0) {
-		return fabs(controller->GetError()) < ERROR_TOLERANCE;
-	}
-	return false;
+	return leftPast || rightPast;
 }
 
 void RotateTowardCameraTarget::Interrupted() {
@@ -78,10 +89,12 @@ void RotateTowardCameraTarget::PIDWrite(float output) {
 		}
 
 		outputspeed = output;
-
-		drivebase->setLeftSpeed(output);
-		drivebase->setRightSpeed(- output);
-	}else{
+		char str[1024];
+		sprintf(str, "CameraOutput %f", output);
+		Logger::getLogger()->log(str, Info);
+		drivebase->setLeftSpeed(speedTranslate + output);
+		drivebase->setRightSpeed(speedTranslate - output);
+	} else {
 		Logger::getLogger()->log("CAMERA READER READ IS INVALID", Info);
 	}
 }

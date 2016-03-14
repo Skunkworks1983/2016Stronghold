@@ -1,35 +1,74 @@
 #include <Commands/Shooting/BangBangControl.h>
+#include <Services/Logger.h>
 #include <Subsystems/Shooter.h>
 #include <cstdbool>
+#include <cstdio>
 
-#define BANG_BANG_FULL 1.0
-#define BANG_BANG_NONE 0.0
-#define NO_ENCODER_SPEED .7
+#define BANG_BANG_FULL .6
+#define BANG_BANG_NONE .5
+#define NO_ENCODER_SPEED .6
 
-BangBangControl::BangBangControl(double desiredSpeed, double timeActivated) {
+#define SCALING_CONSTANT .2
+
+#define ERROR_SCALAR .0018
+
+BangBangControl::BangBangControl(double targetSpeed, double timeOut) {
 	Requires(shooter);
-	this->desiredSpeed = desiredSpeed;
-	this->timeActivated = timeActivated;
-	sensorManager = SensorManager::getSensorManager();
-	motorManager = MotorManager::getMotorManager();
-	currentSpeed = 0;
+	this->targetSpeed = targetSpeed;
+	this->timeOut = timeOut;
+	realSpeed = 0.0;
 }
 
 BangBangControl::~BangBangControl() {
-
 }
 
 void BangBangControl::Initialize() {
-	SetTimeout(timeActivated);
+	char str[1024];
+	sprintf(str, "BangBangControl Initialize");
+	Logger::getLogger()->log(str, Info);
+	realSpeed = .01;
+	alreadyRamped = false;
+	if (timeOut > 0) {
+		SetTimeout(timeOut);
+	}
+	shooter->setShooterSpeed(realSpeed);
+	leftSpeed = BANG_BANG_FULL;
+	rightSpeed = BANG_BANG_FULL;
 }
 
 void BangBangControl::Execute() {
-	if (shooter->getShooterSpeed() != 0) {
-		shooter->setShooterSpeed(
-				currentSpeed < desiredSpeed ? BANG_BANG_FULL : BANG_BANG_NONE);
+	if ((shooter->getLeftShooterSpeed() < targetSpeed * .25
+			|| shooter->getRightShooterSpeed() < targetSpeed * .25)
+			&& !alreadyRamped) {
+		realSpeed *= (1.0 + SCALING_CONSTANT);
+		shooter->setShooterSpeed(realSpeed);
 	} else {
-		shooter->setShooterSpeed(NO_ENCODER_SPEED);
+		realSpeed = BANG_BANG_FULL;
+		alreadyRamped = true;
 	}
+
+	if (alreadyRamped) {
+		double leftError = targetSpeed - shooter->getLeftShooterSpeed();
+		double rightError = targetSpeed - shooter->getRightShooterSpeed();
+
+		leftSpeed += leftError * ERROR_SCALAR;
+		rightSpeed += rightError * ERROR_SCALAR;
+		if (leftSpeed > 1.0) {
+			leftSpeed = 1.0;
+		}
+		if (rightSpeed > 1.0) {
+			rightSpeed = 1.0;
+		}
+		shooter->setLeftShooterSpeed(leftSpeed);
+		shooter->setRightShooterSpeed(rightSpeed);
+	}
+
+	/*shooter->setLeftShooterSpeed(
+	 shooter->getLeftShooterSpeed() < targetSpeed ?
+	 realSpeed : BANG_BANG_NONE);
+	 shooter->setRightShooterSpeed(
+	 shooter->getRightShooterSpeed() < targetSpeed ?
+	 realSpeed : BANG_BANG_NONE);*/
 }
 
 bool BangBangControl::IsFinished() {
@@ -41,5 +80,8 @@ void BangBangControl::Interrupted() {
 }
 
 void BangBangControl::End() {
+	char str[1024];
+	sprintf(str, "BangBangControl ended");
+	Logger::getLogger()->log(str, Info);
 	shooter->setShooterSpeed(0);
 }

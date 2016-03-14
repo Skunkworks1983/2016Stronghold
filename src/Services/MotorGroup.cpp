@@ -38,10 +38,6 @@ MotorGroup::~MotorGroup() {
 }
 
 void MotorGroup::PIDWrite(float output) {
-	char str[1024];
-	sprintf(str, "Output: %f", output);
-	Logger::getLogger()->log(str, Info);
-
 	std::vector<Motor*>::iterator it = motorList.begin();
 
 	for (; it != motorList.end(); ++it) {

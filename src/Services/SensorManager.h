@@ -33,6 +33,7 @@ public:
 	float getHighRange();
 	int getAbsolutePosition();
 	void resetEncoder();
+	double getSpeed();
 };
 
 class SensorManager {
@@ -60,6 +61,7 @@ public:
 	double GetSpeed(int ID);bool ahrsDead;
 	double initialYaw;
 	Sensor *getSensor(unsigned ID);
+	AHRS *getGyro();
 };
 
 #endif

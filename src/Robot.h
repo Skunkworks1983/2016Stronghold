@@ -4,6 +4,8 @@
 #include <IterativeRobot.h>
 #include <stddef.h>
 
+class LiveWindow;
+
 class TurnDegree;
 
 class AutoBase;
@@ -20,6 +22,7 @@ private:
 	int count;
 	AutoBase *cmd  = NULL;
 	TurnDegree * turnDegree;
+
 public:
 	void RobotInit();
 	void DisabledInit();

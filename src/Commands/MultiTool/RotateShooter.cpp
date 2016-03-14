@@ -18,9 +18,6 @@ RotateShooter::RotateShooter(ShooterPosition pos) {
 	case cTOP:
 		target = COLLECTOR_ROTATION_ENCODER_TOP_TICKS;
 		break;
-	case cLowBar:
-		target = COLLECTOR_ROTATION_ENCODER_LOWB_TICKS;
-		break;
 	case cCollect:
 		target = COLLECTOR_ROTATION_ENCODER_COLLECT_TICKS;
 		break;

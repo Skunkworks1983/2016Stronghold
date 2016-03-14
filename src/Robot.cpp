@@ -1,5 +1,5 @@
+#include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/TurnDegree.h>
 #include <Commands/Scheduler.h>
 #include <Robot.h>
 #include <RobotBase.h>
@@ -21,24 +21,28 @@ void Robot::RobotInit() {
 	MotorManager::getMotorManager()->initPIDS();
 
 	CommandBase::init();
+
 	//SensorManager::getSensorManager()->initGyro();
 
 	//managePower = new ManagePower();
 	//managePower->Start();
 
-	turnDegree = new TurnDegree(90);
+	//turnDegree = new TurnDegree(90);
 
 	//StallProtection *stall = new StallProtection();
 	//stall->Start();
 	//acc = new BuiltInAccelerometer(Accelerometer::kRange_16G);
-	cmd = AutoBase::getSelectedAuto();
+	//cmd = AutoBase::getSelectedAuto();
+	cmd = AutoBase::doLowBarandScore();
+	sprintf(str, "END OF ROBOTINIT");
+	Logger::getLogger()->log(str, Info);
 }
 
 void Robot::DisabledInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
-	MotorManager::getMotorManager()->disablePID(PID_ID_DRIVEBASE_ROT);
+	//MotorManager::getMotorManager()->disablePID(PID_ID_DRIVEBASE_ROT);
 	//MotorManager::getMotorManager()->disablePID(PID_ID_TURN_DEGREE_RIGHT);
 
 }
@@ -51,12 +55,15 @@ void Robot::AutonomousInit() {
 	char str[1024];
 	sprintf(str, "AutonomousInit Called");
 	Logger::getLogger()->log(str, Info);
-	turnDegree->Start();
-	//cmd->Start(); ADD BACK
+	//turnDegree->Start();
+	cmd->Start();
 }
 
 void Robot::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
+
+	//CommandBase::shooter->setShooterSpeed(1.0);
+	//CommandBase::shooter->setRightShooterSpeed(.3);
 
 	/*double left = SensorManager::getSensorManager()->getSensor(
 	 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
@@ -79,9 +86,6 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
-	char str[1024];
-	sprintf(str, "gyro angle: %f", SensorManager::getSensorManager()->getSensor(SENSOR_GYRO_ID)->PIDGet());
-	Logger::getLogger()->log(str, Info);
 }
 
 void Robot::TestPeriodic() {

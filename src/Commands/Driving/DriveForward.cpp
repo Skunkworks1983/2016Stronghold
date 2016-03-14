@@ -51,8 +51,8 @@ bool DriveForward::IsFinished() {
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	bool leftPast = fabs(left - initialLeft) > distance;
-	bool rightPast = fabs(right - initialRight) > distance;
+	bool leftPast = fabs(left - initialLeft) > fabs(distance);
+	bool rightPast = fabs(right - initialRight) > fabs(distance);
 
 	return leftPast || rightPast;
 }

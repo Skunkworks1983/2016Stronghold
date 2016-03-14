@@ -5,7 +5,7 @@
 AutoBase *AutoBase::doSpy()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doSpy");
-	cmd->AddSequential(new RotateShooter(cLowBar));
+	cmd->AddSequential(new RotateShooter(cCollect));
 	cmd->AddSequential(new DriveForward(8, 1.0f));
 
 	return cmd;

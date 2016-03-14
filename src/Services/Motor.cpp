@@ -44,6 +44,10 @@ Motor::~Motor() {
 
 }
 
+void Motor::setSpeed(float speed) {
+	talon->Set(speed);
+}
+
 void Motor::setC(Priority priorityArg, float voltage) {
 
 	if (motorPriority == PRIORITY_FIRST) {
@@ -61,6 +65,4 @@ void Motor::setC(Priority priorityArg, float voltage) {
 	}
 
 }
-
-
 
