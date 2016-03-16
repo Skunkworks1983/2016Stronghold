@@ -1,8 +1,9 @@
 #include <Commands/Climbing/MoveServo.h>
+#include <Services/Logger.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <Subsystems/Climber.h>
 #include <TuningValues.h>
-#include <cmath>
+#include <cstdio>
 
 MoveServo::MoveServo(eServoPosition pos) :
 		CommandBase("MoveServo"), pos(pos) {
@@ -11,6 +12,9 @@ MoveServo::MoveServo(eServoPosition pos) :
 }
 
 void MoveServo::Initialize() {
+	char str[1024];
+	sprintf(str, "MoveServo Initialize called");
+	Logger::getLogger()->log(str, Info);
 	SmartDashboard::PutBoolean("MoveServoRunning", true);
 	switch (pos) {
 	case IN:
@@ -28,15 +32,18 @@ void MoveServo::Execute() {
 
 bool MoveServo::IsFinished() {
 	/*switch (pos) {
-	case IN:
-		return fabs(climber->getServoAngle() - CLIMBER_SERVO_IN_ANGLE) < 5;
-	case OUT:
-		return fabs(climber->getServoAngle() - CLIMBER_SERVO_OUT_ANGLE) < 5;
-	}*/
+	 case IN:
+	 return fabs(climber->getServoAngle() - CLIMBER_SERVO_IN_ANGLE) < 5;
+	 case OUT:
+	 return fabs(climber->getServoAngle() - CLIMBER_SERVO_OUT_ANGLE) < 5;
+	 }*/
 	return IsTimedOut();
 }
 
 void MoveServo::End() {
+	char str[1024];
+	sprintf(str, "MoveServo End called");
+	Logger::getLogger()->log(str, Info);
 	SmartDashboard::PutBoolean("MoveServoRunning", false);
 }
 

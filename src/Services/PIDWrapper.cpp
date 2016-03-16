@@ -11,7 +11,6 @@
 #include <Services/PIDWrapper.h>
 #include <cstdio>
 
-
 PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
 		PIDOutput *output) {
 	ptr = new PIDController(p, i, d, f, source, output);
@@ -43,6 +42,9 @@ void PIDWrapper::SetSetpoint(float setpoint) {
 }
 
 void PIDWrapper::SetPID(float p, float i, float d, float f) {
+	char str[1024];
+	sprintf(str, "PIDWrapper Setting PID values to %f, %f, %f, %f", p, i, d, f);
+	Logger::getLogger()->log(str, Debug);
 	ptr->SetPID(p, i, d, f);
 }
 

@@ -8,7 +8,7 @@
 SafeRotateArm::SafeRotateArm(float target)
 {
 	//AddParallel(new HoldAgainstTower(.2));
-	AddParallel(new RotateShooter(ShooterPosition::cCollect));
+	//AddParallel(new RotateShooter(ShooterPosition::cCollect));
 	AddSequential(new MoveServo(MoveServo::OUT));
 	AddSequential(new RotateArm(target));
 	//AddSequential(new RunWinch(.5, .25));

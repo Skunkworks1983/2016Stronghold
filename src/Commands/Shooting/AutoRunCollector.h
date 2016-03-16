@@ -13,6 +13,7 @@ class AutoRunCollector: public CommandBase {
 private:
 	double timeout = 0;
 	bool alreadyUp = false;
+	unsigned c = 0;
 public:
 	AutoRunCollector();
 	void Initialize();

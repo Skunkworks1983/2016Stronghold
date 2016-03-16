@@ -27,6 +27,8 @@ public:
 	void SetSetpoint(float setpoint);
 	void PIDWrite(float output);
 	double PIDGet();
+	void setPID(float p, float i, float d);
+	double getSetpoint();
 private:
 	ShooterSide side;
 	PIDController *controller;

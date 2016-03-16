@@ -7,13 +7,18 @@
 
 #include <CommandBase.h>
 #include <PIDController.h>
+#include <Services/Logger.h>
+#include <Services/ShooterMotor.h>
 #include <Subsystems/Shooter.h>
-#include <Subsystems/ShooterMotor.h>
 #include <cmath>
+#include <cstdio>
+
+#define SHOOTER_MOTOR_MAX_ACCELERATION .04
 
 ShooterMotor::ShooterMotor(ShooterSide side, double p, double i, double d) :
 		side(side) {
 	controller = new PIDController(p, i, d, this, this);
+	setpoint = 0.0;
 }
 
 ShooterMotor::~ShooterMotor() {
@@ -21,6 +26,9 @@ ShooterMotor::~ShooterMotor() {
 }
 
 void ShooterMotor::PIDWrite(float output) {
+	output = std::fmax(-SHOOTER_MOTOR_MAX_ACCELERATION,
+			std::fmin(output, SHOOTER_MOTOR_MAX_ACCELERATION));
+
 	oldOutput = std::fmax(std::fmin(1.0, oldOutput + output), 0.0);
 
 	switch (side) {
@@ -75,6 +83,10 @@ void ShooterMotor::SetSetpoint(float setpoint) {
 	}
 }
 
+double ShooterMotor::getSetpoint() {
+	return controller->GetSetpoint();
+}
+
 void ShooterMotor::Reset() {
 	controller->Reset();
 	switch (side) {
@@ -85,4 +97,11 @@ void ShooterMotor::Reset() {
 		oldOutput = CommandBase::shooter->getRightShooterMotorPower();
 		break;
 	}
+}
+
+void ShooterMotor::setPID(float p, float i, float d) {
+	controller->SetPID(p, i, d);
+	char str[1024];
+	sprintf(str, "SHOOTERMOTOR setPID to %f, %f, %f", p, i, d);
+	Logger::getLogger()->log(str, Info);
 }

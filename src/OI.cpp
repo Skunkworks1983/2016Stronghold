@@ -8,6 +8,7 @@
 #include <Commands/Shooting/ArmShot.h>
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/RunShooter.h>
+#include <Commands/Tests/ReadShooterPIDValues.h>
 #include <OI.h>
 #include <Services/Logger.h>
 #include <Subsystems/Shooter.h>
@@ -29,6 +30,7 @@ OI::OI() {
 	holdAgainstTower = new JoystickButton(leftStick, 1);
 	driverShooterDown = new JoystickButton(rightStick, 1);
 	driverShooterUp = new JoystickButton(rightStick, 2);
+	driverReadShooterPIDValues = new JoystickButton(rightStick, 3);
 
 	//operatorbuttons
 	collect = new JoystickButton(op, 8);
@@ -86,6 +88,7 @@ OI::~OI() {
 	delete stopShooterPID;
 	delete driverShooterDown;
 	delete driverShooterUp;
+	delete driverReadShooterPIDValues;
 	delete holdAgainstTower;
 }
 
@@ -118,7 +121,7 @@ void OI::registerButtonListeners() {
 	driverShooterDown->WhenPressed(new RotateShooter(cCollect));
 	driverShooterUp->WhenPressed(new RotateShooter(cTOP));
 	//holdAgainstTower->WhileHeld(new HoldAgainstTower(-.3));
-
+	driverReadShooterPIDValues->WhenPressed(new ReadShooterPIDValues());
 	/**
 	 * Operator Buttons
 	 */

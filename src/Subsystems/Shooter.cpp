@@ -6,6 +6,7 @@
 #include <Services/Motor.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
+#include <Services/ShooterMotor.h>
 #include <Subsystems/Shooter.h>
 #include <TuningValues.h>
 #include <cstdio>
@@ -16,6 +17,9 @@ Shooter::Shooter() :
 		Subsystem("Shooter") {
 	motorManager = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
+
+	left = new ShooterMotor(ShooterMotor::LEFT, p, i, d);
+	right = new ShooterMotor(ShooterMotor::RIGHT, p, i, d);
 
 	frontLimitSwitch = new DigitalInput(SHOOTER_FRONT_LIMIT_SWITCH_PORT);
 	backLimitSwitch = new DigitalInput(SHOOTER_BACK_LIMIT_SWITCH_PORT);
@@ -28,6 +32,24 @@ Shooter::~Shooter() {
 
 void Shooter::InitDefaultCommand() {
 
+}
+
+ShooterMotor *Shooter::getLeft() {
+	return left;
+}
+ShooterMotor *Shooter::getRight() {
+	return right;
+}
+
+void Shooter::setPID(float p, float i, float d) {
+	this->p = p;
+	this->i = i;
+	this->d = d;
+	left->setPID(p,i,d);
+	right->setPID(p,i,d);
+	char str[1024];
+	sprintf(str, "setPID to %f, %f, %f", p,i,d);
+	Logger::getLogger()->log(str, Info);
 }
 
 void Shooter::setUpToSpeed(bool upToSpeed) {

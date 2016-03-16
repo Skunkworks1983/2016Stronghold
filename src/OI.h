@@ -35,6 +35,7 @@ private:
 	JoystickButton *manualShooterUp = NULL;
 	JoystickButton *portcullis = NULL;
 
+	JoystickButton *driverReadShooterPIDValues = NULL;
 	JoystickButton *stopShooterPID = NULL;
 	JoystickButton *driverShooterDown = NULL;
 	JoystickButton *driverShooterUp = NULL;

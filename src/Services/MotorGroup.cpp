@@ -64,13 +64,6 @@ void DrivebaseMotorGroup::PIDWrite(float output) {
 	//std::vector<Motor*> motorList = MotorGroup::getMotorList();
 	std::vector<Motor*>::iterator it = motorList.begin();
 
-	//lastOutput = output;
-	/*if (motorList.front() != NULL && motorList.front()->talon != NULL) {
-	 lastCurrent = motorList.front()->talon->GetOutputCurrent();
-	 }
-	 char str[1024];
-	 sprintf(str, "Output %f Current %f", output, lastCurrent);
-	 writeToLogFile(LOGFILE_NAME, str);*/
 	for (; it != this->motorList.end(); it++) {
 		/*if ((*it)->stoppedStartTime == 0) {
 		 (*it)->talon->Set(output * (*it)->C);

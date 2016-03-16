@@ -20,9 +20,6 @@ MotorManager::MotorManager() {
 #if USE_DRIVEBASE
 	initDriveBase();
 #endif
-#if USE_COLLECTOR
-	initShooter();
-#endif
 #if USE_CLIMBER
 	initClimber();
 #endif

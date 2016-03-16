@@ -4,6 +4,7 @@
  *  Created on: Mar 9, 2016
  *      Author: S-4020395
  */
+#pragma once
 
 #include <PIDSource.h>
 #include <stddef.h>

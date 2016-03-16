@@ -1,7 +1,9 @@
 #include <Commands/Shooting/PIDShot.h>
 #include <Services/Logger.h>
+#include <Services/ShooterMotor.h>
+#include <SmartDashboard/SmartDashboard.h>
 #include <Subsystems/Shooter.h>
-#include <Subsystems/ShooterMotor.h>
+#include <Utility.h>
 #include <cmath>
 #include <cstdio>
 
@@ -9,11 +11,6 @@
 
 PIDShot::PIDShot(double leftSpeed, double rightSpeed) :
 		leftSpeed(leftSpeed), rightSpeed(rightSpeed) {
-	double p = .0024;	//works = .0018
-	double i = 0.0;		//works = 0.0
-	double d = 0.0006;	//works = 0.0
-	left = new ShooterMotor(ShooterMotor::LEFT, p, i, d);
-	right = new ShooterMotor(ShooterMotor::RIGHT, p, i, d);
 }
 
 // Called just before this Command runs the first time
@@ -21,35 +18,44 @@ void PIDShot::Initialize() {
 	char str[1024];
 	sprintf(str, "PIDShot Initialize called");
 	Logger::getLogger()->log(str, Info);
-	right->SetSetpoint(rightSpeed);
-	left->SetSetpoint(leftSpeed);
+	shooter->getRight()->SetSetpoint(rightSpeed);
+	shooter->getLeft()->SetSetpoint(leftSpeed);
 
-	left->Enable();
-	right->Enable();
+	shooter->getLeft()->Enable();
+	shooter->getRight()->Enable();
+	c = 0;
 }
 
 // Called repeatedly when this Command is scheduled to run
 void PIDShot::Execute() {
-	/*char str[1024];
-	 sprintf(str, "PIDShot target %f leftSpeed %f rightSpeed %f", speed,
-	 shooter->getLeftShooterSpeed(), shooter->getRightShooterSpeed());
-	 Logger::getLogger()->log(str, Info);*/
 
-	const bool leftOnTarget = fabs(left->PIDGet() - leftSpeed) < SHOT_TOLERANCE;
-	const bool rightOnTarget = fabs(
-			right->PIDGet() - rightSpeed) < SHOT_TOLERANCE;
-
-	if (leftOnTarget && rightOnTarget) {
-		c++;
-	} else {
-		c = 0;
-	}
-
-	if (c > 15) {
-		shooter->setUpToSpeed(true);
-	} else {
-		shooter->setUpToSpeed(false);
-	}
+	SmartDashboard::PutNumber("leftSpeed", shooter->getLeftShooterSpeed());
+	SmartDashboard::PutNumber("rightSpeed", shooter->getRightShooterSpeed());
+	SmartDashboard::PutNumber("time", GetFPGATime());
+//	const double leftDiff = fabs(shooter->getLeft()->PIDGet() - leftSpeed);
+//	const bool leftOnTarget = leftDiff < SHOT_TOLERANCE;
+//	const double rightDiff = fabs(shooter->getRight()->PIDGet() - rightSpeed);
+//	const bool rightOnTarget = rightDiff < SHOT_TOLERANCE;
+//
+//	char str[1024];
+//	sprintf(str, "PIDShot leftSpeed %f rightSpeed %f, diffleft %f, diffRight %f",
+//			shooter->getLeftShooterSpeed(), shooter->getRightShooterSpeed(), leftDiff, rightDiff);
+//	Logger::getLogger()->log(str, Info);
+//
+//	if (leftOnTarget && rightOnTarget) {
+//		c++;
+//	} else {
+//		c--;
+//		if(c < 0){
+//			c = 0;
+//		}
+//	}
+//
+//	if (c > 5) {
+//		shooter->setUpToSpeed(true);
+//	} else {
+//		shooter->setUpToSpeed(false);
+//	}
 }
 
 // Make this return true when this Command no longer needs to run execute()
@@ -64,10 +70,10 @@ void PIDShot::End() {
 	Logger::getLogger()->log(str, Info);
 
 	shooter->setShooterSpeed(0.0);
-	left->Disable();
-	right->Disable();
-	left->Reset();
-	right->Reset();
+	shooter->getLeft()->Disable();
+	shooter->getRight()->Disable();
+	shooter->getLeft()->Reset();
+	shooter->getRight()->Reset();
 }
 
 // Called when another command which requires one or more of the same

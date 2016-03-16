@@ -2,7 +2,7 @@
 #define TUNING_VALUES_H
 
 /**
- * PID ID's
+ * PID ID's not equal to ports, used in createPID and motormanager manipulation of pidWrappers
  */
 #define PID_ID_SHOOTER_1 0
 #define PID_ID_SHOOTER_2 1
@@ -22,7 +22,7 @@
 #define LOWB_TURN 1
 
 /**
- * Sensor IDs
+ * Sensor IDs does not correlate to port, simply an id to access the generic Sensor objects
  */
 
 #define SENSOR_GYRO_ID 0

@@ -5,11 +5,13 @@
 #include <Commands/Shooting/RampToSpeed.h>
 #include <Subsystems/Shooter.h>
 
-ArmShot::ArmShot()
-{
+ArmShot::ArmShot() {
 	const double shooter_batter_speed = 54.65;
 	AddSequential(new RunCollector(Shooter::KBackward, 1.0, .1));
-	AddSequential(new RampToSpeed(shooter_batter_speed * .5));
+	AddSequential(new RunCollector(Shooter::KForward, 1.0, .15));
+	AddSequential(new RunCollector(Shooter::KBackward, 1.0, .3));
+	AddSequential(new RunCollector(Shooter::KBackward, 1.0, .1));
+	AddSequential(new RunCollector(Shooter::KForward, 1.0, .15));
+	AddSequential(new RunCollector(Shooter::KBackward, 1.0, .3));
 	AddParallel(new PIDShot(shooter_batter_speed, shooter_batter_speed));
-	//AddParallel(new BangBangControl(shooter_batter_speed));
 }
