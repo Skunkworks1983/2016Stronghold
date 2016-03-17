@@ -2,6 +2,7 @@
 #include <Services/Logger.h>
 #include <Subsystems/Shooter.h>
 #include <cstdio>
+#include <RobotMap.h>
 
 #define SCALING_CONSTANT .2
 
@@ -12,9 +13,7 @@ RampToSpeed::RampToSpeed(double targetSpeed) :
 
 // Called just before this Command runs the first time
 void RampToSpeed::Initialize() {
-	char str[1024];
-	sprintf(str, "RampToSpeed Initialize called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("RampToSpeed Initialize called");
 	realSpeed = .01;
 	shooter->setShooterSpeed(realSpeed);
 }
@@ -26,10 +25,8 @@ void RampToSpeed::Execute() {
 		realSpeed *= (1.0 + SCALING_CONSTANT);
 		shooter->setShooterSpeed(realSpeed);
 	}
-	char str[1024];
-	sprintf(str, "RAMPING target %f leftSpeed %f rightSpeed %f", targetSpeed,
+	LOG_INFO("RAMPING target %f leftSpeed %f rightSpeed %f", targetSpeed,
 			shooter->getLeftShooterSpeed(), shooter->getRightShooterSpeed());
-	Logger::getLogger()->log(str, Info);
 }
 
 // Make this return true when this Command no longer needs to run execute()
@@ -40,9 +37,7 @@ bool RampToSpeed::IsFinished() {
 
 // Called once after isFinished returns true
 void RampToSpeed::End() {
-	char str[1024];
-	sprintf(str, "RampToSpeed End called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("RampToSpeed End called");
 }
 
 // Called when another command which requires one or more of the same

@@ -47,9 +47,7 @@ void Shooter::setPID(float p, float i, float d) {
 	this->d = d;
 	left->setPID(p,i,d);
 	right->setPID(p,i,d);
-	char str[1024];
-	sprintf(str, "setPID to %f, %f, %f", p,i,d);
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("setPID to %f, %f, %f", p,i,d);
 }
 
 void Shooter::setUpToSpeed(bool upToSpeed) {
@@ -82,24 +80,20 @@ float Shooter::getShooterSpeed() {
 
 void Shooter::registerCommand(Command *cmd) {
 	if (lastCommand == NULL) {
-		Logger::getLogger()->log("lastCommand = cmd", Debug);
+		LOG_INFO("lastCommand = cmd", Debug);
 		lastCommand = cmd;
 	} else {
 		if (lastCommand->IsRunning()) {
 			lastCommand->Cancel();
 		}
 		lastCommand = cmd;
-		Logger::getLogger()->log("After", Debug);
+		LOG_INFO("After", Debug);
 	}
-	char str[1024];
-	sprintf(str, "Command %d registered", cmd != NULL ? cmd->GetID() : -420);
-	Logger::getLogger()->log(str, Debug);
+	LOG_INFO("Command %d registered", cmd != NULL ? cmd->GetID() : -420);
 }
 
 void Shooter::deregisterCommand(Command *cmd) {
-	char str[1024];
-	sprintf(str, "Command %d DEREGISTERED", cmd != NULL ? cmd->GetID() : -420);
-	Logger::getLogger()->log(str, Debug);
+	LOG_INFO("Command %d DEREGISTERED", cmd != NULL ? cmd->GetID() : -420);
 	if (lastCommand == cmd) {
 		if (lastCommand != NULL) {
 			if (lastCommand->IsRunning()) {

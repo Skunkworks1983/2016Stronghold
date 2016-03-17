@@ -23,9 +23,7 @@ BangBangControl::~BangBangControl() {
 }
 
 void BangBangControl::Initialize() {
-	char str[1024];
-	sprintf(str, "BangBangControl Initialize");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("BangBangControl Initialize");
 	realSpeed = .01;
 	alreadyRamped = false;
 	if (timeOut > 0) {
@@ -80,8 +78,6 @@ void BangBangControl::Interrupted() {
 }
 
 void BangBangControl::End() {
-	char str[1024];
-	sprintf(str, "BangBangControl ended");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("BangBangControl ended");
 	shooter->setShooterSpeed(0);
 }

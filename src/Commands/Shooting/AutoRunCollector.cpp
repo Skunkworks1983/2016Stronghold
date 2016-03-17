@@ -3,6 +3,7 @@
 #include <Services/ShooterMotor.h>
 #include <cmath>
 #include <cstdio>
+#include <RobotMap.h>
 
 #define SHOT_TOLERANCE .3
 
@@ -13,9 +14,7 @@ AutoRunCollector::AutoRunCollector() {
 }
 
 void AutoRunCollector::Initialize() {
-	char str[1024];
-	sprintf(str, "AutoRunCollector Initialize called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("AutoRunCollector Initialize called");
 	alreadyUp = false;
 	c = 0;
 }
@@ -42,17 +41,13 @@ void AutoRunCollector::Execute() {
 		 }*/
 	}
 
-	char str[1024];
-	sprintf(str, "leftDiff %f rightDiff %f leftOnTarget %u rightOnTarget %u c: %u",
+	LOG_INFO("leftDiff %f rightDiff %f leftOnTarget %u rightOnTarget %u c: %u",
 			leftDiff, rightDiff, leftOnTarget, rightOnTarget, c);
-	Logger::getLogger()->log(str, Info);
 
 	if (c > 5 && !alreadyUp) {
 		shooter->setRollerSpeed(Shooter::KForward, 1.0);
 		alreadyUp = true;
-		char str[1024];
-		sprintf(str, "THIS IS WHERE THE AUTORUNCOLLECTOR STARTS STARTS STARTS");
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("THIS IS WHERE THE AUTORUNCOLLECTOR STARTS STARTS STARTS");
 	}
 }
 
@@ -62,9 +57,7 @@ bool AutoRunCollector::IsFinished() {
 
 void AutoRunCollector::End() {
 	shooter->setRollerSpeed(Shooter::KStop, 0);
-	char str[1024];
-	sprintf(str, "THIS IS WHERE THE AUTORUNCOLLECTOR ENDS ENDS ENDS");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("THIS IS WHERE THE AUTORUNCOLLECTOR ENDS ENDS ENDS");
 }
 
 void AutoRunCollector::Interrupted() {

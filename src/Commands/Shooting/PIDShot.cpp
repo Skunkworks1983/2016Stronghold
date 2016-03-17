@@ -5,6 +5,7 @@
 #include <Subsystems/Shooter.h>
 #include <Utility.h>
 #include <cmath>
+#include <RobotMap.h>
 #include <cstdio>
 
 #define SHOT_TOLERANCE .15
@@ -15,9 +16,7 @@ PIDShot::PIDShot(double leftSpeed, double rightSpeed) :
 
 // Called just before this Command runs the first time
 void PIDShot::Initialize() {
-	char str[1024];
-	sprintf(str, "PIDShot Initialize called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("PIDShot Initialize called");
 	shooter->getRight()->SetSetpoint(rightSpeed);
 	shooter->getLeft()->SetSetpoint(leftSpeed);
 
@@ -65,9 +64,7 @@ bool PIDShot::IsFinished() {
 
 // Called once after isFinished returns true
 void PIDShot::End() {
-	char str[1024];
-	sprintf(str, "PIDShot End called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("PIDShot End called");
 
 	shooter->setShooterSpeed(0.0);
 	shooter->getLeft()->Disable();

@@ -178,9 +178,7 @@ void MotorManager::initPIDS() {
 	 0, 0, 0, true);*/
 #endif
 
-	char str[1024];
-	sprintf(str, "Created PIDS");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("Created PIDS");
 }
 
 Motor * MotorManager::getMotor(unsigned ID) {
@@ -334,10 +332,8 @@ void MotorManager::setPIDF(unsigned pidID, float P, float I, float D, float F) {
 }
 
 void MotorManager::enablePID(unsigned pidID, float setPoint) {
-	char str[1024];
-	sprintf(str, "enablePID called on %u with setpoint %f count = %d", pidID,
+	LOG_INFO("enablePID called on %u with setpoint %f count = %d", pidID,
 			setPoint, pidControllerMap.count(pidID));
-	Logger::getLogger()->log(str, Debug);
 
 	if (pidControllerMap.count(pidID) >= 1) {
 		pidControllerMap[pidID]->SetSetpoint(setPoint);
@@ -354,10 +350,8 @@ void MotorManager::enablePID(unsigned pidID) {
 }
 
 void MotorManager::disablePID(unsigned pidID) {
-	char str[1024];
-	sprintf(str, "disablePID called on %u count = %d", pidID,
+	LOG_INFO("disablePID called on %u count = %d", pidID,
 			pidControllerMap.count(pidID));
-	Logger::getLogger()->log(str, Debug);
 	if (pidControllerMap.count(pidID) >= 1) {
 		pidControllerMap[pidID]->Disable();
 	}

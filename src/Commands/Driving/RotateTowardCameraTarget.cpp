@@ -89,12 +89,10 @@ void RotateTowardCameraTarget::PIDWrite(float output) {
 		}
 
 		outputspeed = output;
-		char str[1024];
-		sprintf(str, "CameraOutput %f", output);
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("CameraOutput %f", output);
 		drivebase->setLeftSpeed(speedTranslate + output);
 		drivebase->setRightSpeed(speedTranslate - output);
 	} else {
-		Logger::getLogger()->log("CAMERA READER READ IS INVALID", Info);
+		LOG_WARNING("CAMERA READER READ IS INVALID", Info);
 	}
 }

@@ -12,9 +12,7 @@
 #include <cstdio>
 
 void Robot::RobotInit() {
-	char startup[1024];
-	sprintf(startup, "START OF NEW RUN \t START OF NEW RUN");
-	Logger::getLogger()->log(startup, Info);
+	LOG_INFO("START OF NEW RUN \t START OF NEW RUN");
 	LOG_INFO("RobotInit Called");
 	MotorManager::getMotorManager();
 	SensorManager::getSensorManager();

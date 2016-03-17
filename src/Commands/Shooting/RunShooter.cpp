@@ -2,6 +2,7 @@
 #include <Services/Logger.h>
 #include <Subsystems/Shooter.h>
 #include <cstdio>
+#include <RobotMap.h>
 
 #define SCALING_CONSTANT .075
 
@@ -38,11 +39,9 @@ void RunShooter::Execute() {
 		}
 	}
 	shooter->setShooterSpeed(realSpeed);
-	char str[1024];
-	sprintf(str, "motorPower %f speed %f leftSpeed %f rightSpeed %f", realSpeed,
+	LOG_INFO("motorPower %f speed %f leftSpeed %f rightSpeed %f", realSpeed,
 			shooter->getShooterSpeed(), shooter->getLeftShooterSpeed(),
 			shooter->getRightShooterSpeed());
-	Logger::getLogger()->log(str, Info);
 }
 
 bool RunShooter::IsFinished() {

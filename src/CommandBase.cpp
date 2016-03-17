@@ -34,6 +34,6 @@ void CommandBase::init() {
 	shooter = new Shooter();
 #endif
 #if USE_LOGGING
-	Logger::getLogger()->log("Robot initialized", Info);
+	LOG_INFO("Robot initialized");
 #endif
 }

@@ -27,7 +27,7 @@ void DriveForwardStraight::Initialize() {
 		initialYaw = SensorManager::getSensorManager()->getYaw();
 		drivebase->setLeftSpeed(speed);
 		drivebase->setRightSpeed(speed);
-		Logger::getLogger()->log("Using gyro for straight drive", Info);
+		LOG_INFO("Using gyro for straight drive", Info);
 	} else {
 		initialLeft = fabs(SensorManager::getSensorManager()->getSensor(
 		SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());

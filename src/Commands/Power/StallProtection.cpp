@@ -30,10 +30,8 @@ void StallProtection::Execute() {
 						OVER_MAX_TIME
 								/ (motor->talon->GetOutputCurrent()
 										/ motor->maxCurrent)) {
-					char str[1024];
-					sprintf(str, "StallProtection Called ID: %u ",
+					LOG_INFO("StallProtection Called ID: %u ",
 							(*it).second->port);
-					Logger::getLogger()->log(str, Info);
 					motor->overCurrentStartTime = 0;
 					motor->talon->Set(0);
 					motor->stoppedStartTime = GetFPGATime();

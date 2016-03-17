@@ -44,24 +44,20 @@ void Climber::setWinchSpeed(float winchSpeed) {
 
 void Climber::registerCommand(Command *cmd) {
 	if (lastCommand == NULL) {
-		Logger::getLogger()->log("lastCommand = cmd", Debug);
+		LOG_INFO("lastCommand = cmd");
 		lastCommand = cmd;
 	} else {
 		if (lastCommand->IsRunning()) {
 			lastCommand->Cancel();
 		}
 		lastCommand = cmd;
-		Logger::getLogger()->log("After", Debug);
+		LOG_INFO("After");
 	}
-	char str[1024];
-	sprintf(str, "Command %d registered", cmd != NULL ? cmd->GetID() : -420);
-	Logger::getLogger()->log(str, Debug);
+	LOG_INFO("Command %d registered", cmd != NULL ? cmd->GetID() : -420);
 }
 
 void Climber::deregisterCommand(Command *cmd) {
-	char str[1024];
-	sprintf(str, "Command %d DEREGISTERED", cmd != NULL ? cmd->GetID() : -420);
-	Logger::getLogger()->log(str, Debug);
+	LOG_INFO("Command %d DEREGISTERED", cmd != NULL ? cmd->GetID() : -420);
 	if (lastCommand == cmd) {
 		if (lastCommand != NULL) {
 			if (lastCommand->IsRunning()) {

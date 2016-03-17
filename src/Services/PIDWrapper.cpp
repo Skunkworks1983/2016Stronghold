@@ -35,9 +35,7 @@ void PIDWrapper::SetSetpoint(float setpoint) {
 }
 
 void PIDWrapper::SetPID(float p, float i, float d, float f) {
-	char str[1024];
-	sprintf(str, "PIDWrapper Setting PID values to %f, %f, %f, %f", p, i, d, f);
-	Logger::getLogger()->log(str, Debug);
+	LOG_INFO("PIDWrapper Setting PID values to %f, %f, %f, %f", p, i, d, f);
 	ptr->SetPID(p, i, d, f);
 }
 

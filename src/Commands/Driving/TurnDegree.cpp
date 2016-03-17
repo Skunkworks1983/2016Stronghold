@@ -44,10 +44,8 @@ void TurnDegree::Initialize() {
 	//drivebase->setLeftSpeed(speed);
 	//drivebase->setRightSpeed(-speed);
 
-	char str[1024];
-	sprintf(str, "Initialize of TurnDegree, target yaw %f, current yaw %f",
-			degree, initialYaw);
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("Initialize of TurnDegree, target yaw %f, current yaw %f", degree,
+			initialYaw);
 }
 
 void TurnDegree::Execute() {
@@ -69,10 +67,7 @@ void TurnDegree::Execute() {
 	DRIVEBASE_RIGHTMOTOR_3_PORT)->talon->Get();
 	double yaw =
 			SensorManager::getSensorManager()->getSensor(SENSOR_GYRO_ID)->PIDGet();
-	sprintf(str, "%f, %f, %f\t%f, %f, %f, yaw: %f", l1, l2, l3, r1, r2, r3,
-			yaw);
-
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("%f, %f, %f\t%f, %f, %f, yaw: %f", l1, l2, l3, r1, r2, r3, yaw);
 }
 
 bool TurnDegree::IsFinished() {
@@ -87,11 +82,8 @@ bool TurnDegree::IsFinished() {
 }
 
 void TurnDegree::End() {
-	char str[1024];
-	sprintf(str, "End Called on TurnDegree, target yaw %f, current yaw %f",
-			degree,
+	LOG_INFO("End Called on TurnDegree, target yaw %f, current yaw %f", degree,
 			SensorManager::getSensorManager()->getSensor(SENSOR_GYRO_ID)->PIDGet());
-	Logger::getLogger()->log(str, Info);
 	drivebase->setLeftSpeed(0.0);
 	drivebase->setRightSpeed(0.0);
 	motorManager->disablePID(PID_ID_DRIVEBASE_ROT);

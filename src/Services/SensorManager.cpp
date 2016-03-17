@@ -85,11 +85,9 @@ double Sensor::PIDGet() {
 		LOG_INFO("PIDSource is returning PIDGet");
 		return src->PIDGet();
 	} else {
-		char str[1024];
-		sprintf(str,
+		LOG_INFO(
 				"%s:%d Sensor is returning a 0.0 because talon && src are NULL",
 				__PRETTY_FUNCTION__, __LINE__);
-		Logger::getLogger()->log(str, Info);
 		return 0.0;
 	}
 }
@@ -179,7 +177,7 @@ SensorManager* SensorManager::getSensorManager() {
 }
 
 void SensorManager::initGyro() {
-	Logger::getLogger()->log("Initializing Gyro", Debug);
+	LOG_INFO("Initializing Gyro", Debug);
 	std::cout << "Reached initGyro" << std::endl;
 	try {
 		ahrsDead = false;
@@ -279,6 +277,6 @@ Sensor* SensorManager::getSensor(unsigned ID) {
 	}
 }
 
-AHRS* SensorManager::getGyro(){
+AHRS* SensorManager::getGyro() {
 	return ahrs;
 }

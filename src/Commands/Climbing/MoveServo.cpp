@@ -3,6 +3,7 @@
 #include <SmartDashboard/SmartDashboard.h>
 #include <Subsystems/Climber.h>
 #include <TuningValues.h>
+#include <RobotMap.h>
 #include <cstdio>
 
 MoveServo::MoveServo(eServoPosition pos) :
@@ -12,9 +13,8 @@ MoveServo::MoveServo(eServoPosition pos) :
 }
 
 void MoveServo::Initialize() {
-	char str[1024];
-	sprintf(str, "MoveServo Initialize called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("MoveServo Initialize called");
+
 	SmartDashboard::PutBoolean("MoveServoRunning", true);
 	switch (pos) {
 	case IN:
@@ -41,9 +41,7 @@ bool MoveServo::IsFinished() {
 }
 
 void MoveServo::End() {
-	char str[1024];
-	sprintf(str, "MoveServo End called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("MoveServo End called");
 	SmartDashboard::PutBoolean("MoveServoRunning", false);
 }
 

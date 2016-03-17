@@ -7,11 +7,11 @@
 
 #include <CommandBase.h>
 #include <PIDController.h>
-#include <Services/Logger.h>
+#include <RobotMap.h>
 #include <Services/ShooterMotor.h>
 #include <Subsystems/Shooter.h>
+#include <Services/Logger.h>
 #include <cmath>
-#include <cstdio>
 
 #define SHOOTER_MOTOR_MAX_ACCELERATION .04
 
@@ -101,7 +101,5 @@ void ShooterMotor::Reset() {
 
 void ShooterMotor::setPID(float p, float i, float d) {
 	controller->SetPID(p, i, d);
-	char str[1024];
-	sprintf(str, "SHOOTERMOTOR setPID to %f, %f, %f", p, i, d);
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("SHOOTERMOTOR setPID to %f, %f, %f", p, i, d);
 }

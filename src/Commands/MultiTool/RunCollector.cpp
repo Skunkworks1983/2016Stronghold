@@ -1,5 +1,6 @@
 #include <Commands/MultiTool/RunCollector.h>
 #include <Services/Logger.h>
+#include <RobotMap.h>
 #include <cstdio>
 
 #define SHOOTER_SPEED 54.0 - 2
@@ -11,9 +12,7 @@ RunCollector::RunCollector(Shooter::rollerDirection dir, float speed,
 }
 
 void RunCollector::Initialize() {
-	char str[1024];
-	sprintf(str, "RunCollector Initialize called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("RunCollector Initialize called");
 	already_on = false;
 	if (timeOut != 0) {
 		SetTimeout(timeOut);
@@ -39,9 +38,7 @@ bool RunCollector::IsFinished() {
 }
 
 void RunCollector::End() {
-	char str[1024];
-	sprintf(str, "RunCollector End called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("RunCollector End called");
 	shooter->setRollerSpeed(Shooter::KStop, 0);
 }
 

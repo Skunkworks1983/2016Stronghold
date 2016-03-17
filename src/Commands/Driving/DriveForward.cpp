@@ -28,11 +28,8 @@ void DriveForward::Initialize() {
 	initialRight = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	char str[1024];
-	sprintf(str,
-			"DriveForward Initialize Called initialLeft %f initialRight %f ",
+	LOG_INFO("DriveForward Initialize Called initialLeft %f initialRight %f ",
 			initialLeft, initialRight);
-	Logger::getLogger()->log(str, Info);
 }
 
 void DriveForward::Execute() {
