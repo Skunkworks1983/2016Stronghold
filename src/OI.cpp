@@ -110,9 +110,15 @@ double OI::getRightStickY() {
 }
 
 void OI::registerButtonListeners() {
-	char str[1024];
-	sprintf(str, "RegisterButtonListeners called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("RegisterButtonListeners called");
+	/*rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
+	SmartDashboard::PutData("Climber Down",
+			new RotateArm(CLIMBER_ARM_DOWN_POSITION));
+
+	//engageWinch->WhenPressed(new RunWinchToSetPoint(CLIMBER_WINCH_UP_POSITION, .25));
+	engageWinch->WhileHeld(new RunWinch(.50));
+
+	engageWinch->WhileHeld(new RunWinch(.50));*/
 
 	/**
 	 * Driver Buttons
@@ -155,8 +161,7 @@ void OI::registerButtonListeners() {
 	manualShooterUp->WhenPressed(new MoveServo(MoveServo::eServoPosition::IN));
 	portcullis->WhileHeld(new RunCollector(Shooter::KBackward));
 
-	sprintf(str, "RegisterButtonListeners Ended");
-	Logger::getLogger()->log(str, Debug);
+	LOG_DEBUG("RegisterButtonListeners Ended");
 }
 
 bool OI::isJoystickButtonPressed(int control, int button) {

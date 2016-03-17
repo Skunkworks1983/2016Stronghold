@@ -13,9 +13,7 @@
 
 MotorManager::MotorManager() {
 	allowedPriority = PRIORITY_ACCESSORIES;
-	char str[1024];
-	sprintf(str, "MotorManager Constructor #%u", count++);
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("MotorManager Constructor #%u", count++);
 
 #if USE_DRIVEBASE
 	initDriveBase();
@@ -56,9 +54,7 @@ void MotorManager::initDriveBase() {
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_3_PORT,
 	CIM_MAX_CURRENT, DRIVEBASE, true);
 
-	char str[1024];
-	sprintf(str, "Created DriveBase Motors");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("Created DriveBase Motors");
 }
 
 void MotorManager::initShooter() {
@@ -189,9 +185,7 @@ void MotorManager::initPIDS() {
 
 Motor * MotorManager::getMotor(unsigned ID) {
 	if (ID < 0 || motors.count(ID) < 1) {
-		char str[1024];
-		sprintf(str, "Null motor at ID %u", ID);
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("Null motor at ID %u", ID);
 		return NULL;
 	}
 	//char str[1024];
@@ -327,9 +321,7 @@ void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 		pidcontroller->SetContinuous(isContinuous);
 		pidControllerMap[pidID] = pidcontroller;
 		pidcontroller->Disable();
-		char str[1024];
-		sprintf(str, "Created PIDController with ID %u", pidID);
-		Logger::getLogger()->log(str, Debug);
+		LOG_DEBUG("Created PIDController with ID %u", pidID);
 	} else {
 		//pidControllerMap[pidID]->Enable();
 	}

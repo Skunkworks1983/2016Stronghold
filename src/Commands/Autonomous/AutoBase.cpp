@@ -190,9 +190,7 @@ AutoBase * AutoBase::getSelectedAuto() {
 }
 
 void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
-	char str[1024];
-	sprintf(str, "Read Switched Obstacle start");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("Read Switched Obstacle start");
 	std::vector<DigitalInput *> digitalInputs; // initialize digital input
 
 	for (int i = 1; i < 4; i++) {
@@ -204,15 +202,13 @@ void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
 	int adder = 1;
 	for (unsigned i = 0; i < digitalInputs.size(); i++) {
 		bool isSet = digitalInputs[i]->Get();
-		sprintf(str, "index %u bool %u", i, isSet);
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("index %u bool %u", i, isSet);
 		if (isSet) {
 			*obstacle = (eObstacle) ((*obstacle) | adder);
 		}
 		adder = adder << 1;
 	}
-	sprintf(str, "obstacle selected %d", (*obstacle));
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("obstacle selected %d", (*obstacle));
 	for (unsigned i = 0; i < digitalInputs.size(); i++) {
 		delete digitalInputs[i];
 	}

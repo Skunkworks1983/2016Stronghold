@@ -10,35 +10,28 @@
 #include <Services/Logger.h>
 #include <Services/PIDWrapper.h>
 #include <cstdio>
+#include <RobotMap.h>
 
 PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
 		PIDOutput *output) {
 	ptr = new PIDController(p, i, d, f, source, output);
 
-	char str[1024];
-	sprintf(str, "Created PIDWrapper with %f, %f, %f", p, i, d);
-	Logger::getLogger()->log(str, Debug);
+	LOG_DEBUG("Created PIDWrapper with %f, %f, %f", p, i, d);
 }
 
 void PIDWrapper::Enable() {
 	ptr->Enable();
-	char str[1024];
-	sprintf(str, "PIDWrapper Enabled");
-	Logger::getLogger()->log(str, Debug);
+	LOG_DEBUG("PIDWrapper Enabled");
 }
 
 void PIDWrapper::Disable() {
 	ptr->Disable();
-	char str[1024];
-	sprintf(str, "PIDWrapper Enabled");
-	Logger::getLogger()->log(str, Debug);
+	LOG_DEBUG("PIDWrapper Enabled");
 }
 
 void PIDWrapper::SetSetpoint(float setpoint) {
 	ptr->SetSetpoint(setpoint);
-	char str[1024];
-	sprintf(str, "PIDWrapper SetSetpoint");
-	Logger::getLogger()->log(str, Debug);
+	LOG_DEBUG("PIDWrapper SetSetpoint");
 }
 
 void PIDWrapper::SetPID(float p, float i, float d, float f) {

@@ -35,9 +35,7 @@ void DriveForwardStraight::Initialize() {
 		SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
 		initialPosition = (initialLeft + initialRight) / 2;
-		char str[1024];
-		sprintf(str, "DriveForward Initialize Called initialLeft %f initialRight %f ", initialLeft, initialRight);
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("DriveForward Initialize Called initialLeft %f initialRight %f ", initialLeft, initialRight);
 	}
 }
 
@@ -46,9 +44,7 @@ void DriveForwardStraight::Execute() {
 		errorOffset = initialYaw - sensorManager->getYaw();
 		double leftSpeed = ((1 / 15) * errorOffset + 1) * speed;
 		double rightSpeed = (-1 * (1 / 15) * errorOffset + 1) * speed;
-		char str[1024];
-		sprintf(str, "Gyro: %f, Left: %f, Right: %f", sensorManager->getYaw(), leftSpeed, rightSpeed);
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("Gyro: %f, Left: %f, Right: %f", sensorManager->getYaw(), leftSpeed, rightSpeed);
 		 if (errorOffset <= 0) { //If its tilting to the left
 			 drivebase->setLeftSpeed(speed);
 			 drivebase->setRightSpeed(rightSpeed); //At 15 degree error to the left, no forward motion, just pivot
@@ -74,9 +70,7 @@ void DriveForwardStraight::Execute() {
 		drivebase->setLeftSpeed(leftSpeed);
 		drivebase->setRightSpeed(rightSpeed);
 
-		char str[1024];
-		sprintf(str, "left: %f, right: %f", left, right);
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("left: %f, right: %f", left, right);
 	}
 }
 
@@ -87,9 +81,7 @@ bool DriveForwardStraight::IsFinished() {
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
 	double difference = ((left + right) / 2) - initialPosition;
-	char str[1024];
-	sprintf(str, "Difference: %f, target: %f", difference, distance);
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("Difference: %f, target: %f", difference, distance);
 	if (difference > distance && !CONTINUOUS_TEST) { //Temp constant for testing if the gyro straight works
 		return true;
 	}

@@ -19,9 +19,7 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 	Motor * motor = MotorManager::getMotorManager()->getMotor(
 			CANTalonEncoderPort);
 	if (motor != NULL) {
-		char str[1024];
-		sprintf(str, "Created Sensor with talon on ID %d", CANTalonEncoderPort);
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("Created Sensor with talon on ID %d", CANTalonEncoderPort);
 		this->talon = motor->talon;
 		talon->SetEncPosition(0);
 		talon->SetPosition(0);
@@ -29,9 +27,7 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 		talon->GetAnalogIn();
 		talon->GetPulseWidthPosition();
 	} else {
-		char str[1024];
-		sprintf(str, "MotorIs null!!! port: %d", CANTalonEncoderPort);
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("MotorIs null!!! port: %d", CANTalonEncoderPort);
 	}
 	this->src = NULL;
 	this->ahrs = NULL;
@@ -86,9 +82,7 @@ double Sensor::PIDGet() {
 //		Logger::getLogger()->log(str, Info);
 		return ahrs->GetYaw() - SensorManager::getSensorManager()->initialYaw;
 	} else if (src != NULL) {
-		char str[1024];
-		sprintf(str, "PIDSource is returning PIDGet");
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("PIDSource is returning PIDGet");
 		return src->PIDGet();
 	} else {
 		char str[1024];
@@ -114,9 +108,7 @@ int Sensor::getAbsolutePosition() {
 }
 
 SensorManager::SensorManager() {
-	char str[1024];
-	sprintf(str, "SensorManager Created #%u", count++);
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("SensorManager Created #%u", count++);
 #if USE_GYRO
 	//Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID, bool reversed = false);
 

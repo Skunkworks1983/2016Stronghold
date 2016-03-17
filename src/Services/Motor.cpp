@@ -13,6 +13,7 @@
 #include <TuningValues.h>
 #include <cmath>
 #include <cstdio>
+#include <RobotMap.h>
 
 Motor::Motor(Priority prioArg, int portArg, float maxCurrent,
 		ESubsystem parentSubsystem, bool reversed) :
@@ -29,9 +30,7 @@ Motor::Motor(Priority prioArg, int portArg, float maxCurrent,
 		talon->SetSafetyEnabled(false);
 		talon->SetControlMode(CANTalon::kPercentVbus);
 	} else {
-		char str[1024];
-		sprintf(str, "Talon assignment failed on Port %d", port);
-		Logger::getLogger()->log(str, Info);
+		LOG_INFO("Talon assignment failed on Port %d", port);
 	}
 	C = 1;
 }

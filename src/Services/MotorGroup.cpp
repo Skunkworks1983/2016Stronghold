@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <iterator>
 #include <vector>
+#include <RobotMap.h>
 
 float MotorGroup::getLastOutput() {
 	return lastOutput;

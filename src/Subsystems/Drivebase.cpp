@@ -1,8 +1,11 @@
 #include <Commands/Driving/TankDrive.h>
 #include <RobotMap.h>
+#include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <Subsystems/Drivebase.h>
+#include <cstdbool>
+#include <cstdio>
 
 Drivebase::Drivebase() :
 		Subsystem("Drivebase") {
@@ -18,6 +21,15 @@ void Drivebase::InitDefaultCommand() {
 
 void Drivebase::resetEncoder() {
 
+}
+
+void Drivebase::setDriverControl(bool state){
+	LOG_INFO("SetDriverControl to %u", state);
+	driverControl = state;
+}
+bool Drivebase::isDriverControl(){
+	LOG_INFO("Returning driverControl %u", driverControl);
+	return driverControl;
 }
 
 float Drivebase::getRightDistance() {

@@ -33,9 +33,7 @@ void RotateShooter::Initialize() {
 	shooter->registerCommand(this);
 	//motorManager->disablePID(PID_ID_COLLECTOR);
 	motorManager->enablePID(PID_ID_COLLECTOR, target);
-	char str[1024];
-	sprintf(str, "CollectorMove Initialize target %f", target);
-	Logger::getLogger()->log(str, Debug);
+	LOG_DEBUG("CollectorMove Initialize target %f", target);
 	SmartDashboard::PutNumber("target", target);
 }
 
@@ -60,15 +58,10 @@ bool RotateShooter::IsFinished() {
 void RotateShooter::End() {
 	SmartDashboard::PutBoolean("CollectorMoveRunning", false);
 	//MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
-	char str[1024];
-	sprintf(str, "CollectorMove END Called for target %f", target);
-	Logger::getLogger()->log(str, Debug);
+	LOG_DEBUG("CollectorMove END Called for target %f", target);
 	shooter->deregisterCommand(this);
 }
 
 void RotateShooter::Interrupted() {
-	char str[1024];
-	sprintf(str, "CollectorMove INTERRUPTED Called for target %f", target);
-	Logger::getLogger()->log(str, Debug);
-	End(); //MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
+	LOG_DEBUG("CollectorMove INTERRUPTED Called for target %f", target);
 }

@@ -191,4 +191,24 @@
 
 #define DEBUG false
 
+#define LOG_DEBUG(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Debug);}
+
+#define LOG_INFO(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Info);}
+
+#define LOG_WARNING(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Warning);}
+
+#define LOG_ERROR(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Error);}
+
 #endif

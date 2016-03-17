@@ -2,6 +2,7 @@
 #define COMMAND_BASE_H
 
 #include <Commands/Command.h>
+#include <Subsystems/Drivebase.h>
 
 // Redeclare static classes
 class Drivebase;

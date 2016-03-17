@@ -1,5 +1,10 @@
 #include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
+<<<<<<< HEAD
+=======
+#include <Commands/Driving/TurnDegree.h>
+#include <CommandBase.h>
+>>>>>>> Added macros for logging (see RobotMap.h)
 #include <Commands/Scheduler.h>
 #include <Robot.h>
 #include <RobotBase.h>
@@ -13,9 +18,7 @@ void Robot::RobotInit() {
 	char startup[1024];
 	sprintf(startup, "START OF NEW RUN \t START OF NEW RUN");
 	Logger::getLogger()->log(startup, Info);
-	char str[1024];
-	sprintf(str, "RobotInit Called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("RobotInit Called");
 	MotorManager::getMotorManager();
 	SensorManager::getSensorManager();
 	MotorManager::getMotorManager()->initPIDS();
@@ -51,10 +54,9 @@ void Robot::DisabledPeriodic() {
 }
 
 void Robot::AutonomousInit() {
+	CommandBase::drivebase->setDriverControl(false);
 	Scheduler::GetInstance()->RemoveAll();
-	char str[1024];
-	sprintf(str, "AutonomousInit Called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("AutonomousInit Called");
 	//turnDegree->Start();
 	cmd->Start();
 }
@@ -70,18 +72,15 @@ void Robot::AutonomousPeriodic() {
 	 double right = SensorManager::getSensorManager()->getSensor(
 	 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
 
-	 char str[1024];
-	 sprintf(str, "LeftEncoder %f, RightEncoder %f", left, right);
-	 Logger::getLogger()->log(str, Debug);*/
+	 LOG_DEBUG("LeftEncoder %f, RightEncoder %f", left, right);*/
 
 	//SmartDashboard::PutNumber("AbsoluteRollerEncoder", Sensor);
 }
 
 void Robot::TeleopInit() {
+	CommandBase::drivebase->setDriverControl(true);
 	Scheduler::GetInstance()->RemoveAll();
-	char str[1024];
-	sprintf(str, "TeleOp Called");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("TeleOp Called");
 }
 
 void Robot::TeleopPeriodic() {

@@ -14,11 +14,9 @@ RotateArm::RotateArm(float target) :
 }
 
 void RotateArm::Initialize() {
-	char str[1024];
-	sprintf(str, "RotateArm Initialize called with target %f", target);
-	Logger::getLogger()->log(str, Info);
 	climber->registerCommand(this);
 
+	LOG_INFO("RotateArm Initialize called with target %f", target);
 	MotorManager::getMotorManager()->enablePID(PID_ID_ARM, target);
 }
 
@@ -37,11 +35,8 @@ bool RotateArm::IsFinished() {
 }
 
 void RotateArm::End() {
-	char str[1024];
-	sprintf(str, "RotateArm END called with target %f", target);
-	Logger::getLogger()->log(str, Info);
 	climber->deregisterCommand(this);
-
+	LOG_INFO("RotateArm END called with target %f", target);
 	//MotorManager::getMotorManager()->disablePID(target*CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS);
 	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT,0.0); //probably wrong
 	//MotorManager::getMotorManager()->disablePID(PID_ID_ARM);

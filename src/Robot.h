@@ -3,6 +3,7 @@
 
 #include <IterativeRobot.h>
 #include <stddef.h>
+#include <RobotMap.h>
 
 class LiveWindow;
 

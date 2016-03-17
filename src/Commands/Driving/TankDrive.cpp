@@ -16,7 +16,7 @@ void TankDrive::Execute() {
 	if(oi->getLeftStickY() > .5){
 		drivebase->setHold(false);
 	}
-	if(DriverStation::GetInstance().IsOperatorControl() && !drivebase->isHolding()){
+	if(CommandBase::drivebase->isDriverControl()){
 		drivebase->setLeftSpeed(oi->getLeftStickY());	//TODO: possibly move this sign flop into subsystem
 		drivebase->setRightSpeed(oi->getRightStickY());
 	}
