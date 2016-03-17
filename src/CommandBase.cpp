@@ -6,7 +6,6 @@
 #include <Subsystems/Climber.h>
 #include <Subsystems/Drivebase.h>
 #include <Subsystems/Shooter.h>
-#include <Subsystems/Collector.h>
 
 // Initialize a single static instance of all of your subsystems to NULL
 OI* CommandBase::oi = NULL;

@@ -1,10 +1,7 @@
 #include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
-<<<<<<< HEAD
-=======
 #include <Commands/Driving/TurnDegree.h>
 #include <CommandBase.h>
->>>>>>> Added macros for logging (see RobotMap.h)
 #include <Commands/Scheduler.h>
 #include <Robot.h>
 #include <RobotBase.h>
@@ -37,8 +34,7 @@ void Robot::RobotInit() {
 	//acc = new BuiltInAccelerometer(Accelerometer::kRange_16G);
 	//cmd = AutoBase::getSelectedAuto();
 	cmd = AutoBase::doLowBarandScore();
-	sprintf(str, "END OF ROBOTINIT");
-	Logger::getLogger()->log(str, Info);
+	LOG_INFO("END OF ROBOTINIT");
 }
 
 void Robot::DisabledInit() {

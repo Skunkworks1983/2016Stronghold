@@ -8,11 +8,8 @@ class MotorManager;
 class Drivebase: public Subsystem
 {
 private:
-<<<<<<< HEAD
 	bool holding = false;
-=======
 	bool driverControl;
->>>>>>> Added macros for logging (see RobotMap.h)
 public:
 	void setDriverControl(bool state);
 	bool isDriverControl();
