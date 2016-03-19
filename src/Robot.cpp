@@ -30,8 +30,8 @@ void Robot::RobotInit() {
 	//StallProtection *stall = new StallProtection();
 	//stall->Start();
 	//acc = new BuiltInAccelerometer(Accelerometer::kRange_16G);
-	//cmd = AutoBase::getSelectedAuto();
-	cmd = AutoBase::doLowBarandScore();
+
+	//cmd = AutoBase::doLowBarandScore();
 	LOG_INFO("END OF ROBOTINIT");
 }
 
@@ -52,6 +52,8 @@ void Robot::AutonomousInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	LOG_INFO("AutonomousInit Called");
 	//turnDegree->Start();
+	cmd = AutoBase::getSelectedAuto();
+
 	cmd->Start();
 }
 

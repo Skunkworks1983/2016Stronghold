@@ -11,8 +11,9 @@ private:
 	unsigned c = 0;
 	double leftSpeed;
 	double rightSpeed;
+	float timeout;
 public:
-	PIDShot(double leftSpeed, double rightSpeed);
+	PIDShot(double leftSpeed, double rightSpeed, float timeout = 0.0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

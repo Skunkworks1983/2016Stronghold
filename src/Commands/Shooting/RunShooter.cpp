@@ -27,7 +27,7 @@ void RunShooter::Initialize() {
 	if (timeout > 0) {
 		SetTimeout(timeout);
 	}
-	shooter->setShooterSpeed(realSpeed);
+	shooter->setShooterSpeed(speed);
 }
 
 void RunShooter::Execute() {
@@ -38,7 +38,7 @@ void RunShooter::Execute() {
 			realSpeed = speed;
 		}
 	}
-	shooter->setShooterSpeed(realSpeed);
+	//shooter->setShooterSpeed(s);
 	LOG_INFO("motorPower %f speed %f leftSpeed %f rightSpeed %f", realSpeed,
 			shooter->getShooterSpeed(), shooter->getLeftShooterSpeed(),
 			shooter->getRightShooterSpeed());

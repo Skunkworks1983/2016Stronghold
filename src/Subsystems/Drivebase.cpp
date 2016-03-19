@@ -28,7 +28,7 @@ void Drivebase::setDriverControl(bool state){
 	driverControl = state;
 }
 bool Drivebase::isDriverControl(){
-	LOG_INFO("Returning driverControl %u", driverControl);
+	//LOG_DEBUG("Returning driverControl %u", driverControl);
 	return driverControl;
 }
 

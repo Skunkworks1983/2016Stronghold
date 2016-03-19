@@ -10,8 +10,8 @@
 
 #define SHOT_TOLERANCE .15
 
-PIDShot::PIDShot(double leftSpeed, double rightSpeed) :
-		leftSpeed(leftSpeed), rightSpeed(rightSpeed) {
+PIDShot::PIDShot(double leftSpeed, double rightSpeed, float timeout) :
+		leftSpeed(leftSpeed), rightSpeed(rightSpeed), timeout(timeout) {
 }
 
 // Called just before this Command runs the first time
@@ -23,6 +23,9 @@ void PIDShot::Initialize() {
 	shooter->getLeft()->Enable();
 	shooter->getRight()->Enable();
 	c = 0;
+	if(timeout != 0){
+		SetTimeout(timeout);
+	}
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -31,6 +34,9 @@ void PIDShot::Execute() {
 	SmartDashboard::PutNumber("leftSpeed", shooter->getLeftShooterSpeed());
 	SmartDashboard::PutNumber("rightSpeed", shooter->getRightShooterSpeed());
 	SmartDashboard::PutNumber("time", GetFPGATime());
+//	LOG_INFO("PIDShot leftSpeed %f rightSpeed %f",
+//			shooter->getLeftShooterSpeed(), shooter->getRightShooterSpeed());
+
 //	const double leftDiff = fabs(shooter->getLeft()->PIDGet() - leftSpeed);
 //	const bool leftOnTarget = leftDiff < SHOT_TOLERANCE;
 //	const double rightDiff = fabs(shooter->getRight()->PIDGet() - rightSpeed);
@@ -59,7 +65,7 @@ void PIDShot::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool PIDShot::IsFinished() {
-	return false;
+	return IsTimedOut();
 }
 
 // Called once after isFinished returns true

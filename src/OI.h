@@ -39,7 +39,7 @@ private:
 	JoystickButton *stopShooterPID = NULL;
 	JoystickButton *driverShooterDown = NULL;
 	JoystickButton *driverShooterUp = NULL;
-	JoystickButton *holdAgainstTower = NULL;
+	JoystickButton *driverPass = NULL;
 
 public:
 	OI();

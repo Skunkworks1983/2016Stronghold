@@ -24,6 +24,7 @@ private:
 	};
 
 	enum eObstacle {
+		BLANK,
 		Obstacle_lowBar,
 		Obstacle_cheval,
 		Obstacle_moat,

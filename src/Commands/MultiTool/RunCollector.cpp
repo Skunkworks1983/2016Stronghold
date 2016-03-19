@@ -8,7 +8,6 @@
 RunCollector::RunCollector(Shooter::rollerDirection dir, float speed,
 		float timeOut) :
 		dir(dir), speed(speed), timeOut(timeOut) {
-	Requires(shooter);
 }
 
 void RunCollector::Initialize() {
@@ -32,9 +31,8 @@ bool RunCollector::IsFinished() {
 		return IsTimedOut();
 	}
 	if (timeOut != 0 || dir == Shooter::KBackward) {
-		return false;
 	}
-	return shooter->getBreakBeam();
+	return false;
 }
 
 void RunCollector::End() {

@@ -49,6 +49,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_cheval:
+		auto_base->AddSequential(AutoBase::doLowBarandScore());
 		//auto_base->AddSequential(AutoBase::doCheval());
 		break;
 
@@ -69,7 +70,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_portcullis:
-		//auto_base->AddSequential(AutoBase::doPortC());
+		auto_base->AddSequential(AutoBase::doPortC());
 		break;
 	}
 	/*const float driveSpeed = .5;

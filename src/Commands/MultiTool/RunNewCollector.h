@@ -6,8 +6,10 @@
 
 class RunNewCollector: public CommandGroup
 {
+private:
+	bool reverse;
 public:
-	RunNewCollector();
+	RunNewCollector(float timeout = 0, bool reverse = false);
 };
 
 #endif

@@ -15,23 +15,24 @@
 PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
 		PIDOutput *output) {
 	ptr = new PIDController(p, i, d, f, source, output);
+	setpoint = 0;
 
 	LOG_DEBUG("Created PIDWrapper with %f, %f, %f", p, i, d);
 }
 
 void PIDWrapper::Enable() {
 	ptr->Enable();
-	LOG_DEBUG("PIDWrapper Enabled");
+	//LOG_DEBUG("PIDWrapper Enabled");
 }
 
 void PIDWrapper::Disable() {
 	ptr->Disable();
-	LOG_DEBUG("PIDWrapper Enabled");
+//	LOG_DEBUG("PIDWrapper Enabled");
 }
 
 void PIDWrapper::SetSetpoint(float setpoint) {
 	ptr->SetSetpoint(setpoint);
-	LOG_DEBUG("PIDWrapper SetSetpoint");
+//	LOG_DEBUG("PIDWrapper SetSetpoint");
 }
 
 void PIDWrapper::SetPID(float p, float i, float d, float f) {

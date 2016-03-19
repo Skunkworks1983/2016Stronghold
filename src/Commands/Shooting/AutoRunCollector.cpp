@@ -41,8 +41,8 @@ void AutoRunCollector::Execute() {
 		 }*/
 	}
 
-	LOG_INFO("leftDiff %f rightDiff %f leftOnTarget %u rightOnTarget %u c: %u",
-			leftDiff, rightDiff, leftOnTarget, rightOnTarget, c);
+	LOG_INFO("leftSpeed %f rightSpeed %f leftDiff %f rightDiff %f leftOnTarget %u rightOnTarget %u c: %u",
+			shooter->getLeft()->PIDGet(), shooter->getRight()->PIDGet(), leftDiff, rightDiff, leftOnTarget, rightOnTarget, c);
 
 	if (c > 5 && !alreadyUp) {
 		shooter->setRollerSpeed(Shooter::KForward, 1.0);
