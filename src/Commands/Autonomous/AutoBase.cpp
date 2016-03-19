@@ -54,7 +54,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_moat:
-		//auto_base->AddSequential(AutoBase::doMoat());
+		auto_base->AddSequential(AutoBase::doMoat());
 		break;
 
 	case Obstacle_rough:

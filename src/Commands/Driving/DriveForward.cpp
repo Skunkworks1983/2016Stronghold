@@ -17,6 +17,8 @@ DriveForward::DriveForward(float distance, float speed) {
 	initialYaw = 0.0;
 	initialPosition = 0.0;
 	errorOffset = 0.0;
+	initialRight = 0.0;
+	initialLeft = 0.0;
 }
 
 DriveForward::~DriveForward() {
@@ -38,7 +40,7 @@ void DriveForward::Execute() {
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet() - initialRight);
 
-	drivebase->setLeftSpeed(speed);
+	drivebase->setLeftSpeed(speed * 1.01);
 	drivebase->setRightSpeed(speed);
 }
 
