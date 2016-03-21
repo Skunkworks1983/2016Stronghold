@@ -49,11 +49,12 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_cheval:
+		auto_base->AddSequential(AutoBase::doLowBarandScore());
 		//auto_base->AddSequential(AutoBase::doCheval());
 		break;
 
 	case Obstacle_moat:
-		//auto_base->AddSequential(AutoBase::doMoat());
+		auto_base->AddSequential(AutoBase::doMoat());
 		break;
 
 	case Obstacle_rough:
@@ -69,7 +70,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_portcullis:
-		//auto_base->AddSequential(AutoBase::doPortC());
+		auto_base->AddSequential(AutoBase::doPortC());
 		break;
 	}
 	/*const float driveSpeed = .5;
@@ -190,9 +191,7 @@ AutoBase * AutoBase::getSelectedAuto() {
 }
 
 void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
-	char str[1024];
-	sprintf(str, "Read Switched Obstacle start");
-	writeToLogFile(LOGFILE_NAME, str);
+	LOG_INFO("Read Switched Obstacle start");
 	std::vector<DigitalInput *> digitalInputs; // initialize digital input
 
 	for (int i = 1; i < 4; i++) {
@@ -204,15 +203,13 @@ void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
 	int adder = 1;
 	for (unsigned i = 0; i < digitalInputs.size(); i++) {
 		bool isSet = digitalInputs[i]->Get();
-		sprintf(str, "index %u bool %u", i, isSet);
-		writeToLogFile(LOGFILE_NAME, str);
+		LOG_INFO("index %u bool %u", i, isSet);
 		if (isSet) {
 			*obstacle = (eObstacle) ((*obstacle) | adder);
 		}
 		adder = adder << 1;
 	}
-	sprintf(str, "obstacle selected %d", (*obstacle));
-	writeToLogFile(LOGFILE_NAME, str);
+	LOG_INFO("obstacle selected %d", (*obstacle));
 	for (unsigned i = 0; i < digitalInputs.size(); i++) {
 		delete digitalInputs[i];
 	}

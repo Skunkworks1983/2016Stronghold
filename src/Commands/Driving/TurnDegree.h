@@ -19,7 +19,7 @@ class SensorManager;
 
 #define ENCODER_TURN_RADIUS_RATIO 1.2 // this is a placeholder for the actual ratio
 
-class TurnDegree: public CommandBase, public PIDOutput, public PIDSource
+class TurnDegree: public CommandBase
 {
 private:
 	float degree;
@@ -29,6 +29,7 @@ private:
 	SensorManager * sensorManager = NULL;
 	float initialYaw;
 	float epsilon;
+	unsigned onCount = 0;
 public:
 	TurnDegree(double degree); //number of degrees to turn, speed at which to turn
 	virtual ~TurnDegree();
@@ -40,8 +41,6 @@ public:
 	double P;
 	double I;
 	double D;
-	double PIDGet();
-	void PIDWrite(float output);
 };
 
 

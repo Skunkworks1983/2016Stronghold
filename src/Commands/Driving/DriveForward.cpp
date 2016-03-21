@@ -17,26 +17,21 @@ DriveForward::DriveForward(float distance, float speed) {
 	initialYaw = 0.0;
 	initialPosition = 0.0;
 	errorOffset = 0.0;
+	initialRight = 0.0;
+	initialLeft = 0.0;
 }
 
 DriveForward::~DriveForward() {
 }
 
 void DriveForward::Initialize() {
-
-	//initialYaw = sensorManager->getYaw();
-	//drivebase->setLeftSpeed(speed);
-	//drivebase->setRightSpeed(speed);
 	initialLeft = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
 	initialRight = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	char str[1024];
-	sprintf(str,
-			"DriveForward Initialize Called initialLeft %f initialRight %f ",
+	LOG_INFO("DriveForward Initialize Called initialLeft %f initialRight %f ",
 			initialLeft, initialRight);
-	writeToLogFile(LOGFILE_NAME, str);
 }
 
 void DriveForward::Execute() {
@@ -45,12 +40,8 @@ void DriveForward::Execute() {
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet() - initialRight);
 
-	drivebase->setLeftSpeed(speed);
+	drivebase->setLeftSpeed(speed * 1.01);
 	drivebase->setRightSpeed(speed);
-
-	char str[1024];
-	sprintf(str, "left: %f, right: %f", left, right);
-	writeToLogFile(LOGFILE_NAME, str);
 }
 
 bool DriveForward::IsFinished() {
@@ -59,17 +50,10 @@ bool DriveForward::IsFinished() {
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	double difference = ((left + right) / 2) - initialPosition;
-	char str[1024];
-	sprintf(str, "Difference: %f, target: %f", difference, distance);
-	writeToLogFile(LOGFILE_NAME, str);
-	if (fabs(left - initialLeft) > distance
-			|| fabs(right - initialRight) > distance) {
-		return true;
-	}
+	bool leftPast = fabs(left - initialLeft) > fabs(distance);
+	bool rightPast = fabs(right - initialRight) > fabs(distance);
 
-	return false;
-
+	return leftPast || rightPast;
 }
 
 void DriveForward::End() {

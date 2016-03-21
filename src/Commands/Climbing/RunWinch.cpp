@@ -25,7 +25,7 @@ void RunWinch::Initialize() {
 }
 
 void RunWinch::Execute() {
-	if(counter++ > 50){
+	if(counter++ > 5){
 		//drivebase->stopHold = true;
 		drivebase->setLeftSpeed(0);
 		drivebase->setRightSpeed(0);

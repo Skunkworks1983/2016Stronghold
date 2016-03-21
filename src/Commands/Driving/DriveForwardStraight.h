@@ -6,6 +6,9 @@
 #include <Services/SensorManager.h>
 #include <cstdbool>
 
+#define USE_GYRO_TURN 1
+#define CONTINUOUS_TEST 1
+
 class MotorManager;
 class SensorManager;
 

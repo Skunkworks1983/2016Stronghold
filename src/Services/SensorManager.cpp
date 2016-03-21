@@ -2,6 +2,7 @@
 #include <I2C.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
+#include <Services/Motor.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <TuningValues.h>
@@ -18,9 +19,7 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 	Motor * motor = MotorManager::getMotorManager()->getMotor(
 			CANTalonEncoderPort);
 	if (motor != NULL) {
-		char str[1024];
-		sprintf(str, "Created Sensor with talon on ID %d", CANTalonEncoderPort);
-		writeToLogFile(LOGFILE_NAME, str);
+		LOG_INFO("Created Sensor with talon on ID %d", CANTalonEncoderPort);
 		this->talon = motor->talon;
 		talon->SetEncPosition(0);
 		talon->SetPosition(0);
@@ -28,11 +27,10 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 		talon->GetAnalogIn();
 		talon->GetPulseWidthPosition();
 	} else {
-		char str[1024];
-		sprintf(str, "MotorIs null!!! port: %d", CANTalonEncoderPort);
-		writeToLogFile(LOGFILE_NAME, str);
+		LOG_INFO("MotorIs null!!! port: %d", CANTalonEncoderPort);
 	}
 	this->src = NULL;
+	this->ahrs = NULL;
 }
 
 Sensor::Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID,
@@ -40,6 +38,19 @@ bool reversed) :
 		ID(ID), lowRange(lowRange), highRange(highRange), reversed(reversed) {
 	this->talon = NULL;
 	this->src = src;
+	this->ahrs = NULL;
+}
+
+Sensor::Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID,
+bool reversed) :
+		ahrs(ahrs), lowRange(lowRange), highRange(highRange), ID(ID), reversed(
+				reversed), src(NULL), talon(NULL) {
+	if (ahrs != NULL) {
+		ahrs->SetPIDSourceType(PIDSourceType::kDisplacement);
+		ahrs->ZeroYaw();
+		ahrs->Reset();
+		ahrs->ResetDisplacement();
+	}
 }
 
 void Sensor::resetEncoder() {
@@ -64,29 +75,45 @@ double Sensor::PIDGet() {
 		} else {
 			return (double) talon->GetEncPosition();
 		}
+	} else if (ahrs != NULL) {
+//		char str[1024];
+//		sprintf(str, "PIDSource returning ahrs GetYaw(), Gryo: %f",
+//				ahrs->GetYaw());
+//		Logger::getLogger()->log(str, Info);
+		return ahrs->GetYaw() - SensorManager::getSensorManager()->initialYaw;
 	} else if (src != NULL) {
-		char str[1024];
-		sprintf(str, "PIDSource is returning PIDGet");
-		writeToLogFile(LOGFILE_NAME, str);
+		LOG_INFO("PIDSource is returning PIDGet");
 		return src->PIDGet();
 	} else {
-		char str[1024];
-		sprintf(str, "Sensor is returning a 0.0 because talon && src are NULL");
-		writeToLogFile(LOGFILE_NAME, str);
+		LOG_INFO(
+				"%s:%d Sensor is returning a 0.0 because talon && src are NULL",
+				__PRETTY_FUNCTION__, __LINE__);
 		return 0.0;
 	}
 }
 
+//ticks per 100 ms
+double Sensor::getSpeed() {
+	//from CANTalon.cpp  * The speed units will be in the sensor's native ticks per 100ms.*
+	if (talon != NULL) {
+		return talon->GetSpeed() * (reversed ? -1 : 1);
+	}
+	return 0.0;
+}
+
 int Sensor::getAbsolutePosition() {
-	return talon->GetPulseWidthPosition();
+	return talon->GetPulseWidthPosition() * (reversed ? -1 : 1);
 }
 
 SensorManager::SensorManager() {
-	char str[1024];
-	sprintf(str, "SensorManager Created #%u", count++);
-	writeToLogFile(LOGFILE_NAME, str);
+	LOG_INFO("SensorManager Created #%u", count++);
 #if USE_GYRO
+	//Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID, bool reversed = false);
+
 	initGyro();
+	sensors[SENSOR_GYRO_ID] = new Sensor(ahrs, -180, //REMOVE MAGIC NUMBER
+			180, //DITTO
+			SENSOR_GYRO_ID);
 	//sensors.insert(std::pair<int, Sensor*>(SENSOR_GYRO_ID, new Sensor(ahrs)));
 	//todo: FIX THIS
 #endif
@@ -97,9 +124,15 @@ SensorManager::SensorManager() {
 	sensors[SENSOR_DRIVE_BASE_LEFT_ENCODER_ID] = new Sensor(
 	DRIVEBASE_LEFT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID);
 	sensors[SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID] = new Sensor(
-	DRIVEBASE_RIGHT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID, true);
+	DRIVEBASE_RIGHT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
+	true);
 #endif
-#if USE_COLLECTOR
+#if USE_SHOOTER
+	sensors[SENSOR_SHOOTER_ENCODER_1_ID] = new Sensor(
+	SHOOTER_1_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_1_ID, true);
+	sensors[SENSOR_SHOOTER_ENCODER_2_ID] = new Sensor(
+	SHOOTER_2_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_2_ID, false);
+
 	sensors[SENSOR_COLLECTOR_ROTATION_ENCODER_ID] = new Sensor(
 	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT,
 	COLLECTOR_ROTATION_ENCODER_TOP_TICKS,
@@ -113,10 +146,6 @@ SensorManager::SensorManager() {
 	 std::pair<unsigned, Sensor*>(SENSOR_COLLECTOR_ROLLER_ENCODER_ID,
 	 new Sensor(COLLECTOR_ROLLER_ENCODER_PORT,
 	 SENSOR_COLLECTOR_ROLLER_ENCODER_ID)));*/
-#endif
-#if USE_SHOOTER
-	sensors.insert(std::pair<int, Sensor*>(SENSOR_SHOOTER_ENCODER_1_ID, new Sensor(SENSOR_SHOOTER_ENCODER_1_ID)));
-	sensors.insert(std::pair<int, Sensor*>(SENSOR_SHOOTER_ENCODER_2_ID, new Sensor(SENSOR_SHOOTER_ENCODER_2_ID)));
 #endif
 #if USE_CLIMBER
 	sensors[SENSOR_CLIMBER_WINCH_ENCODER] = new Sensor(
@@ -148,6 +177,7 @@ SensorManager* SensorManager::getSensorManager() {
 }
 
 void SensorManager::initGyro() {
+	LOG_INFO("Initializing Gyro", Debug);
 	std::cout << "Reached initGyro" << std::endl;
 	try {
 		ahrsDead = false;
@@ -245,4 +275,8 @@ Sensor* SensorManager::getSensor(unsigned ID) {
 	} else {
 		return NULL;
 	}
+}
+
+AHRS* SensorManager::getGyro() {
+	return ahrs;
 }

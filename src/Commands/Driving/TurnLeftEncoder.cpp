@@ -37,9 +37,7 @@ bool TurnLeftEncoder::IsFinished() {
 }
 
 void TurnLeftEncoder::End() {
-	char str[1024];
-	sprintf(str, "TurnDegreeEncoder ENDED!");
-	writeToLogFile(LOGFILE_NAME, str);
+	LOG_INFO("TurnDegreeEncoder ENDED!");
 	drivebase->setLeftSpeed(0.0);
 	drivebase->setRightSpeed(0.0);
 }

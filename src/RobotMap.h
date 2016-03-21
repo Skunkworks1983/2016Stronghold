@@ -7,14 +7,13 @@
 #include "TuningValues.h"
 
 #define USE_DRIVEBASE 1
-#define USE_COLLECTOR 1
 #define USE_CLIMBER 1
-#define USE_SHOOTER 0
+#define USE_SHOOTER 1
 #define USE_ARM 0
 
 #define USE_LOGGING 1
 
-#define USE_GYRO 0
+#define USE_GYRO 1
 #define USE_CAMERA 0
 
 #define USE_GAMEPAD 0
@@ -75,7 +74,7 @@
 #endif
 
 /**
- * Collector
+ * Shooter Rotation
  */
 
 #define COLLECTOR_ROTATOR_MOTOR_LEFT_PORT 3
@@ -112,12 +111,16 @@
  * Shooter
  */
 
-#define SHOOTER_MOTOR_1_PORT 14
-#define SHOOTER_MOTOR_2_PORT 15
+#define SHOOTER_MOTOR_1_PORT 9
+#define SHOOTER_MOTOR_2_PORT 10
 
-#define SHOOTER_1_ENCODER_PORT 15
-#define SHOOTER_2_ENCODER_PORT 16
+#define SHOOTER_1_ENCODER_PORT 9
+#define SHOOTER_2_ENCODER_PORT 10
 
+#define SHOOTER_FRONT_LIMIT_SWITCH_PORT 420
+#define SHOOTER_BACK_LIMIT_SWITCH_PORT 420
+
+#define SHOOTER_ENCODER_TICKS_PER_REV 4096
 
 /**
  * OI Ports
@@ -183,11 +186,29 @@
 #define SALLYPORT_SPEED 1
 #define LOWBAR_SPEED 1
 
-#define MOTOR_DIAMETER 8
 #define TICKS_REVOLUTION 360
 #define DISTANCE_NUMBER 0.0025
 
 #define DEBUG false
 
+#define LOG_DEBUG(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Debug);}
+
+#define LOG_INFO(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Info);}
+
+#define LOG_WARNING(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Warning);}
+
+#define LOG_ERROR(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Error);}
 
 #endif

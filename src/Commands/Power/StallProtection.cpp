@@ -30,16 +30,15 @@ void StallProtection::Execute() {
 						OVER_MAX_TIME
 								/ (motor->talon->GetOutputCurrent()
 										/ motor->maxCurrent)) {
-					char str[1024];
-					sprintf(str, "StallProtection Called ID: %u ",
+					LOG_INFO("StallProtection Called ID: %u ",
 							(*it).second->port);
-					writeToLogFile(LOGFILE_NAME, str);
 					motor->overCurrentStartTime = 0;
 					motor->talon->Set(0);
 					motor->stoppedStartTime = GetFPGATime();
 					switch (motor->parentSubsystem) {
 					case DRIVEBASE:
-						motorManager->disablePID(PID_ID_TURN_DEGREE);
+						motorManager->disablePID(PID_ID_TURN_DEGREE_LEFT);
+						motorManager->disablePID(PID_ID_TURN_DEGREE_RIGHT);
 						motorManager->disablePID(PID_ID_CAMERA);
 						break;
 					case WINCH:
@@ -68,7 +67,8 @@ void StallProtection::Execute() {
 		if (motor->stoppedStartTime > MAX_STOP_TIME) {
 			switch (motor->parentSubsystem) {
 			case DRIVEBASE:
-				motorManager->enablePID(PID_ID_TURN_DEGREE);
+				motorManager->enablePID(PID_ID_TURN_DEGREE_LEFT);
+				motorManager->enablePID(PID_ID_TURN_DEGREE_RIGHT);
 				motorManager->enablePID(PID_ID_CAMERA);
 				break;
 			case WINCH:

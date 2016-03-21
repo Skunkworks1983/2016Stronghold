@@ -1,4 +1,4 @@
-#include <Commands/MultiTool/CollectorMove.h>
+#include <Commands/MultiTool/RotateShooter.h>
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
@@ -10,16 +10,13 @@
 #define COLLECTOR_MOVE_TOLERANCE 250
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
-CollectorMove::CollectorMove(CollectorPosition pos) {
-	Requires(collector);
+RotateShooter::RotateShooter(ShooterPosition pos) {
+	Requires(shooter);
 	SetInterruptible(true);
 	test = 0;
 	switch (pos) {
 	case cTOP:
 		target = COLLECTOR_ROTATION_ENCODER_TOP_TICKS;
-		break;
-	case cLowBar:
-		target = COLLECTOR_ROTATION_ENCODER_LOWB_TICKS;
 		break;
 	case cCollect:
 		target = COLLECTOR_ROTATION_ENCODER_COLLECT_TICKS;
@@ -32,20 +29,18 @@ CollectorMove::CollectorMove(CollectorPosition pos) {
 	motorManager = MotorManager::getMotorManager();
 }
 
-void CollectorMove::Initialize() {
-	collector->registerCommand(this);
+void RotateShooter::Initialize() {
+	shooter->registerCommand(this);
 	//motorManager->disablePID(PID_ID_COLLECTOR);
 	motorManager->enablePID(PID_ID_COLLECTOR, target);
-	char str[1024];
-	sprintf(str, "CollectorMove Initialize target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
+	LOG_DEBUG("CollectorMove Initialize target %f", target);
 	SmartDashboard::PutNumber("target", target);
 }
 
-void CollectorMove::Execute() {
+void RotateShooter::Execute() {
 }
 
-bool CollectorMove::IsFinished() {
+bool RotateShooter::IsFinished() {
 	SmartDashboard::PutNumber("error",
 			fabs(SensorManager::getSensorManager()->getSensor(
 			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet() - target));
@@ -60,18 +55,13 @@ bool CollectorMove::IsFinished() {
 	return closeEnough;
 }
 
-void CollectorMove::End() {
+void RotateShooter::End() {
 	SmartDashboard::PutBoolean("CollectorMoveRunning", false);
 	//MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
-	char str[1024];
-	sprintf(str, "CollectorMove END Called for target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
-	collector->deregisterCommand(this);
+	LOG_DEBUG("CollectorMove END Called for target %f", target);
+	shooter->deregisterCommand(this);
 }
 
-void CollectorMove::Interrupted() {
-	char str[1024];
-	sprintf(str, "CollectorMove INTERRUPTED Called for target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
-	End(); //MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
+void RotateShooter::Interrupted() {
+	LOG_DEBUG("CollectorMove INTERRUPTED Called for target %f", target);
 }

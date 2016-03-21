@@ -1,16 +1,20 @@
 #include <Commands/Climbing/MoveServo.h>
 #include <Commands/Climbing/RunWinch.h>
 #include <Commands/Climbing/SafeRotateArm.h>
-#include <Commands/Driving/HoldAgainstTower.h>
-#include <Commands/MultiTool/ActivateRollers.h>
-#include <Commands/MultiTool/CollectorMove.h>
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
+#include <Commands/MultiTool/RotateShooter.h>
+#include <Commands/MultiTool/RunCollector.h>
+#include <Commands/MultiTool/RunNewCollector.h>
+#include <Commands/Shooting/ArmShot.h>
+#include <Commands/Shooting/AutoRunCollector.h>
+#include <Commands/Shooting/IndexBall.h>
+#include <Commands/Shooting/PIDShot.h>
+#include <Commands/Shooting/RunShooter.h>
+#include <Commands/Tests/ReadShooterPIDValues.h>
 #include <OI.h>
-#include <Services/Logger.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter.h>
 #include <cmath>
 #include <cstdbool>
-#include <cstdio>
 
 OI::OI() {
 #if USE_GAMEPAD
@@ -22,34 +26,35 @@ OI::OI() {
 	op = new Joystick(OI_JOYSTICK_OPERATOR_PORT);
 
 	//driverbuttons
-	stopCollectorPID = new JoystickButton(leftStick, 3);
-	holdAgainstTower = new JoystickButton(leftStick, 2);
-	driverCollectorDown = new JoystickButton(rightStick, 1);
-	driverCollectorUp = new JoystickButton(rightStick, 2);
+	stopShooterPID = new JoystickButton(leftStick, 2);
+	driverPass = new JoystickButton(leftStick, 1);
+	driverShooterDown = new JoystickButton(rightStick, 1);
+	driverShooterUp = new JoystickButton(rightStick, 2);
+	driverReadShooterPIDValues = new JoystickButton(rightStick, 3);
 
 	//operatorbuttons
 	collect = new JoystickButton(op, 8);
-	collectorDown = new JoystickButton(op, 7);
-	collectorUp = new JoystickButton(op, 6);
-	collectorPass = new JoystickButton(op, 5);
-	collector45 = new JoystickButton(op, 4);
+	shooterDown = new JoystickButton(op, 7);
+	shooterUp = new JoystickButton(op, 6);
+	shooterPass = new JoystickButton(op, 5);
+	shooter45 = new JoystickButton(op, 4);
 	lowFire = new JoystickButton(op, 1);
 	lowArm = new JoystickButton(op, 2);
 	lowAim = new JoystickButton(op, 3);
 	highFire = new JoystickButton(op, 17);
-	highAim = new JoystickButton(op, 18);
-	highAimPosition1 = new JoystickButton(op, 19);
-	highAimPosition2 = new JoystickButton(op, 20);
+	highArm = new JoystickButton(op, 18);
+	highArmPosition1 = new JoystickButton(op, 19);
+	highArmPosition2 = new JoystickButton(op, 20);
 	highLineUp = new JoystickButton(op, 23);
 	climberArmsUp = new JoystickButton(op, 10);
 	winchEngage = new JoystickButton(op, 11);
 	manualOveride = new JoystickButton(op, 9);
 	manualWinchReverse = new JoystickButton(op, 21);
-	manualCollectorDown = new JoystickButton(op, 22);
-	manualCollectorUp = new JoystickButton(op, 24);
+	manualShooterDown = new JoystickButton(op, 22);
+	manualShooterUp = new JoystickButton(op, 24);
 	portcullis = new JoystickButton(op, 12);
-
-	registerButtonListeners();
+//ayy lmao you register my buttons ;)
+	registerButtonListeners(/* woah look at dat chees*/);
 }
 
 OI::~OI() {
@@ -60,30 +65,31 @@ OI::~OI() {
 	delete rightStick;
 #endif
 	delete collect;
-	delete collectorDown;
-	delete collectorUp;
-	delete collectorPass;
-	delete collector45;
+	delete shooterDown;
+	delete shooterUp;
+	delete shooterPass;
+	delete shooter45;
 	delete lowFire;
 	delete lowArm;
 	delete lowAim;
 	delete highFire;
-	delete highAim;
-	delete highAimPosition1;
-	delete highAimPosition2;
+	delete highArm;
+	delete highArmPosition1;
+	delete highArmPosition2;
 	delete highLineUp;
 	delete climberArmsUp;
 	delete winchEngage;
 	delete manualOveride;
 	delete manualWinchReverse;
-	delete manualCollectorDown;
-	delete manualCollectorUp;
+	delete manualShooterDown;
+	delete manualShooterUp;
 	delete portcullis;
 
-	delete stopCollectorPID;
-	delete driverCollectorDown;
-	delete driverCollectorUp;
-	delete holdAgainstTower;
+	delete stopShooterPID;
+	delete driverShooterDown;
+	delete driverShooterUp;
+	delete driverReadShooterPIDValues;
+	delete driverPass;
 }
 
 double OI::getLeftStickY() {
@@ -104,51 +110,55 @@ double OI::getRightStickY() {
 }
 
 void OI::registerButtonListeners() {
-	char str[1024];
-	sprintf(str, "RegisterButtonListeners called");
-	writeToLogFile(LOGFILE_NAME, str);
+	/*rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
+	 SmartDashboard::PutData("Climber Down",
+	 new RotateArm(CLIMBER_ARM_DOWN_POSITION));
+
+	 //engageWinch->WhenPressed(new RunWinchToSetPoint(CLIMBER_WINCH_UP_POSITION, .25));
+	 engageWinch->WhileHeld(new RunWinch(.50));
+
+	 engageWinch->WhileHeld(new RunWinch(.50));*/
 
 	/**
 	 * Driver Buttons
 	 */
-	driverCollectorDown->WhileHeld(new ActivateRollers(Collector::KForward));
-	driverCollectorDown->WhenPressed(new CollectorMove(cCollect));
-	driverCollectorUp->WhenPressed(new CollectorMove(cTOP));
-	//holdAgainstTower->WhenPressed(new HoldAgainstTower(.2));
-
+	driverShooterDown->WhileHeld(new RunNewCollector(false));
+	driverShooterDown->WhenPressed(new RotateShooter(cCollect));
+	driverShooterUp->WhenPressed(new RotateShooter(cTOP));
+	driverPass->WhileHeld(new RunNewCollector(true));
+	driverReadShooterPIDValues->WhenPressed(new ReadShooterPIDValues());
 	/**
 	 * Operator Buttons
 	 */
 
-	collect->WhileHeld(new ActivateRollers(Collector::KForward));
-	//collect->WhileHeld(new StopCollectorPID());
-	collectorDown->WhenPressed(new CollectorMove(cCollect));
-	//collectorDown->WhenReleased(new StopCollectorPID());
+	collect->WhileHeld(new RunNewCollector(false));
+	shooterDown->WhenPressed(new RotateShooter(cCollect));
 
-	collectorUp->WhenPressed(new CollectorMove(cTOP));
-	//collectorUp->WhenReleased(new StopCollectorPID());
+	shooterUp->WhenPressed(new RotateShooter(cTOP));
 
-	collectorPass->WhileHeld(new ActivateRollers(Collector::KBackward));
-	collector45->WhenPressed(new CollectorMove(c45));
-	lowFire->WhenPressed(new ActivateRollers(Collector::KBackward));
-	//lowArm->WhenPressed();	//no need for this at the moment
-	lowAim->WhenPressed(new CollectorMove(cLowBar));
-	//highFire->WhenPressed();
-	//highAim;
+	shooterPass->WhileHeld(new RunNewCollector(true));
+	shooter45->WhenPressed(new RotateShooter(c45));
+
+	lowFire->WhileHeld(new AutoRunCollector());
+	lowArm->WhenPressed(new IndexBall());	//no need for this at the moment
+	lowAim->WhenPressed(new RotateShooter(cCollect));
+
+	highArm->WhileHeld(new PIDShot(55.35, 55.35));
+	highArmPosition1->WhileHeld(new ArmShot());
+	highArmPosition2->WhileHeld(new RunShooter(.65, .2));
+	highFire->ToggleWhenPressed(new RunCollector(Shooter::KForward, 1.0, .5));
 	//highAimPosition1;
-	highLineUp->WhenPressed(new ResetCollectorEncoder());
+	highLineUp->WhenPressed(new ResetShooterRotationEncoder());
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
 	const double climber_arm_up_debug = 3125;
 	climberArmsUp->WhenPressed(new SafeRotateArm(climber_arm_up_debug));
 	winchEngage->WhileHeld(new RunWinch(.75));
 	//manualOveride;	no effect currently
 	manualWinchReverse->WhileHeld(new RunWinch(-.1));
-	manualCollectorDown->WhenPressed(new MoveServo(MoveServo::eServoPosition::OUT));
-	manualCollectorUp->WhenPressed(new MoveServo(MoveServo::eServoPosition::IN));
-	portcullis->WhileHeld(new ActivateRollers(Collector::KBackward));
-
-	sprintf(str, "RegisterButtonListeners Ended");
-	writeToLogFile(LOGFILE_NAME, str);
+	manualShooterDown->WhenPressed(
+			new MoveServo(MoveServo::eServoPosition::OUT));
+	manualShooterUp->WhenPressed(new MoveServo(MoveServo::eServoPosition::IN));
+	portcullis->WhileHeld(new RunCollector(Shooter::KBackward));
 }
 
 bool OI::isJoystickButtonPressed(int control, int button) {

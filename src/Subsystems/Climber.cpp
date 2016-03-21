@@ -5,7 +5,7 @@
 #include <Services/MotorManager.h>
 #include <Servo.h>
 #include <Subsystems/Climber.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter.h>
 #include <cstdio>
 
 Climber::Climber() :
@@ -44,29 +44,24 @@ void Climber::setWinchSpeed(float winchSpeed) {
 
 void Climber::registerCommand(Command *cmd) {
 	if (lastCommand == NULL) {
-		writeToLogFile(LOGFILE_NAME, "lastCommand = cmd");
+		LOG_INFO("lastCommand = cmd");
 		lastCommand = cmd;
 	} else {
 		if (lastCommand->IsRunning()) {
 			lastCommand->Cancel();
 		}
 		lastCommand = cmd;
-		writeToLogFile(LOGFILE_NAME, "After");
+		LOG_INFO("After");
 	}
-	char str[1024];
-	sprintf(str, "Command %d registered", cmd != NULL ? cmd->GetID() : -420);
-	writeToLogFile(LOGFILE_NAME, str);
+	LOG_INFO("Command %d registered", cmd != NULL ? cmd->GetID() : -420);
 }
 
 void Climber::deregisterCommand(Command *cmd) {
-	char str[1024];
-	sprintf(str, "Command %d DEREGISTERED", cmd != NULL ? cmd->GetID() : -420);
-	writeToLogFile(LOGFILE_NAME, str);
+	LOG_INFO("Command %d DEREGISTERED", cmd != NULL ? cmd->GetID() : -420);
 	if (lastCommand == cmd) {
 		if (lastCommand != NULL) {
 			if (lastCommand->IsRunning()) {
 				lastCommand->Cancel();
-				//Scheduler::GetInstance()->Remove(lastCommand);
 			}
 		}
 	}

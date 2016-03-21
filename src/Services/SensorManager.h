@@ -13,11 +13,13 @@ class Encoder;
 
 class Sensor: public PIDSource {
 private:
+	AHRS * ahrs = NULL;
 	CANTalon *talon = NULL;
 	PIDSource *src = NULL;
 	unsigned ID;
 	float lowRange;
-	float highRange;bool reversed;
+	float highRange;
+	bool reversed;
 public:
 	Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 			unsigned ID, bool reversed = false);
@@ -25,11 +27,13 @@ public:
 			bool reversed = false);
 	Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID,
 			bool reversed = false);
+	Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID, bool reversed = false);
 	double PIDGet();
 	float getLowRange();
 	float getHighRange();
 	int getAbsolutePosition();
 	void resetEncoder();
+	double getSpeed();
 };
 
 class SensorManager {
@@ -57,6 +61,7 @@ public:
 	double GetSpeed(int ID);bool ahrsDead;
 	double initialYaw;
 	Sensor *getSensor(unsigned ID);
+	AHRS *getGyro();
 };
 
 #endif

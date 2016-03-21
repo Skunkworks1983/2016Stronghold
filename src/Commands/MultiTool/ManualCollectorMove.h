@@ -7,15 +7,13 @@
 class MotorManager;
 class SensorManager;
 
-class ManualCollectorMove: public CommandBase
+class ManualRotateShooter: public CommandBase
 {
 private:
 	float speed;
 	float timeout;
-	MotorManager * motorManager = NULL;
-	SensorManager * sensorManager = NULL;
 public:
-	ManualCollectorMove(float speed, float timeout = 0);
+	ManualRotateShooter(float speed, float timeout = 0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

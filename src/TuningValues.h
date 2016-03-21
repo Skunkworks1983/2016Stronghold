@@ -2,12 +2,13 @@
 #define TUNING_VALUES_H
 
 /**
- * PID ID's
+ * PID ID's not equal to ports, used in createPID and motormanager manipulation of pidWrappers
  */
 #define PID_ID_SHOOTER_1 0
 #define PID_ID_SHOOTER_2 1
 #define PID_ID_COLLECTOR 2
-#define PID_ID_TURN_DEGREE 3
+#define PID_ID_TURN_DEGREE_RIGHT 3
+#define PID_ID_TURN_DEGREE_LEFT 11
 #define PID_ID_CAMERA 4
 #define PID_ID_ROLLER 5
 #define PID_ID_ARM 6
@@ -21,7 +22,7 @@
 #define LOWB_TURN 1
 
 /**
- * Sensor IDs
+ * Sensor IDs does not correlate to port, simply an id to access the generic Sensor objects
  */
 
 #define SENSOR_GYRO_ID 0
@@ -67,6 +68,8 @@
 #define POWER_BROWNOUT_VOLTAGE 7
 #define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
 #define POWER_VOLTAGE_WIDTH 1.5
+
+#define SHOOTER_BATTER_SPEED 58.0
 
 /**
  * PID Values
@@ -117,8 +120,8 @@
 #define CLIMBER_WINCH_D 0.0
 #define CLIMBER_WINCH_F 0.0
 
-#define MOVE_TOWARD_CAMERA_P .3
-#define MOVE_TOWARD_CAMERA_I 0
+#define MOVE_TOWARD_CAMERA_P .5
+#define MOVE_TOWARD_CAMERA_I 0.0001
 #define MOVE_TOWARD_CAMERA_D 0
 #define MOVE_TOWARD_CAMERA_F 0
 

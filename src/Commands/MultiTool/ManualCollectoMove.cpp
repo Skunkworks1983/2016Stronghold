@@ -1,39 +1,32 @@
 #include <Commands/MultiTool/ManualCollectorMove.h>
-#include <RobotMap.h>
-#include <Services/MotorManager.h>
-#include <Services/SensorManager.h>
+#include <Subsystems/Shooter.h>
 #include <cstdbool>
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
-ManualCollectorMove::ManualCollectorMove(float speed, float timeout) :
+ManualRotateShooter::ManualRotateShooter(float speed, float timeout) :
 		speed(speed), timeout(timeout) {
-
-	sensorManager = SensorManager::getSensorManager();
-	motorManager = MotorManager::getMotorManager();
+	Requires(shooter);
 }
 
-void ManualCollectorMove::Initialize() {
+void ManualRotateShooter::Initialize() {
 	if(timeout != 0){
 		SetTimeout(timeout);
 	}
-	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, speed);
-	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, speed);
+	shooter->setRotatorSpeed(speed);
+}
+
+void ManualRotateShooter::Execute() {
 
 }
 
-void ManualCollectorMove::Execute() {
-
-}
-
-bool ManualCollectorMove::IsFinished() {
+bool ManualRotateShooter::IsFinished() {
 	return false;
 }
 
-void ManualCollectorMove::End() {
-	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, speed);
-	motorManager->setSpeed(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, speed);
+void ManualRotateShooter::End() {
+	shooter->setRotatorSpeed(0);
 }
 
-void ManualCollectorMove::Interrupted() {
+void ManualRotateShooter::Interrupted() {
 	End();
 }

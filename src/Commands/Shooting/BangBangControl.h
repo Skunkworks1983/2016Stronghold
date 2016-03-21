@@ -5,16 +5,16 @@
 #include <Services/SensorManager.h>
 #include "RobotMap.h"
 
-
-class BangBangControl : public CommandBase{
+class BangBangControl: public CommandBase {
 private:
-	double desiredSpeed;
-	float currentSpeed;
-	double timeActivated;
-	MotorManager * motorManager = NULL;
-	SensorManager * sensorManager = NULL;
+	double targetSpeed;
+	double timeOut;
+	double realSpeed;
+	bool alreadyRamped = false;
+	double leftSpeed;
+	double rightSpeed;
 public:
-	BangBangControl(double desiredSpeed, double timeActivated);
+	BangBangControl(double desiredSpeed, double timeOut = 0);
 	~BangBangControl();
 	void Initialize();
 	void Execute();

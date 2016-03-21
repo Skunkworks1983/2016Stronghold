@@ -11,26 +11,26 @@ HoldAgainstTower::HoldAgainstTower(float speed) :
 }
 
 void HoldAgainstTower::Initialize() {
-	char str[1024];
-	sprintf(str, "HoldAgainstTower Started");
-	writeToLogFile(LOGFILE_NAME, str);
+	drivebase->setHold(true);
+	LOG_INFO("HoldAgainstTower Started");
 }
 
 void HoldAgainstTower::Execute() {
-	drivebase->setLeftSpeed(speed);
-	drivebase->setRightSpeed(speed);
+	drivebase->setLeftSpeed(speed, speed, 0);
+	drivebase->setRightSpeed(speed, speed, 0);
 }
 
 bool HoldAgainstTower::IsFinished() {
-	return true;
+	return false;
 }
 
 void HoldAgainstTower::End() {
 	/*drivebase->setLeftSpeed(0);
-	drivebase->setRightSpeed(0);*/
-	char str[1024];
-	sprintf(str, "HoldAgainstTower ended");
-	writeToLogFile(LOGFILE_NAME, str);
+	 drivebase->setRightSpeed(0);*/
+	drivebase->setLeftSpeed(0);
+	 drivebase->setRightSpeed(0);
+	drivebase->setHold(true);
+	LOG_INFO("HoldAgainstTower ended");
 }
 
 void HoldAgainstTower::Interrupted() {

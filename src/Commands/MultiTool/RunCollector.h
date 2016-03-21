@@ -2,23 +2,24 @@
 #define ActivateRollers_H
 
 #include <CommandBase.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter.h>
 #include <cstdbool>
 #include <ctime>
 
 class MotorManager;
 class SensorManager;
 
-class ActivateRollers: public CommandBase
+#define COLLECT_SPEED 1.0
+
+class RunCollector: public CommandBase
 {
 private:
-	MotorManager * motorManager = NULL;
-	SensorManager * sensorManager = NULL;
-	clock_t rollerTime;
+	Shooter::rollerDirection dir;
+	float speed;
 	float timeOut;
-	Collector::rollerDirection dir;
+	bool already_on  =false;
 public:
-	ActivateRollers(Collector::rollerDirection dir, float timeOut = 0);
+	RunCollector(Shooter::rollerDirection dir, float speed = COLLECT_SPEED, float timeOut = 0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

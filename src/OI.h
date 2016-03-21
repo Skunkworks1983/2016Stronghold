@@ -15,30 +15,31 @@ private:
 	Joystick *op = NULL;
 
 	JoystickButton *collect = NULL;
-	JoystickButton *collectorDown = NULL;
-	JoystickButton *collectorUp = NULL;
-	JoystickButton *collectorPass = NULL;
-	JoystickButton *collector45 = NULL;
+	JoystickButton *shooterDown = NULL;
+	JoystickButton *shooterUp = NULL;
+	JoystickButton *shooterPass = NULL;
+	JoystickButton *shooter45 = NULL;
 	JoystickButton *lowFire = NULL;
 	JoystickButton *lowArm = NULL;
 	JoystickButton *lowAim = NULL;
 	JoystickButton *highFire = NULL;
-	JoystickButton *highAim = NULL;
-	JoystickButton *highAimPosition1 = NULL;
-	JoystickButton *highAimPosition2 = NULL;
+	JoystickButton *highArm = NULL;
+	JoystickButton *highArmPosition1 = NULL;
+	JoystickButton *highArmPosition2 = NULL;
 	JoystickButton *highLineUp = NULL;
 	JoystickButton *climberArmsUp = NULL;
 	JoystickButton *winchEngage = NULL;
 	JoystickButton *manualOveride = NULL;
 	JoystickButton *manualWinchReverse = NULL;
-	JoystickButton *manualCollectorDown = NULL;
-	JoystickButton *manualCollectorUp = NULL;
+	JoystickButton *manualShooterDown = NULL;
+	JoystickButton *manualShooterUp = NULL;
 	JoystickButton *portcullis = NULL;
 
-	JoystickButton *stopCollectorPID = NULL;
-	JoystickButton *driverCollectorDown = NULL;
-	JoystickButton *driverCollectorUp = NULL;
-	JoystickButton *holdAgainstTower = NULL;
+	JoystickButton *driverReadShooterPIDValues = NULL;
+	JoystickButton *stopShooterPID = NULL;
+	JoystickButton *driverShooterDown = NULL;
+	JoystickButton *driverShooterUp = NULL;
+	JoystickButton *driverPass = NULL;
 
 public:
 	OI();

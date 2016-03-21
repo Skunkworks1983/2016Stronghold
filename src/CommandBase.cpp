@@ -4,14 +4,12 @@
 #include <stddef.h>
 #include <Services/Logger.h>
 #include <Subsystems/Climber.h>
-#include <Subsystems/Collector.h>
 #include <Subsystems/Drivebase.h>
-
+#include <Subsystems/Shooter.h>
 
 // Initialize a single static instance of all of your subsystems to NULL
 OI* CommandBase::oi = NULL;
 Drivebase* CommandBase::drivebase = NULL;
-Collector* CommandBase::collector = NULL;
 Shooter* CommandBase::shooter = NULL;
 Climber* CommandBase::climber = NULL;
 
@@ -29,9 +27,6 @@ void CommandBase::init() {
 #if USE_DRIVEBASE
 	drivebase = new Drivebase();
 #endif
-#if USE_COLLECTOR
-	collector = new Collector();
-#endif
 #if USE_CLIMBER
 	climber = new Climber();
 #endif
@@ -39,6 +34,6 @@ void CommandBase::init() {
 	shooter = new Shooter();
 #endif
 #if USE_LOGGING
-	writeToLogFile(LOGFILE_NAME, "Robot initialized");
+	LOG_INFO("Robot initialized");
 #endif
 }
