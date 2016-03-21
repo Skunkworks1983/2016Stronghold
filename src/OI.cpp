@@ -122,7 +122,7 @@ void OI::registerButtonListeners() {
 	/**
 	 * Driver Buttons
 	 */
-	driverShooterDown->WhileHeld(new RunNewCollector());
+	driverShooterDown->WhileHeld(new RunNewCollector(false));
 	driverShooterDown->WhenPressed(new RotateShooter(cCollect));
 	driverShooterUp->WhenPressed(new RotateShooter(cTOP));
 	driverPass->WhileHeld(new RunNewCollector(true));
@@ -131,7 +131,7 @@ void OI::registerButtonListeners() {
 	 * Operator Buttons
 	 */
 
-	collect->WhileHeld(new RunNewCollector());
+	collect->WhileHeld(new RunNewCollector(false));
 	shooterDown->WhenPressed(new RotateShooter(cCollect));
 
 	shooterUp->WhenPressed(new RotateShooter(cTOP));
@@ -145,7 +145,7 @@ void OI::registerButtonListeners() {
 
 	highArm->WhileHeld(new PIDShot(55.35, 55.35));
 	highArmPosition1->WhileHeld(new ArmShot());
-	highArmPosition2->WhileHeld(new RunShooter(.65));
+	highArmPosition2->WhileHeld(new RunShooter(.65, .2));
 	highFire->ToggleWhenPressed(new RunCollector(Shooter::KForward, 1.0, .5));
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetShooterRotationEncoder());

@@ -8,8 +8,9 @@ private:
 	double speed;
 	double timeout;
 	double realSpeed;
+	double startingSpeed;
 public:
-	RunShooter(double speed, double timoeut = -1);
+	RunShooter(double speed, double startingSpeed, double timeout = -1);
 	~RunShooter();
 	void Initialize();
 	void Execute();

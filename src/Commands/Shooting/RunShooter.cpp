@@ -6,10 +6,10 @@
 
 #define SCALING_CONSTANT .075
 
-RunShooter::RunShooter(double speed, double timeout) :
-		speed(speed), timeout(timeout) {
+RunShooter::RunShooter(double speed, double startingSpeed, double timeout) :
+		speed(speed), timeout(timeout), startingSpeed(startingSpeed) {
 	Requires(shooter);
-	realSpeed = 0;
+	realSpeed = startingSpeed;
 	if (timeout > 0) {
 		SetTimeout(timeout);
 	}
@@ -38,7 +38,7 @@ void RunShooter::Execute() {
 			realSpeed = speed;
 		}
 	}
-	//shooter->setShooterSpeed(s);
+	//shooter->setShooterSpeed(realSpeed);
 	LOG_INFO("motorPower %f speed %f leftSpeed %f rightSpeed %f", realSpeed,
 			shooter->getShooterSpeed(), shooter->getLeftShooterSpeed(),
 			shooter->getRightShooterSpeed());
