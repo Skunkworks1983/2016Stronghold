@@ -211,4 +211,9 @@
 			sprintf(buf, __VA_ARGS__);\
 			Logger::getLogger()->log(buf, Error);}
 
+#define LOG_RECORD(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Record);}
+
 #endif
