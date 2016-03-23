@@ -18,13 +18,13 @@
 
 OI::OI() {
 #if USE_GAMEPAD
-	gamepad = new Joystick(OI_JOYSTICK_GAMEPAD);
+	gamepad = new Joystick(0);
 #else
 	leftStick = new Joystick(OI_JOYSTICK_LEFT_PORT);
 	rightStick = new Joystick(OI_JOYSTICK_RIGHT_PORT);
-#endif
-	op = new Joystick(OI_JOYSTICK_OPERATOR_PORT);
 
+	op = new Joystick(OI_JOYSTICK_OPERATOR_PORT);
+#endif
 	//driverbuttons
 	stopShooterPID = new JoystickButton(leftStick, 2);
 	driverPass = new JoystickButton(leftStick, 1);
@@ -94,7 +94,7 @@ OI::~OI() {
 
 double OI::getLeftStickY() {
 #if USE_GAMEPAD
-	return gamepad->GetY() * fabs(gamepad->GetY());
+	return -gamepad->GetY() * fabs(gamepad->GetY());
 #else
 	return -leftStick->GetY() * fabs(leftStick->GetY());
 #endif
@@ -102,8 +102,9 @@ double OI::getLeftStickY() {
 
 double OI::getRightStickY() {
 #if USE_GAMEPAD
-	return gamepad->GetAxis(Joystick::AxisType::kThrottleAxis)
-	* fabs(gamepad->GetAxis(Joystick::AxisType::kThrottleAxis));
+	return -gamepad->GetRawAxis(5) * fabs(gamepad->GetRawAxis(5));
+	//return gamepad->GetAxis(Joystick::AxisType::kNumAxisTypes) * fabs(gamepad->GetAxis(Joystick::AxisType::kNumAxisTypes));
+	//return gamepad->GetAxis(Joystick::AxisType::kThrottleAxis)* fabs(gamepad->GetAxis(Joystick::AxisType::kThrottleAxis));
 #else
 	return -rightStick->GetY() * fabs(rightStick->GetY());
 #endif
@@ -118,7 +119,9 @@ void OI::registerButtonListeners() {
 	 engageWinch->WhileHeld(new RunWinch(.50));
 
 	 engageWinch->WhileHeld(new RunWinch(.50));*/
+#if USE_GAMEPAD
 
+#else
 	/**
 	 * Driver Buttons
 	 */
@@ -143,7 +146,7 @@ void OI::registerButtonListeners() {
 	lowArm->WhenPressed(new IndexBall());	//no need for this at the moment
 	lowAim->WhenPressed(new RotateShooter(cCollect));
 
-	highArm->WhileHeld(new PIDShot(55.35, 55.35));
+	highArm->WhileHeld(new PIDShot(77.0, 77.0));
 	highArmPosition1->WhileHeld(new ArmShot());
 	highArmPosition2->WhileHeld(new RunShooter(.65, .2));
 	highFire->ToggleWhenPressed(new RunCollector(Shooter::KForward, 1.0, .5));
@@ -159,19 +162,21 @@ void OI::registerButtonListeners() {
 			new MoveServo(MoveServo::eServoPosition::OUT));
 	manualShooterUp->WhenPressed(new MoveServo(MoveServo::eServoPosition::IN));
 	portcullis->WhileHeld(new RunCollector(Shooter::KBackward));
+#endif
 }
 
 bool OI::isJoystickButtonPressed(int control, int button) {
 	switch (control) {
-	case OI_JOYSTICK_LEFT_PORT:
-		return leftStick->GetRawButton(button);
-	case OI_JOYSTICK_RIGHT_PORT:
-		return rightStick->GetRawButton(button);
-	case OI_JOYSTICK_OPERATOR_PORT:
-		return op->GetRawButton(button);
 #if USE_GAMEPAD
-		case OI_JOYSTICK_GAMEPAD_PORT:
+	case 0:
 		return gamepad->GetRawButton(button);
+#else
+		case OI_JOYSTICK_LEFT_PORT:
+		return leftStick->GetRawButton(button);
+		case OI_JOYSTICK_RIGHT_PORT:
+		return rightStick->GetRawButton(button);
+		case OI_JOYSTICK_OPERATOR_PORT:
+		return op->GetRawButton(button);
 #endif
 	}
 	return false;

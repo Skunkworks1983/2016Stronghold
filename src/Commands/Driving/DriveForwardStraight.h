@@ -20,8 +20,7 @@ private:
 	float 			initialYaw;			//Initial yaw at the start of the command
 	float			initialPosition;	//Initial encoder position at start of command
 	SensorManager * sensorManager = NULL;
-	MotorManager * 	motorManager = NULL;
-	float			errorOffset;		//Current enc position - initial enc position
+	float			error;		//Current enc position - initial enc position
 	//Todo: Check if ahrsDead and ignore all orient calls if it is
 	double initialLeft;
 	double initialRight;

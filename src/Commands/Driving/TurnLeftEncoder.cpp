@@ -1,23 +1,25 @@
 #include <Commands/Driving/TurnLeftEncoder.h>
-#include <Services/Logger.h>
+#include <RobotMap.h>
 #include <Services/SensorManager.h>
 #include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
-#include <RobotMap.h>
-#include <cstdio>
+#include <Services/Logger.h>
+#include <cmath>
 
-TurnLeftEncoder::TurnLeftEncoder(double degrees) :
-		degrees(degrees) {
+TurnLeftEncoder::TurnLeftEncoder(double degrees, double speed) :
+		degrees(degrees), speed(speed) {
 	Requires(drivebase);
+	initialEncoderTick = 0.0;
+	sensorManager = SensorManager::getSensorManager();
 }
 
 TurnLeftEncoder::~TurnLeftEncoder() {
 }
 
 void TurnLeftEncoder::Initialize() {
-	initial = SensorManager::getSensorManager()->getSensor(
+	initialEncoderTick = sensorManager->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
-	double speed = .5;
+
 	drivebase->setLeftSpeed(-speed);
 	drivebase->setRightSpeed(speed);
 }
@@ -27,13 +29,16 @@ void TurnLeftEncoder::Execute() {
 }
 
 bool TurnLeftEncoder::IsFinished() {
-	double end = 3000;
-	return fabs(
-			(fabs(SensorManager::getSensorManager()->getSensor(
-			SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet())
-					+ fabs(SensorManager::getSensorManager()->getSensor(
-					SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet())) / 2
-					- initial) > end * (degrees / 360.0);
+	const double targetTicks = 3000 * (degrees / 360.0);
+
+	double leftEncoder = fabs(sensorManager->getSensor(
+	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
+	double rightEncoder = fabs(sensorManager->getSensor(
+	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+
+	//check if average of encoder ticks is larger than target
+	return fabs((leftEncoder + rightEncoder) / 2 - initialEncoderTick)
+			> targetTicks;
 }
 
 void TurnLeftEncoder::End() {

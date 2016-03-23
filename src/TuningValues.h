@@ -53,7 +53,7 @@
 #define CLIMBER_ARM_UP_POSITION 3150
 
 #define REACH_DEFENCE_DISTANCE 420	//TODO: find out this value at practice field
-#define REACH_DEFENCE_SPEED .3
+#define REACH_DEFENCE_SPEED .5
 
 #define CLIMBER_SERVO_IN_ANGLE 0
 #define CLIMBER_SERVO_OUT_ANGLE 130

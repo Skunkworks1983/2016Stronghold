@@ -34,7 +34,7 @@ AutoBase *AutoBase::doLowBarandScore() {
 			new PIDShot(shooter_batter_speed + 1, shooter_batter_speed - 1));
 
 	cmd->AddSequential(new DriveForward(-3, -0.2));
-	cmd->AddParallel(new RotateTowardCameraTarget(-.2, -1600));
+	cmd->AddParallel(new RotateTowardCameraTarget(5));
 	cmd->AddSequential(new AutoRunCollector());
 	cmd->AddSequential(new TimeOut(15));
 	return cmd;

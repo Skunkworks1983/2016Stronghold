@@ -7,7 +7,7 @@
 
 class LiveWindow;
 
-class TurnDegree;
+class DriveForwardStraight;
 
 class AutoBase;
 
@@ -22,7 +22,7 @@ private:
 	ManagePower *managePower  = NULL;
 	int count;
 	AutoBase *cmd  = NULL;
-	TurnDegree * turnDegree;
+	DriveForwardStraight * turnDegree = NULL;
 
 public:
 	void RobotInit();

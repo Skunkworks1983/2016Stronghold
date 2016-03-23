@@ -2,13 +2,13 @@
 #define ROBOTMAP_H
 
 #define ROBOT_NAME "VanillaThunder"
-#define PRACTICEBOT 0
+#define PRACTICEBOT 1
 
 #include "TuningValues.h"
 
 #define USE_DRIVEBASE 1
 #define USE_CLIMBER 1
-#define USE_SHOOTER 1
+#define USE_SHOOTER 0
 #define USE_ARM 0
 
 #define USE_LOGGING 1
@@ -117,9 +117,6 @@
 #define SHOOTER_1_ENCODER_PORT 9
 #define SHOOTER_2_ENCODER_PORT 10
 
-#define SHOOTER_FRONT_LIMIT_SWITCH_PORT 420
-#define SHOOTER_BACK_LIMIT_SWITCH_PORT 420
-
 #define SHOOTER_ENCODER_TICKS_PER_REV 4096
 
 /**
@@ -190,6 +187,8 @@
 #define DISTANCE_NUMBER 0.0025
 
 #define DEBUG false
+
+#include <Services/Logger.h>
 
 #define LOG_DEBUG(...) {\
 			char buf[1024];\

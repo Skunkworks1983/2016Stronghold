@@ -2,6 +2,7 @@
 #include <Commands/Driving/DriveForward.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunNewCollector.h>
+#include <string>
 
 AutoBase *AutoBase::doMoat() {
 	AutoBase *cmd = new AutoBase("Autonomous-doMoat");

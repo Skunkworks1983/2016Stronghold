@@ -1,7 +1,8 @@
 #ifndef SensorManager_H
 #define SensorManager_H
 
-#include <PIDSource.h>
+#include <stddef.h>
+#include <Services/Sensor.h>
 #include <cstdbool>
 #include <map>
 
@@ -9,32 +10,7 @@ class AHRS;
 class CANTalon;
 class Encoder;
 
-#define AHRS_CYCLE_TIMEOUT 10
-
-class Sensor: public PIDSource {
-private:
-	AHRS * ahrs = NULL;
-	CANTalon *talon = NULL;
-	PIDSource *src = NULL;
-	unsigned ID;
-	float lowRange;
-	float highRange;
-	bool reversed;
-public:
-	Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
-			unsigned ID, bool reversed = false);
-	Sensor(CANTalon *canTalon, float lowRange, float highRange, unsigned ID,
-			bool reversed = false);
-	Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID,
-			bool reversed = false);
-	Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID, bool reversed = false);
-	double PIDGet();
-	float getLowRange();
-	float getHighRange();
-	int getAbsolutePosition();
-	void resetEncoder();
-	double getSpeed();
-};
+#define AHRS_CYCLE_TIMEOUT 100
 
 class SensorManager {
 	friend class MotorManager;
@@ -58,8 +34,10 @@ public:
 	float GetAccelY();
 	float GetAccelZ();
 	double GetEncoderPosition(int ID);
-	double GetSpeed(int ID);bool ahrsDead;
-	double initialYaw;
+	double GetSpeed(int ID);
+	void ZeroYaw();
+	bool ahrsDead;
+	double startupYaw = 0;
 	Sensor *getSensor(unsigned ID);
 	AHRS *getGyro();
 };

@@ -2,7 +2,6 @@
 #include <RobotMap.h>
 #include <Services/CameraReader.h>
 #include <Services/Logger.h>
-#include <Services/SensorManager.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
@@ -10,17 +9,18 @@
 
 #define ERROR_TOLERANCE .1
 
-RotateTowardCameraTarget::RotateTowardCameraTarget(float speedTranslate,
-		float distance) :
-		speedTranslate(speedTranslate), distance(distance) {
+
+/**
+ * Rotate Robot toward camera target using PIDController
+ */
+RotateTowardCameraTarget::RotateTowardCameraTarget(float timeout) :
+		timeout(timeout) {
 	Requires(drivebase);
 	controller = new PIDController(MOVE_TOWARD_CAMERA_P, MOVE_TOWARD_CAMERA_I,
 	MOVE_TOWARD_CAMERA_D, CameraReader::getCameraReader(), this);
 	controller->SetInputRange(-1, 1);
 	outputspeed = 0;
 	error = 0;
-	initialRight = 0.0;
-	initialLeft = 0.0;
 }
 
 RotateTowardCameraTarget::~RotateTowardCameraTarget() {
@@ -28,48 +28,30 @@ RotateTowardCameraTarget::~RotateTowardCameraTarget() {
 }
 
 void RotateTowardCameraTarget::Initialize() {
+	//only set timeout if larger than default value
+	if (timeout > 0.0) {
+		SetTimeout(timeout);
+	}
 	CameraReader::getCameraReader()->startReading();
 	controller->SetSetpoint(0.0);
 	controller->Enable();
-
-	initialLeft = fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-	initialRight = fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-
-	initialPosition = (initialLeft + initialRight) / 2;
-
 }
 
 void RotateTowardCameraTarget::Execute() {
 	SmartDashboard::PutNumber("Error", error);
 	SmartDashboard::PutNumber("output", outputspeed);
+	//if last x value less than tolerance we are close to target
+	if (fabs(CameraReader::getCameraReader()->getLastLeftX()) < ERROR_TOLERANCE) {
+		onTargetCount++;
+	} else {
+		//"lost" target, reset
+		onTargetCount = 0;
+	}
 }
 
 bool RotateTowardCameraTarget::IsFinished() {
-//	double left = fabs(SensorManager::getSensorManager()->getSensor(
-//	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-//	double right = fabs(SensorManager::getSensorManager()->getSensor(
-//	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-//
-//	double difference = ((left + right) / 2) - initialPosition;
-//
-//	if (distance > 0) {
-//		return fabs(difference) < distance;
-//	}
-//	if (speedTranslate == 0) {
-//		return fabs(controller->GetError()) < ERROR_TOLERANCE;
-//	}
-//	return false;
-	double left = fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-	double right = fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-
-	bool leftPast = fabs(left - initialLeft) > fabs(distance);
-	bool rightPast = fabs(right - initialRight) > fabs(distance);
-
-	return leftPast || rightPast;
+	//onTargetCount set in execute when target within tolerance
+	return onTargetCount > 10 || IsTimedOut();
 }
 
 void RotateTowardCameraTarget::Interrupted() {
@@ -83,16 +65,21 @@ void RotateTowardCameraTarget::End() {
 
 void RotateTowardCameraTarget::PIDWrite(float output) {
 	if (!CameraReader::getCameraReader()->isLastInvalid()) {
-		int range = 1;
-		if (output < -range || output > range) {
-			return;
+		outputspeed = output;
+		//don't log on every tick
+		if (PIDWriteCounter++ > 10) {
+			LOG_INFO("CameraOutput %f", output);
+			PIDWriteCounter = 0;
 		}
 
-		outputspeed = output;
-		LOG_INFO("CameraOutput %f", output);
-		drivebase->setLeftSpeed(speedTranslate + output);
-		drivebase->setRightSpeed(speedTranslate - output);
+		drivebase->setLeftSpeed(output);
+		//reverse right side to turn
+		drivebase->setRightSpeed(-output);
 	} else {
-		LOG_WARNING("CAMERA READER READ IS INVALID", Info);
+		//don't log every tick
+		if (PIDWriteCounter++ > 10) {
+			LOG_WARNING("CAMERA READER READ IS INVALID");
+			PIDWriteCounter = 0;
+		}
 	}
 }
