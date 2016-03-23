@@ -49,6 +49,7 @@ public:
 	static AutoBase *doSpy(); //Spy box
 	static AutoBase *doLowB(); // Low Bar
 	static AutoBase *doLowBarandScore(); // Low Bar and score
+	static float getTurnAngle();
 
 	AutoBase();
 	AutoBase(char *style);
