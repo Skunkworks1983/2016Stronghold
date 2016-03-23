@@ -21,8 +21,6 @@ Shooter::Shooter() :
 	left = new ShooterMotor(ShooterMotor::LEFT, p, i, d);
 	right = new ShooterMotor(ShooterMotor::RIGHT, p, i, d);
 
-	frontLimitSwitch = new DigitalInput(SHOOTER_FRONT_LIMIT_SWITCH_PORT);
-	backLimitSwitch = new DigitalInput(SHOOTER_BACK_LIMIT_SWITCH_PORT);
 	breakBeam = new DigitalInput(COLLECTOR_BREAK_BEAM_PORT);
 }
 

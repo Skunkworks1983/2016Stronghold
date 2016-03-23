@@ -40,7 +40,7 @@ void DriveForward::Execute() {
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet() - initialRight);
 
-	drivebase->setLeftSpeed(speed * 1.01);
+	drivebase->setLeftSpeed(speed);
 	drivebase->setRightSpeed(speed);
 }
 

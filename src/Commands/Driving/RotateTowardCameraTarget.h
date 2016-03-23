@@ -12,15 +12,11 @@ private:
 	PIDController *controller = NULL;
 	double error = 0.0;
 	double outputspeed = 0.0;
-	float speedTranslate = 0.0;
-	float distance = 0.0;
-	double initialPosition = 0.0;
-	double initialRight;
-	double initialLeft;
-	unsigned invalidCount = 0;
-	unsigned pidcounter = 0;
+	unsigned onTargetCount = 0;
+	float timeout = 0.0;
+	unsigned PIDWriteCounter = 0;
 public:
-	RotateTowardCameraTarget(float speedTranslate = 0, float distance = 0);
+	RotateTowardCameraTarget(float timeout = 0.0);
 	virtual ~RotateTowardCameraTarget();
 	void Initialize();
 	void Execute();

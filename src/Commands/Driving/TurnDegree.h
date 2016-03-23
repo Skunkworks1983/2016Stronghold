@@ -28,7 +28,6 @@ private:
 	MotorManager * motorManager = NULL;
 	SensorManager * sensorManager = NULL;
 	float initialYaw;
-	float epsilon;
 	unsigned onCount = 0;
 public:
 	TurnDegree(double degree); //number of degrees to turn, speed at which to turn
