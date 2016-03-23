@@ -1,14 +1,16 @@
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/DriveForward.h>
-#include <Commands/Driving/TurnDegree.h>
-#include <Services/SensorManager.h>
-#include <Commands/MultiTool/CollectorMove.h>
+#include <Commands/Driving/DriveForwardStraight.h>
+#include <RobotMap.h>
 
 AutoBase *AutoBase::doRoughT()
 {
 	AutoBase *cmd = new AutoBase("Autonomous-doRoughT");
-	cmd->AddSequential(new CollectorMove(TOP));
-	cmd->AddSequential(new DriveForward(REACH_DEFENCE_DISTANCE, REACH_DEFENCE_SPEED));
+#if USE_SHOOTER
+	cmd->AddParallel(new RotateShooter(cTOP));
+	cmd->AddSequential(new RunNewCollector(.3));
+#endif
+	cmd->AddSequential(new DriveForwardStraight(5, 0.75));	//Reach the defence
+	cmd->AddSequential(new DriveForwardStraight(8.5, 0.75));	//breach the defence
 	return cmd;
 }
 

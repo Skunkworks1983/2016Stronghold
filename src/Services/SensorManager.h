@@ -1,7 +1,8 @@
 #ifndef SensorManager_H
 #define SensorManager_H
 
-#include <PIDSource.h>
+#include <stddef.h>
+#include <Services/Sensor.h>
 #include <cstdbool>
 #include <map>
 
@@ -9,33 +10,13 @@ class AHRS;
 class CANTalon;
 class Encoder;
 
-#define AHRS_CYCLE_TIMEOUT 10
-
-class Sensor: public PIDSource {
-private:
-	CANTalon *talon;
-	PIDSource *src;
-	unsigned ID;
-	float lowRange;
-	float highRange;
-public:
-	Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
-			unsigned ID);
-	Sensor(CANTalon *canTalon, float lowRange, float highRange, unsigned ID);
-	Sensor(PIDSource *src, float lowRange, float highRange, unsigned ID);
-	virtual ~Sensor() {
-	}
-	;
-	double PIDGet();
-	float getLowRange();
-	float getHighRange();
-};
+#define AHRS_CYCLE_TIMEOUT 100
 
 class SensorManager {
 	friend class MotorManager;
 private:
 	unsigned count = 0;
-	AHRS * ahrs;
+	AHRS * ahrs = NULL;
 	std::map<unsigned, Sensor*> sensors;
 	SensorManager();
 	~SensorManager();
@@ -54,9 +35,11 @@ public:
 	float GetAccelZ();
 	double GetEncoderPosition(int ID);
 	double GetSpeed(int ID);
+	void ZeroYaw();
 	bool ahrsDead;
-	double initialYaw;
+	double startupYaw = 0;
 	Sensor *getSensor(unsigned ID);
+	AHRS *getGyro();
 };
 
 #endif

@@ -3,17 +3,14 @@
 
 #include <CommandBase.h>
 #include <cstdbool>
-
-
 #define EPSILON .0005f
+
 class RotateArm: public CommandBase
 {
 private:
 	float target; //set position it will turn
-
 public:
-	RotateArm(float angleDegrees);
-	~RotateArm();
+	RotateArm(float targetTicks);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

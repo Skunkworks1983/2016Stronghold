@@ -17,9 +17,9 @@ class PIDGyroTest: public CommandBase, public PIDOutput, public PIDSource
 {
 private:
 	int degreeTurnRight;
-	MotorManager * motorManager;
-	SensorManager * sensorManager;
-	PIDController * pidController;
+	MotorManager * motorManager = NULL;
+	SensorManager * sensorManager = NULL;
+	PIDController * pidController  = NULL;
 	float yawTurnTo;
 public:
 	PIDGyroTest();

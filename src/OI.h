@@ -7,44 +7,47 @@
 #include <RobotMap.h>
 #include <Buttons/JoystickButton.h>
 
-class OI
-{
+class OI {
 private:
-	Joystick *gamepad;
-	Joystick *leftStick, *rightStick;
-	Joystick *op;
+	Joystick *gamepad = NULL;
+	Joystick *leftStick = NULL;
+	Joystick *rightStick = NULL;
+	Joystick *op = NULL;
+
+	JoystickButton *collect = NULL;
+	JoystickButton *shooterDown = NULL;
+	JoystickButton *shooterUp = NULL;
+	JoystickButton *shooterPass = NULL;
+	JoystickButton *shooter45 = NULL;
+	JoystickButton *lowFire = NULL;
+	JoystickButton *lowArm = NULL;
+	JoystickButton *lowAim = NULL;
+	JoystickButton *highFire = NULL;
+	JoystickButton *highArm = NULL;
+	JoystickButton *highArmPosition1 = NULL;
+	JoystickButton *highArmPosition2 = NULL;
+	JoystickButton *highLineUp = NULL;
+	JoystickButton *climberArmsUp = NULL;
+	JoystickButton *winchEngage = NULL;
+	JoystickButton *manualOveride = NULL;
+	JoystickButton *manualWinchReverse = NULL;
+	JoystickButton *manualShooterDown = NULL;
+	JoystickButton *manualShooterUp = NULL;
+	JoystickButton *portcullis = NULL;
+
+	JoystickButton *driverReadShooterPIDValues = NULL;
+	JoystickButton *stopShooterPID = NULL;
+	JoystickButton *driverShooterDown = NULL;
+	JoystickButton *driverShooterUp = NULL;
+	JoystickButton *driverPass = NULL;
+
 public:
-	//breaching buttons
-	JoystickButton *portcullisBreach;
-	JoystickButton *chevalBreach;
-	JoystickButton *generalBreach;
-
-	JoystickButton *stopPID;
-	// collector buttons
-	JoystickButton *collectBall;
-	JoystickButton *collectorUp;
-	JoystickButton *collectorDown;
-
-	JoystickButton *holdAgainst;
-	//aiming buttons
-	JoystickButton *aimAtGoal;
-
-	//shooting buttons
-	JoystickButton *shootLow;
-	JoystickButton *shootHigh;
-	JoystickButton *spinUpShooter;
-
-	//climbing buttons
-	JoystickButton *rotateArm;
-	JoystickButton *engageWinch;
-	JoystickButton *reverseWinch;
-
 	OI();
 	~OI();
 	double getLeftStickY();
 	double getRightStickY();
-	void registerButtonListeners();
-	bool isJoystickButtonPressed(int control, int button);
+	void registerButtonListeners();bool isJoystickButtonPressed(int control,
+			int button);
 };
 
 #endif

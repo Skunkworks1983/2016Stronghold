@@ -2,26 +2,25 @@
 #define ROBOTMAP_H
 
 #define ROBOT_NAME "VanillaThunder"
+#define PRACTICEBOT 1
 
 #include "TuningValues.h"
 
 #define USE_DRIVEBASE 1
-#define USE_COLLECTOR 1
 #define USE_CLIMBER 1
 #define USE_SHOOTER 0
 #define USE_ARM 0
 
 #define USE_LOGGING 1
 
-#define USE_GYRO 0
+#define USE_GYRO 1
 #define USE_CAMERA 0
 
 #define USE_GAMEPAD 0
 
 #define POWER_DISTRIBUTION_PANEL_PORT 0
-#define LOGFILE_NAME "/U/robotLog"
 
-#define DIP_CHANNEL_POSITION_START 0
+#define DIP_CHANNEL_POSITION_START 1
 #define DIP_CHANNEL_POSITIONS 3
 #define DIP_CHANNEL_POSITION_END 	DIP_CHANNEL_POSITION_START 	+ DIP_CHANNEL_POSITIONS
 #define DIP_CHANNEL_OBSTACLE_START 	DIP_CHANNEL_POSITION_END
@@ -38,10 +37,6 @@
  * Power
  */
 
-#define POWER_BROWNOUT_VOLTAGE 7
-#define POWER_DRIVEBASE_VOLTAGE_WIDTH 0.5
-#define POWER_VOLTAGE_WIDTH 1.5
-
 #define CIM_MAX_CURRENT 133
 #define MINI_CIM_MAX_CURRENT 86
 #define RS775_MAX_CURRENT 30
@@ -55,9 +50,9 @@
 
 #define OI_JOYSTICK_LEFT_PORT 0
 #define OI_JOYSTICK_RIGHT_PORT 1
-#define OI_OPERATOR_PORT 5
+#define OI_JOYSTICK_OPERATOR_PORT 2
 
-#define OI_JOYSTICK_GAMEPAD 0
+#define OI_JOYSTICK_GAMEPAD_PORT 0
 
 /**
  * DriveBase
@@ -72,10 +67,14 @@
 #define DRIVEBASE_RIGHTMOTOR_3_PORT 15
 
 #define DRIVEBASE_RIGHT_ENCODER_PORT 13 //CAN switched it to 2, orig is 1
+#if PRACTICEBOT
 #define DRIVEBASE_LEFT_ENCODER_PORT 2
+#else
+#define DRIVEBASE_LEFT_ENCODER_PORT 1
+#endif
 
 /**
- * Collector
+ * Shooter Rotation
  */
 
 #define COLLECTOR_ROTATOR_MOTOR_LEFT_PORT 3
@@ -87,6 +86,9 @@
 #define COLLECTOR_KICKER_MOTOR_PORT 4
 
 #define COLLECTOR_ROTATOR_TOLERANCE 15
+#define COLLECTOR_BREAK_BEAM_PORT 0
+
+#define COLLECTOR_ROTATION_TICKS_PER_DEGREE (3565/135)
 
 /**
  * Climber
@@ -103,16 +105,19 @@
 #define CLIMBER_ARM_ENCODER_PORT CLIMBER_ARM_MOTOR_PORT
 #define CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS 1.5f
 
+#define CLIMBER_SERVO_PORT 0
+
 /**
  * Shooter
  */
 
-#define SHOOTER_MOTOR_1_PORT 14
-#define SHOOTER_MOTOR_2_PORT 15
+#define SHOOTER_MOTOR_1_PORT 9
+#define SHOOTER_MOTOR_2_PORT 10
 
-#define SHOOTER_1_ENCODER_PORT 15
-#define SHOOTER_2_ENCODER_PORT 16
+#define SHOOTER_1_ENCODER_PORT 9
+#define SHOOTER_2_ENCODER_PORT 10
 
+#define SHOOTER_ENCODER_TICKS_PER_REV 4096
 
 /**
  * OI Ports
@@ -158,6 +163,7 @@
 //auto constants
 
 #define LOGFILE_NAME "/U/robotLog"
+#define LOGFILE_PIDS "/U/pids"
 
 #define CHEVAL_ENCODER_TICKS 0
 #define MOAT_ENCODER_TICKS 0
@@ -177,11 +183,31 @@
 #define SALLYPORT_SPEED 1
 #define LOWBAR_SPEED 1
 
-#define MOTOR_DIAMETER 8
 #define TICKS_REVOLUTION 360
 #define DISTANCE_NUMBER 0.0025
 
-#define DEBUG false //HOLY CRAP CHANGE THIS TO FALSE BEFORE RUNNING THE ROBOT FOR REAL. I'M NOT KIDDING.
-//ALSO AILIS WILL PERSONALLY GIVE YOU BODILY HARM IF YOU DONT CHANGE IT. THANKS.
+#define DEBUG false
+
+#include <Services/Logger.h>
+
+#define LOG_DEBUG(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Debug);}
+
+#define LOG_INFO(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Info);}
+
+#define LOG_WARNING(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Warning);}
+
+#define LOG_ERROR(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Error);}
 
 #endif

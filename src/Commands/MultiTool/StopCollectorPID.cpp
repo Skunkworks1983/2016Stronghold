@@ -1,29 +1,29 @@
 #include <Commands/MultiTool/StopCollectorPID.h>
 #include <Services/MotorManager.h>
-#include <Subsystems/Collector.h>
+#include <Subsystems/Shooter.h>
 #include <TuningValues.h>
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
-StopCollectorPID::StopCollectorPID() {
+StopShooterRotationPID::StopShooterRotationPID() {
 
 }
 
-void StopCollectorPID::Initialize() {
+void StopShooterRotationPID::Initialize() {
 	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
-	collector->pidStopped = true;
+	//shooter->pidStopped = true;
 }
 
-void StopCollectorPID::Execute() {
+void StopShooterRotationPID::Execute() {
 }
 
-bool StopCollectorPID::IsFinished() {
+bool StopShooterRotationPID::IsFinished() {
 	return true;
 }
 
-void StopCollectorPID::End() {
+void StopShooterRotationPID::End() {
 
 }
 
-void StopCollectorPID::Interrupted() {
+void StopShooterRotationPID::Interrupted() {
 	End();
 }

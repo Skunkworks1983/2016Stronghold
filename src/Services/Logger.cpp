@@ -1,47 +1,79 @@
-#include "Logger.h"
-#include <ctime>
-#include <sys/time.h>
-#include <fstream>
-#include <string>
+#include <HAL/cpp/priority_mutex.h>
 #include <RobotMap.h>
+#include <Services/Logger.h>
+#include <cstdio>
+#include <fstream>
+#include <iostream>
 
-void writeToLogFile(const std::string &fileName, const std::string &message,
-		bool csv) {
-	if (loggerMutex == NULL) {
-		loggerMutex = new priority_mutex();
+Logger::Logger() {
+	threadMutex = new priority_mutex();
+	logging = (pthread_t)NULL;
+	pthread_create(&logging, NULL, write, this);
+}
+
+Logger * Logger::getLogger() {
+	static Logger * instance = NULL;
+	if (instance == NULL) {
+		instance = new Logger();
 	}
-	loggerMutex->lock();
-//	while(!loggerMutex->try_lock() && !loggerDied)  {
-//		if(loggerDied) {
-//			break;
-//		}
-//	}
+	return instance;
+}
 
-	if(!loggerDied) {
+void Logger::push_message(LogMessage message) {
+	threadMutex->lock();
+		messages.push(message);
+	threadMutex->unlock();
+}
+
+bool Logger::is_empty() {
+	bool isEmpty;
+	threadMutex->lock();
+		isEmpty = messages.empty();
+	threadMutex->unlock();
+	return isEmpty;
+}
+
+LogMessage Logger::pull_message() {
+	LogMessage tmp;
+	threadMutex->lock();
+		tmp = messages.front();
+		messages.pop();
+	threadMutex->unlock();
+	return tmp;
+}
+
+void Logger::log(std::string message, ELogLevel logLevel) {
+	LogMessage messageObj;
+	messageObj.message.assign(message);
+	messageObj.level = logLevel;
+	struct timeval rawtime;
+	gettimeofday(&rawtime, NULL);
+	messageObj.time = rawtime;
+
+	push_message(messageObj);
+}
+
+void *Logger::write(void * d) {
+	Logger * logger = (Logger*) d;
+	while(!logger->loggerDied) {
 		std::ofstream logFile;
 		logFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 		try {
+			std::string logfileName = LOGFILE_NAME;
+			logFile.open(logfileName.c_str(), std::ios::app);
 
-			logFile.open(fileName.c_str(), std::ios::app);
+			while(!logger->is_empty()) {
+				LogMessage message = logger->pull_message();
+				uint64_t timestamp = (message.time.tv_sec * 1000) + (message.time.tv_usec/1000);
 
-			timeval timeMicro;
-			time_t microsec;
-			gettimeofday(&timeMicro, NULL);
-			microsec = timeMicro.tv_usec;
-			char microStr[32];
-			sprintf(microStr, "%i", microsec);
+				logFile << "[" << timestamp << "] " << ROBOT_NAME << " " << message.level << " " << message.message << std::endl; //Write to log file
+			}
 
-			time_t rawtime;
-			struct tm * timeinfo;
-			char timer[32];
-
-			time (&rawtime); //Get the time from rawtime
-			timeinfo = localtime(&rawtime);
-
-			strftime(timer, 32, "%c", timeinfo); //Puts the time in human-friendly format
-			logFile<<"["<<timer<<"] "<< ROBOT_NAME << " "<< message<<std::endl; //Write to log file
+			logFile.close();
 		}
-		catch(/*std::ifstream::failure *e*/...) {} //Not sure what the exact error is, but will not die when no flashdrive
+		catch(...) {
+			logger->loggerDied = true;
+		} //Not sure what the exact error is, but will not die when no flashdrive
 	}
-	loggerMutex->unlock();
+	return NULL;
 }

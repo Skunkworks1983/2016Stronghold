@@ -1,24 +1,22 @@
 #include <Commands/Climbing/RotateArm.h>
+#include <PIDController.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
 #include <Services/MotorManager.h>
-#include <Subsystems/Drivebase.h>
+#include <Services/SensorManager.h>
+#include <Subsystems/Climber.h>
 #include <TuningValues.h>
 #include <cstdio>
 
-RotateArm::RotateArm(float target) :target(target) {
-}
-
-RotateArm::~RotateArm() {
-
+RotateArm::RotateArm(float target) :
+		target(target) {
+	Requires(climber);
 }
 
 void RotateArm::Initialize() {
-	MotorManager::getMotorManager()->resetPID(PID_ID_ARM);
-	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT, .35);
-	char str[1024];
-	sprintf(str, "RotateArm Initialize called with target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
+	climber->registerCommand(this);
+
+	LOG_INFO("RotateArm Initialize called with target %f", target);
 	MotorManager::getMotorManager()->enablePID(PID_ID_ARM, target);
 }
 
@@ -26,26 +24,22 @@ void RotateArm::Execute() {
 	//get PID values
 	//char str[1024];
 	//sprintf(str, "ArmPower %f", MotorManager::getMotorManager()->get);
-	//writeToLogFile(LOGFILE_NAME, str);
+	//Logger::getLogger()->log(str, Info);
+
 }
 
 bool RotateArm::IsFinished() {
-	/*if (target == getpid){
-	 return true;
-	 }
-	 else {
-	 return false;
-	 } */
-	return false;
+
+	return fabs(SensorManager::getSensorManager()->getSensor(
+	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()) > target - 250;
 }
 
 void RotateArm::End() {
-	char str[1024];
-	sprintf(str, "RotateArm END called with target %f", target);
-	writeToLogFile(LOGFILE_NAME, str);
+	climber->deregisterCommand(this);
+	LOG_INFO("RotateArm END called with target %f", target);
 	//MotorManager::getMotorManager()->disablePID(target*CLIMBER_ARM_DEGREES_TO_ENCODER_TICKS);
 	//MotorManager::getMotorManager()->setSpeed(CLIMBER_ARM_MOTOR_PORT,0.0); //probably wrong
-	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
+	//MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 }
 
 void RotateArm::Interrupted() {

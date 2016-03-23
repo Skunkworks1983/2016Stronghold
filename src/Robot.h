@@ -2,6 +2,12 @@
 #define ROBOT_H_
 
 #include <IterativeRobot.h>
+#include <stddef.h>
+#include <RobotMap.h>
+
+class LiveWindow;
+
+class DriveForwardStraight;
 
 class AutoBase;
 
@@ -11,13 +17,16 @@ class SensorManager;
 
 class Robot: public IterativeRobot {
 private:
-	MotorManager * motorManager;
-	SensorManager * sensorManager;
-	ManagePower *managePower;
+	MotorManager * motorManager  = NULL;
+	SensorManager * sensorManager  = NULL;
+	ManagePower *managePower  = NULL;
 	int count;
-	AutoBase *cmd;
+	AutoBase *cmd  = NULL;
+	DriveForwardStraight * turnDegree = NULL;
+
 public:
 	void RobotInit();
+	void DisabledInit();
 	void DisabledPeriodic();
 	void TeleopInit();
 	void TeleopPeriodic();

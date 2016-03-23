@@ -3,21 +3,28 @@
 
 #include <Commands/Subsystem.h>
 
-class Climber: public Subsystem
-{
-private:
+class CANTalon;
 
+class Servo;
+
+class Climber: public Subsystem {
+private:
+	Servo *servo = NULL;
+	CANTalon *armMotor = NULL;
+	Command *lastCommand = NULL;
 public:
 	Climber();
 	~Climber();
 
+	void registerCommand(Command *cmd);
+	void deregisterCommand(Command *cmd);
+	void setServoAngle(float angle);
+	float getServoAngle();
+	void setServoSpeed(float speed);
 	void setWinchSpeed(float winchSpeed);
-	float getWinchSpeed();
-	void setArmSpeed(float armSpeed);
-	float getArmSpeed();
 	void InitDefaultCommand();
-	float getWinchPos();
-	float getArmPos();
+	void setSetpoint(float position);
+	void disablePID();
 };
 
 #endif

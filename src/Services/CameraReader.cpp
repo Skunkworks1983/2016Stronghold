@@ -6,10 +6,11 @@
 #include <iostream>
 #include <HAL/cpp/priority_mutex.h>
 
+static const int imageWidth = 640;
+static const int imageHeight = 480;
+
 CameraReader::CameraReader() {
-	thread = (pthread_t)NULL;
-	lastX = 0;
-	lastY = 0;
+	thread = (pthread_t) NULL;
 	len = -1;
 	mysocket = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -30,17 +31,37 @@ CameraReader *CameraReader::getCameraReader() {
 	return reader;
 }
 
+bool CameraReader::isLastInvalid() {
+	switch (currentMode) {
+	case LEFTGOAL:
+		return getLastLeftX() == INVALID;
+	case MIDGOAL:
+		return getLastMidX() == INVALID;
+	case RIGHTGOAL:
+		return getLastRightX() == INVALID;
+	}
+	return true;
+}
+
+void CameraReader::setCameraMode(CameraMode mode) {
+	currentMode = mode;
+}
+
 void CameraReader::startUp() {
 	int rc = pthread_create(&thread, NULL, update, (void*) this);
 	if (rc) {
-		//std::cout << "Error:unable to create thread," << rc << std::endl;
+		std::cout << "Error:unable to create thread," << rc << std::endl;
 	}
 }
 
 void CameraReader::startReading() {
 	reading = true;
-	lastX = 0;
-	lastY = 0;
+	lastLeftX = 0;
+	lastLeftY = 0;
+	lastMidX = 0;
+	lastMidY = 0;
+	lastRightX = 0;
+	lastRightY = 0;
 }
 
 void CameraReader::stopReading() {
@@ -59,30 +80,73 @@ void *CameraReader::update(void *d) {
 		camera_reader->len = recv(camera_reader->mysocket, (char *) &msg,
 				sizeof(msg), 0);
 		camera_reader->mutex->lock();
-		if (msg.posX != INVALID) {
-			camera_reader->lastX = 2 * (msg.posX / 640.0) - 1;
-			camera_reader->lastY = 2 * (msg.posY / 480.0) - 1;
+		if (msg.posX1 != INVALID) {
+			camera_reader->lastLeftX = 2 * (msg.posX1 / imageWidth) - 1;
+			camera_reader->lastLeftY = 2 * (msg.posY1 / imageHeight) - 1;
+			camera_reader->lastMidX = 2 * (msg.posY2 / imageWidth) - 1;
+			camera_reader->lastMidY = 2 * (msg.posY2 / imageHeight) - 1;
+			camera_reader->lastRightX = 2 * (msg.posY3 / imageWidth) - 1;
+			camera_reader->lastRightY = 2 * (msg.posY3 / imageHeight) - 1;
 		}
 		camera_reader->mutex->unlock();
 	}
 }
 
-float CameraReader::getLastX() {
+float CameraReader::getLastLeftX() {
 	mutex->lock();
-	float tempLastX = lastX;
+	float tempLast = lastLeftX;
 	mutex->unlock();
-	return tempLastX;
+	return tempLast;
 }
 
-float CameraReader::getLastY() {
+float CameraReader::getLastLeftY() {
 	mutex->lock();
-	float tempLastX = lastX;
+	float tempLast = lastLeftY;
 	mutex->unlock();
-	return tempLastX;
+	return tempLast;
 }
 
-double CameraReader::PIDGet(){
-	return getLastX();
+float CameraReader::getLastMidX() {
+	mutex->lock();
+	float tempLast = lastMidX;
+	mutex->unlock();
+	return tempLast;
 }
 
+float CameraReader::getLastMidY() {
+	mutex->lock();
+	float tempLast = lastMidY;
+	mutex->unlock();
+	return tempLast;
+}
+
+float CameraReader::getLastRightX() {
+	mutex->lock();
+	float tempLast = lastRightX;
+	mutex->unlock();
+	return tempLast;
+}
+
+float CameraReader::getLastRightY() {
+	mutex->lock();
+	float tempLast = lastRightY;
+	mutex->unlock();
+	return tempLast;
+}
+
+bool CameraReader::isBallInShooter(){
+	return ballInShooter;
+}
+
+double CameraReader::PIDGet() {
+	switch (currentMode) {
+	case LEFTGOAL:
+		return getLastLeftX();
+	case MIDGOAL:
+		return getLastMidX();
+	case RIGHTGOAL:
+		return getLastRightX();
+	}
+	return 0.0;
+}
 

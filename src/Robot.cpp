@@ -1,91 +1,103 @@
-#include <Commands/Driving/TurnRightEncoder.h>
+#include <CANTalon.h>
+#include <CommandBase.h>
+#include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Scheduler.h>
-#include <DriverStation.h>
+#include <LiveWindow/LiveWindow.h>
 #include <Robot.h>
 #include <RobotBase.h>
-#include <RobotMap.h>
-#include <Services/Logger.h>
+#include <Services/Motor.h>
 #include <Services/MotorManager.h>
+#include <Services/Sensor.h>
 #include <Services/SensorManager.h>
+#include <SmartDashboard/SmartDashboard.h>
+#include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
-#include <cstdio>
-#include <Commands/Autonomous/AutoBase.h>
+#include <cstdbool>
 
 void Robot::RobotInit() {
-	char startup[1024];
-	sprintf(startup, "START OF NEW RUN \t START OF NEW RUN");
-	writeToLogFile(LOGFILE_NAME, startup);
-	char str[1024];
-	sprintf(str, "RobotInit Called");
-	writeToLogFile(LOGFILE_NAME, str);
-	MotorManager::getMotorManager();
-	SensorManager::getSensorManager();
+	LOG_INFO("START OF NEW RUN \t START OF NEW RUN");
+	LOG_INFO("RobotInit Called");
+	motorManager = MotorManager::getMotorManager();
+	sensorManager = SensorManager::getSensorManager();
 	MotorManager::getMotorManager()->initPIDS();
 
 	CommandBase::init();
+
 	//SensorManager::getSensorManager()->initGyro();
 
 	//managePower = new ManagePower();
 	//managePower->Start();
 
+	//turnDegree = new TurnDegree(90);
+
 	//StallProtection *stall = new StallProtection();
 	//stall->Start();
+	//acc = new BuiltInAccelerometer(Accelerometer::kRange_16G);
 
-	cmd = AutoBase::doLowB();
+	//cmd = AutoBase::doLowBarandScore();
+	LOG_INFO("END OF ROBOTINIT");
+}
+
+void Robot::DisabledInit() {
+	Scheduler::GetInstance()->RemoveAll();
+	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
+	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
+	MotorManager::getMotorManager()->disablePID(PID_ID_DRIVEBASE_ROT);
+	//MotorManager::getMotorManager()->disablePID(PID_ID_TURN_DEGREE_RIGHT);
 }
 
 void Robot::DisabledPeriodic() {
 }
 
 void Robot::AutonomousInit() {
+	CommandBase::drivebase->setDriverControl(false);
 	Scheduler::GetInstance()->RemoveAll();
-	char str[1024];
-	sprintf(str, "AutonomousInit Called");
-	writeToLogFile(LOGFILE_NAME, str);
-
+	LOG_INFO("AutonomousInit Called");
+	//turnDegree->Start();
+	//cmd = AutoBase::getSelectedAuto();
+	cmd = AutoBase::doRoughT();
+	SensorManager::getSensorManager()->ZeroYaw();
+	//turnDegree = new DriveForwardStraight(5, .25);
+	//turnDegree->Start();
 	cmd->Start();
 }
 
 void Robot::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
 
-	/*double left = SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
-	double right = SensorManager::getSensorManager()->getSensor(
-	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
+	//CommandBase::shooter->setShooterSpeed(1.0);
+	//CommandBase::shooter->setRightShooterSpeed(.3);
 
-	char str[1024];
-	sprintf(str, "LeftEncoder %f, RightEncoder %f", left, right);
-	writeToLogFile(LOGFILE_NAME, str);*/
+	/*double left = SensorManager::getSensorManager()->getSensor(
+	 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
+	 double right = SensorManager::getSensorManager()->getSensor(
+	 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
+
+	 LOG_DEBUG("LeftEncoder %f, RightEncoder %f", left, right);*/
+
+	//SmartDashboard::PutNumber("AbsoluteRollerEncoder", Sensor);
 }
 
 void Robot::TeleopInit() {
+	CommandBase::drivebase->setDriverControl(true);
 	Scheduler::GetInstance()->RemoveAll();
-	char str[1024];
-	sprintf(str, "TeleOp Called");
-	writeToLogFile(LOGFILE_NAME, str);
+	LOG_INFO("TeleOp Called");
 }
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
-	double voltage = DriverStation::GetInstance().GetBatteryVoltage();
+	LiveWindow::GetInstance()->Run();
+	double left = fabs(SensorManager::getSensorManager()->getSensor(
+		SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
+		double right = fabs(SensorManager::getSensorManager()->getSensor(
+		SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	//char str[1024];
-	//sprintf(str, "BatteryVoltage %f", voltage);
-	//writeToLogFile(LOGFILE_NAME, str);
-
-	char str[1024];
-	sprintf(str, "leftEncoder %f, rightEncoder %f",
-			SensorManager::getSensorManager()->getSensor(
-			SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet(),
-			SensorManager::getSensorManager()->getSensor(
-			SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-	writeToLogFile(LOGFILE_NAME, str);
-
+		LOG_INFO("left %f right %f ",
+				left, right);
 }
 
 void Robot::TestPeriodic() {
-	//lw->Run();
+
 }
 
 START_ROBOT_CLASS(Robot);

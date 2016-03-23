@@ -2,7 +2,7 @@
 
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/DriveForward.h>
-#include <Commands/MultiTool/CollectorMove.h>
+#include <Commands/MultiTool/RotateShooter.h>
 
 /**
  * Cheval De Fris Constants
@@ -14,9 +14,10 @@
 //TODO: rework this logic slightly
 AutoBase *AutoBase::doCheval() {
 	AutoBase*cmd = new AutoBase("Autonomous-doCheval");
-	cmd->AddSequential(new CollectorMove(FLOOR));
+	cmd->AddSequential(new DriveForward(5, 0.25));	//Reach the defence
+	cmd->AddSequential(new RotateShooter(cCollect));
 	cmd->AddSequential(new DriveForward(CHEV_SHORTDIST, CHEV_SPEED));
-	cmd->AddSequential(new CollectorMove(TOP));
+	cmd->AddSequential(new RotateShooter(cTOP));
 	cmd->AddSequential(new DriveForward(CHEV_DIST, CHEV_SPEED));
 	return cmd;
 }
