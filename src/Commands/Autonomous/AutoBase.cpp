@@ -1,4 +1,4 @@
-#include <Commands/Autonomous/AutoBase.h>
+#include "AutoBase.h"
 #include <DigitalInput.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
@@ -18,6 +18,32 @@ AutoBase::AutoBase(char *style) :
 }
 
 AutoBase::~AutoBase() {
+}
+
+float AutoBase::getTurnAngle(){
+
+	switch(startPos) {
+		 case spy:
+			 return 0.0;
+
+		 break;
+		 case lowBar:
+			 return -135;
+			 break;
+		 case posZero:
+			 return 20;
+			 break;
+		 case posOne:
+			 return-5;
+			 break;
+		 case posTwo:
+			 return -40;
+			 break;
+		 case posThree:
+			 return -75;
+		 break;
+	}
+	return 0.0;
 }
 
 AutoBase *AutoBase::readFromTextFile(std::string file) {
