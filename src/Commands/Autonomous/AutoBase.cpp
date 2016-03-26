@@ -1,9 +1,8 @@
-#include "AutoBase.h"
+#include <Commands/Autonomous/AutoBase.h>
+#include <Commands/GoAndScoreHighGoal.h>
 #include <DigitalInput.h>
 #include <RobotMap.h>
-#include <Services/Logger.h>
 #include <cstdbool>
-#include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -20,30 +19,36 @@ AutoBase::AutoBase(char *style) :
 AutoBase::~AutoBase() {
 }
 
-float AutoBase::getTurnAngle(){
+float AutoBase::getTurnAngle() {
+	eStartPos startPos;
+	readDIPSwitchedPosition(&startPos);
 
-	switch(startPos) {
-		 case spy:
-			 return 0.0;
+	float ret_val = 0;
 
-		 break;
-		 case lowBar:
-			 return -135;
-			 break;
-		 case posZero:
-			 return 20;
-			 break;
-		 case posOne:
-			 return-5;
-			 break;
-		 case posTwo:
-			 return -40;
-			 break;
-		 case posThree:
-			 return -75;
-		 break;
+	switch (startPos) {
+	case spy:
+		ret_val = 0.0;
+		break;
+	case lowBar:
+		ret_val = 60;
+		break;
+	case posZero:
+		ret_val = 60;
+		break;
+	case posOne:
+		ret_val = 20;
+		break;
+	case posTwo:
+		ret_val = -20;
+		break;
+	case posThree:
+		ret_val = -60;
+		break;
 	}
-	return 0.0;
+
+	LOG_INFO("GETTURN ANGLE RETURNING %f", ret_val);
+
+	return ret_val;
 }
 
 AutoBase *AutoBase::readFromTextFile(std::string file) {
@@ -70,6 +75,8 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		eGoalPos goalPos) {
 	AutoBase *auto_base = new AutoBase("SelectedAuto");
 	switch (obstacle) {
+	case BLANK:
+		break;
 	case Obstacle_lowBar:
 		auto_base->AddSequential(AutoBase::doLowB());
 		break;
@@ -88,7 +95,8 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_ramppart:
-		//auto_base->AddSequential(AutoBase::doRamP());
+		auto_base->AddSequential(AutoBase::doRoughT());
+		//auto_base->AddSequential(new GoAndScoreHighGoal());
 		break;
 
 	case Obstacle_rockwall:
@@ -99,120 +107,17 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		auto_base->AddSequential(AutoBase::doPortC());
 		break;
 	}
-	/*const float driveSpeed = .5;
-	 //203.73 ticks per foot
-	 switch (goalPos) {
-	 case high:
-	 switch (startPos) {
-	 case spy: //drive forward
-	 auto_base->AddSequential(new DriveForward(3.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-135));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-20));
-	 auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-	 break;
-	 case lowBar: // drive slightly left then line up for goal
-	 auto_base->AddSequential(new DriveForward(3.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-135));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-20));
-	 auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-	 ;
-	 break;
-	 case posZero: // drive left then line up for goal
-	 auto_base->AddSequential(new TurnDegree(-20));
-	 auto_base->AddSequential(new DriveForward(5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(90));
-	 auto_base->AddSequential(new DriveForward(3.49, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(15));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 break;
-	 case posOne: // drive forward for high goal, left for low goal
-	 auto_base->AddSequential(new TurnDegree(90));
-	 auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-90));
-	 auto_base->AddSequential(new DriveForward(4, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(5));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 break;
-	 case posTwo: // drive right then line up for goal
-	 auto_base->AddSequential(new TurnDegree(-15));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(15));
-	 auto_base->AddSequential(new DriveForward(3, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(5));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 break;
-	 case posThree: // drive slightly right then line up for goal
-	 auto_base->AddSequential(new TurnDegree(90));
-	 auto_base->AddSequential(new DriveForward(1.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-90));
-	 auto_base->AddSequential(new DriveForward(4.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-75));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 break;
-	 }
-	 case low:
-	 switch (startPos) {
-	 case spy: //drive forward
-	 auto_base->AddSequential(new DriveForward(4, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-135));
-	 auto_base->AddSequential(new DriveForward(0.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-20));
-	 auto_base->AddSequential(new DriveForward(5, driveSpeed));
-	 break;
-	 case lowBar: // drive slightly left then line up for goal
-	 auto_base->AddSequential(new DriveForward(5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(45));
-	 auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(50));
-	 auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-	 break;
-	 case posZero: // drive left then line up for goal
-	 auto_base->AddSequential(new TurnDegree(-20));
-	 auto_base->AddSequential(new DriveForward(4, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(90));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(15));
-	 auto_base->AddSequential(new DriveForward(4, driveSpeed));
-	 break;
-	 case posOne: // drive forward for high goal, left for low goal
-	 auto_base->AddSequential(new TurnDegree(90));
-	 auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-90));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(5));
-	 auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-	 break;
-	 case posTwo: // drive right then line up for goal
-	 auto_base->AddSequential(new TurnDegree(-15));
-	 auto_base->AddSequential(new DriveForward(0.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(15));
-	 auto_base->AddSequential(new DriveForward(1, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(5));
-	 auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-	 break;
-	 case posThree: // drive slightly right then line up for goal
-	 auto_base->AddSequential(new TurnDegree(90));
-	 auto_base->AddSequential(new DriveForward(1.5, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-90));
-	 auto_base->AddSequential(new DriveForward(4.4, driveSpeed));
-	 auto_base->AddSequential(new TurnDegree(-75));
-	 auto_base->AddSequential(new DriveForward(2.5, driveSpeed));
-	 break;
-	 }
-	 break;
-	 }*/
 	return auto_base;
 }
 
 AutoBase * AutoBase::getSelectedAuto() {
-	eObstacle obstacle;
-	eStartPos startPos;
-	eGoalPos goalPos;
+	eObstacle obstacle = BLANK;
+	eStartPos startPos = posZero;
+	eGoalPos goalPos = high;
 
 	//readDIPSwitches(&obstacle, &startPos, &goalPos);
 	readDIPSwitchedObstacle(&obstacle);
+	readDIPSwitchedPosition(&startPos);
 	return createSelectedAuto(obstacle, startPos, goalPos);
 }
 
@@ -241,6 +146,31 @@ void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
 	}
 }
 
+void AutoBase::readDIPSwitchedPosition(eStartPos *startPos) {
+	LOG_INFO("Read Switched Obstacle start");
+	std::vector<DigitalInput *> digitalInputs; // initialize digital input
+
+	for (int i = 4; i < 7; i++) {
+		digitalInputs.push_back(new DigitalInput(i));
+	}
+
+	//calculate obstacle
+	*startPos = (eStartPos) 0;
+	int adder = 1;
+	for (unsigned i = 0; i < digitalInputs.size(); i++) {
+		bool isSet = digitalInputs[i]->Get();
+		LOG_INFO("index %u bool %u", i, isSet);
+		if (isSet) {
+			*startPos = (eStartPos) ((*startPos) | adder);
+		}
+		adder = adder << 1;
+	}
+	LOG_INFO("position selected %d", (*startPos));
+	for (unsigned i = 0; i < digitalInputs.size(); i++) {
+		delete digitalInputs[i];
+	}
+}
+
 void AutoBase::readDIPSwitches(eObstacle *obstacle, eStartPos *sp,
 		eGoalPos *goal) {
 	std::vector<DigitalInput *> digitalInputs; // initialize digital input
@@ -259,6 +189,8 @@ void AutoBase::readDIPSwitches(eObstacle *obstacle, eStartPos *sp,
 		}
 		adder = adder << 1;
 	}
+	LOG_INFO("position selected %d", (*sp));
+
 	//calculate obstacle
 	*obstacle = (eObstacle) 0;
 	adder = 1;
@@ -270,8 +202,9 @@ void AutoBase::readDIPSwitches(eObstacle *obstacle, eStartPos *sp,
 		}
 		adder = adder << 1;
 	}
+	LOG_INFO("obstacle selected %d", (*obstacle));
 	//calculate goal
-	*goal = (eGoalPos) 0; // start Position
+	/**goal = (eGoalPos) 0; // start Position
 	adder = 1;
 	for (int i = DIP_CHANNEL_GOAL_START; i < DIP_CHANNEL_GOAL_END; i++) {
 		bool isSet = digitalInputs[i]->Get();
@@ -279,8 +212,10 @@ void AutoBase::readDIPSwitches(eObstacle *obstacle, eStartPos *sp,
 			*goal = (eGoalPos) ((*goal) | adder);
 		}
 		adder = adder << 1;
-	}
-	for (int i = DIP_START; i < DIP_END; ++i) {
+	}*/
+	LOG_INFO("goal selected %d", (*goal));
+
+	for (unsigned i = 0; i < digitalInputs.size(); ++i) {
 		delete digitalInputs[i];
 	}
 }

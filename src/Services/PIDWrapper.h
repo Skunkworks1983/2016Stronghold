@@ -16,6 +16,8 @@ class PIDOutput;
 class PIDWrapper {
 private:
 	PIDController *ptr = NULL;
+	PIDOutput *output = NULL;
+	PIDSource *source = NULL;
 	float setpoint;
 public:
 	PIDWrapper(float p, float i, float d, float f, PIDSource *source, PIDOutput *output);

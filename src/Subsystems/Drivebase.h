@@ -22,8 +22,6 @@ public:
 
 	void setLeftSpeed(const double speed1, const double speed2, const double speed3);
 	void setRightSpeed(const double speed1, const double speed2, const double speed3);
-	float getLeftDistance();
-	float getRightDistance();
 
 	void setHold(bool state);
 	bool isHolding();

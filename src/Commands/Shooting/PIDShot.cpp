@@ -17,8 +17,8 @@ PIDShot::PIDShot(double leftSpeed, double rightSpeed, float timeout) :
 // Called just before this Command runs the first time
 void PIDShot::Initialize() {
 	LOG_INFO("PIDShot Initialize called");
-	shooter->getRight()->SetSetpoint(rightSpeed);
-	shooter->getLeft()->SetSetpoint(leftSpeed);
+	shooter->getRight()->SetSetpoint(rightSpeed - 4);
+	shooter->getLeft()->SetSetpoint(leftSpeed + 3);
 
 	shooter->getLeft()->Enable();
 	shooter->getRight()->Enable();

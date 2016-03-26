@@ -79,6 +79,7 @@ SensorManager* SensorManager::getSensorManager() {
 void SensorManager::ZeroYaw() {
 	if (ahrs != NULL) {
 		ahrs->ZeroYaw();
+		ahrs->Reset();
 	}
 }
 
@@ -93,7 +94,7 @@ void SensorManager::initGyro() {
 			while (!ahrs->IsConnected()) {
 				counter++;
 				if (counter > AHRS_CYCLE_TIMEOUT) {
-					LOG_ERROR("AHRS NOT CONNECTED");
+					//LOG_ERROR("AHRS NOT CONNECTED");
 					ahrsDead = true;
 					break;
 				}
@@ -101,7 +102,10 @@ void SensorManager::initGyro() {
 			counter = 0;
 			while (ahrs->IsCalibrating()) {
 				if (counter++ % 5 == 0) {
-					LOG_INFO("Counter %d", counter);
+					//LOG_INFO("Counter %d", counter);
+				}
+				if(counter > 20000){
+					break;
 				}
 			}
 			LOG_INFO("Is the AHRS connected? %s",
@@ -112,21 +116,6 @@ void SensorManager::initGyro() {
 			ahrsDead = true;
 		}
 	}
-
-	/*unsigned c = 0;
-	while (ahrs->GetYaw() == 0.0) {
-		if (c++ % 10 == 0) {
-			LOG_INFO("Counter %u Yaw %f", c, ahrs->GetYaw());
-		}
-	}
-	LOG_INFO("Before Reset %f", ahrs->GetYaw());
-
-	if (ahrs != NULL) {
-		//ahrs->ZeroYaw();
-		//ahrs->Reset();
-		startupYaw = ahrs->GetYaw() + 180.0;
-	}
-	LOG_INFO("After Reset %f", ahrs->GetYaw());*/
 }
 
 float SensorManager::getYaw() {
@@ -134,11 +123,7 @@ float SensorManager::getYaw() {
 		double current = ahrs->GetYaw();
 		current += 180.0;
 
-		if (current - startupYaw < 0) {
-			current += 360.0;
-		}
-
-		return current - startupYaw;
+		return current;
 	}
 	return 0.0;
 }

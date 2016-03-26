@@ -45,7 +45,7 @@ Motor::~Motor() {
 }
 
 void Motor::setSpeed(float speed) {
-	LOG_RECORD("PORT: %f SPEED: %f", port, speed);
+	//LOG_RECORD("PORT: %f SPEED: %f", port, speed);
 	talon->Set(speed);
 }
 

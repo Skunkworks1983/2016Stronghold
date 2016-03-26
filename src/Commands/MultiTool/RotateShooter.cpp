@@ -10,7 +10,8 @@
 #define COLLECTOR_MOVE_TOLERANCE 250
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
-RotateShooter::RotateShooter(ShooterPosition pos) {
+RotateShooter::RotateShooter(ShooterPosition pos, bool noreset) :
+		noreset(noreset) {
 	Requires(shooter);
 	SetInterruptible(true);
 	test = 0;
@@ -32,6 +33,9 @@ RotateShooter::RotateShooter(ShooterPosition pos) {
 void RotateShooter::Initialize() {
 	shooter->registerCommand(this);
 	//motorManager->disablePID(PID_ID_COLLECTOR);
+	if (!noreset) {
+		motorManager->resetPID(PID_ID_COLLECTOR);
+	}
 	motorManager->enablePID(PID_ID_COLLECTOR, target);
 	LOG_DEBUG("CollectorMove Initialize target %f", target);
 	SmartDashboard::PutNumber("target", target);
@@ -64,4 +68,5 @@ void RotateShooter::End() {
 
 void RotateShooter::Interrupted() {
 	LOG_DEBUG("CollectorMove INTERRUPTED Called for target %f", target);
+	End();
 }

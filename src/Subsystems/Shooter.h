@@ -14,15 +14,12 @@ class DigitalInput;
 
 class Shooter: public Subsystem {
 private:
-	float p = .0024;	//works = .0018
+	float p = .003;	//works = .0018
 	float i = 0.0;		//works = 0.0
-	float d = 0.008;	//works = 0.0
+	float d = 0.012;	//works = 0.0
 
 	MotorManager *motorManager;
 	SensorManager *sensorManager;
-	DigitalInput *frontLimitSwitch;
-	DigitalInput *backLimitSwitch;
-	DigitalInput *breakBeam;
 	ShooterMotor *left;
 	ShooterMotor *right;
 	Command *lastCommand = NULL;
@@ -46,10 +43,6 @@ public:
 
 	void registerCommand(Command *cmd);
 	void deregisterCommand(Command *cmd);
-
-	bool getFrontSensor();
-	bool getBackSensor();
-	bool getBreakBeam();
 
 	void setRollerSpeed(rollerDirection direction, float speed);
 

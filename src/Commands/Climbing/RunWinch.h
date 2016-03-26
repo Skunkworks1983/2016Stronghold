@@ -15,6 +15,7 @@ private:
 	float speed;
 	int counter = 0;
 	float timeout;
+	float realspeed = .75;
 public:
 	RunWinch(float setPoint, float timeout = 0);
 	~RunWinch();

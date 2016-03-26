@@ -11,8 +11,6 @@
 #include <TuningValues.h>
 #include <cstdio>
 
-#define SHOOTER_SPEED 54.0 - 2
-
 Shooter::Shooter() :
 		Subsystem("Shooter") {
 	motorManager = MotorManager::getMotorManager();
@@ -20,8 +18,6 @@ Shooter::Shooter() :
 
 	left = new ShooterMotor(ShooterMotor::LEFT, p, i, d);
 	right = new ShooterMotor(ShooterMotor::RIGHT, p, i, d);
-
-	breakBeam = new DigitalInput(COLLECTOR_BREAK_BEAM_PORT);
 }
 
 Shooter::~Shooter() {
@@ -115,18 +111,6 @@ void Shooter::setRollerSpeed(rollerDirection direction, float speed) {
 		motorManager->setSpeed(COLLECTOR_ROLLER_MOTOR_1_PORT, 0.0);
 		break;
 	}
-}
-
-bool Shooter::getFrontSensor() {
-	return frontLimitSwitch->Get();
-}
-
-bool Shooter::getBackSensor() {
-	return backLimitSwitch->Get();
-}
-
-bool Shooter::getBreakBeam() {
-	return breakBeam->Get();
 }
 
 void Shooter::setRotatorSpeed(float rotatorSpeed) {

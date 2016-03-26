@@ -1,6 +1,7 @@
 #include <Commands/Climbing/MoveServo.h>
 #include <Commands/Climbing/RunWinch.h>
 #include <Commands/Climbing/SafeRotateArm.h>
+#include <Commands/Driving/StopArmPID.h>
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunCollector.h>
@@ -27,7 +28,7 @@ OI::OI() {
 #endif
 	//driverbuttons
 	stopShooterPID = new JoystickButton(leftStick, 2);
-	driverPass = new JoystickButton(leftStick, 1);
+	driverTankDriveOneCIM = new JoystickButton(leftStick, 1);
 	driverShooterDown = new JoystickButton(rightStick, 1);
 	driverShooterUp = new JoystickButton(rightStick, 2);
 	driverReadShooterPIDValues = new JoystickButton(rightStick, 3);
@@ -89,7 +90,7 @@ OI::~OI() {
 	delete driverShooterDown;
 	delete driverShooterUp;
 	delete driverReadShooterPIDValues;
-	delete driverPass;
+	delete driverTankDriveOneCIM;
 }
 
 double OI::getLeftStickY() {
@@ -128,8 +129,8 @@ void OI::registerButtonListeners() {
 	driverShooterDown->WhileHeld(new RunNewCollector(false));
 	driverShooterDown->WhenPressed(new RotateShooter(cCollect));
 	driverShooterUp->WhenPressed(new RotateShooter(cTOP));
-	driverPass->WhileHeld(new RunNewCollector(true));
 	driverReadShooterPIDValues->WhenPressed(new ReadShooterPIDValues());
+
 	/**
 	 * Operator Buttons
 	 */
@@ -146,7 +147,8 @@ void OI::registerButtonListeners() {
 	lowArm->WhenPressed(new IndexBall());	//no need for this at the moment
 	lowAim->WhenPressed(new RotateShooter(cCollect));
 
-	highArm->WhileHeld(new PIDShot(77.0, 77.0));
+	const double shot_speed = 77.0 - 4.5;
+	highArm->WhileHeld(new PIDShot(shot_speed, shot_speed));
 	highArmPosition1->WhileHeld(new ArmShot());
 	highArmPosition2->WhileHeld(new RunShooter(.65, .2));
 	highFire->ToggleWhenPressed(new RunCollector(Shooter::KForward, 1.0, .5));
@@ -154,10 +156,11 @@ void OI::registerButtonListeners() {
 	highLineUp->WhenPressed(new ResetShooterRotationEncoder());
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
 	const double climber_arm_up_debug = 3125;
-	climberArmsUp->WhenPressed(new SafeRotateArm(climber_arm_up_debug));
-	winchEngage->WhileHeld(new RunWinch(.75));
+	climberArmsUp->WhileHeld(new SafeRotateArm(climber_arm_up_debug));
+	climberArmsUp->WhenReleased(new StopArmPID());
+	winchEngage->WhileHeld(new RunWinch(1.0));
 	//manualOveride;	no effect currently
-	manualWinchReverse->WhileHeld(new RunWinch(-.1));
+	manualWinchReverse->WhileHeld(new RunWinch(-.2));
 	manualShooterDown->WhenPressed(
 			new MoveServo(MoveServo::eServoPosition::OUT));
 	manualShooterUp->WhenPressed(new MoveServo(MoveServo::eServoPosition::IN));

@@ -22,9 +22,29 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 		this->talon = motor->talon;
 		talon->SetEncPosition(0);
 		talon->SetPosition(0);
-		talon->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-		talon->GetAnalogIn();
-		talon->GetPulseWidthPosition();
+		if (talon->IsSensorPresent(CANTalon::FeedbackDevice::AnalogEncoder)) {
+			LOG_INFO("Talon port %u has AnalogEncoder", CANTalonEncoderPort);
+		} else if (talon->IsSensorPresent(
+				CANTalon::FeedbackDevice::CtreMagEncoder_Absolute)) {
+			LOG_INFO("Talon port %u has CtreMagEncoder_Absolute",
+					CANTalonEncoderPort);
+		} else if (talon->IsSensorPresent(
+				CANTalon::FeedbackDevice::CtreMagEncoder_Relative)) {
+			LOG_INFO("Talon port %u has CtreMagEncoder_Relative",
+					CANTalonEncoderPort);
+		} else if (talon->IsSensorPresent(
+				CANTalon::FeedbackDevice::QuadEncoder)) {
+			LOG_INFO("Talon port %u has QuadEncoder", CANTalonEncoderPort);
+		} else if (talon->IsSensorPresent(
+				CANTalon::FeedbackDevice::PulseWidth)) {
+			LOG_INFO("Talon port %u has PulseWidth", CANTalonEncoderPort);
+		} else if (talon->IsSensorPresent(
+				CANTalon::FeedbackDevice::EncFalling)) {
+			LOG_INFO("Talon port %u has EncFalling", CANTalonEncoderPort);
+		} else if (talon->IsSensorPresent(
+				CANTalon::FeedbackDevice::EncRising)) {
+			LOG_INFO("Talon port %u has EncRising", CANTalonEncoderPort);
+		}
 	} else {
 		LOG_INFO("MotorIs null!!! port: %d", CANTalonEncoderPort);
 	}
@@ -57,7 +77,7 @@ bool reversed) :
 				highRange), reversed(reversed) {
 	talon->SetEncPosition(0);
 	talon->SetPosition(0);
-	talon->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	talon->SetControlMode(CANTalon::kPercentVbus);
 }
 
 Sensor::~Sensor() {
@@ -74,9 +94,9 @@ void Sensor::resetEncoder() {
 double Sensor::PIDGet() {
 	if (talon != NULL) {
 		if (reversed) {
-			return (double) -talon->GetEncPosition();
+			return (double) -talon->GetPosition();
 		} else {
-			return (double) talon->GetEncPosition();
+			return (double) talon->GetPosition();
 		}
 	} else if (ahrs != NULL) {
 		return SensorManager::getSensorManager()->getYaw();
@@ -91,14 +111,9 @@ double Sensor::PIDGet() {
 
 //ticks per 100 ms
 double Sensor::getSpeed() {
-	//from CANTalon.cpp  * The speed units will be in the sensor's native ticks per 100ms.*
+//from CANTalon.cpp  * The speed units will be in the sensor's native ticks per 100ms.*
 	if (talon != NULL) {
 		return talon->GetSpeed() * (reversed ? -1 : 1);
 	}
 	return 0.0;
 }
-
-int Sensor::getAbsolutePosition() {
-	return talon->GetPulseWidthPosition() * (reversed ? -1 : 1);
-}
-

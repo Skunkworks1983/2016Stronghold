@@ -20,8 +20,10 @@ private:
 	unsigned onCount = 0;
 	double speed = .5;
 	SensorManager *sensorManager = NULL;
+	bool absolute = false;
+	float timeout = 0.0;
 public:
-	BangBangTurn(const double degrees);
+	BangBangTurn(const double degrees, bool absolute = false, float timeout = 0.0);
 	virtual ~BangBangTurn();
 	void Initialize();
 	void Execute();

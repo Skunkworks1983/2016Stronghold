@@ -13,7 +13,8 @@
 #include <RobotMap.h>
 
 PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
-		PIDOutput *output) {
+		PIDOutput *output) :
+		output(output), source(source) {
 	ptr = new PIDController(p, i, d, f, source, output);
 	setpoint = 0;
 
@@ -62,5 +63,11 @@ bool PIDWrapper::IsEnabled() {
 
 void PIDWrapper::Reset() {
 	ptr->Reset();
+	double p = ptr->GetP();
+	double i = ptr->GetI();
+	double d = ptr->GetD();
+	double f = ptr->GetF();
+	delete ptr;
+	ptr = new PIDController(p, i, d, f, source, output);
 }
 
