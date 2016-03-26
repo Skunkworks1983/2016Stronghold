@@ -54,16 +54,21 @@ void Robot::AutonomousInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	LOG_INFO("AutonomousInit Called");
 	//turnDegree->Start();
-	//cmd = AutoBase::getSelectedAuto();
-	cmd = AutoBase::doRoughT();
 	SensorManager::getSensorManager()->ZeroYaw();
+
+	cmd = AutoBase::getSelectedAuto();
+	//cmd = AutoBase::doRoughT();
 	//turnDegree = new DriveForwardStraight(5, .25);
 	//turnDegree->Start();
 	cmd->Start();
+	oldTime = GetFPGATime();
 }
 
 void Robot::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
+	LOG_INFO("Autonomous TimeDiff = %ud", GetFPGATime() - oldTime);
+
+	oldTime = GetFPGATime();
 
 	//CommandBase::shooter->setShooterSpeed(1.0);
 	//CommandBase::shooter->setRightShooterSpeed(.3);
@@ -87,13 +92,6 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
 	LiveWindow::GetInstance()->Run();
-	double left = fabs(SensorManager::getSensorManager()->getSensor(
-		SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-		double right = fabs(SensorManager::getSensorManager()->getSensor(
-		SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-
-		LOG_INFO("left %f right %f ",
-				left, right);
 }
 
 void Robot::TestPeriodic() {

@@ -1,4 +1,4 @@
-#include <Commands/Climbing/RunWinchSetPoint.h>
+#include <Commands/Climbing/RunWinchToSetPoint.h>
 #include <RobotMap.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>

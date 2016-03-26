@@ -8,7 +8,7 @@
 
 #define USE_DRIVEBASE 1
 #define USE_CLIMBER 1
-#define USE_SHOOTER 0
+#define USE_SHOOTER 1
 #define USE_ARM 0
 
 #define USE_LOGGING 1
@@ -209,5 +209,10 @@
 			char buf[1024];\
 			sprintf(buf, __VA_ARGS__);\
 			Logger::getLogger()->log(buf, Error);}
+
+#define LOG_RECORD(...) {\
+			char buf[1024];\
+			sprintf(buf, __VA_ARGS__);\
+			Logger::getLogger()->log(buf, Record);}
 
 #endif

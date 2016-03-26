@@ -165,10 +165,13 @@ void MotorManager::initPIDS() {
 
 	MotorGroup * groupShooterRotation = new MotorGroup(rotationShooterMotors);
 
+	const double shooter_p = 0.00015;
+	const double shooter_i = 0.0000015;
+	const double shooter_d = 0.0003;
+	const double shooter_f = -.1 / 3565;
+
 	createPID(groupShooterRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
-	PID_ID_COLLECTOR, COLLECTOR_ROTATION_P, COLLECTOR_ROTATION_I,
-	COLLECTOR_ROTATION_D,
-	COLLECTOR_ROTATION_F, false);
+	PID_ID_COLLECTOR, shooter_p, shooter_i, shooter_d, shooter_f, false);
 	/*
 	 std::vector<Motor*> rollerMotors;
 	 rollerMotors.push_back(getMotor(COLLECTOR_ROLLER_MOTOR_1_PORT));
@@ -203,7 +206,9 @@ void MotorManager::setPosition(unsigned pidID, float position) {
 }
 
 void MotorManager::resetPID(unsigned ID) {
-	pidControllerMap[ID]->Reset();
+	if (pidControllerMap.count(ID) >= 1) {
+		pidControllerMap[ID]->Reset();
+	}
 }
 
 void MotorManager::setSpeed(unsigned ID, float speed) {
@@ -242,7 +247,7 @@ void MotorManager::setPID(unsigned ID, double P, double I, double D) {
 
 double MotorManager::GetPosition(unsigned ID) {
 	if (motors[ID]->talon != NULL) {
-		return this->motors[ID]->talon->GetEncPosition();
+		return this->motors[ID]->talon->GetPosition();
 	} else {
 		return 0.0;
 	}

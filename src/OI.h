@@ -39,14 +39,15 @@ private:
 	JoystickButton *stopShooterPID = NULL;
 	JoystickButton *driverShooterDown = NULL;
 	JoystickButton *driverShooterUp = NULL;
-	JoystickButton *driverPass = NULL;
+	JoystickButton *driverTankDriveOneCIM = NULL;
 
 public:
 	OI();
 	~OI();
 	double getLeftStickY();
 	double getRightStickY();
-	void registerButtonListeners();bool isJoystickButtonPressed(int control,
+	void registerButtonListeners();
+	bool isJoystickButtonPressed(int control,
 			int button);
 };
 

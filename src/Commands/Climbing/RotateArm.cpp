@@ -31,7 +31,7 @@ void RotateArm::Execute() {
 bool RotateArm::IsFinished() {
 
 	return fabs(SensorManager::getSensorManager()->getSensor(
-	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()) > target - 250;
+	SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()) > target - EPSILON;
 }
 
 void RotateArm::End() {

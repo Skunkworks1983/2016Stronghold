@@ -6,7 +6,7 @@
 
 AutoBase *AutoBase::doMoat() {
 	AutoBase *cmd = new AutoBase("Autonomous-doMoat");
-	cmd->AddParallel(new RotateShooter(cTOP));
+	cmd->AddParallel(new RotateShooter(cTOP, true));
 	cmd->AddSequential(new RunNewCollector(.3));
 	cmd->AddSequential(new DriveForward(5, .85f));	//Reach the defence
 	cmd->AddSequential(new DriveForward(6, .85f));	//breach the defence

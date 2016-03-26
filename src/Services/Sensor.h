@@ -33,7 +33,6 @@ public:
 	double PIDGet();
 	float getLowRange();
 	float getHighRange();
-	int getAbsolutePosition();
 	void resetEncoder();
 	double getSpeed();
 };

@@ -23,7 +23,7 @@ private:
 	int count;
 	AutoBase *cmd  = NULL;
 	DriveForwardStraight * turnDegree = NULL;
-
+	uint64_t oldTime;
 public:
 	void RobotInit();
 	void DisabledInit();

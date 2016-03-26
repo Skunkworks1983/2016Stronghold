@@ -1,7 +1,10 @@
 #include <Commands/Driving/TankDrive.h>
 #include <DriverStation.h>
 #include <OI.h>
+#include <RobotMap.h>
+#include <Services/MotorManager.h>
 #include <Subsystems/Drivebase.h>
+#include <cmath>
 
 TankDrive::TankDrive() {
 	Requires(drivebase);
@@ -13,17 +16,55 @@ void TankDrive::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void TankDrive::Execute() {
+	if (drivebase->isDriverControl()
+			&& DriverStation::GetInstance().IsOperatorControl()
+			&& !DriverStation::GetInstance().IsAutonomous()) {
+		if (oi->isJoystickButtonPressed(0, 1)) {
+			const double oiLeft = oi->getLeftStickY();
+			const double oiRight = oi->getRightStickY();
+
+			MotorManager::getMotorManager()->setSpeed(
+			DRIVEBASE_LEFTMOTOR_1_PORT, oiLeft);
+			MotorManager::getMotorManager()->setSpeed(
+			DRIVEBASE_LEFTMOTOR_2_PORT, 0);
+			MotorManager::getMotorManager()->setSpeed(
+			DRIVEBASE_LEFTMOTOR_3_PORT, 0);
+
+			MotorManager::getMotorManager()->setSpeed(
+			DRIVEBASE_RIGHTMOTOR_1_PORT, oiRight);
+			MotorManager::getMotorManager()->setSpeed(
+			DRIVEBASE_RIGHTMOTOR_2_PORT, 0);
+			MotorManager::getMotorManager()->setSpeed(
+			DRIVEBASE_RIGHTMOTOR_3_PORT, 0);
+
+			const float l1 = MotorManager::getMotorManager()->getMotor(
+			DRIVEBASE_LEFTMOTOR_1_PORT)->talon->GetOutputCurrent();
+			const float l2 = MotorManager::getMotorManager()->getMotor(
+			DRIVEBASE_LEFTMOTOR_2_PORT)->talon->GetOutputCurrent();
+			const float l3 = MotorManager::getMotorManager()->getMotor(
+			DRIVEBASE_LEFTMOTOR_3_PORT)->talon->GetOutputCurrent();
+
+			const float r1 = MotorManager::getMotorManager()->getMotor(
+			DRIVEBASE_RIGHTMOTOR_1_PORT)->talon->GetOutputCurrent();
+			const float r2 = MotorManager::getMotorManager()->getMotor(
+			DRIVEBASE_RIGHTMOTOR_2_PORT)->talon->GetOutputCurrent();
+			const float r3 = MotorManager::getMotorManager()->getMotor(
+			DRIVEBASE_RIGHTMOTOR_3_PORT)->talon->GetOutputCurrent();
+
+			LOG_INFO("USING ONLY ONE CIM %f %f", oiLeft, oiRight);
+			LOG_INFO("%f %f %f %f %f %f", l1, l2, l3, r1, r2, r3);
+
+		} else {
+			drivebase->setLeftSpeed(oi->getLeftStickY());
+			drivebase->setRightSpeed(oi->getRightStickY());
+		}
+	}
 	if (oi->getLeftStickY() > .5) {
 		drivebase->setHold(false);
 	}
 	if (fabs(oi->getLeftStickY()) > .8 || fabs(oi->getRightStickY()) > .8) {
 		drivebase->setDriverControl(true);
 	}
-	if (drivebase->isDriverControl() && DriverStation::GetInstance().IsOperatorControl() && !DriverStation::GetInstance().IsAutonomous()) {
-		drivebase->setLeftSpeed(oi->getLeftStickY());
-		drivebase->setRightSpeed(oi->getRightStickY());
-	}
-
 }
 
 // Make this return true when this Command no longer needs to run execute()

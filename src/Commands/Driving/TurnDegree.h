@@ -24,13 +24,14 @@ class TurnDegree: public CommandBase
 private:
 	float degree;
 	//double speed; See cpp
+	bool absolute = false;
 	bool ahrsDead;
 	MotorManager * motorManager = NULL;
 	SensorManager * sensorManager = NULL;
 	float initialYaw;
 	unsigned onCount = 0;
 public:
-	TurnDegree(double degree); //number of degrees to turn, speed at which to turn
+	TurnDegree(double degree, bool absolute = false); //number of degrees to turn, speed at which to turn
 	virtual ~TurnDegree();
 	void Initialize();
 	void Execute();

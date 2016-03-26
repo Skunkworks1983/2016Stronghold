@@ -16,7 +16,7 @@ void RunCollector::Initialize() {
 	if (timeOut != 0) {
 		SetTimeout(timeOut);
 	}
-	shooter->setRollerSpeed(dir, 1.0);
+	shooter->setRollerSpeed(dir, speed);
 }
 
 void RunCollector::Execute() {

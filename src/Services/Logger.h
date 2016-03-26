@@ -14,7 +14,8 @@ enum ELogLevel {
 	Debug,
 	Info,
 	Warning,
-	Error
+	Error,
+	Record
 };
 
 struct LogMessage {

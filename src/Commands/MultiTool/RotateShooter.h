@@ -18,8 +18,9 @@ private:
 	MotorManager * motorManager = NULL;
 	SensorManager * sensorManager = NULL;
 	int test;
+	bool noreset = false;
 public:
-	RotateShooter(ShooterPosition pos);
+	RotateShooter(ShooterPosition pos, bool noreset = false);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

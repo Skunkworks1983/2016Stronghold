@@ -40,6 +40,7 @@ public:
 	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos, eGoalPos goalPos);
 	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp, eGoalPos *goal);
 	static void readDIPSwitchedObstacle(eObstacle *obstacle);
+	static void readDIPSwitchedPosition(eStartPos *startPos);
 	static AutoBase *doCheval(); //Cheval de Frise
 	static AutoBase *doMoat(); // the U-shape
 	static AutoBase *doRockW(); //Rock Wall

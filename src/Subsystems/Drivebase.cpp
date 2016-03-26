@@ -24,22 +24,12 @@ void Drivebase::resetEncoder() {
 }
 
 void Drivebase::setDriverControl(bool state){
-	LOG_INFO("SetDriverControl to %u", state);
+	//LOG_INFO("SetDriverControl to %u", state);
 	driverControl = state;
 }
 bool Drivebase::isDriverControl(){
 	//LOG_DEBUG("Returning driverControl %u", driverControl);
 	return driverControl;
-}
-
-float Drivebase::getRightDistance() {
-	return SensorManager::getSensorManager()->GetEncoderPosition(
-	DRIVEBASE_RIGHT_ENCODER_PORT);
-}
-
-float Drivebase::getLeftDistance() {
-	return SensorManager::getSensorManager()->GetEncoderPosition(
-	DRIVEBASE_LEFT_ENCODER_PORT);
 }
 
 //only use if you know what you are doing
@@ -72,7 +62,7 @@ void Drivebase::setRightSpeed(double speed1, double speed2, double speed3) {
 }
 
 void Drivebase::setLeftSpeed(double speed) {
-	LOG_INFO("Setting Left Speed to %f", speed);
+	//LOG_INFO("Setting Left Speed to %f", speed);
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_LEFTMOTOR_1_PORT,
 			speed);
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_LEFTMOTOR_2_PORT,
@@ -82,8 +72,7 @@ void Drivebase::setLeftSpeed(double speed) {
 }
 
 void Drivebase::setRightSpeed(double speed) {
-	LOG_INFO("Setting Right Speed to %f", speed);
-	speed *= .8;
+	//LOG_INFO("Setting Right Speed to %f", speed);
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_RIGHTMOTOR_1_PORT,
 			speed);
 	MotorManager::getMotorManager()->setSpeed(DRIVEBASE_RIGHTMOTOR_2_PORT,

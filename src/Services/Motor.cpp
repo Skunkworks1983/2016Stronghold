@@ -14,6 +14,7 @@
 #include <cmath>
 #include <cstdio>
 #include <RobotMap.h>
+#include <Services/Logger.h>
 
 Motor::Motor(Priority prioArg, int portArg, float maxCurrent,
 		ESubsystem parentSubsystem, bool reversed) :
@@ -44,6 +45,7 @@ Motor::~Motor() {
 }
 
 void Motor::setSpeed(float speed) {
+	//LOG_RECORD("PORT: %f SPEED: %f", port, speed);
 	talon->Set(speed);
 }
 

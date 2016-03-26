@@ -19,7 +19,7 @@
 
 #define TURN_DEGREE_ESPSILON 2.0
 
-TurnDegree::TurnDegree(double degree) {
+TurnDegree::TurnDegree(double degree, bool absolute) : absolute(absolute){
 	P = 1. / 180.0;
 	I = 1.0 / 3000.0; //TODO: Tune for competition robot, currently tuned to totebot sorta
 	D = 1.0 / 360.0;
@@ -50,7 +50,7 @@ void TurnDegree::Initialize() {
 
 	ahrsDead = sensorManager->ahrsDead; //True if the ahrs (gyro) is non functional for the round
 
-	motorManager->enablePID(PID_ID_DRIVEBASE_ROT, degree + initialYaw); //Fix ahrsDead in motormanger somehow
+	motorManager->enablePID(PID_ID_DRIVEBASE_ROT, degree + (absolute ? 0 : initialYaw)); //Fix ahrsDead in motormanger somehow
 
 	LOG_INFO("Initialize of TurnDegree, target yaw %f, current yaw %f", degree,
 			initialYaw);
@@ -74,7 +74,7 @@ void TurnDegree::Execute() {
 
 	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 
-	LOG_INFO("%f, %f, %f\t%f, %f, %f, yaw: %f", l1, l2, l3, r1, r2, r3, yaw);
+	//LOG_INFO("%f, %f, %f\t%f, %f, %f, yaw: %f", l1, l2, l3, r1, r2, r3, yaw);
 }
 
 bool TurnDegree::IsFinished() {
