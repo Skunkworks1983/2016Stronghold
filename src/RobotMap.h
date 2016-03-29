@@ -9,12 +9,12 @@
 #define USE_DRIVEBASE 1
 #define USE_CLIMBER 1
 #define USE_SHOOTER 1
-#define USE_ARM 0
+#define USE_ARM 1
 
 #define USE_LOGGING 1
 
 #define USE_GYRO 1
-#define USE_CAMERA 0
+#define USE_CAMERA 1
 
 #define USE_GAMEPAD 0
 

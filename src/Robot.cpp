@@ -91,7 +91,6 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
-	LiveWindow::GetInstance()->Run();
 }
 
 void Robot::TestPeriodic() {

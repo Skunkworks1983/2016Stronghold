@@ -6,6 +6,7 @@
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunCollector.h>
 #include <Commands/MultiTool/RunNewCollector.h>
+#include <Commands/MultiTool/StopCollectorPID.h>
 #include <Commands/Shooting/ArmShot.h>
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/IndexBall.h>
@@ -129,7 +130,8 @@ void OI::registerButtonListeners() {
 	driverShooterDown->WhileHeld(new RunNewCollector(false));
 	driverShooterDown->WhenPressed(new RotateShooter(cCollect));
 	driverShooterUp->WhenPressed(new RotateShooter(cTOP));
-	driverReadShooterPIDValues->WhenPressed(new ReadShooterPIDValues());
+	//driverReadShooterPIDValues->WhenPressed(new ReadShooterPIDValues());
+	stopShooterPID->WhenPressed(new StopShooterRotationPID());
 
 	/**
 	 * Operator Buttons
