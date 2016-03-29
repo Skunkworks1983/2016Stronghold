@@ -1,7 +1,8 @@
 #include <HAL/cpp/priority_mutex.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
-#include <cstdio>
+#include <unistd.h>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 
@@ -74,6 +75,7 @@ void *Logger::write(void * d) {
 		catch(...) {
 			logger->loggerDied = true;
 		} //Not sure what the exact error is, but will not die when no flashdrive
+		usleep(100);
 	}
 	return NULL;
 }

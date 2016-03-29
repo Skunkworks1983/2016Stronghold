@@ -1,11 +1,11 @@
 #include <I2C.h>
 #include <RobotMap.h>
-#include <Services/Logger.h>
+#include <Services/CameraReader.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <TuningValues.h>
 #include <exception>
-#include <iostream>
+#include <utility>
 
 #include "../../navx-mxp/cpp/include/AHRS.h"
 
@@ -17,7 +17,7 @@ SensorManager::SensorManager() {
 	SENSOR_GYRO_ID);
 #endif
 #if USE_CAMERA
-	sensors.insert(std::pair<int, Sensor*>(SENSOR_CAMERA_ID, new Sensor(CameraReader::getCameraReader())));
+	//sensors.insert(std::pair<int, Sensor*>(SENSOR_CAMERA_ID, new Sensor(CameraReader::getCameraReader())));
 #endif
 #if USE_DRIVEBASE
 	sensors[SENSOR_DRIVE_BASE_LEFT_ENCODER_ID] = new Sensor(

@@ -74,14 +74,14 @@ float Shooter::getShooterSpeed() {
 
 void Shooter::registerCommand(Command *cmd) {
 	if (lastCommand == NULL) {
-		LOG_INFO("lastCommand = cmd", Debug);
+		LOG_INFO("lastCommand = cmd");
 		lastCommand = cmd;
 	} else {
 		if (lastCommand->IsRunning()) {
 			lastCommand->Cancel();
 		}
 		lastCommand = cmd;
-		LOG_INFO("After", Debug);
+		LOG_INFO("After");
 	}
 	LOG_INFO("Command %d registered", cmd != NULL ? cmd->GetID() : -420);
 }

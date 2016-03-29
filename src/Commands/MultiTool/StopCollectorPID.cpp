@@ -5,7 +5,7 @@
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
 StopShooterRotationPID::StopShooterRotationPID() {
-
+	Requires(shooter);
 }
 
 void StopShooterRotationPID::Initialize() {
@@ -21,7 +21,7 @@ bool StopShooterRotationPID::IsFinished() {
 }
 
 void StopShooterRotationPID::End() {
-
+	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
 }
 
 void StopShooterRotationPID::Interrupted() {

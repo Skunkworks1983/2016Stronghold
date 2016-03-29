@@ -70,10 +70,9 @@ void CameraReader::stopReading() {
 
 void *CameraReader::update(void *d) {
 	CameraReader *camera_reader = (CameraReader*) d;
-
+#if USE_CAMERA
 	bind(camera_reader->mysocket, (sockaddr *) &(camera_reader->dest),
 			sizeof(camera_reader->dest));
-
 	while (true) {
 		Message msg;
 
@@ -90,6 +89,7 @@ void *CameraReader::update(void *d) {
 		}
 		camera_reader->mutex->unlock();
 	}
+#endif
 }
 
 float CameraReader::getLastLeftX() {

@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <RobotMap.h>
 
-#define SHOT_TOLERANCE .5
+#define SHOT_TOLERANCE .65
 
 AutoRunCollector::AutoRunCollector() {
 	if (timeout > 0) {
@@ -32,8 +32,8 @@ void AutoRunCollector::Execute() {
 	if (leftOnTarget && rightOnTarget && shooter->getLeft()->getSetpoint() != 0
 			&& shooter->getRight()->getSetpoint() != 0) {
 		c++;
-		if (c >= 5) {
-			c = 5;
+		if (c >= 3) {
+			c = 3;
 		}
 	} else {
 		c = 0;
@@ -48,7 +48,7 @@ void AutoRunCollector::Execute() {
 			shooter->getLeft()->PIDGet(), shooter->getRight()->PIDGet(),
 			leftDiff, rightDiff, rightLeftDiff);
 
-	if (c >= 5 && !alreadyUp) {
+	if (c >= 3 && !alreadyUp) {
 		shooter->setRollerSpeed(Shooter::KForward, 1.0);
 		alreadyUp = true;
 		LOG_INFO("THIS IS WHERE THE AUTORUNCOLLECTOR STARTS STARTS STARTS");

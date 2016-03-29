@@ -124,11 +124,8 @@ void MotorManager::initPIDS() {
 #endif
 
 #if USE_CAMERA
-	MotorGroup * groupCamera = new MotorGroup(driveBaseMotors);
-	createPID(groupCamera, SENSOR_CAMERA_ID, PID_ID_CAMERA,
-			MOVE_TOWARD_CAMERA_P,
-			MOVE_TOWARD_CAMERA_I, MOVE_TOWARD_CAMERA_D, MOVE_TOWARD_CAMERA_F,
-			false);
+//	MotorGroup * groupCamera = new MotorGroup(driveBaseMotors);
+//	createPID(groupCamera, SENSOR_CAMERA_ID, PID_ID_CAMERA,	MOVE_TOWARD_CAMERA_P, MOVE_TOWARD_CAMERA_I, MOVE_TOWARD_CAMERA_D, MOVE_TOWARD_CAMERA_F, false);
 #endif
 
 #endif
