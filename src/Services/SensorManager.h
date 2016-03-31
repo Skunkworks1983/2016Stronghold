@@ -6,6 +6,8 @@
 #include <cstdbool>
 #include <map>
 
+#define GYRO_NOT_CONNECTED_VALUE -4200
+
 class AHRS;
 class CANTalon;
 class Encoder;

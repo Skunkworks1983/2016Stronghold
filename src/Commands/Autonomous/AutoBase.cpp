@@ -23,6 +23,8 @@ float AutoBase::getTurnAngle() {
 	eStartPos startPos;
 	readDIPSwitchedPosition(&startPos);
 
+	startPos = eStartPos::lowBar;
+
 	float ret_val = 0;
 
 	switch (startPos) {
@@ -39,7 +41,7 @@ float AutoBase::getTurnAngle() {
 		ret_val = 20;
 		break;
 	case posTwo:
-		ret_val = -20;
+		ret_val = -10;
 		break;
 	case posThree:
 		ret_val = -60;
@@ -96,7 +98,6 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 
 	case Obstacle_ramppart:
 		auto_base->AddSequential(AutoBase::doRoughT());
-		//auto_base->AddSequential(new GoAndScoreHighGoal());
 		break;
 
 	case Obstacle_rockwall:
@@ -107,6 +108,10 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		auto_base->AddSequential(AutoBase::doPortC());
 		break;
 	}
+	if(goalPos == eGoalPos::high){
+		auto_base->AddSequential(new GoAndScoreHighGoal());
+	}
+
 	return auto_base;
 }
 
@@ -118,6 +123,11 @@ AutoBase * AutoBase::getSelectedAuto() {
 	//readDIPSwitches(&obstacle, &startPos, &goalPos);
 	readDIPSwitchedObstacle(&obstacle);
 	readDIPSwitchedPosition(&startPos);
+
+	obstacle = eObstacle::Obstacle_lowBar;
+	startPos = eStartPos::lowBar;
+	goalPos = eGoalPos::high;
+
 	return createSelectedAuto(obstacle, startPos, goalPos);
 }
 

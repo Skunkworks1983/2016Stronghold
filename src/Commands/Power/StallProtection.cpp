@@ -51,10 +51,10 @@ void StallProtection::Execute() {
 						//No PIDs for that yet
 						break;
 					case ROLLER:
-						motorManager->disablePID(PID_ID_ROLLER);
+						motorManager->disablePID(PID_ID_ROLLER);	//not used
 						break;
 					case SHOOTER:
-						motorManager->disablePID(PID_ID_SHOOTER_1);
+						motorManager->disablePID(PID_ID_SHOOTER_1);	//not how it works
 						motorManager->disablePID(PID_ID_SHOOTER_2);
 						break;
 					}

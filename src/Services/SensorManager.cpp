@@ -119,13 +119,13 @@ void SensorManager::initGyro() {
 }
 
 float SensorManager::getYaw() {
-	if (ahrs != NULL) {
+	if (ahrs != NULL && ahrs->IsConnected()) {
 		double current = ahrs->GetYaw();
-		current += 180.0;
+		//current += 180.0;
 
 		return current;
 	}
-	return 0.0;
+	return GYRO_NOT_CONNECTED_VALUE;
 }
 
 float SensorManager::getPitch() {

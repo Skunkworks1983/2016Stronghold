@@ -18,7 +18,7 @@ class BangBangTurn : public CommandBase{
 private:
 	double targetDegrees = 0.0;
 	unsigned onCount = 0;
-	double speed = .5;
+	double speed = .75;
 	SensorManager *sensorManager = NULL;
 	bool absolute = false;
 	float timeout = 0.0;
