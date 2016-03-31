@@ -1,6 +1,7 @@
 #include <Commands/Climbing/MoveServo.h>
 #include <Commands/Climbing/RunWinch.h>
 #include <Commands/Climbing/SafeRotateArm.h>
+#include <Commands/Driving/RotateTowardCameraTarget.h>
 #include <Commands/Driving/StopArmPID.h>
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
 #include <Commands/MultiTool/RotateShooter.h>
@@ -12,7 +13,6 @@
 #include <Commands/Shooting/IndexBall.h>
 #include <Commands/Shooting/PIDShot.h>
 #include <Commands/Shooting/RunShooter.h>
-#include <Commands/Tests/ReadShooterPIDValues.h>
 #include <OI.h>
 #include <Subsystems/Shooter.h>
 #include <cmath>
@@ -130,7 +130,7 @@ void OI::registerButtonListeners() {
 	driverShooterDown->WhileHeld(new RunNewCollector(false));
 	driverShooterDown->WhenPressed(new RotateShooter(cCollect));
 	driverShooterUp->WhenPressed(new RotateShooter(cTOP));
-	//driverReadShooterPIDValues->WhenPressed(new ReadShooterPIDValues());
+	driverReadShooterPIDValues->WhenPressed(new RotateTowardCameraTarget());
 	stopShooterPID->WhenPressed(new StopShooterRotationPID());
 
 	/**

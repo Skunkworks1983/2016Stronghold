@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <iostream>
+#include <RobotMap.h>
 #include <HAL/cpp/priority_mutex.h>
 
 static const int imageWidth = 640;
@@ -19,6 +20,8 @@ CameraReader::CameraReader() {
 	dest.sin_addr.s_addr = htonl(0); /* Listen on all interfaces */
 	dest.sin_port = htons(PORTNUM); /* set destination port number */
 	mutex = new priority_mutex();
+
+	startUp();
 }
 
 CameraReader::~CameraReader() {
@@ -62,6 +65,7 @@ void CameraReader::startReading() {
 	lastMidY = 0;
 	lastRightX = 0;
 	lastRightY = 0;
+
 }
 
 void CameraReader::stopReading() {
@@ -80,12 +84,12 @@ void *CameraReader::update(void *d) {
 				sizeof(msg), 0);
 		camera_reader->mutex->lock();
 		if (msg.posX1 != INVALID) {
-			camera_reader->lastLeftX = 2 * (msg.posX1 / imageWidth) - 1;
-			camera_reader->lastLeftY = 2 * (msg.posY1 / imageHeight) - 1;
-			camera_reader->lastMidX = 2 * (msg.posY2 / imageWidth) - 1;
-			camera_reader->lastMidY = 2 * (msg.posY2 / imageHeight) - 1;
-			camera_reader->lastRightX = 2 * (msg.posY3 / imageWidth) - 1;
-			camera_reader->lastRightY = 2 * (msg.posY3 / imageHeight) - 1;
+			camera_reader->lastLeftX = 2 * ((float)msg.posX1 / (float)imageWidth) - 1;
+			camera_reader->lastLeftY = 2 * ((float)msg.posY1 / (float)imageHeight) - 1;
+			camera_reader->lastMidX = 2 * ((float)msg.posY2 / (float)imageWidth) - 1;
+			camera_reader->lastMidY = 2 * ((float)msg.posY2 / (float)imageHeight) - 1;
+			camera_reader->lastRightX = 2 * ((float)msg.posY3 / (float)imageWidth) - 1;
+			camera_reader->lastRightY = 2 * ((float)msg.posY3 / (float)imageHeight) - 1;
 		}
 		camera_reader->mutex->unlock();
 	}

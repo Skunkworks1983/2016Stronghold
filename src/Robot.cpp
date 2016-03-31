@@ -1,17 +1,14 @@
-#include <CANTalon.h>
-#include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
+#include <Commands/Power/StallProtection.h>
 #include <Commands/Scheduler.h>
-#include <LiveWindow/LiveWindow.h>
 #include <Robot.h>
 #include <RobotBase.h>
-#include <Services/Motor.h>
+#include <RobotMap.h>
 #include <Services/MotorManager.h>
-#include <Services/Sensor.h>
 #include <Services/SensorManager.h>
-#include <SmartDashboard/SmartDashboard.h>
 #include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
+#include <Utility.h>
 #include <cstdbool>
 
 void Robot::RobotInit() {
@@ -30,9 +27,8 @@ void Robot::RobotInit() {
 
 	//turnDegree = new TurnDegree(90);
 
-	//StallProtection *stall = new StallProtection();
-	//stall->Start();
-	//acc = new BuiltInAccelerometer(Accelerometer::kRange_16G);
+	StallProtection *stall = new StallProtection();
+	stall->Start();
 
 	//cmd = AutoBase::doLowBarandScore();
 	LOG_INFO("END OF ROBOTINIT");
@@ -61,12 +57,15 @@ void Robot::AutonomousInit() {
 	//turnDegree = new DriveForwardStraight(5, .25);
 	//turnDegree->Start();
 	cmd->Start();
+	//RotateTowardCameraTarget *rotate = new RotateTowardCameraTarget();
+	//rotate->Start();
+
 	oldTime = GetFPGATime();
 }
 
 void Robot::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
-	LOG_INFO("Autonomous TimeDiff = %ud", GetFPGATime() - oldTime);
+	//LOG_INFO("Autonomous TimeDiff = %ud", GetFPGATime() - oldTime);
 
 	oldTime = GetFPGATime();
 

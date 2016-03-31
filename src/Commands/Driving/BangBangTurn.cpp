@@ -6,16 +6,19 @@
  */
 
 #include <Commands/Driving/BangBangTurn.h>
+#include <DriverStation.h>
+#include <RobotMap.h>
 #include <Services/Sensor.h>
 #include <Services/SensorManager.h>
+#include <SmartDashboard/SmartDashboard.h>
 #include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
-#include <RobotMap.h>
 #include <cmath>
 
 #define BANG_BANG_TURN_TOLERANCE 2
 
-BangBangTurn::BangBangTurn(const double targetDegrees, bool absolute, float timeout) :
+BangBangTurn::BangBangTurn(const double targetDegrees, bool absolute,
+		float timeout) :
 		targetDegrees(targetDegrees), absolute(absolute), timeout(timeout) {
 	Requires(drivebase);
 	sensorManager = SensorManager::getSensorManager();
@@ -27,7 +30,7 @@ BangBangTurn::~BangBangTurn() {
 
 void BangBangTurn::Initialize() {
 
-	if(timeout > 0.0){
+	if (timeout > 0.0) {
 		SetTimeout(timeout);
 	}
 
@@ -37,14 +40,17 @@ void BangBangTurn::Initialize() {
 		targetDegrees;
 	} else {
 		if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + targetDegrees
-				> 360.0) {
-			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet()
-					- 360.0;
-		}
-		if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + targetDegrees
-				< 0.0) {
-			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet()
-					+ 360.0;
+				> 180.0) {
+			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+			targetDegrees -= 180.0;
+			targetDegrees *= -1;
+		} else if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet()
+				+ targetDegrees < -180.0) {
+			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+			targetDegrees += 180.0;
+			targetDegrees *= -1;
+		} else {
+			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 		}
 	}
 
@@ -57,26 +63,26 @@ void BangBangTurn::Initialize() {
 
 void BangBangTurn::Execute() {
 	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+	const double error = yaw - targetDegrees;
 
-	LOG_INFO("Yaw: %f", yaw);
+	SmartDashboard::PutNumber("Yaw", yaw);
+	SmartDashboard::PutNumber("Error", error);
 
-	double error = yaw - targetDegrees;
+	LOG_INFO("Yaw: %f error: %f", yaw, error);
+
+	if (fabs(error) < 20) {
+		speed *= .85;
+	} else {
+		speed *= 1.02;
+	}
 
 	if (DriverStation::GetInstance().IsSysBrownedOut()) {
 		speed = .35;
 	}
 	if (speed > 1) {
 		speed = 1;
-	}
-
-	if (fabs(error) < 20) {
-		speed *= (fabs(error) / (fabs(error) + 1));
-	} else {
-		speed *= 1.02;
-	}
-
-	if (speed < .35) {
-		speed = .35;
+	} else if (speed < .45) {
+		speed = .45;
 	}
 
 	if (error < 0) {
@@ -96,7 +102,7 @@ bool BangBangTurn::IsFinished() {
 	} else {
 		onCount = 0;
 	}
-	return IsTimedOut() || onCount > 20;
+	return IsTimedOut() || onCount > 10;
 }
 
 void BangBangTurn::End() {
