@@ -28,50 +28,50 @@ MotorManager::MotorManager() {
 
 void MotorManager::initClimber() {
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_ARM_MOTOR_PORT,
-	RS775_MAX_CURRENT, ARM);
+	RS775_MAX_CURRENT, ARM, false, false);
 
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_1_PORT,
-	RS775_MAX_CURRENT, WINCH, true);
+	RS775_MAX_CURRENT, WINCH, false, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_2_PORT,
-	RS775_MAX_CURRENT, WINCH, true);
+	RS775_MAX_CURRENT, WINCH, false, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_3_PORT,
-	RS775_MAX_CURRENT, WINCH, true);
+	RS775_MAX_CURRENT, WINCH, false, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, CLIMBER_WINCH_MOTOR_4_PORT,
-	RS775_MAX_CURRENT, WINCH, true);
+	RS775_MAX_CURRENT, WINCH, false, true);
 }
 
 void MotorManager::initDriveBase() {
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_1_PORT,
-	CIM_MAX_CURRENT, DRIVEBASE);
+	CIM_MAX_CURRENT, DRIVEBASE, true, false);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_2_PORT,
-	CIM_MAX_CURRENT, DRIVEBASE);
+	CIM_MAX_CURRENT, DRIVEBASE, false, false);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_3_PORT,
-	CIM_MAX_CURRENT, DRIVEBASE);
+	CIM_MAX_CURRENT, DRIVEBASE, true, false);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_1_PORT,
-	CIM_MAX_CURRENT, DRIVEBASE, true);
+	CIM_MAX_CURRENT, DRIVEBASE, true, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_2_PORT,
-	CIM_MAX_CURRENT, DRIVEBASE, true);
+	CIM_MAX_CURRENT, DRIVEBASE, false, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_3_PORT,
-	CIM_MAX_CURRENT, DRIVEBASE, true);
+	CIM_MAX_CURRENT, DRIVEBASE, true, true);
 
 	LOG_INFO("Created DriveBase Motors");
 }
 
 void MotorManager::initShooter() {
 	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_1_PORT,
-	MINI_CIM_MAX_CURRENT, SHOOTER);
+	MINI_CIM_MAX_CURRENT, SHOOTER, false, false);
 	addMotor(Priority::PRIORITY_SECONDARY_ACTUATORS, SHOOTER_MOTOR_2_PORT,
-	MINI_CIM_MAX_CURRENT, SHOOTER);
+	MINI_CIM_MAX_CURRENT, SHOOTER, false, false);
 
 	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
-	COLLECTOR_ROLLER_MOTOR_1_PORT, RS775_MAX_CURRENT, ROLLER);
+	COLLECTOR_ROLLER_MOTOR_1_PORT, RS775_MAX_CURRENT, ROLLER, false, false);
 
 	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
 	COLLECTOR_ROTATOR_MOTOR_LEFT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
-	false);
+	false, false);
 	addMotor(Priority::PRIORITY_PRIMARY_ACTUATORS,
 	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT, RS775_MAX_CURRENT, COLLECTOR_ROTATOR,
-	true);
+	false, true);
 }
 
 void MotorManager::initPIDS() {
@@ -294,9 +294,9 @@ MotorManager * MotorManager::getMotorManager() {
 }
 
 void MotorManager::addMotor(Priority priority, int Port, float maxCurrent,
-		ESubsystem parentSubsystem, bool reversed) {
+		ESubsystem parentSubsystem, bool brownoutProtect, bool reversed) {
 	Motor * motor = new Motor(priority, Port, maxCurrent, parentSubsystem,
-			reversed);
+			brownoutProtect, reversed);
 	motors.insert(std::pair<int, Motor*>(Port, motor));
 }
 

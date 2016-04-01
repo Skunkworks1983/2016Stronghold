@@ -23,9 +23,10 @@ class Motor {
 	friend class MotorManager;
 private:
 	bool reversed;
+	bool brownoutProtect;
 public:
 	Motor(Priority prioArg, int portArg, float maxCurrent,
-			ESubsystem parentSubsystem, bool reversed);
+			ESubsystem parentSubsystem, bool brownoutProtect, bool reversed);
 	~Motor();
 	ESubsystem parentSubsystem;
 	CANTalon * talon = NULL;
@@ -37,7 +38,9 @@ public:
 	unsigned port;
 	float C;
 	void setSpeed(float speed);
-	void setC(Priority priority, float voltage);bool isReversed();
+	void setC(Priority priority, float voltage);
+	bool isReversed();
+	bool isBrownoutProtect();
 };
 
 #endif /* SRC_SERVICES_MOTOR_H_ */

@@ -6,9 +6,7 @@
 
 class SensorManager;
 
-class AutoBase: public CommandGroup {
-private:
-	enum eGoalPos
+enum eGoalPos
 	{
 		high,
 		low
@@ -33,6 +31,12 @@ private:
 		Obstacle_rockwall,
 		Obstacle_portcullis
 	};
+
+class AutoBase: public CommandGroup {
+private:
+	static eStartPos startPos;
+	static eObstacle obstacle;
+	static eGoalPos goalPos;
 public:
 	static AutoBase *getSelectedAuto();
 
@@ -51,6 +55,9 @@ public:
 	static AutoBase *doLowB(); // Low Bar
 	static AutoBase *doLowBarandScore(); // Low Bar and score
 	static float getTurnAngle();
+	static float getSecondTurnAngle();
+	static float getFirstDistance();
+	static void readValues();
 
 	AutoBase();
 	AutoBase(char *style);

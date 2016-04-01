@@ -5,7 +5,7 @@
  *      Author: S-4020395
  */
 
-#include <Commands/Driving/BangBangTurn.h>
+#include <Commands/Driving/Turning/BangBangTurn.h>
 #include <DriverStation.h>
 #include <RobotMap.h>
 #include <Services/Sensor.h>
@@ -77,7 +77,7 @@ void BangBangTurn::Execute() {
 	}
 
 	if (DriverStation::GetInstance().IsSysBrownedOut()) {
-		speed = .35;
+		speed = .45;
 	}
 	if (speed > 1) {
 		speed = 1;

@@ -19,6 +19,7 @@ private:
 	int c;
 	float lastOutput;
 	float lastCurrent;
+	unsigned brownoutCount;
 public:
 	std::vector<Motor*> & getMotorList();
 	MotorGroup(std::vector<Motor*> motorgroup);

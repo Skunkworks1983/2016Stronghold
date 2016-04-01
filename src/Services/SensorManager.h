@@ -12,7 +12,7 @@ class AHRS;
 class CANTalon;
 class Encoder;
 
-#define AHRS_CYCLE_TIMEOUT 100
+#define AHRS_CYCLE_TIMEOUT 500
 
 class SensorManager {
 	friend class MotorManager;

@@ -6,13 +6,11 @@
  */
 
 #include <CANTalon.h>
-#include <Services/Logger.h>
-#include <Services/Motor.h>
+#include <DriverStation.h>
 #include <Services/MotorGroup.h>
+#include <cstdbool>
 #include <cstdio>
 #include <iterator>
-#include <vector>
-#include <RobotMap.h>
 
 float MotorGroup::getLastOutput() {
 	return lastOutput;
@@ -25,6 +23,7 @@ float MotorGroup::getLastCurrent() {
 MotorGroup::MotorGroup(std::vector<Motor*> motorgroup) :
 		motorList(motorgroup) {
 	c = 0;
+	brownoutCount = 0;
 }
 
 std::vector<Motor*> & MotorGroup::getMotorList() {
@@ -41,6 +40,8 @@ MotorGroup::~MotorGroup() {
 void MotorGroup::PIDWrite(float output) {
 	std::vector<Motor*>::iterator it = motorList.begin();
 
+	const bool brownedOut = DriverStation::GetInstance().IsSysBrownedOut();
+
 	for (; it != motorList.end(); ++it) {
 		/*if ((*it)->stoppedStartTime == 0) {
 		 (*it)->talon->Set(output * (*it)->C);
@@ -48,6 +49,11 @@ void MotorGroup::PIDWrite(float output) {
 		 (*it)->speed = output;*/
 
 		if ((*it)->talon != NULL) {
+			if(brownedOut && (*it)->isBrownoutProtect() && brownoutCount++ > 5){
+				continue;
+			}else{
+				brownoutCount = 0;
+			}
 			(*it)->talon->Set(
 					((*it)->isReversed() ? -1 : 1) * output /** (*it)->C*/);
 		}
