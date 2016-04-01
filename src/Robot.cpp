@@ -1,4 +1,5 @@
 #include <Commands/Autonomous/AutoBase.h>
+#include <Commands/Driving/Turning/ArcTurn.h>
 #include <Commands/Power/StallProtection.h>
 #include <Commands/Scheduler.h>
 #include <Robot.h>
@@ -25,8 +26,6 @@ void Robot::RobotInit() {
 	//managePower = new ManagePower();
 	//managePower->Start();
 
-	//turnDegree = new TurnDegree(90);
-
 	StallProtection *stall = new StallProtection();
 	stall->Start();
 
@@ -51,10 +50,13 @@ void Robot::AutonomousInit() {
 	LOG_INFO("AutonomousInit Called");
 	//turnDegree->Start();
 	SensorManager::getSensorManager()->ZeroYaw();
-
+	AutoBase::readValues();
 	cmd = AutoBase::getSelectedAuto();
 	//cmd = AutoBase::doRoughT();
 	//turnDegree = new DriveForwardStraight(5, .25);
+	//turnDegree->Start();
+	//ArcTurn *turnDegree;
+	//turnDegree = new ArcTurn(-60.0, -0.75, .3);
 	//turnDegree->Start();
 	cmd->Start();
 	//RotateTowardCameraTarget *rotate = new RotateTowardCameraTarget();

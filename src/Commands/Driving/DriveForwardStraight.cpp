@@ -23,6 +23,9 @@ DriveForwardStraight::~DriveForwardStraight() {
 
 void DriveForwardStraight::Initialize() {
 	initialYaw = sensorManager->getYaw();
+
+	speed *= 12.75 / DriverStation::GetInstance().GetBatteryVoltage();
+
 	drivebase->setLeftSpeed(speed);
 	drivebase->setRightSpeed(speed);
 

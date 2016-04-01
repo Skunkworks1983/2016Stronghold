@@ -5,13 +5,14 @@
 #include <stddef.h>
 #include <cstdint>
 
+class ManagePower;
+
 class LiveWindow;
 
 class DriveForwardStraight;
 
 class AutoBase;
 
-class ManagePower;
 class MotorManager;
 class SensorManager;
 
@@ -22,7 +23,6 @@ private:
 	ManagePower *managePower  = NULL;
 	int count;
 	AutoBase *cmd  = NULL;
-	DriveForwardStraight * turnDegree = NULL;
 	uint64_t oldTime;
 public:
 	void RobotInit();

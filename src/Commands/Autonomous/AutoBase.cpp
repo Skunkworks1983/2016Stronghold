@@ -7,6 +7,10 @@
 #include <iostream>
 #include <vector>
 
+eObstacle AutoBase::obstacle = BLANK;
+eStartPos AutoBase::startPos = spy;
+eGoalPos AutoBase::goalPos = high;
+
 AutoBase::AutoBase() {
 	AutoBase("AutoBase-Blank");
 }
@@ -19,12 +23,16 @@ AutoBase::AutoBase(char *style) :
 AutoBase::~AutoBase() {
 }
 
-float AutoBase::getTurnAngle() {
-	eStartPos startPos;
+void AutoBase::readValues() {
+	readDIPSwitchedObstacle(&obstacle);
 	readDIPSwitchedPosition(&startPos);
 
-	startPos = eStartPos::lowBar;
+	startPos = posZero;
+	obstacle = Obstacle_rockwall;
+	goalPos = high;
+}
 
+float AutoBase::getTurnAngle() {
 	float ret_val = 0;
 
 	switch (startPos) {
@@ -35,22 +43,69 @@ float AutoBase::getTurnAngle() {
 		ret_val = 60;
 		break;
 	case posZero:
-		ret_val = 60;
+		ret_val = 45;
 		break;
 	case posOne:
-		ret_val = 20;
+		ret_val = 40;
 		break;
 	case posTwo:
 		ret_val = -10;
 		break;
 	case posThree:
-		ret_val = -60;
+		ret_val = -90;
 		break;
 	}
 
 	LOG_INFO("GETTURN ANGLE RETURNING %f", ret_val);
 
 	return ret_val;
+}
+
+float AutoBase::getSecondTurnAngle() {
+	float ret_val = 0;
+
+	switch (startPos) {
+	case spy:
+		ret_val = 0.0;
+		break;
+	case lowBar:
+		ret_val = 0.0;
+		break;
+	case posZero:
+		ret_val = 0;
+		break;
+	case posOne:
+		ret_val = -40;
+		break;
+	case posTwo:
+		ret_val = 10;
+		break;
+	case posThree:
+		ret_val = 90;
+		break;
+	}
+
+	LOG_INFO("GETSECONDTURN ANGLE RETURNING %f", ret_val);
+
+	return ret_val;
+}
+
+float AutoBase::getFirstDistance() {
+	switch (startPos) {
+	case spy:
+		return 0;
+	case lowBar:
+		return -5.25;
+	case posZero:
+		return -7.35;
+	case posOne:
+		return 0;
+	case posTwo:
+		return 0;
+	case posThree:
+		return -4.0;
+	}
+	return 0;
 }
 
 AutoBase *AutoBase::readFromTextFile(std::string file) {
@@ -76,6 +131,7 @@ AutoBase *AutoBase::readFromTextFile(std::string file) {
 AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		eGoalPos goalPos) {
 	AutoBase *auto_base = new AutoBase("SelectedAuto");
+
 	switch (obstacle) {
 	case BLANK:
 		break;
@@ -84,8 +140,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_cheval:
-		auto_base->AddSequential(AutoBase::doLowBarandScore());
-		//auto_base->AddSequential(AutoBase::doCheval());
+		auto_base->AddSequential(AutoBase::doCheval());
 		break;
 
 	case Obstacle_moat:
@@ -97,18 +152,18 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 
 	case Obstacle_ramppart:
-		auto_base->AddSequential(AutoBase::doRoughT());
+		auto_base->AddSequential(AutoBase::doRamP());
 		break;
 
 	case Obstacle_rockwall:
-		//auto_base->AddSequential(AutoBase::doRockW());
+		auto_base->AddSequential(AutoBase::doRockW());
 		break;
 
 	case Obstacle_portcullis:
 		auto_base->AddSequential(AutoBase::doPortC());
 		break;
 	}
-	if(goalPos == eGoalPos::high){
+	if (goalPos == eGoalPos::high) {
 		auto_base->AddSequential(new GoAndScoreHighGoal());
 	}
 
@@ -116,18 +171,6 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 }
 
 AutoBase * AutoBase::getSelectedAuto() {
-	eObstacle obstacle = BLANK;
-	eStartPos startPos = posZero;
-	eGoalPos goalPos = high;
-
-	//readDIPSwitches(&obstacle, &startPos, &goalPos);
-	readDIPSwitchedObstacle(&obstacle);
-	readDIPSwitchedPosition(&startPos);
-
-	obstacle = eObstacle::Obstacle_lowBar;
-	startPos = eStartPos::lowBar;
-	goalPos = eGoalPos::high;
-
 	return createSelectedAuto(obstacle, startPos, goalPos);
 }
 
@@ -215,14 +258,14 @@ void AutoBase::readDIPSwitches(eObstacle *obstacle, eStartPos *sp,
 	LOG_INFO("obstacle selected %d", (*obstacle));
 	//calculate goal
 	/**goal = (eGoalPos) 0; // start Position
-	adder = 1;
-	for (int i = DIP_CHANNEL_GOAL_START; i < DIP_CHANNEL_GOAL_END; i++) {
-		bool isSet = digitalInputs[i]->Get();
-		if (isSet) {
-			*goal = (eGoalPos) ((*goal) | adder);
-		}
-		adder = adder << 1;
-	}*/
+	 adder = 1;
+	 for (int i = DIP_CHANNEL_GOAL_START; i < DIP_CHANNEL_GOAL_END; i++) {
+	 bool isSet = digitalInputs[i]->Get();
+	 if (isSet) {
+	 *goal = (eGoalPos) ((*goal) | adder);
+	 }
+	 adder = adder << 1;
+	 }*/
 	LOG_INFO("goal selected %d", (*goal));
 
 	for (unsigned i = 0; i < digitalInputs.size(); ++i) {
