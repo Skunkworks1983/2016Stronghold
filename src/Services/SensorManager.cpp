@@ -119,7 +119,7 @@ void SensorManager::initGyro() {
 }
 
 float SensorManager::getYaw() {
-	if (ahrs != NULL && ahrs->IsConnected()) {
+	if (ahrs != NULL && ahrs->IsConnected() && !ahrs->IsCalibrating()) {
 		double current = ahrs->GetYaw();
 		//current += 180.0;
 

@@ -6,24 +6,24 @@
  */
 
 #include <CANTalon.h>
-#include <Commands/Driving/TurnDegree.h>
+#include <Commands/Driving/Turning/TurnDegree.h>
 #include <RobotMap.h>
-#include <Services/Logger.h>
 #include <Services/Motor.h>
 #include <Services/MotorManager.h>
+#include <Services/PIDWrapper.h>
+#include <Services/Sensor.h>
 #include <Services/SensorManager.h>
 #include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
 #include <cmath>
-#include <cstdio>
 
 #define TURN_DEGREE_ESPSILON 2.0
 
-TurnDegree::TurnDegree(double degree, bool absolute) : absolute(absolute){
-	P = 1. / 180.0;
-	I = 1.0 / 3000.0; //TODO: Tune for competition robot, currently tuned to totebot sorta
-	D = 1.0 / 360.0;
-	//this->speed = speed; Speed is not passed in, would be tricky to implement with PID
+TurnDegree::TurnDegree(double degree, bool absolute) :
+		absolute(absolute) {
+	P = 1.0 / 120.0;
+	I = 1.0 / 2000.0;
+	D = 1.0 / 3.5;
 
 	this->degree = degree;
 	sensorManager = SensorManager::getSensorManager();
@@ -36,21 +36,30 @@ TurnDegree::~TurnDegree() {
 }
 
 void TurnDegree::Initialize() {
-
 	motorManager->getPID(PID_ID_DRIVEBASE_ROT)->Reset();
+	MotorManager::getMotorManager()->setPID(PID_ID_DRIVEBASE_ROT, P, I, D);
 
-	if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + degree > 360.0) {
-		degree = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + degree
-				- 360.0;
-	}
-	if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + degree < 0.0) {
-		degree = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + degree
-				+ 360.0;
+	if (absolute) {
+		degree;
+	} else {
+		if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + degree
+				> 180.0) {
+			degree += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+			degree -= 180.0;
+			degree *= -1;
+		} else if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + degree
+				< -180.0) {
+			degree += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+			degree += 180.0;
+			degree *= -1;
+		} else {
+			degree += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+		}
 	}
 
 	ahrsDead = sensorManager->ahrsDead; //True if the ahrs (gyro) is non functional for the round
 
-	motorManager->enablePID(PID_ID_DRIVEBASE_ROT, degree + (absolute ? 0 : initialYaw)); //Fix ahrsDead in motormanger somehow
+	motorManager->enablePID(PID_ID_DRIVEBASE_ROT, degree); //Fix ahrsDead in motormanger somehow
 
 	LOG_INFO("Initialize of TurnDegree, target yaw %f, current yaw %f", degree,
 			initialYaw);
@@ -74,7 +83,7 @@ void TurnDegree::Execute() {
 
 	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 
-	//LOG_INFO("%f, %f, %f\t%f, %f, %f, yaw: %f", l1, l2, l3, r1, r2, r3, yaw);
+	LOG_INFO("%f, %f, %f\t%f, %f, %f, yaw: %f", l1, l2, l3, r1, r2, r3, yaw);
 }
 
 bool TurnDegree::IsFinished() {
@@ -89,11 +98,13 @@ bool TurnDegree::IsFinished() {
 }
 
 void TurnDegree::End() {
-	LOG_INFO("End Called on TurnDegree, target yaw %f, current yaw %f error %f", degree,
-			sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet(), sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet());
+	LOG_INFO("End Called on TurnDegree, target yaw %f, current yaw %f error %f",
+			degree, sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet(),
+			sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet());
+
+	motorManager->disablePID(PID_ID_DRIVEBASE_ROT);
 	drivebase->setLeftSpeed(0.0);
 	drivebase->setRightSpeed(0.0);
-	motorManager->disablePID(PID_ID_DRIVEBASE_ROT);
 }
 
 void TurnDegree::Interrupted() {

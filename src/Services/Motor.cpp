@@ -17,9 +17,9 @@
 #include <Services/Logger.h>
 
 Motor::Motor(Priority prioArg, int portArg, float maxCurrent,
-		ESubsystem parentSubsystem, bool reversed) :
+		ESubsystem parentSubsystem, bool brownoutProtect, bool reversed) :
 		reversed(reversed), maxCurrent(maxCurrent), parentSubsystem(
-				parentSubsystem) {
+				parentSubsystem), brownoutProtect(brownoutProtect) {
 	overCurrentStartTime = 0;
 	stoppedStartTime = 0;
 	port = portArg;
@@ -38,6 +38,10 @@ Motor::Motor(Priority prioArg, int portArg, float maxCurrent,
 
 bool Motor::isReversed() {
 	return reversed;
+}
+
+bool Motor::isBrownoutProtect(){
+	return brownoutProtect;
 }
 
 Motor::~Motor() {

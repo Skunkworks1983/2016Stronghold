@@ -1,8 +1,8 @@
 #include <Commands/Climbing/MoveServo.h>
 #include <Commands/Climbing/RunWinch.h>
 #include <Commands/Climbing/SafeRotateArm.h>
-#include <Commands/Driving/RotateTowardCameraTarget.h>
-#include <Commands/Driving/StopArmPID.h>
+#include <Commands/Climbing/StopArmPID.h>
+#include <Commands/Driving/Turning/RotateTowardCameraTarget.h>
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunCollector.h>

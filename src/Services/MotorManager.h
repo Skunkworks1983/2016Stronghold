@@ -36,7 +36,7 @@ private:
 	std::map<unsigned, PIDWrapper*> pidControllerMap;
 
 	void addMotor(Priority priority, int Port, float maxCurrent,
-			ESubsystem subsystem, bool reverse = false);
+			ESubsystem subsystem, bool brownoutProtect, bool reverse = false);
 
 protected:
 	double GetPosition(unsigned ID);

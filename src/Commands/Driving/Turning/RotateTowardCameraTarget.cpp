@@ -1,10 +1,8 @@
-#include <Commands/Driving/RotateTowardCameraTarget.h>
+#include <Commands/Driving/Turning/RotateTowardCameraTarget.h>
 #include <RobotMap.h>
 #include <Services/CameraReader.h>
-#include <Services/Logger.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <Subsystems/Drivebase.h>
-#include <TuningValues.h>
 #include <cmath>
 
 #define ERROR_TOLERANCE .05
@@ -15,8 +13,8 @@
 RotateTowardCameraTarget::RotateTowardCameraTarget(float timeout) :
 		timeout(timeout) {
 	Requires(drivebase);
-	const double p = 1.35;
-	const double i = .062;
+	const double p = 3.0;
+	const double i = .068;
 	const double d = 0.005;
 	const double f = 0.0;
 

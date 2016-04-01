@@ -1,12 +1,13 @@
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/BangBangTurn.h>
 #include <Commands/Driving/DriveForwardStraight.h>
-#include <Commands/Driving/RotateTowardCameraTarget.h>
+#include <Commands/Driving/Turning/BangBangTurn.h>
+#include <Commands/Driving/Turning/RotateTowardCameraTarget.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunNewCollector.h>
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/PIDShot.h>
 #include <Commands/TimeOut.h>
+#include <cstdbool>
 
 AutoBase *AutoBase::doLowBarandScore() {
 	AutoBase *cmd = new AutoBase((char*) "Autonomous-doLowB");
