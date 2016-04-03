@@ -12,6 +12,8 @@ private:
 	double leftSpeed;
 	double rightSpeed;
 	float timeout;
+	float current_left_setpoint = 5;
+	float current_right_setpoint = 5;
 public:
 	PIDShot(double leftSpeed, double rightSpeed, float timeout = 0.0);
 	void Initialize();

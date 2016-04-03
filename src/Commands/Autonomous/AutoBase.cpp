@@ -1,5 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/GoAndScoreHighGoal.h>
+#include <Commands/HighGoalPosThree.h>
 #include <DigitalInput.h>
 #include <RobotMap.h>
 #include <cstdbool>
@@ -43,7 +44,7 @@ float AutoBase::getTurnAngle() {
 		ret_val = 60;
 		break;
 	case posZero:
-		ret_val = 45;
+		ret_val = 60;
 		break;
 	case posOne:
 		ret_val = 40;
@@ -52,7 +53,7 @@ float AutoBase::getTurnAngle() {
 		ret_val = -10;
 		break;
 	case posThree:
-		ret_val = -90;
+		ret_val = -60;
 		break;
 	}
 
@@ -81,7 +82,7 @@ float AutoBase::getSecondTurnAngle() {
 		ret_val = 10;
 		break;
 	case posThree:
-		ret_val = 90;
+		ret_val = 0;
 		break;
 	}
 
@@ -103,9 +104,27 @@ float AutoBase::getFirstDistance() {
 	case posTwo:
 		return 0;
 	case posThree:
-		return -4.0;
+		return -8.5;
 	}
 	return 0;
+}
+
+float AutoBase::getMiddleDistance() {
+	switch (startPos) {
+	case spy:
+		return -0.0;
+	case lowBar:
+		return -2.0;
+	case posZero:
+		return -2.0;
+	case posOne:
+		return -1.0;
+	case posTwo:
+		return -2.0;
+	case posThree:
+		return -2.0;
+	}
+	return -2.0;
 }
 
 AutoBase *AutoBase::readFromTextFile(std::string file) {
@@ -118,14 +137,172 @@ AutoBase *AutoBase::readFromTextFile(std::string file) {
 			std::cout << line << '\n';
 		}
 		myfile.close();
-	}
-
-	else
+	} else {
 		std::cout << "Unable to open file";
-
+	}
 	AutoBase *auto_base = new AutoBase(title);
 
 	return auto_base;
+}
+
+TurnData *AutoBase::getTurnData() {
+	TurnData *d = new TurnData();
+	float angle = 0;
+
+	switch (startPos) {
+	case spy:
+		angle = 0.0;
+		break;
+	case lowBar:
+		angle = 60;
+		break;
+	case posZero:
+		angle = 60;
+		break;
+	case posOne:
+		angle = 40;
+		break;
+	case posTwo:
+		angle = -5;
+		break;
+	case posThree:
+		angle = -50;
+		break;
+	}
+
+	d->angle = angle;
+
+	float power = 0;
+
+	switch (startPos) {
+	case spy:
+		power = -.5;
+		break;
+	case lowBar:
+		power = -.7;
+		break;
+	case posZero:
+		power = -.7;
+		break;
+	case posOne:
+		power = -.5;
+		break;
+	case posTwo:
+		power = -.5;
+		break;
+	case posThree:
+		power = -.75;
+		break;
+	}
+
+	d->power = power;
+
+	float percentage = 0;
+
+	switch (startPos) {
+	case spy:
+		percentage = 0.3;
+		break;
+	case lowBar:
+		percentage = -.25;
+		break;
+	case posZero:
+		percentage = -.25;
+		break;
+	case posOne:
+		percentage = -0.5;
+		break;
+	case posTwo:
+		percentage = 0.2;
+		break;
+	case posThree:
+		percentage = -0.7;
+		break;
+	}
+
+	d->percentage = percentage;
+
+	return d;
+}
+
+TurnData *AutoBase::getSecondTurnData() {
+	TurnData *d = new TurnData();
+	float angle = 0;
+
+	switch (startPos) {
+	case spy:
+		angle = 0.0;
+		break;
+	case lowBar:
+		angle = 0.0;
+		break;
+	case posZero:
+		angle = 0;
+		break;
+	case posOne:
+		angle = -30;
+		break;
+	case posTwo:
+		angle = 5;
+		break;
+	case posThree:
+		angle = 0;
+		break;
+	}
+
+	d->angle = angle;
+
+	float power = 0;
+
+	switch (startPos) {
+	case spy:
+		power = -.5;
+		break;
+	case lowBar:
+		power = -.5;
+		break;
+	case posZero:
+		power = -.5;
+		break;
+	case posOne:
+		power = -.5;
+		break;
+	case posTwo:
+		power = -.5;
+		break;
+	case posThree:
+		power = -.5;
+		break;
+	}
+
+	d->power = power;
+
+	float percentage = 0;
+
+	switch (startPos) {
+	case spy:
+		percentage = 0.3;
+		break;
+	case lowBar:
+		percentage = 0.3;
+		break;
+	case posZero:
+		percentage = 0.3;
+		break;
+	case posOne:
+		percentage = -0.5;
+		break;
+	case posTwo:
+		percentage = 0.2;
+		break;
+	case posThree:
+		percentage = 0.3;
+		break;
+	}
+
+	d->percentage = percentage;
+
+	return d;
 }
 
 AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
@@ -135,7 +312,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 	switch (obstacle) {
 	case BLANK:
 		break;
-	case Obstacle_lowBar:
+	case Obstacle_lowbar:
 		auto_base->AddSequential(AutoBase::doLowB());
 		break;
 
@@ -151,7 +328,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		auto_base->AddSequential(AutoBase::doRoughT());
 		break;
 
-	case Obstacle_ramppart:
+	case Obstacle_rampparts:
 		auto_base->AddSequential(AutoBase::doRamP());
 		break;
 
@@ -164,7 +341,11 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 	}
 	if (goalPos == eGoalPos::high) {
-		auto_base->AddSequential(new GoAndScoreHighGoal());
+		if (startPos == eStartPos::posThree) {
+			auto_base->AddSequential(new HighGoalPosThree());
+		} else {
+			auto_base->AddSequential(new GoAndScoreHighGoal());
+		}
 	}
 
 	return auto_base;

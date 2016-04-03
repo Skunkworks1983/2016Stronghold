@@ -1,6 +1,5 @@
+#include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/Turning/ArcTurn.h>
-#include <Commands/Power/StallProtection.h>
 #include <Commands/Scheduler.h>
 #include <Robot.h>
 #include <RobotBase.h>
@@ -11,6 +10,9 @@
 #include <TuningValues.h>
 #include <Utility.h>
 #include <cstdbool>
+
+uint64_t Robot::teleStart = 0;
+uint64_t Robot::autoStart = 0;
 
 void Robot::RobotInit() {
 	LOG_INFO("START OF NEW RUN \t START OF NEW RUN");
@@ -26,8 +28,8 @@ void Robot::RobotInit() {
 	//managePower = new ManagePower();
 	//managePower->Start();
 
-	StallProtection *stall = new StallProtection();
-	stall->Start();
+	//StallProtection *stall = new StallProtection();
+	//stall->Start();
 
 	//cmd = AutoBase::doLowBarandScore();
 	LOG_INFO("END OF ROBOTINIT");
@@ -42,6 +44,7 @@ void Robot::DisabledInit() {
 }
 
 void Robot::DisabledPeriodic() {
+
 }
 
 void Robot::AutonomousInit() {
@@ -63,6 +66,7 @@ void Robot::AutonomousInit() {
 	//rotate->Start();
 
 	oldTime = GetFPGATime();
+	autoStart = GetFPGATime();
 }
 
 void Robot::AutonomousPeriodic() {
@@ -88,6 +92,7 @@ void Robot::TeleopInit() {
 	CommandBase::drivebase->setDriverControl(true);
 	Scheduler::GetInstance()->RemoveAll();
 	LOG_INFO("TeleOp Called");
+	teleStart = GetFPGATime();
 }
 
 void Robot::TeleopPeriodic() {
@@ -96,6 +101,14 @@ void Robot::TeleopPeriodic() {
 
 void Robot::TestPeriodic() {
 
+}
+
+uint64_t Robot::getAutoStartTime() {
+	return autoStart;
+}
+
+uint64_t Robot::getTeleStartTime() {
+	return teleStart;
 }
 
 START_ROBOT_CLASS(Robot);

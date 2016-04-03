@@ -39,9 +39,9 @@ void RunShooter::Execute() {
 		}
 	}
 	//shooter->setShooterSpeed(realSpeed);
-	LOG_INFO("motorPower %f speed %f leftSpeed %f rightSpeed %f", realSpeed,
+	/*LOG_INFO("motorPower %f speed %f leftSpeed %f rightSpeed %f", realSpeed,
 			shooter->getShooterSpeed(), shooter->getLeftShooterSpeed(),
-			shooter->getRightShooterSpeed());
+			shooter->getRightShooterSpeed());*/
 }
 
 bool RunShooter::IsFinished() {

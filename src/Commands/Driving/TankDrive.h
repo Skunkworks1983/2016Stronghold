@@ -6,6 +6,8 @@
 
 class TankDrive: public CommandBase
 {
+private:
+	bool driveState = true;
 public:
 	TankDrive();
 	void Initialize();

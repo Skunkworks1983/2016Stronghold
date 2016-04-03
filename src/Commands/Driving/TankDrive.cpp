@@ -20,6 +20,22 @@ void TankDrive::Execute() {
 			&& DriverStation::GetInstance().IsOperatorControl()
 			&& !DriverStation::GetInstance().IsAutonomous()) {
 		if (oi->isJoystickButtonPressed(0, 1)) {
+			if (driveState) {
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_LEFTMOTOR_1_PORT)->setBrakeMode(true);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_LEFTMOTOR_2_PORT)->setBrakeMode(true);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_LEFTMOTOR_3_PORT)->setBrakeMode(true);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_RIGHTMOTOR_1_PORT)->setBrakeMode(true);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_RIGHTMOTOR_2_PORT)->setBrakeMode(true);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_RIGHTMOTOR_3_PORT)->setBrakeMode(true);
+
+				driveState = false;
+			}
 			const double oiLeft = oi->getLeftStickY();
 			const double oiRight = oi->getRightStickY();
 
@@ -51,10 +67,26 @@ void TankDrive::Execute() {
 			const float r3 = MotorManager::getMotorManager()->getMotor(
 			DRIVEBASE_RIGHTMOTOR_3_PORT)->talon->GetOutputCurrent();
 
-			LOG_INFO("USING ONLY ONE CIM %f %f", oiLeft, oiRight);
-			LOG_INFO("%f %f %f %f %f %f", l1, l2, l3, r1, r2, r3);
+			//LOG_INFO("USING ONLY ONE CIM %f %f", oiLeft, oiRight);
+			//LOG_INFO("%f %f %f %f %f %f", l1, l2, l3, r1, r2, r3);
 
 		} else {
+			if (!driveState) {
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_LEFTMOTOR_1_PORT)->setBrakeMode(false);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_LEFTMOTOR_2_PORT)->setBrakeMode(false);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_LEFTMOTOR_3_PORT)->setBrakeMode(false);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_RIGHTMOTOR_1_PORT)->setBrakeMode(false);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_RIGHTMOTOR_2_PORT)->setBrakeMode(false);
+				MotorManager::getMotorManager()->getMotor(
+				DRIVEBASE_RIGHTMOTOR_3_PORT)->setBrakeMode(false);
+
+				driveState = true;
+			}
 			drivebase->setLeftSpeed(oi->getLeftStickY());
 			drivebase->setRightSpeed(oi->getRightStickY());
 		}

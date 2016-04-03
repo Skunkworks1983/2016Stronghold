@@ -149,10 +149,12 @@ void OI::registerButtonListeners() {
 	lowArm->WhenPressed(new IndexBall());	//no need for this at the moment
 	lowAim->WhenPressed(new RotateShooter(cCollect));
 
-	const double shot_speed = 77.0 - 4.5;
+	const double shot_speed = 78.0;
+	//const double shot_speed = 120.0;
+
 	highArm->WhileHeld(new PIDShot(shot_speed, shot_speed));
-	highArmPosition1->WhileHeld(new ArmShot());
-	highArmPosition2->WhileHeld(new RunShooter(.65, .2));
+	highArmPosition1->WhileHeld(new PIDShot(shot_speed - 3, shot_speed - 3));
+	highArmPosition2->WhileHeld(new PIDShot(shot_speed - 6, shot_speed - 6));
 	highFire->ToggleWhenPressed(new RunCollector(Shooter::KForward, 1.0, .5));
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetShooterRotationEncoder());

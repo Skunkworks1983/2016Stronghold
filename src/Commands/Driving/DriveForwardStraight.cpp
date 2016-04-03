@@ -34,15 +34,22 @@ void DriveForwardStraight::Initialize() {
 	initialRight = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	LOG_INFO("Using gyro for straight drive");
+	LOG_INFO("Using gyro for straight drive initial yaw %f", initialYaw);
 }
 
 void DriveForwardStraight::Execute() {
 	error = initialYaw - sensorManager->getYaw();
+
+	if (error < -180.0) {
+		error += 360.0;
+	} else if (error > 180.0) {
+		error -= 360.0;
+	}
+
 	double leftSpeed = ((1 / 15) * error + 1) * speed;
 	double rightSpeed = (-1 * (1 / 15) * error + 1) * speed;
-	LOG_INFO("Gyro: %f, Left: %f, Right: %f", sensorManager->getYaw(),
-			leftSpeed, rightSpeed);
+	LOG_INFO("Gyro: %f, Left: %f, Right: %f error %f", sensorManager->getYaw(),
+			leftSpeed, rightSpeed, error);
 	const double P = .07;
 	drivebase->setLeftSpeed(speed + error * P);
 	drivebase->setRightSpeed(speed - error * P);

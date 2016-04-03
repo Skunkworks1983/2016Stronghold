@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <cstdbool>
 
+struct TurnData;
+
 class SensorManager;
 
 class ArcTurn: public CommandBase
@@ -22,6 +24,7 @@ private:
 	MotorManager *motorManger = NULL;
 public:
 	ArcTurn(double targetDegrees, double speed, double percentTurn, bool absolute = false);
+	ArcTurn(TurnData *d);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

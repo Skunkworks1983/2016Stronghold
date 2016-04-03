@@ -32,7 +32,43 @@ void ArcTurnToCamera::Initialize() {
 	targetDegrees = CameraReader::getCameraReader()->getLastLeftX()
 			* (53.5 / 2);	//raspberry pi cam horizontal FOV
 
-	if (!absolute) {
+	if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + targetDegrees
+			> 180.0) {
+		targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+		targetDegrees -= 180.0;
+		targetDegrees *= -1;
+	} else if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet()
+			+ targetDegrees < -180.0) {
+		targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+		targetDegrees += 180.0;
+		targetDegrees *= -1;
+	} else {
+		targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+	}
+
+	LOG_INFO("ArcTurnToCamera starting with target %f speed %f yaw %f",
+			targetDegrees, speed,
+			sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet());
+
+}
+
+// Called repeatedly when this Command is scheduled to run
+void ArcTurnToCamera::Execute() {
+	double leftEncoder =
+			fabs(
+					sensorManager->getSensor(SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
+	double rightEncoder =
+			fabs(
+					sensorManager->getSensor(SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+
+	const double P = 1 / 90;
+
+	//speed -= error * P;
+
+	if (absolute) {
+		targetDegrees = CameraReader::getCameraReader()->getLastLeftX()
+				* (53.5 / 2);	//raspberry pi cam horizontal FOV
+
 		if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + targetDegrees
 				> 180.0) {
 			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
@@ -46,31 +82,13 @@ void ArcTurnToCamera::Initialize() {
 		} else {
 			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 		}
-	} else {
-		LOG_INFO("ArcTurnToCamera is absolute with target %f", targetDegrees);
 	}
 
-	LOG_INFO("ArcTurnToCamera starting with target %f speed %f yaw %f", targetDegrees,
-			speed, sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet());
-
-}
-
-// Called repeatedly when this Command is scheduled to run
-void ArcTurnToCamera::Execute() {
-	double leftEncoder =
-			fabs(
-					sensorManager->getSensor(SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-	double rightEncoder =
-			fabs(
-					sensorManager->getSensor(SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 	const double error = yaw - targetDegrees;
 
-	const double P = 1 / 90;
-
-	//speed -= error * P;
-
-	LOG_INFO(" ArcTurnToCamera target %f error %f speed %f", targetDegrees, error, speed);
+	LOG_INFO(" ArcTurnToCamera target %f error %f speed %f", targetDegrees,
+			error, speed);
 
 	if (error > 0) {
 		drivebase->setLeftSpeed(speed);
@@ -97,6 +115,23 @@ bool ArcTurnToCamera::IsFinished() {
 
 	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 
+	double error = yaw - initialYaw;
+
+	if (error < -180.0) {
+		error += 360.0;
+	} else if (error > 180.0) {
+		error -= 360.0;
+	}
+
+	double targetDiff = targetDegrees - initialYaw;
+	if (targetDiff < -180.0) {
+		targetDiff += 360.0;
+	} else if (targetDiff > 180.0) {
+		targetDiff -= 360.0;
+	}
+
+	return fabs(error) > fabs(targetDiff);
+
 	return fabs(yaw - initialYaw) > fabs(targetDegrees - initialYaw);
 
 	if (targetDegrees > 0) {
@@ -118,8 +153,8 @@ void ArcTurnToCamera::End() {
 	drivebase->setLeftSpeed(0);
 	drivebase->setRightSpeed(0);
 
-	LOG_INFO("ArcTurnToCamera ENDED WITH TARGET %f CURRENT YAW %f", targetDegrees,
-			sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet());
+	LOG_INFO("ArcTurnToCamera ENDED WITH TARGET %f CURRENT YAW %f",
+			targetDegrees, sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet());
 }
 
 // Called when another command which requires one or more of the same

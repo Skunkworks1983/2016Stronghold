@@ -12,7 +12,11 @@ AutoBase *AutoBase::doRoughT()
 	cmd->AddSequential(new RunNewCollector(.3));
 #endif
 	cmd->AddSequential(new DriveForwardStraight(-5, -0.75));	//Reach the defence
+	cmd->AddParallel(new RotateShooter(cTOP, true));
+
 	cmd->AddSequential(new DriveForwardStraight(-8.5, -0.75));	//breach the defence
+	cmd->AddParallel(new RotateShooter(cTOP, true));
+
 	return cmd;
 }
 

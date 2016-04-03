@@ -10,6 +10,11 @@
 
 #include <PIDOutput.h>
 #include <PIDSource.h>
+#include <stddef.h>
+
+#define USE_CAN_PID 0
+
+class CANTalon;
 
 class PIDController;
 
@@ -29,11 +34,16 @@ public:
 	double PIDGet();
 	void setPID(float p, float i, float d);
 	double getSetpoint();
+	double getError();
+	bool isEnabled();
+	float getOutputPercentage();
 private:
 	ShooterSide side;
-	PIDController *controller;
-	float setpoint;
+	PIDController *controller = NULL;
+	CANTalon *talon = NULL;
+	float setpoint = 0.0;
 	double oldOutput = 0.0;
+	double lastSpeed = 0.0;
 };
 
 #endif /* SRC_SUBSYSTEMS_SHOOTERMOTOR_H_ */

@@ -10,8 +10,8 @@
 #define COLLECTOR_MOVE_TOLERANCE 250
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
-RotateShooter::RotateShooter(ShooterPosition pos, bool noreset) :
-		noreset(noreset) {
+RotateShooter::RotateShooter(ShooterPosition pos, bool noreset, float timeout) :
+		noreset(noreset), timeout(timeout) {
 	Requires(shooter);
 	SetInterruptible(true);
 	test = 0;
@@ -31,6 +31,9 @@ RotateShooter::RotateShooter(ShooterPosition pos, bool noreset) :
 }
 
 void RotateShooter::Initialize() {
+	if(timeout > 0){
+		SetTimeout(timeout);
+	}
 	shooter->registerCommand(this);
 	//motorManager->disablePID(PID_ID_COLLECTOR);
 	if (!noreset) {
@@ -56,7 +59,7 @@ bool RotateShooter::IsFinished() {
 			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()
 					- target) < COLLECTOR_MOVE_TOLERANCE;
 	//return true;
-	return closeEnough;
+	return closeEnough || IsTimedOut();
 }
 
 void RotateShooter::End() {
