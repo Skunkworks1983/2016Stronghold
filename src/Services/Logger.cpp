@@ -13,6 +13,29 @@ Logger::Logger() {
 	if(rc){
 		LOG_INFO("Logger failed to create thread");
 	}
+
+	ifstream baseTest("/U/robotLog");
+	if(!baseTest.good()) {
+		std::system("touch /U/robotLog");
+	}
+
+	std::string logPre = "/U/robotLog";
+	int doesItExist = 1;
+	bool found = false;
+	int i = 0;
+	while (!found) {
+		std::ifstream robotLog (logPre + "." + std::to_string(i));
+		std::cout << logPre + std::to_string(i) << std::endl;
+		doesItExist = robotLog.peek();
+		if(doesItExist == -1) {
+			found = true;
+		} else {
+			i++;
+		}
+	}
+	char command[1024];
+	sprintf(command, "mv %s %s.%d", logPre.c_str(), logPre.c_str(), i);
+	std::system(command);
 }
 
 Logger * Logger::getLogger() {
