@@ -49,8 +49,12 @@ ShooterMotor::~ShooterMotor() {
 }
 
 float ShooterMotor::getOutputPercentage() {
+#if USE_CAN_PID
 	return talon->GetOutputVoltage();
 	//return talon->Get();
+#else
+	return 0.0;
+#endif
 }
 
 void ShooterMotor::PIDWrite(float output) {
@@ -73,11 +77,16 @@ void ShooterMotor::PIDWrite(float output) {
 #endif
 }
 
+#define USE_STUPID_LOGIC 0
+
 double ShooterMotor::PIDGet() {
 #if USE_CAN_PID
 	return talon->GetSpeed();
 	//return talon->PIDGet();
 #else
+
+#if USE_STUPID_LOGIC
+
 	switch (side) {
 	case LEFT:
 		if (CommandBase::shooter->getLeftShooterSpeed() < 0 && lastSpeed > 0) {
@@ -95,10 +104,29 @@ double ShooterMotor::PIDGet() {
 		}
 		break;
 	}
+#endif
+
 	switch (side) {
 	case LEFT:
+		lastSpeed = CommandBase::shooter->getLeftShooterSpeed();
+#if USE_STUPID_LOGIC
+		if (lastSpeed < .01
+				&& CommandBase::shooter->getRightShooterSpeed()
+						> CommandBase::shooter->getRight()->getSetpoint()
+								- 20) {
+			return CommandBase::shooter->getRightShooterSpeed();
+		}
+#endif
 		return CommandBase::shooter->getLeftShooterSpeed();
 	case RIGHT:
+		lastSpeed = CommandBase::shooter->getRightShooterSpeed();
+#if USE_STUPID_LOGIC
+		if (lastSpeed < .01
+				&& CommandBase::shooter->getLeftShooterSpeed()
+						> CommandBase::shooter->getLeft()->getSetpoint() - 20) {
+			return CommandBase::shooter->getLeftShooterSpeed();
+		}
+#endif
 		return CommandBase::shooter->getRightShooterSpeed();
 	}
 	return 0.0;

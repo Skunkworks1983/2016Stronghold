@@ -33,6 +33,7 @@ void PIDShot::Initialize() {
 	if (timeout != 0) {
 		SetTimeout(timeout);
 	}
+	//shooter->setRollerSpeed(Shooter::rollerDirection::KBackward, .15);
 }
 
 // Called repeatedly when this Command is scheduled to run

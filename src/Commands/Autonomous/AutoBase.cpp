@@ -28,8 +28,8 @@ void AutoBase::readValues() {
 	readDIPSwitchedObstacle(&obstacle);
 	readDIPSwitchedPosition(&startPos);
 
-	startPos = posZero;
-	obstacle = Obstacle_rockwall;
+	//startPos = posOne;
+	//obstacle = Obstacle_rockwall;
 	goalPos = high;
 }
 
@@ -311,7 +311,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 
 	switch (obstacle) {
 	case BLANK:
-		break;
+		return auto_base;
 	case Obstacle_lowbar:
 		auto_base->AddSequential(AutoBase::doLowB());
 		break;
@@ -328,7 +328,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		auto_base->AddSequential(AutoBase::doRoughT());
 		break;
 
-	case Obstacle_rampparts:
+	case Obstacle_ramparts:
 		auto_base->AddSequential(AutoBase::doRamP());
 		break;
 
@@ -340,7 +340,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		auto_base->AddSequential(AutoBase::doPortC());
 		break;
 	}
-	if (goalPos == eGoalPos::high) {
+	if (goalPos == eGoalPos::high && obstacle != BLANK) {
 		if (startPos == eStartPos::posThree) {
 			auto_base->AddSequential(new HighGoalPosThree());
 		} else {

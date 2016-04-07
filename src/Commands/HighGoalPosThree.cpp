@@ -23,7 +23,7 @@ HighGoalPosThree::HighGoalPosThree() {
 	AddSequential(new ArcTurnToCamera(.75, .1, true));
 	AddSequential(new DriveForwardStraight(-3.5, -.3));
 
-	const double shot_speed = 78.0;
+	const double shot_speed = 70.0;
 
 	AddParallel(new RotateShooter(ShooterPosition::cTOP));
 	AddParallel(new PIDShot(shot_speed, shot_speed, 10.0));

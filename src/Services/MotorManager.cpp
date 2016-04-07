@@ -2,9 +2,9 @@
 #include <DriverStation.h>
 #include <PIDSource.h>
 #include <RobotMap.h>
-#include <Services/Logger.h>
 #include <Services/MotorGroup.h>
 #include <Services/MotorManager.h>
+#include <Services/Sensor.h>
 #include <Services/SensorManager.h>
 #include <TuningValues.h>
 #include <cstdio>
@@ -75,6 +75,7 @@ void MotorManager::initShooter() {
 }
 
 void MotorManager::initPIDS() {
+	LOG_INFO("Entering initPIDS");
 #if USE_DRIVEBASE
 
 	std::vector<Motor*> DrivebaseLeftMotors;
@@ -82,6 +83,13 @@ void MotorManager::initPIDS() {
 	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_2_PORT));
 	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
 	MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
+
+	const double followP = 0.1;
+	const double followI = 0.0001;
+	const double followD = 0.0001;
+
+
+
 	/*createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
 	 PID_ID_DRIVEBASE_LEFT,
 	 DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
@@ -178,7 +186,7 @@ void MotorManager::initPIDS() {
 	 0, 0, 0, true);*/
 #endif
 
-	LOG_INFO("Created PIDS");
+	LOG_INFO("Exiting initPIDS");
 }
 
 Motor * MotorManager::getMotor(unsigned ID) {

@@ -20,7 +20,7 @@ enum eObstacle {
 	Obstacle_cheval,
 	Obstacle_moat,
 	Obstacle_rough,
-	Obstacle_rampparts,
+	Obstacle_ramparts,
 	Obstacle_rockwall,
 	Obstacle_portcullis
 };

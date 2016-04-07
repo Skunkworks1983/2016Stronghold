@@ -1,11 +1,10 @@
 #include <sys/socket.h>
-#include <Services/CameraReader.h>
-#include <SmartDashboard/SmartDashboard.h>
-#include <unistd.h>
-#include <cstdlib>
-#include <iostream>
-#include <RobotMap.h>
 #include <HAL/cpp/priority_mutex.h>
+#include <Robot.h>
+#include <RobotMap.h>
+#include <Services/CameraReader.h>
+#include <cstdbool>
+#include <iostream>
 
 static const int imageWidth = 640;
 static const int imageHeight = 480;
@@ -21,12 +20,13 @@ CameraReader::CameraReader() {
 	dest.sin_port = htons(PORTNUM); /* set destination port number */
 	mutex = new priority_mutex();
 
-	startUp();
+	tele = false;
+
+	//startUp();
 }
 
 CameraReader::~CameraReader() {
 	delete mutex;
-	pthread_exit(NULL);
 }
 
 CameraReader *CameraReader::getCameraReader() {
@@ -80,20 +80,34 @@ void *CameraReader::update(void *d) {
 	while (true) {
 		Message msg;
 
+		if(camera_reader->tele){
+			break;
+		}
+
+		camera_reader->mutex->lock();
 		camera_reader->len = recv(camera_reader->mysocket, (char *) &msg,
 				sizeof(msg), 0);
-		camera_reader->mutex->lock();
 		if (msg.posX1 != INVALID) {
-			camera_reader->lastLeftX = 2 * ((float)msg.posX1 / (float)imageWidth) - 1;
-			camera_reader->lastLeftY = 2 * ((float)msg.posY1 / (float)imageHeight) - 1;
-			camera_reader->lastMidX = 2 * ((float)msg.posY2 / (float)imageWidth) - 1;
-			camera_reader->lastMidY = 2 * ((float)msg.posY2 / (float)imageHeight) - 1;
-			camera_reader->lastRightX = 2 * ((float)msg.posY3 / (float)imageWidth) - 1;
-			camera_reader->lastRightY = 2 * ((float)msg.posY3 / (float)imageHeight) - 1;
+			camera_reader->lastLeftX = 2
+					* ((float) msg.posX1 / (float) imageWidth) - 1;
+			camera_reader->lastLeftY = 2
+					* ((float) msg.posY1 / (float) imageHeight) - 1;
+			camera_reader->lastMidX = 2
+					* ((float) msg.posY2 / (float) imageWidth) - 1;
+			camera_reader->lastMidY = 2
+					* ((float) msg.posY2 / (float) imageHeight) - 1;
+			camera_reader->lastRightX = 2
+					* ((float) msg.posY3 / (float) imageWidth) - 1;
+			camera_reader->lastRightY = 2
+					* ((float) msg.posY3 / (float) imageHeight) - 1;
 		}
 		camera_reader->mutex->unlock();
 	}
 #endif
+	pthread_detach(pthread_self());
+	pthread_exit(NULL);
+
+	return NULL;
 }
 
 float CameraReader::getLastLeftX() {
@@ -138,7 +152,7 @@ float CameraReader::getLastRightY() {
 	return tempLast;
 }
 
-bool CameraReader::isBallInShooter(){
+bool CameraReader::isBallInShooter() {
 	return ballInShooter;
 }
 

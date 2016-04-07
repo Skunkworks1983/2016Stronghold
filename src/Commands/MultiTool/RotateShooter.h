@@ -9,7 +9,7 @@
 #include <RobotMap.h>
 
 enum ShooterPosition {
-	cTOP, cCollect, c45
+	cTOP, cCollect, c45, c60
 };
 
 class RotateShooter: public CommandBase {

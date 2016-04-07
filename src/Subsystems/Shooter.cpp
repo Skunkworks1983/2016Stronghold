@@ -31,6 +31,7 @@ void Shooter::InitDefaultCommand() {
 ShooterMotor *Shooter::getLeft() {
 	return left;
 }
+
 ShooterMotor *Shooter::getRight() {
 	return right;
 }

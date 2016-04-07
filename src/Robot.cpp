@@ -1,9 +1,10 @@
-#include <CommandBase.h>
 #include <Commands/Autonomous/AutoBase.h>
+#include <Commands/Power/StallProtection.h>
 #include <Commands/Scheduler.h>
 #include <Robot.h>
 #include <RobotBase.h>
 #include <RobotMap.h>
+#include <Services/CameraReader.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <Subsystems/Drivebase.h>
@@ -19,19 +20,23 @@ void Robot::RobotInit() {
 	LOG_INFO("RobotInit Called");
 	motorManager = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
+	//FollowerHandler::getInstance()->startup();
+
 	MotorManager::getMotorManager()->initPIDS();
 
 	CommandBase::init();
 
-	//SensorManager::getSensorManager()->initGyro();
-
+	SensorManager::getSensorManager()->initGyro();
+	CameraReader::getCameraReader()->startUp();
 	//managePower = new ManagePower();
 	//managePower->Start();
 
-	//StallProtection *stall = new StallProtection();
-	//stall->Start();
+	StallProtection *stall = new StallProtection();
+	stall->Start();
 
 	//cmd = AutoBase::doLowBarandScore();
+
+
 	LOG_INFO("END OF ROBOTINIT");
 }
 
@@ -56,14 +61,8 @@ void Robot::AutonomousInit() {
 	AutoBase::readValues();
 	cmd = AutoBase::getSelectedAuto();
 	//cmd = AutoBase::doRoughT();
-	//turnDegree = new DriveForwardStraight(5, .25);
-	//turnDegree->Start();
-	//ArcTurn *turnDegree;
-	//turnDegree = new ArcTurn(-60.0, -0.75, .3);
-	//turnDegree->Start();
+
 	cmd->Start();
-	//RotateTowardCameraTarget *rotate = new RotateTowardCameraTarget();
-	//rotate->Start();
 
 	oldTime = GetFPGATime();
 	autoStart = GetFPGATime();
@@ -93,6 +92,7 @@ void Robot::TeleopInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	LOG_INFO("TeleOp Called");
 	teleStart = GetFPGATime();
+	CameraReader::getCameraReader()->tele = true;
 }
 
 void Robot::TeleopPeriodic() {

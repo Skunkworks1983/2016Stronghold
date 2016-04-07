@@ -127,7 +127,7 @@ void OI::registerButtonListeners() {
 	/**
 	 * Driver Buttons
 	 */
-	driverShooterDown->WhileHeld(new RunNewCollector(false));
+	driverShooterDown->WhileHeld(new RunNewCollector());
 	driverShooterDown->WhenPressed(new RotateShooter(cCollect));
 	driverShooterUp->WhenPressed(new RotateShooter(cTOP));
 	driverReadShooterPIDValues->WhenPressed(new RotateTowardCameraTarget());
@@ -147,10 +147,9 @@ void OI::registerButtonListeners() {
 
 	lowFire->WhileHeld(new AutoRunCollector());
 	lowArm->WhenPressed(new IndexBall());	//no need for this at the moment
-	lowAim->WhenPressed(new RotateShooter(cCollect));
+	lowAim->WhenPressed(new RotateShooter(c60));
 
-	const double shot_speed = 78.0;
-	//const double shot_speed = 120.0;
+	const double shot_speed = 70.0;
 
 	highArm->WhileHeld(new PIDShot(shot_speed, shot_speed));
 	highArmPosition1->WhileHeld(new PIDShot(shot_speed - 3, shot_speed - 3));

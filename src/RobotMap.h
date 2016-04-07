@@ -2,7 +2,7 @@
 #define ROBOTMAP_H
 
 #define ROBOT_NAME "VanillaThunder"
-#define PRACTICEBOT 1
+#define PRACTICEBOT 0
 
 #include "TuningValues.h"
 
@@ -115,7 +115,8 @@
 #define SHOOTER_MOTOR_RIGHT_PORT 10
 
 #define SHOOTER_MOTOR_LEFT_ENCODER_PORT 9
-#define SHOOTER_MOTOR_RIGHT_ENCODER_PORT 10	//right side if you are robot with collector down
+//right side if you are robot with collector down
+#define SHOOTER_MOTOR_RIGHT_ENCODER_PORT 10
 
 #define SHOOTER_ENCODER_TICKS_PER_REV 4096
 

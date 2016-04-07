@@ -1,11 +1,9 @@
 #include <I2C.h>
 #include <RobotMap.h>
-#include <Services/CameraReader.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <TuningValues.h>
 #include <exception>
-#include <utility>
 
 #include "../../navx-mxp/cpp/include/AHRS.h"
 
@@ -25,6 +23,12 @@ SensorManager::SensorManager() {
 	sensors[SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID] = new Sensor(
 	DRIVEBASE_RIGHT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID,
 	true);
+
+	sensors[SENSOR_DRIVE_BASE_LEFT_SPEED_ID] = new SpeedSensor(
+	DRIVEBASE_LEFT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_LEFT_SPEED_ID);
+	sensors[SENSOR_DRIVE_BASE_RIGHT_SPEED_ID] = new SpeedSensor(
+	DRIVEBASE_RIGHT_ENCODER_PORT, 0, 0, SENSOR_DRIVE_BASE_RIGHT_SPEED_ID,
+	true);
 #endif
 #if USE_SHOOTER
 	sensors[SENSOR_SHOOTER_ENCODER_1_ID] = new Sensor(
@@ -41,10 +45,7 @@ SensorManager::SensorManager() {
 	sensors[SENSOR_COLLECTOR_ROLLER_ENCODER_ID] = new Sensor(
 	COLLECTOR_ROLLER_ENCODER_PORT, 0, 0,
 	SENSOR_COLLECTOR_ROLLER_ENCODER_ID);
-	/*sensors.insert(
-	 std::pair<unsigned, Sensor*>(SENSOR_COLLECTOR_ROLLER_ENCODER_ID,
-	 new Sensor(COLLECTOR_ROLLER_ENCODER_PORT,
-	 SENSOR_COLLECTOR_ROLLER_ENCODER_ID)));*/
+
 #endif
 #if USE_CLIMBER
 	sensors[SENSOR_CLIMBER_WINCH_ENCODER] = new Sensor(
@@ -104,7 +105,7 @@ void SensorManager::initGyro() {
 				if (counter++ % 5 == 0) {
 					//LOG_INFO("Counter %d", counter);
 				}
-				if(counter > 20000){
+				if (counter > 20000) {
 					break;
 				}
 			}

@@ -11,6 +11,7 @@
 #include <cstdbool>
 #include <cstdio>
 #include <iterator>
+#include <RobotMap.h>
 
 float MotorGroup::getLastOutput() {
 	return lastOutput;
@@ -40,8 +41,6 @@ MotorGroup::~MotorGroup() {
 void MotorGroup::PIDWrite(float output) {
 	std::vector<Motor*>::iterator it = motorList.begin();
 
-	const bool brownedOut = DriverStation::GetInstance().IsSysBrownedOut();
-
 	for (; it != motorList.end(); ++it) {
 		/*if ((*it)->stoppedStartTime == 0) {
 		 (*it)->talon->Set(output * (*it)->C);
@@ -49,15 +48,11 @@ void MotorGroup::PIDWrite(float output) {
 		 (*it)->speed = output;*/
 
 		if ((*it)->talon != NULL) {
-			if(brownedOut && (*it)->isBrownoutProtect() && brownoutCount++ > 5){
-				continue;
-			}else{
-				brownoutCount = 0;
-			}
 			(*it)->talon->Set(
 					((*it)->isReversed() ? -1 : 1) * output /** (*it)->C*/);
 		}
 	}
+	//LOG_INFO("MotorGroup PIDWrite is not the problem");
 }
 
 DrivebaseMotorGroup::DrivebaseMotorGroup(std::vector<Motor*> motorgroup) :
@@ -81,5 +76,7 @@ void DrivebaseMotorGroup::PIDWrite(float output) {
 			//So we stop breaking the motor
 		}
 	}
+	//LOG_INFO("DriveBaseMotorGroup PIDWrite is not the problem");
+
 
 }

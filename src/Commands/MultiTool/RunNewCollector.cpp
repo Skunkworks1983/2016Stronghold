@@ -1,7 +1,6 @@
 #include <Commands/MultiTool/RunCollector.h>
 #include <Commands/MultiTool/RunNewCollector.h>
 #include <Commands/Shooting/RunShooter.h>
-#include <Commands/TimeOut.h>
 #include <Subsystems/Shooter.h>
 #include <cstdbool>
 
@@ -13,6 +12,7 @@ RunNewCollector::RunNewCollector(float timeout, bool reverse) :
 //						timeout));
 //		AddParallel(new RunShooter(this->reverse ? -0.5 : 0.5), timeout);
 //	} else {
-		AddParallel(new RunCollector(Shooter::KBackward, .75, timeout));
-		AddSequential(new RunShooter(-0.5, .2, timeout));
+	AddParallel(new RunCollector(Shooter::KBackward, .50, timeout));
+	//AddSequential(new RampToSpeed((reverse ? 0.5 : -.5), timeout));
+	AddSequential(new RunShooter(-0.5, .2, timeout));
 }

@@ -13,7 +13,7 @@ AutoBase *AutoBase::doCheval() {
 
 #if USE_SHOOTER
 	cmd->AddParallel(new RotateShooter(cTOP, true));
-	cmd->AddSequential(new RunNewCollector(.3));
+	cmd->AddSequential(new RunNewCollector(.4));
 #endif
 
 	cmd->AddSequential(new DriveForwardStraight(3.8, 0.25));	//Reach the defence
