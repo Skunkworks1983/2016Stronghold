@@ -24,6 +24,8 @@ private:
 	int count;
 	AutoBase *cmd  = NULL;
 	uint64_t oldTime;
+	static uint64_t autoStart;
+	static uint64_t teleStart;
 public:
 	void RobotInit();
 	void DisabledInit();
@@ -33,10 +35,8 @@ public:
 	void TestPeriodic();
 	void AutonomousPeriodic();
 	void AutonomousInit();
+	static uint64_t getAutoStartTime();
+	static uint64_t getTeleStartTime();
 };
-
-
-
-
 
 #endif /* ROBOT_H_ */

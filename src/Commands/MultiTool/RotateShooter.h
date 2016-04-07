@@ -9,7 +9,7 @@
 #include <RobotMap.h>
 
 enum ShooterPosition {
-	cTOP, cCollect, c45
+	cTOP, cCollect, c45, c60
 };
 
 class RotateShooter: public CommandBase {
@@ -19,8 +19,9 @@ private:
 	SensorManager * sensorManager = NULL;
 	int test;
 	bool noreset = false;
+	float timeout = 0;
 public:
-	RotateShooter(ShooterPosition pos, bool noreset = false);
+	RotateShooter(ShooterPosition pos, bool noreset = false, float fimeout = 0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

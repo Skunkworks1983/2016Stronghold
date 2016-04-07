@@ -1,24 +1,30 @@
 //doCheval.cpp
 
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/DriveForward.h>
+#include <Commands/Driving/DriveForwardStraight.h>
+#include <Commands/Driving/Turning/ArcTurn.h>
 #include <Commands/MultiTool/RotateShooter.h>
+#include <Commands/MultiTool/RunNewCollector.h>
+#include <RobotMap.h>
+#include <cstdbool>
 
-/**
- * Cheval De Fris Constants
- */
-#define CHEV_SPEED 0.5
-#define CHEV_SHORTDIST 3
-#define CHEV_DIST 5
-
-//TODO: rework this logic slightly
 AutoBase *AutoBase::doCheval() {
 	AutoBase*cmd = new AutoBase("Autonomous-doCheval");
-	cmd->AddSequential(new DriveForward(5, 0.25));	//Reach the defence
-	cmd->AddSequential(new RotateShooter(cCollect));
-	cmd->AddSequential(new DriveForward(CHEV_SHORTDIST, CHEV_SPEED));
-	cmd->AddSequential(new RotateShooter(cTOP));
-	cmd->AddSequential(new DriveForward(CHEV_DIST, CHEV_SPEED));
+
+#if USE_SHOOTER
+	cmd->AddParallel(new RotateShooter(cTOP, true));
+	cmd->AddSequential(new RunNewCollector(.4));
+#endif
+
+	cmd->AddSequential(new DriveForwardStraight(3.8, 0.25));	//Reach the defence
+	cmd->AddSequential(new RotateShooter(cCollect, false, .85));
+	cmd->AddSequential(new DriveForwardStraight(2.5, 0.55));
+	cmd->AddParallel(new RotateShooter(cTOP));
+	cmd->AddSequential(new DriveForwardStraight(2.5, 0.55));
+	cmd->AddSequential(new ArcTurn(90, .80, -.5));
+	cmd->AddSequential(new ArcTurn(-90, -.80, -.5));
+	cmd->AddSequential(new DriveForwardStraight(1.5, 0.3));
+
 	return cmd;
 }
 

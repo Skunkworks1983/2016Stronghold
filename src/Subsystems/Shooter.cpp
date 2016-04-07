@@ -31,6 +31,7 @@ void Shooter::InitDefaultCommand() {
 ShooterMotor *Shooter::getLeft() {
 	return left;
 }
+
 ShooterMotor *Shooter::getRight() {
 	return right;
 }
@@ -39,9 +40,9 @@ void Shooter::setPID(float p, float i, float d) {
 	this->p = p;
 	this->i = i;
 	this->d = d;
-	left->setPID(p,i,d);
-	right->setPID(p,i,d);
-	LOG_INFO("setPID to %f, %f, %f", p,i,d);
+	left->setPID(p, i, d);
+	right->setPID(p, i, d);
+	LOG_INFO("setPID to %f, %f, %f", p, i, d);
 }
 
 void Shooter::setUpToSpeed(bool upToSpeed) {
@@ -134,31 +135,31 @@ void Shooter::setShooterSpeed(float speed) {
 }
 
 void Shooter::setRightShooterSpeed(float speedRight) {
-	MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_1_PORT)->setSpeed(
+	MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_RIGHT_PORT)->setSpeed(
 			-speedRight);
 }
 
 void Shooter::setLeftShooterSpeed(float speedLeft) {
-	MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_2_PORT)->setSpeed(
+	MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_LEFT_PORT)->setSpeed(
 			-speedLeft);
 }
 
 //rotation per second
 float Shooter::getLeftShooterSpeed() {
-	return 10 * (SensorManager::getSensorManager()->getSensor(
-	SENSOR_SHOOTER_ENCODER_2_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
+	return -10 * (SensorManager::getSensorManager()->getSensor(
+	SENSOR_SHOOTER_ENCODER_1_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
 }
 
 //rotation per second
 float Shooter::getRightShooterSpeed() {
 	return 10 * (SensorManager::getSensorManager()->getSensor(
-	SENSOR_SHOOTER_ENCODER_1_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
+	SENSOR_SHOOTER_ENCODER_2_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
 }
 
 float Shooter::getLeftShooterMotorPower() {
-	return MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_2_PORT)->talon->Get();
+	return MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_RIGHT_PORT)->talon->Get();
 }
 
 float Shooter::getRightShooterMotorPower() {
-	return MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_1_PORT)->talon->Get();
+	return MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_LEFT_PORT)->talon->Get();
 }

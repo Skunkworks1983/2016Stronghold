@@ -13,7 +13,7 @@
 #include "../../navx-mxp/cpp/include/AHRS.h"
 
 class Sensor: public PIDSource {
-private:
+protected:
 	AHRS * ahrs = NULL;
 	CANTalon *talon = NULL;
 	PIDSource *src = NULL;
@@ -35,6 +35,13 @@ public:
 	float getHighRange();
 	void resetEncoder();
 	double getSpeed();
+};
+
+class SpeedSensor : public Sensor{
+public:
+	SpeedSensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
+			unsigned ID, bool reversed = false);
+	double PIDGet();
 };
 
 #endif /* SRC_SERVICES_SENSOR_H_ */

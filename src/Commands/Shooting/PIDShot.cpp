@@ -17,36 +17,74 @@ PIDShot::PIDShot(double leftSpeed, double rightSpeed, float timeout) :
 // Called just before this Command runs the first time
 void PIDShot::Initialize() {
 	LOG_INFO("PIDShot Initialize called");
-	shooter->getRight()->SetSetpoint(rightSpeed - 4);
-	shooter->getLeft()->SetSetpoint(leftSpeed + 3);
+#if USE_CAN_PID
+	current_left_setpoint = fmax(5.0, shooter->getLeft()->PIDGet());
+	current_right_setpoint = fmax(5.0, shooter->getRight()->PIDGet());
 
+	shooter->getRight()->SetSetpoint(current_right_setpoint);
+	shooter->getLeft()->SetSetpoint(current_left_setpoint);
+#else
+	shooter->getRight()->SetSetpoint(leftSpeed);
+	shooter->getLeft()->SetSetpoint(rightSpeed);
+#endif
 	shooter->getLeft()->Enable();
 	shooter->getRight()->Enable();
 	c = 0;
-	if(timeout != 0){
+	if (timeout != 0) {
 		SetTimeout(timeout);
 	}
+	//shooter->setRollerSpeed(Shooter::rollerDirection::KBackward, .15);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void PIDShot::Execute() {
-
-	SmartDashboard::PutNumber("leftSpeed", shooter->getLeftShooterSpeed());
-	SmartDashboard::PutNumber("rightSpeed", shooter->getRightShooterSpeed());
+	SmartDashboard::PutNumber("leftSpeed", shooter->getLeft()->PIDGet());
+	SmartDashboard::PutNumber("rightSpeed", shooter->getRight()->PIDGet());
 	SmartDashboard::PutNumber("time", GetFPGATime());
-//	LOG_INFO("PIDShot leftSpeed %f rightSpeed %f",
-//			shooter->getLeftShooterSpeed(), shooter->getRightShooterSpeed());
 
-//	const double leftDiff = fabs(shooter->getLeft()->PIDGet() - leftSpeed);
-//	const bool leftOnTarget = leftDiff < SHOT_TOLERANCE;
-//	const double rightDiff = fabs(shooter->getRight()->PIDGet() - rightSpeed);
-//	const bool rightOnTarget = rightDiff < SHOT_TOLERANCE;
-//
-//	char str[1024];
-//	sprintf(str, "PIDShot leftSpeed %f rightSpeed %f, diffleft %f, diffRight %f",
-//			shooter->getLeftShooterSpeed(), shooter->getRightShooterSpeed(), leftDiff, rightDiff);
-//	Logger::getLogger()->log(str, Info);
-//
+	const double leftDiff = fabs(shooter->getLeft()->PIDGet() - leftSpeed);
+	const bool leftOnTarget = leftDiff < SHOT_TOLERANCE;
+	const double rightDiff = fabs(shooter->getRight()->PIDGet() - rightSpeed);
+	const bool rightOnTarget = rightDiff < SHOT_TOLERANCE;
+
+#if USE_CAN_PID
+	if (!shooter->getLeft()->isEnabled()) {
+		shooter->getLeft()->Enable();
+	}
+	if (!shooter->getRight()->isEnabled()) {
+		shooter->getRight()->Enable();
+	}
+
+	LOG_INFO(
+			"PIDShot leftSpeed %f rightSpeed %f errorLeft %f errorRight %f, setpoint %f leftOut %f rightOut %f",
+			shooter->getLeft()->PIDGet(), shooter->getRight()->PIDGet(),
+			shooter->getLeft()->getError(), shooter->getRight()->getError(),
+			shooter->getLeft()->getSetpoint(),
+			shooter->getLeft()->getOutputPercentage(),
+			shooter->getRight()->getOutputPercentage());
+
+	if (current_left_setpoint < leftSpeed) {
+		current_left_setpoint += 2;
+	} else {
+		current_left_setpoint = leftSpeed;
+	}
+	if (current_right_setpoint < rightSpeed) {
+		current_right_setpoint += 2;
+	} else {
+		current_right_setpoint = rightSpeed;
+	}
+
+	shooter->getLeft()->SetSetpoint(current_left_setpoint);
+	shooter->getRight()->SetSetpoint(current_right_setpoint);
+#endif
+
+	LOG_INFO(
+			"PIDShot leftSpeed %f rightSpeed %f errorLeft %f errorRight %f, leftSetPoint %f, rightSetpoint %f",
+			shooter->getLeft()->PIDGet(), shooter->getRight()->PIDGet(),
+			shooter->getLeft()->getError(), shooter->getRight()->getError(),
+			shooter->getLeft()->getSetpoint(),
+			shooter->getRight()->getSetpoint());
+	//
 //	if (leftOnTarget && rightOnTarget) {
 //		c++;
 //	} else {
@@ -60,7 +98,7 @@ void PIDShot::Execute() {
 //		shooter->setUpToSpeed(true);
 //	} else {
 //		shooter->setUpToSpeed(false);
-//	}
+//
 }
 
 // Make this return true when this Command no longer needs to run execute()
@@ -72,11 +110,11 @@ bool PIDShot::IsFinished() {
 void PIDShot::End() {
 	LOG_INFO("PIDShot End called");
 
-	shooter->setShooterSpeed(0.0);
+	//shooter->setShooterSpeed(0.0);
 	shooter->getLeft()->Disable();
 	shooter->getRight()->Disable();
-	shooter->getLeft()->Reset();
 	shooter->getRight()->Reset();
+	shooter->getLeft()->Reset();
 }
 
 // Called when another command which requires one or more of the same

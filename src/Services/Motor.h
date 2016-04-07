@@ -41,6 +41,7 @@ public:
 	void setC(Priority priority, float voltage);
 	bool isReversed();
 	bool isBrownoutProtect();
+	void setBrakeMode(bool brake);
 };
 
 #endif /* SRC_SERVICES_MOTOR_H_ */

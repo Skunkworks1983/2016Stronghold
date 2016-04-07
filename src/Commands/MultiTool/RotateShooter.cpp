@@ -10,8 +10,8 @@
 #define COLLECTOR_MOVE_TOLERANCE 250
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
-RotateShooter::RotateShooter(ShooterPosition pos, bool noreset) :
-		noreset(noreset) {
+RotateShooter::RotateShooter(ShooterPosition pos, bool noreset, float timeout) :
+		noreset(noreset), timeout(timeout) {
 	Requires(shooter);
 	SetInterruptible(true);
 	test = 0;
@@ -25,12 +25,23 @@ RotateShooter::RotateShooter(ShooterPosition pos, bool noreset) :
 	case c45:
 		target = COLLECTOR_ROTATION_ENCODER_45_TICKS;
 		break;
+	case c60:
+		target = COLLECTOR_ROTATION_ENCODER_60_TICKS;
+		break;
 	}
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
+
+	motorManager->getMotor(
+	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT)->setBrakeMode(true);
+	motorManager->getMotor(
+	COLLECTOR_ROTATOR_MOTOR_LEFT_PORT)->setBrakeMode(true);
 }
 
 void RotateShooter::Initialize() {
+	if (timeout > 0) {
+		SetTimeout(timeout);
+	}
 	shooter->registerCommand(this);
 	//motorManager->disablePID(PID_ID_COLLECTOR);
 	if (!noreset) {
@@ -56,13 +67,14 @@ bool RotateShooter::IsFinished() {
 			SENSOR_COLLECTOR_ROTATION_ENCODER_ID)->PIDGet()
 					- target) < COLLECTOR_MOVE_TOLERANCE;
 	//return true;
-	return closeEnough;
+	return closeEnough || IsTimedOut();
 }
 
 void RotateShooter::End() {
 	SmartDashboard::PutBoolean("CollectorMoveRunning", false);
 	//MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
 	LOG_DEBUG("CollectorMove END Called for target %f", target);
+
 	shooter->deregisterCommand(this);
 }
 

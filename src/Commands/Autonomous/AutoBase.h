@@ -6,31 +6,41 @@
 
 class SensorManager;
 
-enum eGoalPos
-	{
-		high,
-		low
-	};
+enum eGoalPos {
+	high, low
+};
 
-	enum eStartPos
-	{	spy,
-		lowBar,
-		posZero,
-		posOne,
-		posTwo,
-		posThree
-	};
+enum eStartPos {
+	spy, lowBar, posZero, posOne, posTwo, posThree
+};
 
-	enum eObstacle {
-		BLANK,
-		Obstacle_lowBar,
-		Obstacle_cheval,
-		Obstacle_moat,
-		Obstacle_rough,
-		Obstacle_ramppart,
-		Obstacle_rockwall,
-		Obstacle_portcullis
-	};
+enum eObstacle {
+	BLANK,
+	Obstacle_lowbar,
+	Obstacle_cheval,
+	Obstacle_moat,
+	Obstacle_rough,
+	Obstacle_ramparts,
+	Obstacle_rockwall,
+	Obstacle_portcullis
+};
+
+struct TurnData {
+	TurnData(float angle, float power, float percentage) {
+		this->angle = angle;
+		this->power = power;
+		this->percentage = percentage;
+	}
+
+	TurnData() {
+		angle = 0.0;
+		power = 0.0;
+		percentage = 0.0;
+	}
+	float angle;
+	float power;
+	float percentage;
+};
 
 class AutoBase: public CommandGroup {
 private:
@@ -41,8 +51,10 @@ public:
 	static AutoBase *getSelectedAuto();
 
 	static AutoBase *readFromTextFile(std::string);
-	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos, eGoalPos goalPos);
-	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp, eGoalPos *goal);
+	static AutoBase *createSelectedAuto(eObstacle obstacle, eStartPos startPos,
+			eGoalPos goalPos);
+	static void readDIPSwitches(eObstacle *obstacle, eStartPos *sp,
+			eGoalPos *goal);
 	static void readDIPSwitchedObstacle(eObstacle *obstacle);
 	static void readDIPSwitchedPosition(eStartPos *startPos);
 	static AutoBase *doCheval(); //Cheval de Frise
@@ -57,6 +69,11 @@ public:
 	static float getTurnAngle();
 	static float getSecondTurnAngle();
 	static float getFirstDistance();
+	static float getMiddleDistance();
+
+	static TurnData *getTurnData();
+	static TurnData *getSecondTurnData();
+
 	static void readValues();
 
 	AutoBase();

@@ -1,13 +1,18 @@
 #include <Commands/Shooting/AutoRunCollector.h>
-#include <Services/Logger.h>
-#include <Services/ShooterMotor.h>
-#include <cmath>
-#include <cstdio>
+#include <Robot.h>
 #include <RobotMap.h>
+#include <Services/ShooterMotor.h>
+#include <Utility.h>
+#include <cmath>
 
 #define SHOT_TOLERANCE .65
+//in microseconds
+#define AUTONOMOUS_TIMEOUT 1.0 * 1000 * 1000
 
-AutoRunCollector::AutoRunCollector() {
+#define AUTO_SHOOT 14 * 1000 * 1000
+
+AutoRunCollector::AutoRunCollector(bool autonomous) :
+		autonomous(autonomous) {
 	if (timeout > 0) {
 		SetTimeout(timeout);
 	}
@@ -23,7 +28,8 @@ void AutoRunCollector::Execute() {
 	double leftDiff = fabs(
 			shooter->getLeft()->PIDGet() - shooter->getLeft()->getSetpoint());
 	bool leftOnTarget = (leftDiff < SHOT_TOLERANCE);
-	double rightDiff = fabs(shooter->getRight()->PIDGet() - shooter->getRight()->getSetpoint());
+	double rightDiff = fabs(
+			shooter->getRight()->PIDGet() - shooter->getRight()->getSetpoint());
 	bool rightOnTarget = (rightDiff < SHOT_TOLERANCE);
 
 	double rightLeftDiff = fabs(shooter->getRight()->PIDGet())
@@ -37,21 +43,29 @@ void AutoRunCollector::Execute() {
 		}
 	} else {
 		c = 0;
-		/*c--;
-		 if(c < 0){
-		 c= 0;
-		 }*/
 	}
 
 	LOG_INFO(
-			"leftSpeed %f rightSpeed %f leftDiff %f rightDiff %f leftOnTarget differenceright-left %f",
-			shooter->getLeft()->PIDGet(), shooter->getRight()->PIDGet(),
-			leftDiff, rightDiff, rightLeftDiff);
+	 "leftSpeed %f rightSpeed %f leftDiff %f rightDiff %f leftOnTarget differenceright-left %f",
+	 shooter->getLeft()->PIDGet(), shooter->getRight()->PIDGet(),
+	 leftDiff, rightDiff, rightLeftDiff);
 
-	if (c >= 3 && !alreadyUp) {
+	if ((c >= 3 || (autonomous && GetFPGATime() - Robot::getAutoStartTime() > AUTO_SHOOT))  && !alreadyUp) {
 		shooter->setRollerSpeed(Shooter::KForward, 1.0);
 		alreadyUp = true;
-		LOG_INFO("THIS IS WHERE THE AUTORUNCOLLECTOR STARTS STARTS STARTS");
+		LOG_INFO("Shot Speed L: %f R: %f", shooter->getLeft()->PIDGet(),
+				shooter->getRight()->PIDGet());
+		if (autonomous) {
+			startingTime = GetFPGATime();
+		}
+	}
+
+	if (autonomous && startingTime > 0 && GetFPGATime() > startingTime + AUTONOMOUS_TIMEOUT) {
+		shooter->getLeft()->Disable();
+		shooter->getRight()->Disable();
+		shooter->getRight()->Reset();
+		shooter->getLeft()->Reset();
+		End();
 	}
 }
 

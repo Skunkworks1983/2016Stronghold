@@ -1,4 +1,4 @@
-#include <Commands/Driving/DriveForwardStraight.h>
+#include <Commands/Driving/DriveStraightUntilLevel.h>
 #include <RobotMap.h>
 #include <Services/Logger.h>
 #include <Subsystems/Drivebase.h>
@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cmath>
 
-DriveForwardStraight::DriveForwardStraight(float distance, float speed) {
+DriveStraightUntilLevel::DriveStraightUntilLevel(float distance, float speed) {
 	Requires(drivebase);
 	sensorManager = SensorManager::getSensorManager();
 	this->distance = ((distance / DISTANCE_NUMBER));
@@ -18,11 +18,13 @@ DriveForwardStraight::DriveForwardStraight(float distance, float speed) {
 	error = 0.0;
 }
 
-DriveForwardStraight::~DriveForwardStraight() {
+DriveStraightUntilLevel::~DriveStraightUntilLevel() {
 }
 
-void DriveForwardStraight::Initialize() {
+void DriveStraightUntilLevel::Initialize() {
 	initialYaw = sensorManager->getYaw();
+
+	initialPitch = sensorManager->getPitch();
 
 	speed *= 12.75 / DriverStation::GetInstance().GetBatteryVoltage();
 
@@ -37,7 +39,7 @@ void DriveForwardStraight::Initialize() {
 	LOG_INFO("Using gyro for straight drive initial yaw %f", initialYaw);
 }
 
-void DriveForwardStraight::Execute() {
+void DriveStraightUntilLevel::Execute() {
 	error = initialYaw - sensorManager->getYaw();
 
 	if (error < -180.0) {
@@ -63,7 +65,7 @@ void DriveForwardStraight::Execute() {
 	 }*/
 }
 
-bool DriveForwardStraight::IsFinished() {
+bool DriveStraightUntilLevel::IsFinished() {
 	double left = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
@@ -72,14 +74,14 @@ bool DriveForwardStraight::IsFinished() {
 	bool leftPast = fabs(left - initialLeft) > fabs(distance);
 	bool rightPast = fabs(right - initialRight) > fabs(distance);
 
-	return leftPast || rightPast;
+	return (leftPast || rightPast) && fabs(sensorManager->getPitch() - initialPitch) < 1.0;
 }
 
-void DriveForwardStraight::End() {
+void DriveStraightUntilLevel::End() {
 	drivebase->setLeftSpeed(0);
 	drivebase->setRightSpeed(0);
 }
 
-void DriveForwardStraight::Interrupted() {
+void DriveStraightUntilLevel::Interrupted() {
 	End();
 }

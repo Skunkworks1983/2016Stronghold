@@ -20,10 +20,7 @@ void RunCollector::Initialize() {
 }
 
 void RunCollector::Execute() {
-	if (shooter->getLeftShooterSpeed() > SHOOTER_SPEED
-			&& shooter->getRightShooterSpeed() > SHOOTER_SPEED && !already_on) {
-		already_on = true;
-	}
+
 }
 
 bool RunCollector::IsFinished() {

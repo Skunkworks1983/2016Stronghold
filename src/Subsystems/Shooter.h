@@ -18,10 +18,10 @@ private:
 	float i = 0.0;		//works = 0.0
 	float d = 0.012;	//works = 0.0
 
-	MotorManager *motorManager;
-	SensorManager *sensorManager;
-	ShooterMotor *left;
-	ShooterMotor *right;
+	MotorManager *motorManager = NULL;
+	SensorManager *sensorManager = NULL;
+	ShooterMotor *left = NULL;
+	ShooterMotor *right = NULL;
 	Command *lastCommand = NULL;
 
 	bool upToSpeed = false;

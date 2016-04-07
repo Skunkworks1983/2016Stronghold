@@ -8,8 +8,9 @@ class RampToSpeed: public CommandBase {
 private:
 	double realSpeed = 0.0;
 	double targetSpeed = 0.0;
+	double timeout = 0;
 public:
-	RampToSpeed(double targetSpeed);
+	RampToSpeed(double targetSpeed, double timeout = 0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

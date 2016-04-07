@@ -14,10 +14,13 @@ private:
 	double timeout = 0;
 	bool alreadyUp = false;
 	unsigned c = 0;
+	bool autonomous = false;
+	uint64_t startingTime = 0.0;
 public:
-	AutoRunCollector();
+	AutoRunCollector(bool autonomous = false);
 	void Initialize();
-	void Execute();bool IsFinished();
+	void Execute();
+	bool IsFinished();
 	void End();
 	void Interrupted();
 };

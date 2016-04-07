@@ -71,3 +71,7 @@ void Motor::setC(Priority priorityArg, float voltage) {
 
 }
 
+void Motor::setBrakeMode(bool brake){
+	talon->ConfigNeutralMode(brake ? CANTalon::NeutralMode::kNeutralMode_Brake : CANTalon::NeutralMode::kNeutralMode_Coast);
+}
+

@@ -12,6 +12,22 @@
 #include <Services/SensorManager.h>
 #include <RobotMap.h>
 
+double SpeedSensor::PIDGet() {
+	if (talon != NULL) {
+		if (reversed) {
+			return (double) -talon->GetSpeed();
+		} else {
+			return (double) talon->GetSpeed();
+		}
+	}
+	return 0.0;
+}
+
+SpeedSensor::SpeedSensor(unsigned CANTalonEncoderPort, float lowRange,
+		float highRange, unsigned ID, bool reversed) :
+		Sensor(CANTalonEncoderPort, lowRange, highRange, ID, reversed) {
+}
+
 Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 		unsigned ID, bool reversed) :
 		ID(ID), lowRange(lowRange), highRange(highRange), reversed(reversed) {

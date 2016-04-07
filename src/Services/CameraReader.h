@@ -58,6 +58,8 @@ public:
 	float getLastRightX();
 	float getLastRightY();
 
+	bool tele = false;
+
 	bool isLastInvalid();
 
 	bool isBallInShooter();

@@ -9,7 +9,10 @@
 Logger::Logger() {
 	threadMutex = new priority_mutex();
 	logging = (pthread_t)NULL;
-	pthread_create(&logging, NULL, write, this);
+	int rc = pthread_create(&logging, NULL, write, this);
+	if(rc){
+		LOG_INFO("Logger failed to create thread");
+	}
 }
 
 Logger * Logger::getLogger() {

@@ -1,16 +1,24 @@
+#include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/Turning/ArcTurn.h>
+#include <RobotMap.h>
 #include <Services/MotorManager.h>
 #include <Services/Sensor.h>
 #include <Services/SensorManager.h>
 #include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
-#include <RobotMap.h>
 #include <cmath>
 
 #define TURN_DEGREE_ESPSILON 2.0
 
+ArcTurn::ArcTurn(TurnData *d) {
+	targetDegrees = d->angle;
+	speed = d->power;
+	percentTurn = d->percentage;
+	Requires(drivebase);
+}
+
 ArcTurn::ArcTurn(double targetDegrees, double speed, double percentTurn,
-		bool absolute) :
+bool absolute) :
 		targetDegrees(targetDegrees), speed(speed), percentTurn(percentTurn), absolute(
 				absolute) {
 	Requires(drivebase);
@@ -32,17 +40,15 @@ void ArcTurn::Initialize() {
 		if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + targetDegrees
 				> 180.0) {
 			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
-			targetDegrees -= 180.0;
-			targetDegrees *= -1;
+			targetDegrees -= 360.0;
 		} else if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet()
 				+ targetDegrees < -180.0) {
 			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
-			targetDegrees += 180.0;
-			targetDegrees *= -1;
+			targetDegrees += 360.0;
 		} else {
 			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 		}
-	}else{
+	} else {
 		LOG_INFO("ArcTurn is absolute with target %f", targetDegrees);
 	}
 
@@ -60,13 +66,19 @@ void ArcTurn::Execute() {
 			fabs(
 					sensorManager->getSensor(SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
-	const double error = yaw - targetDegrees;
+	double error = yaw - targetDegrees;
+
+	if (error < -180.0) {
+		error += 360.0;
+	} else if (error > 180.0) {
+		error -= 360.0;
+	}
 
 	const double P = 1 / 90;
 
 	//speed -= error * P;
 
-	LOG_INFO("target %f error %f speed %f", targetDegrees, error, speed);
+	LOG_INFO("target %f error %f yaw %f speed %f", targetDegrees, yaw, error, speed);
 
 	if (error > 0) {
 		drivebase->setLeftSpeed(speed);
@@ -93,7 +105,22 @@ bool ArcTurn::IsFinished() {
 
 	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 
-	return fabs(yaw - initialYaw) > fabs(targetDegrees - initialYaw);
+	double angle_traveled = yaw - initialYaw;
+
+	if (angle_traveled < -180.0) {
+		angle_traveled += 360.0;
+	} else if (angle_traveled > 180.0) {
+		angle_traveled -= 360.0;
+	}
+
+	double targetDiff = targetDegrees - initialYaw;
+	if (targetDiff < -180.0) {
+		targetDiff += 360.0;
+	} else if (targetDiff > 180.0) {
+		targetDiff -= 360.0;
+	}
+
+	return fabs(angle_traveled) > fabs(targetDiff);
 
 	if (targetDegrees > 0) {
 		return yaw > targetDegrees;

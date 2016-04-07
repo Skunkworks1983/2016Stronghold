@@ -1,10 +1,10 @@
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/Turning/ArcTurn.h>
 #include <Commands/Power/StallProtection.h>
 #include <Commands/Scheduler.h>
 #include <Robot.h>
 #include <RobotBase.h>
 #include <RobotMap.h>
+#include <Services/CameraReader.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <Subsystems/Drivebase.h>
@@ -12,17 +12,22 @@
 #include <Utility.h>
 #include <cstdbool>
 
+uint64_t Robot::teleStart = 0;
+uint64_t Robot::autoStart = 0;
+
 void Robot::RobotInit() {
 	LOG_INFO("START OF NEW RUN \t START OF NEW RUN");
 	LOG_INFO("RobotInit Called");
 	motorManager = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
+	//FollowerHandler::getInstance()->startup();
+
 	MotorManager::getMotorManager()->initPIDS();
 
 	CommandBase::init();
 
-	//SensorManager::getSensorManager()->initGyro();
-
+	SensorManager::getSensorManager()->initGyro();
+	CameraReader::getCameraReader()->startUp();
 	//managePower = new ManagePower();
 	//managePower->Start();
 
@@ -30,6 +35,8 @@ void Robot::RobotInit() {
 	stall->Start();
 
 	//cmd = AutoBase::doLowBarandScore();
+
+
 	LOG_INFO("END OF ROBOTINIT");
 }
 
@@ -42,6 +49,7 @@ void Robot::DisabledInit() {
 }
 
 void Robot::DisabledPeriodic() {
+
 }
 
 void Robot::AutonomousInit() {
@@ -53,16 +61,11 @@ void Robot::AutonomousInit() {
 	AutoBase::readValues();
 	cmd = AutoBase::getSelectedAuto();
 	//cmd = AutoBase::doRoughT();
-	//turnDegree = new DriveForwardStraight(5, .25);
-	//turnDegree->Start();
-	//ArcTurn *turnDegree;
-	//turnDegree = new ArcTurn(-60.0, -0.75, .3);
-	//turnDegree->Start();
+
 	cmd->Start();
-	//RotateTowardCameraTarget *rotate = new RotateTowardCameraTarget();
-	//rotate->Start();
 
 	oldTime = GetFPGATime();
+	autoStart = GetFPGATime();
 }
 
 void Robot::AutonomousPeriodic() {
@@ -88,6 +91,8 @@ void Robot::TeleopInit() {
 	CommandBase::drivebase->setDriverControl(true);
 	Scheduler::GetInstance()->RemoveAll();
 	LOG_INFO("TeleOp Called");
+	teleStart = GetFPGATime();
+	CameraReader::getCameraReader()->tele = true;
 }
 
 void Robot::TeleopPeriodic() {
@@ -96,6 +101,14 @@ void Robot::TeleopPeriodic() {
 
 void Robot::TestPeriodic() {
 
+}
+
+uint64_t Robot::getAutoStartTime() {
+	return autoStart;
+}
+
+uint64_t Robot::getTeleStartTime() {
+	return teleStart;
 }
 
 START_ROBOT_CLASS(Robot);
