@@ -84,21 +84,6 @@ void PIDShot::Execute() {
 			shooter->getLeft()->getError(), shooter->getRight()->getError(),
 			shooter->getLeft()->getSetpoint(),
 			shooter->getRight()->getSetpoint());
-	//
-//	if (leftOnTarget && rightOnTarget) {
-//		c++;
-//	} else {
-//		c--;
-//		if(c < 0){
-//			c = 0;
-//		}
-//	}
-//
-//	if (c > 5) {
-//		shooter->setUpToSpeed(true);
-//	} else {
-//		shooter->setUpToSpeed(false);
-//
 }
 
 // Make this return true when this Command no longer needs to run execute()

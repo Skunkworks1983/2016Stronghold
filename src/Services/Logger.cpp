@@ -14,7 +14,7 @@ Logger::Logger() {
 		LOG_INFO("Logger failed to create thread");
 	}
 
-	ifstream baseTest("/U/robotLog");
+	std::ifstream baseTest("/U/robotLog");
 	if(!baseTest.good()) {
 		std::system("touch /U/robotLog");
 	}
