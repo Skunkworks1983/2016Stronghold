@@ -78,7 +78,7 @@ void PIDShot::Execute() {
 	shooter->getRight()->SetSetpoint(current_right_setpoint);
 #endif
 
-	LOG_INFO(
+	LOG_DEBUG(
 			"PIDShot leftSpeed %f rightSpeed %f errorLeft %f errorRight %f, leftSetPoint %f, rightSetpoint %f",
 			shooter->getLeft()->PIDGet(), shooter->getRight()->PIDGet(),
 			shooter->getLeft()->getError(), shooter->getRight()->getError(),

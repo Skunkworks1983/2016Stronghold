@@ -8,7 +8,8 @@ class StopShooterRotationPID: public CommandBase {
 public:
 	StopShooterRotationPID();
 	void Initialize();
-	void Execute();bool IsFinished();
+	void Execute();
+	bool IsFinished();
 	void End();
 	void Interrupted();
 };

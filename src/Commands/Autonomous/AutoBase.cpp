@@ -98,7 +98,7 @@ float AutoBase::getFirstDistance() {
 	case lowBar:
 		return -5.25;
 	case posZero:
-		return -7.35;
+		return -8.5;
 	case posOne:
 		return 0;
 	case posTwo:

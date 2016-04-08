@@ -12,7 +12,7 @@ RunNewCollector::RunNewCollector(float timeout, bool reverse) :
 //						timeout));
 //		AddParallel(new RunShooter(this->reverse ? -0.5 : 0.5), timeout);
 //	} else {
-	AddParallel(new RunCollector(Shooter::KBackward, .50, timeout));
+	AddParallel(new RunCollector(Shooter::KBackward, .80, timeout));
 	//AddSequential(new RampToSpeed((reverse ? 0.5 : -.5), timeout));
 	AddSequential(new RunShooter(-0.5, .2, timeout));
 }

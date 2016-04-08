@@ -2,17 +2,15 @@
 #include <Commands/Climbing/RunWinch.h>
 #include <Commands/Climbing/SafeRotateArm.h>
 #include <Commands/Climbing/StopArmPID.h>
-#include <Commands/Driving/Turning/RotateTowardCameraTarget.h>
+#include <Commands/Driving/Turning/ArcTurnToCamera.h>
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunCollector.h>
 #include <Commands/MultiTool/RunNewCollector.h>
 #include <Commands/MultiTool/StopCollectorPID.h>
-#include <Commands/Shooting/ArmShot.h>
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/IndexBall.h>
 #include <Commands/Shooting/PIDShot.h>
-#include <Commands/Shooting/RunShooter.h>
 #include <OI.h>
 #include <Subsystems/Shooter.h>
 #include <cmath>
@@ -32,7 +30,7 @@ OI::OI() {
 	driverTankDriveOneCIM = new JoystickButton(leftStick, 1);
 	driverShooterDown = new JoystickButton(rightStick, 1);
 	driverShooterUp = new JoystickButton(rightStick, 2);
-	driverReadShooterPIDValues = new JoystickButton(rightStick, 3);
+	rotateToCamera = new JoystickButton(rightStick, 3);
 
 	//operatorbuttons
 	collect = new JoystickButton(op, 8);
@@ -90,7 +88,7 @@ OI::~OI() {
 	delete stopShooterPID;
 	delete driverShooterDown;
 	delete driverShooterUp;
-	delete driverReadShooterPIDValues;
+	delete rotateToCamera;
 	delete driverTankDriveOneCIM;
 }
 
@@ -113,14 +111,6 @@ double OI::getRightStickY() {
 }
 
 void OI::registerButtonListeners() {
-	/*rotateArm->WhenPressed(new RotateArm(CLIMBER_ARM_UP_POSITION));
-	 SmartDashboard::PutData("Climber Down",
-	 new RotateArm(CLIMBER_ARM_DOWN_POSITION));
-
-	 //engageWinch->WhenPressed(new RunWinchToSetPoint(CLIMBER_WINCH_UP_POSITION, .25));
-	 engageWinch->WhileHeld(new RunWinch(.50));
-
-	 engageWinch->WhileHeld(new RunWinch(.50));*/
 #if USE_GAMEPAD
 
 #else
@@ -130,7 +120,7 @@ void OI::registerButtonListeners() {
 	driverShooterDown->WhileHeld(new RunNewCollector());
 	driverShooterDown->WhenPressed(new RotateShooter(cCollect));
 	driverShooterUp->WhenPressed(new RotateShooter(cTOP));
-	driverReadShooterPIDValues->WhenPressed(new RotateTowardCameraTarget());
+	rotateToCamera->WhenPressed(new ArcTurnToCamera(.75, -.5));
 	stopShooterPID->WhenPressed(new StopShooterRotationPID());
 
 	/**
@@ -154,7 +144,7 @@ void OI::registerButtonListeners() {
 	highArm->WhileHeld(new PIDShot(shot_speed, shot_speed));
 	highArmPosition1->WhileHeld(new PIDShot(shot_speed - 3, shot_speed - 3));
 	highArmPosition2->WhileHeld(new PIDShot(shot_speed - 6, shot_speed - 6));
-	highFire->ToggleWhenPressed(new RunCollector(Shooter::KForward, 1.0, .5));
+	highFire->WhileHeld(new RunCollector(Shooter::KForward, 1.0));
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetShooterRotationEncoder());
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
@@ -167,7 +157,7 @@ void OI::registerButtonListeners() {
 	manualShooterDown->WhenPressed(
 			new MoveServo(MoveServo::eServoPosition::OUT));
 	manualShooterUp->WhenPressed(new MoveServo(MoveServo::eServoPosition::IN));
-	portcullis->WhileHeld(new RunCollector(Shooter::KBackward));
+	portcullis->WhileHeld(new RunNewCollector(true));
 #endif
 }
 
