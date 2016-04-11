@@ -3,6 +3,7 @@
 #include <Commands/Climbing/SafeRotateArm.h>
 #include <Commands/Climbing/StopArmPID.h>
 #include <Commands/Driving/Turning/ArcTurnToCamera.h>
+#include <Commands/MultiTool/ManualCollectorMove.h>
 #include <Commands/MultiTool/ResetCollectorEncoder.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunCollector.h>
@@ -132,18 +133,17 @@ void OI::registerButtonListeners() {
 
 	shooterUp->WhenPressed(new RotateShooter(cTOP));
 
-	shooterPass->WhileHeld(new RunNewCollector(true));
 	shooter45->WhenPressed(new RotateShooter(c45));
 
 	lowFire->WhileHeld(new AutoRunCollector());
 	lowArm->WhenPressed(new IndexBall());	//no need for this at the moment
-	lowAim->WhenPressed(new RotateShooter(c60));
+	shooterPass->WhenPressed(new RotateShooter(c60));
 
 	const double shot_speed = 70.0;
 
 	highArm->WhileHeld(new PIDShot(shot_speed, shot_speed));
 	highArmPosition1->WhileHeld(new PIDShot(shot_speed - 3, shot_speed - 3));
-	highArmPosition2->WhileHeld(new PIDShot(shot_speed - 6, shot_speed - 6));
+	highArmPosition2->WhileHeld(new PIDShot(shot_speed + 3, shot_speed + 3));
 	highFire->WhileHeld(new RunCollector(Shooter::KForward, 1.0));
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetShooterRotationEncoder());
@@ -153,10 +153,12 @@ void OI::registerButtonListeners() {
 	climberArmsUp->WhenReleased(new StopArmPID());
 	winchEngage->WhileHeld(new RunWinch(1.0));
 	//manualOveride;	no effect currently
-	manualWinchReverse->WhileHeld(new RunWinch(-.2));
+	manualWinchReverse->WhenPressed(new ResetShooterRotationEncoder());
 	manualShooterDown->WhenPressed(
 			new MoveServo(MoveServo::eServoPosition::OUT));
-	manualShooterUp->WhenPressed(new MoveServo(MoveServo::eServoPosition::IN));
+	manualShooterDown->WhileHeld(new ManualRotateShooter(.4));
+	manualShooterUp->WhileHeld(new ManualRotateShooter(-.4));
+
 	portcullis->WhileHeld(new RunNewCollector(true));
 #endif
 }

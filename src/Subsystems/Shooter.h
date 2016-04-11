@@ -14,9 +14,14 @@ class DigitalInput;
 
 class Shooter: public Subsystem {
 private:
-	float p = .003;	//works = .0018
+	float p = .0045;	//works = .0018
 	float i = 0.0;		//works = 0.0
-	float d = 0.012;	//works = 0.0
+	float d = 0.015;	//works = 0.0
+
+	//working values
+//	float p = .003;
+//	float i = 0.0;
+//	float d = 0.012;
 
 	MotorManager *motorManager = NULL;
 	SensorManager *sensorManager = NULL;

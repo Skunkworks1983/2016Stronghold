@@ -7,7 +7,10 @@
 #include <Services/CameraReader.h>
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
+#include <Services/ShooterMotor.h>
+#include <SmartDashboard/SmartDashboard.h>
 #include <Subsystems/Drivebase.h>
+#include <Subsystems/Shooter.h>
 #include <TuningValues.h>
 #include <Utility.h>
 #include <cstdbool>
@@ -36,6 +39,11 @@ void Robot::RobotInit() {
 
 	//cmd = AutoBase::doLowBarandScore();
 
+	SmartDashboard::PutNumber("leftSpeed",
+			CommandBase::shooter->getLeft()->PIDGet());
+	SmartDashboard::PutNumber("rightSpeed",
+			CommandBase::shooter->getRight()->PIDGet());
+	SmartDashboard::PutNumber("time", GetFPGATime());
 
 	LOG_INFO("END OF ROBOTINIT");
 }

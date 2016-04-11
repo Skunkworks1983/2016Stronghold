@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cmath>
 
-DriveForwardStraight::DriveForwardStraight(float distance, float speed) {
+DriveForwardStraight::DriveForwardStraight(float distance, float speed, double timeout) : timeout(timeout) {
 	Requires(drivebase);
 	sensorManager = SensorManager::getSensorManager();
 	this->distance = ((distance / DISTANCE_NUMBER));
@@ -22,6 +22,9 @@ DriveForwardStraight::~DriveForwardStraight() {
 }
 
 void DriveForwardStraight::Initialize() {
+	if(timeout > 0){
+		SetTimeout(timeout);
+	}
 	initialYaw = sensorManager->getYaw();
 
 	speed *= 12.75 / DriverStation::GetInstance().GetBatteryVoltage();
@@ -72,7 +75,7 @@ bool DriveForwardStraight::IsFinished() {
 	bool leftPast = fabs(left - initialLeft) > fabs(distance);
 	bool rightPast = fabs(right - initialRight) > fabs(distance);
 
-	return leftPast || rightPast;
+	return leftPast || rightPast || IsTimedOut();
 }
 
 void DriveForwardStraight::End() {

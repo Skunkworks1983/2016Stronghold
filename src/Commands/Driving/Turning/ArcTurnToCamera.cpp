@@ -12,13 +12,17 @@
 #define TURN_DEGREE_ESPSILON 2.0
 
 ArcTurnToCamera::ArcTurnToCamera(double speed, double percentTurn,
-bool absolute) :
-		speed(speed), percentTurn(percentTurn), absolute(absolute) {
+bool absolute, double timeout) :
+		speed(speed), percentTurn(percentTurn), absolute(absolute), timeout(timeout) {
 	Requires(drivebase);
 }
 
 // Called just before this Command runs the first time
 void ArcTurnToCamera::Initialize() {
+	if(timeout > 0){
+		SetTimeout(timeout);
+	}
+
 	motorManger = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
 
@@ -130,7 +134,7 @@ bool ArcTurnToCamera::IsFinished() {
 		targetDiff -= 360.0;
 	}
 
-	return fabs(error) > fabs(targetDiff);
+	return fabs(error) > fabs(targetDiff) || IsTimedOut();
 
 	return fabs(yaw - initialYaw) > fabs(targetDegrees - initialYaw);
 

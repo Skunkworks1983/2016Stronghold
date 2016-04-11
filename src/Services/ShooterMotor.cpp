@@ -16,7 +16,8 @@
 #include <Subsystems/Shooter.h>
 #include <cstdbool>
 
-#define SHOOTER_MOTOR_MAX_ACCELERATION .04
+//#define SHOOTER_MOTOR_MAX_ACCELERATION .04	//working
+#define SHOOTER_MOTOR_MAX_ACCELERATION .08
 
 ShooterMotor::ShooterMotor(ShooterSide side, double p, double i, double d) :
 		side(side) {

@@ -1,5 +1,7 @@
 #include <Commands/MultiTool/ManualCollectorMove.h>
+#include <Services/MotorManager.h>
 #include <Subsystems/Shooter.h>
+#include <RobotMap.h>
 #include <cstdbool>
 
 //TODO: Find the conversion ratio for encoder ticks to degrees
@@ -12,6 +14,8 @@ void ManualRotateShooter::Initialize() {
 	if(timeout != 0){
 		SetTimeout(timeout);
 	}
+	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
+
 	shooter->setRotatorSpeed(speed);
 }
 
@@ -20,7 +24,7 @@ void ManualRotateShooter::Execute() {
 }
 
 bool ManualRotateShooter::IsFinished() {
-	return false;
+	return IsTimedOut();
 }
 
 void ManualRotateShooter::End() {

@@ -17,11 +17,12 @@ private:
 	double initialYaw = 0.0;
 	double percentTurn = 0.0;
 	unsigned onCount = 0;
+	double timeout = 0;
 	bool absolute = false;
 	SensorManager *sensorManager = NULL;
 	MotorManager *motorManger = NULL;
 public:
-	ArcTurnToCamera(double speed, double percentTurn, bool absolute = false);
+	ArcTurnToCamera(double speed, double percentTurn, bool absolute = false, double timeout = 0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
