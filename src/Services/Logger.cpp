@@ -25,7 +25,6 @@ Logger::Logger() {
 	int i = 0;
 	while (!found) {
 		std::ifstream robotLog (logPre + "." + std::to_string(i));
-		std::cout << logPre + std::to_string(i) << std::endl;
 		doesItExist = robotLog.peek();
 		if(doesItExist == -1) {
 			found = true;
