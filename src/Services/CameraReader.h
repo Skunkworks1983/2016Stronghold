@@ -1,4 +1,4 @@
-#ifndef CAMERAREADER_H
+#ifndef CAMERA_READER_H
 #define CAMERA_READER_H
 
 #include <PIDSource.h>
