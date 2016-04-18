@@ -157,9 +157,9 @@ float Shooter::getRightShooterSpeed() {
 }
 
 float Shooter::getLeftShooterMotorPower() {
-	return MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_RIGHT_PORT)->talon->Get();
+	return -MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_RIGHT_PORT)->talon->Get();
 }
 
 float Shooter::getRightShooterMotorPower() {
-	return MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_LEFT_PORT)->talon->Get();
+	return -MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_LEFT_PORT)->talon->Get();
 }

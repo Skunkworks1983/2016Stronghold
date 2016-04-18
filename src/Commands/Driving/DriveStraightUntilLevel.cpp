@@ -9,7 +9,7 @@
 DriveStraightUntilLevel::DriveStraightUntilLevel(float distance, float speed) {
 	Requires(drivebase);
 	sensorManager = SensorManager::getSensorManager();
-	this->distance = ((distance / DISTANCE_NUMBER));
+	this->distance = ((distance / DRIVEBASE_FOOT_PER_TICK));
 	this->speed = speed;
 	initialYaw = 0.0;
 	initialPosition = 0.0;

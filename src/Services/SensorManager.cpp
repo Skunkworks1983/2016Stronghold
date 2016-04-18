@@ -130,17 +130,17 @@ float SensorManager::getYaw() {
 }
 
 float SensorManager::getPitch() {
-	if (ahrs != NULL) {
+	if (ahrs != NULL && ahrs->IsConnected() && !ahrs->IsCalibrating()) {
 		return ahrs->GetPitch();
 	}
-	return 0.0;
+	return GYRO_NOT_CONNECTED_VALUE;
 }
 
 float SensorManager::getRoll() {
-	if (ahrs != NULL) {
-		return ahrs->GetAngle();
+	if (ahrs != NULL && ahrs->IsConnected() && !ahrs->IsCalibrating()) {
+		return ahrs->GetRoll();
 	}
-	return 0.0;
+	return GYRO_NOT_CONNECTED_VALUE;
 }
 
 float SensorManager::GetAccelX() {

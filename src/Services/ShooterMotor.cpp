@@ -78,56 +78,18 @@ void ShooterMotor::PIDWrite(float output) {
 #endif
 }
 
-#define USE_STUPID_LOGIC 0
-
 double ShooterMotor::PIDGet() {
 #if USE_CAN_PID
 	return talon->GetSpeed();
 	//return talon->PIDGet();
 #else
 
-#if USE_STUPID_LOGIC
-
-	switch (side) {
-	case LEFT:
-		if (CommandBase::shooter->getLeftShooterSpeed() < 0 && lastSpeed > 0) {
-			//encoder speed has wrapped around add difference to approximate real value
-			lastSpeed += (lastSpeed
-					- fabs(CommandBase::shooter->getLeftShooterSpeed()));
-			return lastSpeed;
-		}
-		break;
-	case RIGHT:
-		if (CommandBase::shooter->getRightShooterSpeed() < 0 && lastSpeed > 0) {
-			lastSpeed += (lastSpeed
-					- fabs(CommandBase::shooter->getRightShooterSpeed()));
-			return lastSpeed;
-		}
-		break;
-	}
-#endif
-
 	switch (side) {
 	case LEFT:
 		lastSpeed = CommandBase::shooter->getLeftShooterSpeed();
-#if USE_STUPID_LOGIC
-		if (lastSpeed < .01
-				&& CommandBase::shooter->getRightShooterSpeed()
-						> CommandBase::shooter->getRight()->getSetpoint()
-								- 20) {
-			return CommandBase::shooter->getRightShooterSpeed();
-		}
-#endif
 		return CommandBase::shooter->getLeftShooterSpeed();
 	case RIGHT:
 		lastSpeed = CommandBase::shooter->getRightShooterSpeed();
-#if USE_STUPID_LOGIC
-		if (lastSpeed < .01
-				&& CommandBase::shooter->getLeftShooterSpeed()
-						> CommandBase::shooter->getLeft()->getSetpoint() - 20) {
-			return CommandBase::shooter->getLeftShooterSpeed();
-		}
-#endif
 		return CommandBase::shooter->getRightShooterSpeed();
 	}
 	return 0.0;
@@ -165,7 +127,7 @@ void ShooterMotor::Disable() {
 	controller->Disable();
 	oldOutput = 0.0;
 #endif
-	//CommandBase::shooter->setShooterSpeed(0.0);
+
 }
 
 void ShooterMotor::Enable() {

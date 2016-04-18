@@ -12,7 +12,7 @@ DriveForward::DriveForward(float distance, float speed) {
 	//ENCODER_TICKS_PER_REVOLUTION = 1000;//CHANGE
 	sensorManager = SensorManager::getSensorManager();
 	motorManager = MotorManager::getMotorManager();
-	this->distance = ((distance / DISTANCE_NUMBER));
+	this->distance = ((distance / DRIVEBASE_FOOT_PER_TICK));
 	this->speed = speed;
 	initialYaw = 0.0;
 	initialPosition = 0.0;

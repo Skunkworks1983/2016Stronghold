@@ -1,4 +1,5 @@
 #include <Commands/Autonomous/AutoBase.h>
+#include <Commands/Driving/IndexToOuterWorks.h>
 #include <Commands/GoAndScoreHighGoal.h>
 #include <Commands/HighGoalPosThree.h>
 #include <DigitalInput.h>
@@ -28,8 +29,8 @@ void AutoBase::readValues() {
 	readDIPSwitchedObstacle(&obstacle);
 	readDIPSwitchedPosition(&startPos);
 
-	//startPos = posOne;
-	//obstacle = Obstacle_rockwall;
+	startPos = three;
+	obstacle = Obstacle_ramparts;
 	goalPos = high;
 }
 
@@ -43,16 +44,16 @@ float AutoBase::getTurnAngle() {
 	case lowBar:
 		ret_val = 60;
 		break;
-	case posZero:
+	case two:
 		ret_val = 60;
 		break;
-	case posOne:
+	case three:
 		ret_val = 40;
 		break;
-	case posTwo:
+	case four:
 		ret_val = -10;
 		break;
-	case posThree:
+	case five:
 		ret_val = -60;
 		break;
 	}
@@ -72,16 +73,16 @@ float AutoBase::getSecondTurnAngle() {
 	case lowBar:
 		ret_val = 0.0;
 		break;
-	case posZero:
+	case two:
 		ret_val = 0;
 		break;
-	case posOne:
+	case three:
 		ret_val = -40;
 		break;
-	case posTwo:
+	case four:
 		ret_val = 10;
 		break;
-	case posThree:
+	case five:
 		ret_val = 0;
 		break;
 	}
@@ -96,14 +97,14 @@ float AutoBase::getFirstDistance() {
 	case spy:
 		return 0;
 	case lowBar:
-		return -5.25;
-	case posZero:
+		return -3.8;
+	case two:
 		return -8.5;
-	case posOne:
+	case three:
 		return 0;
-	case posTwo:
+	case four:
 		return 0;
-	case posThree:
+	case five:
 		return -8.5;
 	}
 	return 0;
@@ -115,13 +116,13 @@ float AutoBase::getMiddleDistance() {
 		return -0.0;
 	case lowBar:
 		return -2.0;
-	case posZero:
+	case two:
 		return -2.0;
-	case posOne:
+	case three:
 		return -1.0;
-	case posTwo:
+	case four:
 		return -2.0;
-	case posThree:
+	case five:
 		return -2.0;
 	}
 	return -2.0;
@@ -156,16 +157,16 @@ TurnData *AutoBase::getTurnData() {
 	case lowBar:
 		angle = 60;
 		break;
-	case posZero:
+	case two:
 		angle = 60;
 		break;
-	case posOne:
+	case three:
 		angle = 40;
 		break;
-	case posTwo:
+	case four:
 		angle = -5;
 		break;
-	case posThree:
+	case five:
 		angle = -50;
 		break;
 	}
@@ -181,16 +182,16 @@ TurnData *AutoBase::getTurnData() {
 	case lowBar:
 		power = -.7;
 		break;
-	case posZero:
+	case two:
 		power = -.7;
 		break;
-	case posOne:
+	case three:
 		power = -.5;
 		break;
-	case posTwo:
+	case four:
 		power = -.5;
 		break;
-	case posThree:
+	case five:
 		power = -.75;
 		break;
 	}
@@ -206,16 +207,16 @@ TurnData *AutoBase::getTurnData() {
 	case lowBar:
 		percentage = -.25;
 		break;
-	case posZero:
+	case two:
 		percentage = -.25;
 		break;
-	case posOne:
+	case three:
 		percentage = -0.5;
 		break;
-	case posTwo:
+	case four:
 		percentage = 0.2;
 		break;
-	case posThree:
+	case five:
 		percentage = -0.7;
 		break;
 	}
@@ -236,16 +237,16 @@ TurnData *AutoBase::getSecondTurnData() {
 	case lowBar:
 		angle = 0.0;
 		break;
-	case posZero:
+	case two:
 		angle = 0;
 		break;
-	case posOne:
+	case three:
 		angle = -30;
 		break;
-	case posTwo:
+	case four:
 		angle = 5;
 		break;
-	case posThree:
+	case five:
 		angle = 0;
 		break;
 	}
@@ -261,16 +262,16 @@ TurnData *AutoBase::getSecondTurnData() {
 	case lowBar:
 		power = -.5;
 		break;
-	case posZero:
+	case two:
 		power = -.5;
 		break;
-	case posOne:
+	case three:
 		power = -.5;
 		break;
-	case posTwo:
+	case four:
 		power = -.5;
 		break;
-	case posThree:
+	case five:
 		power = -.5;
 		break;
 	}
@@ -286,16 +287,16 @@ TurnData *AutoBase::getSecondTurnData() {
 	case lowBar:
 		percentage = 0.3;
 		break;
-	case posZero:
+	case two:
 		percentage = 0.3;
 		break;
-	case posOne:
+	case three:
 		percentage = -0.5;
 		break;
-	case posTwo:
+	case four:
 		percentage = 0.2;
 		break;
-	case posThree:
+	case five:
 		percentage = 0.3;
 		break;
 	}
@@ -340,8 +341,11 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		auto_base->AddSequential(AutoBase::doPortC());
 		break;
 	}
+
+	auto_base->AddSequential(new IndexToOuterWorks());
+
 	if (goalPos == eGoalPos::high && obstacle != BLANK) {
-		if (startPos == eStartPos::posThree) {
+		if (startPos == eStartPos::five) {
 			auto_base->AddSequential(new HighGoalPosThree());
 		} else {
 			auto_base->AddSequential(new GoAndScoreHighGoal());

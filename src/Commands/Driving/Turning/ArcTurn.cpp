@@ -8,10 +8,9 @@
 #include <TuningValues.h>
 #include <cmath>
 
-#define TURN_DEGREE_ESPSILON 2.0
-
 ArcTurn::ArcTurn(TurnData *d) {
 	targetDegrees = d->angle;
+	targetInput = targetDegrees;
 	speed = d->power;
 	percentTurn = d->percentage;
 	Requires(drivebase);
@@ -19,13 +18,19 @@ ArcTurn::ArcTurn(TurnData *d) {
 
 ArcTurn::ArcTurn(double targetDegrees, double speed, double percentTurn,
 bool absolute) :
-		targetDegrees(targetDegrees), speed(speed), percentTurn(percentTurn), absolute(
+		targetDegrees(-targetDegrees), speed(speed), percentTurn(percentTurn), absolute(
 				absolute) {
 	Requires(drivebase);
+	targetInput = this->targetDegrees;
 }
 
 // Called just before this Command runs the first time
 void ArcTurn::Initialize() {
+	if (targetDegrees == 0.0) {
+		targetDegrees = .001;	//LOLOL
+		targetInput = .001;
+	}
+
 	motorManger = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
 
@@ -53,87 +58,64 @@ void ArcTurn::Initialize() {
 	}
 
 	LOG_INFO("ArcTurn starting with target %f speed %f yaw %f", targetDegrees,
-			speed, sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet());
+			speed, initialYaw);
 
 }
 
 // Called repeatedly when this Command is scheduled to run
 void ArcTurn::Execute() {
-	double leftEncoder =
-			fabs(
-					sensorManager->getSensor(SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-	double rightEncoder =
-			fabs(
-					sensorManager->getSensor(SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
-	double error = yaw - targetDegrees;
+	double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 
-	if (error < -180.0) {
-		error += 360.0;
-	} else if (error > 180.0) {
-		error -= 360.0;
-	}
+	LOG_INFO("target %f yaw %f speed %f", targetDegrees, yaw, speed);
 
-	const double P = 1 / 90;
-
-	//speed -= error * P;
-
-	LOG_INFO("target %f error %f yaw %f speed %f", targetDegrees, yaw, error, speed);
-
-	if (error > 0) {
-		drivebase->setLeftSpeed(speed);
-		drivebase->setRightSpeed(speed * percentTurn);
+	if (targetInput > 0) {
+		if (speed > 0) {
+			drivebase->setLeftSpeed(speed);
+			drivebase->setRightSpeed(speed * percentTurn);
+		} else {
+			drivebase->setLeftSpeed(speed * percentTurn);
+			drivebase->setRightSpeed(speed);
+		}
 	} else {
-		drivebase->setLeftSpeed(speed * percentTurn);
-		drivebase->setRightSpeed(speed);
+		if (speed > 0) {
+			drivebase->setLeftSpeed(speed * percentTurn);
+			drivebase->setRightSpeed(speed);
+		} else {
+			drivebase->setLeftSpeed(speed);
+			drivebase->setRightSpeed(speed * percentTurn);
+		}
 	}
-
 }
 
 // Make this return true when this Command no longer needs to run execute()
 bool ArcTurn::IsFinished() {
-	/*double leftEncoder = fabs(sensorManager->getSensor(
-	 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-	 double rightEncoder = fabs(sensorManager->getSensor(
-	 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+	double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 
-	 const bool leftPast = fabs(leftEncoder - initialLeft) > leftDist;
-	 const bool rightPast = fabs(rightEncoder - initialRight) > rightDist;
+	LOG_INFO("IsFinished Yaw %f Target %f", yaw, targetDegrees);
 
-
-	 return leftPast && rightPast;*/
-
-	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
-
-	double angle_traveled = yaw - initialYaw;
-
-	if (angle_traveled < -180.0) {
-		angle_traveled += 360.0;
-	} else if (angle_traveled > 180.0) {
-		angle_traveled -= 360.0;
-	}
-
-	double targetDiff = targetDegrees - initialYaw;
-	if (targetDiff < -180.0) {
-		targetDiff += 360.0;
-	} else if (targetDiff > 180.0) {
-		targetDiff -= 360.0;
-	}
-
-	return fabs(angle_traveled) > fabs(targetDiff);
-
-	if (targetDegrees > 0) {
-		return yaw > targetDegrees;
+	if (targetInput < 0) {
+		if (speed < 0) {
+			return yaw < targetDegrees
+					&& (yaw / fabs(yaw))
+							== (targetDegrees / fabs(targetDegrees));
+		} else {
+			return yaw < targetDegrees
+					&& (yaw / fabs(yaw))
+							== (targetDegrees / fabs(targetDegrees));
+		}
 	} else {
-		return yaw < targetDegrees;
+		if (speed < 0) {
+			return yaw > targetDegrees
+					&& (yaw / fabs(yaw))
+							== (targetDegrees / fabs(targetDegrees));
+		} else {
+			return yaw > targetDegrees
+					&& (yaw / fabs(yaw))
+							== (targetDegrees / fabs(targetDegrees));
+		}
 	}
 
-	if (fabs(yaw - targetDegrees) < TURN_DEGREE_ESPSILON) {
-		onCount++;
-	} else {
-		onCount = 0;
-	}
-	return onCount > 20;
+	return false;
 }
 
 // Called once after isFinished returns true

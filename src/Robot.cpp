@@ -1,4 +1,6 @@
+#include <CameraServer.h>
 #include <Commands/Autonomous/AutoBase.h>
+#include <Commands/Driving/Turning/ArcTurn.h>
 #include <Commands/Power/StallProtection.h>
 #include <Commands/Scheduler.h>
 #include <Robot.h>
@@ -9,7 +11,6 @@
 #include <Services/SensorManager.h>
 #include <Services/ShooterMotor.h>
 #include <SmartDashboard/SmartDashboard.h>
-#include <Subsystems/Drivebase.h>
 #include <Subsystems/Shooter.h>
 #include <TuningValues.h>
 #include <Utility.h>
@@ -23,7 +24,6 @@ void Robot::RobotInit() {
 	LOG_INFO("RobotInit Called");
 	motorManager = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
-	//FollowerHandler::getInstance()->startup();
 
 	MotorManager::getMotorManager()->initPIDS();
 
@@ -37,7 +37,13 @@ void Robot::RobotInit() {
 	StallProtection *stall = new StallProtection();
 	stall->Start();
 
-	//cmd = AutoBase::doLowBarandScore();
+	//CameraServer::GetInstance()->SetQuality(50);
+	//std::shared_ptr<USBCamera> camera(new USBCamera("cam0", false));
+
+	//camera->SetBrightness(50);
+	//camera->SetExposureManual(50);
+
+	//CameraServer::GetInstance()->StartAutomaticCapture("cam0");
 
 	SmartDashboard::PutNumber("leftSpeed",
 			CommandBase::shooter->getLeft()->PIDGet());
@@ -61,16 +67,21 @@ void Robot::DisabledPeriodic() {
 }
 
 void Robot::AutonomousInit() {
-	CommandBase::drivebase->setDriverControl(false);
 	Scheduler::GetInstance()->RemoveAll();
 	LOG_INFO("AutonomousInit Called");
-	//turnDegree->Start();
+
 	SensorManager::getSensorManager()->ZeroYaw();
 	AutoBase::readValues();
+
 	cmd = AutoBase::getSelectedAuto();
-	//cmd = AutoBase::doRoughT();
 
 	cmd->Start();
+
+	//ArcTurn *turn = new ArcTurn(-90, -.75, -.5);
+	//turn->Start();
+
+	//GoToBatter *gotoBatter = new GoToBatter(eStartPos::four);
+	//gotoBatter->Start();
 
 	oldTime = GetFPGATime();
 	autoStart = GetFPGATime();
@@ -78,25 +89,11 @@ void Robot::AutonomousInit() {
 
 void Robot::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
-	//LOG_INFO("Autonomous TimeDiff = %ud", GetFPGATime() - oldTime);
 
 	oldTime = GetFPGATime();
-
-	//CommandBase::shooter->setShooterSpeed(1.0);
-	//CommandBase::shooter->setRightShooterSpeed(.3);
-
-	/*double left = SensorManager::getSensorManager()->getSensor(
-	 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet();
-	 double right = SensorManager::getSensorManager()->getSensor(
-	 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
-
-	 LOG_DEBUG("LeftEncoder %f, RightEncoder %f", left, right);*/
-
-	//SmartDashboard::PutNumber("AbsoluteRollerEncoder", Sensor);
 }
 
 void Robot::TeleopInit() {
-	CommandBase::drivebase->setDriverControl(true);
 	Scheduler::GetInstance()->RemoveAll();
 	LOG_INFO("TeleOp Called");
 	teleStart = GetFPGATime();
@@ -105,6 +102,13 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
+
+	//LOG_INFO("Gyro %f",	SensorManager::getSensorManager()->getSensor(SENSOR_GYRO_ID)->PIDGet());
+
+//	LOG_INFO("Yaw %f Roll %f Pitch %f",
+//			SensorManager::getSensorManager()->getYaw(),
+//			SensorManager::getSensorManager()->getRoll(),
+//			SensorManager::getSensorManager()->getPitch());
 }
 
 void Robot::TestPeriodic() {

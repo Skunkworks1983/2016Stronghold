@@ -36,7 +36,7 @@ Sensor::Sensor(unsigned CANTalonEncoderPort, float lowRange, float highRange,
 	if (motor != NULL) {
 		LOG_INFO("Created Sensor with talon on ID %d", CANTalonEncoderPort);
 		this->talon = motor->talon;
-		talon->SetEncPosition(0);
+		//talon->SetEncPosition(0);
 		talon->SetPosition(0);
 		if (talon->IsSensorPresent(CANTalon::FeedbackDevice::AnalogEncoder)) {
 			LOG_INFO("Talon port %u has AnalogEncoder", CANTalonEncoderPort);

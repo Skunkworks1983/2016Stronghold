@@ -2,7 +2,7 @@
 #define ROBOTMAP_H
 
 #define ROBOT_NAME "VanillaThunder"
-#define PRACTICEBOT 0
+#define PRACTICEBOT 1
 
 #include "TuningValues.h"
 
@@ -185,7 +185,7 @@
 #define LOWBAR_SPEED 1
 
 #define TICKS_REVOLUTION 360
-#define DISTANCE_NUMBER 0.0025
+#define DRIVEBASE_FOOT_PER_TICK 0.0025
 
 #define DEBUG false
 

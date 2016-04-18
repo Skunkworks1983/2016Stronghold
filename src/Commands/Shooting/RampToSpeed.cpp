@@ -1,10 +1,12 @@
 #include <Commands/Shooting/RampToSpeed.h>
-#include <Services/Logger.h>
-#include <Subsystems/Shooter.h>
-#include <cstdio>
+#include <Robot.h>
 #include <RobotMap.h>
+#include <SmartDashboard/SmartDashboard.h>
+#include <Subsystems/Shooter.h>
+#include <Utility.h>
+#include <cmath>
 
-#define SCALING_CONSTANT .5
+#define SCALING_CONSTANT .05
 
 RampToSpeed::RampToSpeed(double targetSpeed, double timeout) :
 		targetSpeed(targetSpeed) {
@@ -29,21 +31,25 @@ void RampToSpeed::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void RampToSpeed::Execute() {
+	SmartDashboard::PutNumber("Left", shooter->getLeftShooterSpeed());
+	SmartDashboard::PutNumber("Right", shooter->getRightShooterSpeed());
+	SmartDashboard::PutNumber("Time", GetFPGATime() - Robot::getTeleStartTime());
+
 	if (fabs(realSpeed) < fabs(targetSpeed)) {
 		//realSpeed *= (1.0 + SCALING_CONSTANT);
 		if (targetSpeed < 0) {
-			realSpeed -= 0.05;
+			realSpeed -= SCALING_CONSTANT;
 		} else if (targetSpeed > 0) {
-			realSpeed += 0.05;
+			realSpeed += SCALING_CONSTANT;
 		} else {
 			realSpeed = 0;
 		}
 	} else {
 		realSpeed = targetSpeed;
 	}
-	shooter->setShooterSpeed(targetSpeed);
+	shooter->setShooterSpeed(realSpeed);
 
-	LOG_INFO("RAMPING target %f leftSpeed %f rightSpeed %f givenSpeed %f",
+	LOG_INFO("RAMPING target %f givenSpeed %f leftSpeed %f rightSpeed %f",
 			targetSpeed, shooter->getLeftShooterSpeed(),
 			shooter->getRightShooterSpeed(), realSpeed);
 }

@@ -38,9 +38,13 @@ void PIDShot::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void PIDShot::Execute() {
-	SmartDashboard::PutNumber("leftSpeed", shooter->getLeft()->PIDGet());
-	SmartDashboard::PutNumber("rightSpeed", shooter->getRight()->PIDGet());
+	SmartDashboard::PutNumber("Left", shooter->getLeft()->PIDGet());
+	SmartDashboard::PutNumber("Right", shooter->getRight()->PIDGet());
 	SmartDashboard::PutNumber("time", GetFPGATime());
+
+	SmartDashboard::PutNumber("leftPower", shooter->getLeftShooterMotorPower());
+	SmartDashboard::PutNumber("rightPower", shooter->getRightShooterMotorPower());
+
 
 	const double leftDiff = fabs(shooter->getLeft()->PIDGet() - leftSpeed);
 	const bool leftOnTarget = leftDiff < SHOT_TOLERANCE;

@@ -9,7 +9,7 @@
 DriveForwardStraight::DriveForwardStraight(float distance, float speed, double timeout) : timeout(timeout) {
 	Requires(drivebase);
 	sensorManager = SensorManager::getSensorManager();
-	this->distance = ((distance / DISTANCE_NUMBER));
+	this->distance = ((distance / DRIVEBASE_FOOT_PER_TICK));
 	this->speed = speed;
 	initialYaw = 0.0;
 	initialPosition = 0.0;

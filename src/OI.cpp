@@ -12,6 +12,7 @@
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/IndexBall.h>
 #include <Commands/Shooting/PIDShot.h>
+#include <Commands/Shooting/RampToSpeed.h>
 #include <OI.h>
 #include <Subsystems/Shooter.h>
 #include <cmath>
@@ -139,11 +140,15 @@ void OI::registerButtonListeners() {
 	lowArm->WhenPressed(new IndexBall());	//no need for this at the moment
 	shooterPass->WhenPressed(new RotateShooter(c60));
 
-	const double shot_speed = 70.0;
+	const double shot_speed = 85.0;
 
+	//highArm->WhileHeld(new PIDShot(70.0, 70.0));	//good one	//one inch spacer
 	highArm->WhileHeld(new PIDShot(shot_speed, shot_speed));
 	highArmPosition1->WhileHeld(new PIDShot(shot_speed - 3, shot_speed - 3));
-	highArmPosition2->WhileHeld(new PIDShot(shot_speed + 3, shot_speed + 3));
+	//highArmPosition2->WhileHeld(new PIDShot(shot_speed + 3, shot_speed + 3));
+	//highArmPosition2->WhileHeld(new RampToSpeed(1.0, 10.0));
+	//highArmPosition2->WhileHeld(new PIDShot(100.0, 100.0));
+
 	highFire->WhileHeld(new RunCollector(Shooter::KForward, 1.0));
 	//highAimPosition1;
 	highLineUp->WhenPressed(new ResetShooterRotationEncoder());

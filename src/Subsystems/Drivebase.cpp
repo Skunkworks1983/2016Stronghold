@@ -15,21 +15,27 @@ Drivebase::~Drivebase() {
 
 }
 
+void Drivebase::setBrakeMode(bool brake) {
+	MotorManager::getMotorManager()->getMotor(
+	DRIVEBASE_LEFTMOTOR_1_PORT)->setBrakeMode(brake);
+	MotorManager::getMotorManager()->getMotor(
+	DRIVEBASE_LEFTMOTOR_2_PORT)->setBrakeMode(brake);
+	MotorManager::getMotorManager()->getMotor(
+	DRIVEBASE_LEFTMOTOR_3_PORT)->setBrakeMode(brake);
+	MotorManager::getMotorManager()->getMotor(
+	DRIVEBASE_RIGHTMOTOR_1_PORT)->setBrakeMode(brake);
+	MotorManager::getMotorManager()->getMotor(
+	DRIVEBASE_RIGHTMOTOR_2_PORT)->setBrakeMode(brake);
+	MotorManager::getMotorManager()->getMotor(
+	DRIVEBASE_RIGHTMOTOR_3_PORT)->setBrakeMode(brake);
+}
+
 void Drivebase::InitDefaultCommand() {
 	SetDefaultCommand(new TankDrive());
 }
 
 void Drivebase::resetEncoder() {
 
-}
-
-void Drivebase::setDriverControl(bool state){
-	//LOG_INFO("SetDriverControl to %u", state);
-	driverControl = state;
-}
-bool Drivebase::isDriverControl(){
-	//LOG_DEBUG("Returning driverControl %u", driverControl);
-	return driverControl;
 }
 
 //only use if you know what you are doing

@@ -4,6 +4,7 @@
 #include <RobotMap.h>
 #include <Services/CameraReader.h>
 #include <cstdbool>
+#include <cmath>
 #include <iostream>
 
 static const int imageWidth = 640;
@@ -80,26 +81,31 @@ void *CameraReader::update(void *d) {
 	while (true) {
 		Message msg;
 
-		if(camera_reader->tele){
-			break;
+		if (camera_reader->tele) {
+			//break;	//TODO: remove this
 		}
 
+		int len = recv(camera_reader->mysocket, (char *) &msg, sizeof(msg), 0);
+
 		camera_reader->mutex->lock();
-		camera_reader->len = recv(camera_reader->mysocket, (char *) &msg,
-				sizeof(msg), 0);
+
 		if (msg.posX1 != INVALID) {
 			camera_reader->lastLeftX = 2
 					* ((float) msg.posX1 / (float) imageWidth) - 1;
-			camera_reader->lastLeftY = 2
-					* ((float) msg.posY1 / (float) imageHeight) - 1;
+			camera_reader->lastLeftY =
+					((float) msg.posY1 / (float) imageHeight);
+		}
+		if (msg.posX2 != INVALID) {
+
 			camera_reader->lastMidX = 2
 					* ((float) msg.posY2 / (float) imageWidth) - 1;
-			camera_reader->lastMidY = 2
-					* ((float) msg.posY2 / (float) imageHeight) - 1;
+			camera_reader->lastMidY = ((float) msg.posY2 / (float) imageHeight);
+		}
+		if (msg.posX3 != INVALID) {
 			camera_reader->lastRightX = 2
 					* ((float) msg.posY3 / (float) imageWidth) - 1;
-			camera_reader->lastRightY = 2
-					* ((float) msg.posY3 / (float) imageHeight) - 1;
+			camera_reader->lastRightY =
+					((float) msg.posY3 / (float) imageHeight);
 		}
 		camera_reader->mutex->unlock();
 	}
@@ -168,3 +174,38 @@ double CameraReader::PIDGet() {
 	return 0.0;
 }
 
+double CameraReader::getXAngle() {
+	if (getLastLeftX() != INVALID) {
+		double angle = getLastLeftX() * (53.5 / 2);	//raspberry pi cam horizontal FOV
+		return angle;
+	} else {
+		return INVALID;
+	}
+}
+
+double CameraReader::getCorrectedXAngle(double distance) {
+	if (getLastLeftX() != INVALID) {
+		double pixelX = (((atan(7 / distance) * M_PI) / 180.0) / 53.5)
+				+ getLastLeftX();
+		double angle = pixelX * (53.5 / 2);	//raspberry pi cam horizontal FOV
+
+		return angle;
+	} else {
+		return INVALID;
+	}
+}
+
+double CameraReader::getCorrectedXAngle(){
+	double dist = 81 / tan(M_PI * (getYAngle() / 180.0));
+
+	return getCorrectedXAngle(dist);
+}
+
+double CameraReader::getYAngle() {
+	if (getLastLeftY() != INVALID) {
+		const double angle = (((double) (1 - getLastLeftY())) * 41.41) + 28.46;
+		return angle;
+	} else {
+		return INVALID;
+	}
+}
