@@ -22,6 +22,8 @@ DriveForwardStraight::~DriveForwardStraight() {
 }
 
 void DriveForwardStraight::Initialize() {
+	SensorManager::getSensorManager()->ZeroYaw();
+
 	if(timeout > 0){
 		SetTimeout(timeout);
 	}
@@ -81,6 +83,8 @@ bool DriveForwardStraight::IsFinished() {
 void DriveForwardStraight::End() {
 	drivebase->setLeftSpeed(0);
 	drivebase->setRightSpeed(0);
+
+	SensorManager::getSensorManager()->ZeroYaw();
 }
 
 void DriveForwardStraight::Interrupted() {

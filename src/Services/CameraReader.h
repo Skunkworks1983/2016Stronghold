@@ -32,12 +32,19 @@ private:
 	static CameraReader *reader;
 	bool reading = false;
 	bool ballInShooter = false;
+
 	float lastLeftX = INVALID;
 	float lastLeftY = INVALID;
+	unsigned lastLeftWidth = INVALID;
+
 	float lastMidX = INVALID;
 	float lastMidY = INVALID;
+	unsigned lastMidWidth = INVALID;
+
 	float lastRightX = INVALID;
 	float lastRightY = INVALID;
+	unsigned lastRightWidth = INVALID;
+
 	pthread_t thread;
 	CameraMode currentMode = LEFTGOAL;
 
@@ -58,6 +65,10 @@ public:
 	float getLastRightX();
 	float getLastRightY();
 
+	unsigned getLastLeftWidth();
+	unsigned getLastMidWidth();
+	unsigned getLastRightWidth();
+
 	bool tele = false;
 
 	bool isLastInvalid();
@@ -68,6 +79,9 @@ public:
 	double getCorrectedXAngle(double distance);
 	double getCorrectedXAngle();
 	double getYAngle();
+
+	double getExpectedWidth();
+	unsigned getTargetSide();
 
 	double PIDGet();
 };

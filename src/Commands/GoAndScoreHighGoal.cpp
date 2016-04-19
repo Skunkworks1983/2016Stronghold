@@ -28,7 +28,7 @@ GoAndScoreHighGoal::GoAndScoreHighGoal() {
 	AddSequential(new DriveForwardStraight(-.75, -.3));
 	AddSequential(new ArcTurnToCamera(-.50, -.1, 1.5));
 
-	const double shot_speed = 70.0;
+	const double shot_speed = 85.0;
 
 	AddSequential(new DriveForwardStraight(-8.5, -.3, 1.0));
 	AddParallel(new RotateShooter(ShooterPosition::cTOP));

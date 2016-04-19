@@ -20,8 +20,9 @@ private:
 	double adjacentInitialLeft = 0;
 	double adjacentInitialRight = 0;
 	double distance_adjacent = 0;
+	double adjacentInitialYaw = 0;
 public:
-	GoToBatter(eStartPos startPos);
+	GoToBatter();
 	void Initialize();
 	void Execute();
 	bool IsFinished();

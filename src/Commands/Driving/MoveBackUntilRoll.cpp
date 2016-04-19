@@ -3,9 +3,9 @@
 #include <Subsystems/Drivebase.h>
 #include <RobotMap.h>
 
-#define ON_ANGLE -3
+#define ON_ANGLE -3.5
 
-MoveBackUntilRoll::MoveBackUntilRoll()
+MoveBackUntilRoll::MoveBackUntilRoll(double timeout) : timeout(timeout)
 {
 	Requires(drivebase);
 }
@@ -15,6 +15,9 @@ void MoveBackUntilRoll::Initialize()
 {
 	drivebase->setLeftSpeed(.3);
 	drivebase->setRightSpeed(.3);
+	if(timeout > 0){
+		SetTimeout(timeout);
+	}
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -32,7 +35,7 @@ bool MoveBackUntilRoll::IsFinished()
 	}else{
 		count = 0;
 	}
-	return count > 10;
+	return count > 20 || IsTimedOut();
 }
 
 // Called once after isFinished returns true

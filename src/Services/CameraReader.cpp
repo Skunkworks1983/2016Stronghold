@@ -62,11 +62,36 @@ void CameraReader::startReading() {
 	reading = true;
 	lastLeftX = 0;
 	lastLeftY = 0;
+	lastLeftWidth = 0;
+
 	lastMidX = 0;
 	lastMidY = 0;
+	lastMidWidth = 0;
+
 	lastRightX = 0;
 	lastRightY = 0;
+	lastRightWidth = 0;
+}
 
+unsigned CameraReader::getLastLeftWidth() {
+	mutex->lock();
+	float tempLast = lastLeftWidth;
+	mutex->unlock();
+	return tempLast;
+}
+
+unsigned CameraReader::getLastMidWidth() {
+	mutex->lock();
+	float tempLast = lastMidWidth;
+	mutex->unlock();
+	return tempLast;
+}
+
+unsigned CameraReader::getLastRightWidth() {
+	mutex->lock();
+	float tempLast = lastRightWidth;
+	mutex->unlock();
+	return tempLast;
 }
 
 void CameraReader::stopReading() {
@@ -94,19 +119,35 @@ void *CameraReader::update(void *d) {
 					* ((float) msg.posX1 / (float) imageWidth) - 1;
 			camera_reader->lastLeftY =
 					((float) msg.posY1 / (float) imageHeight);
+			camera_reader->lastLeftWidth = msg.width1;
+		}else{
+			camera_reader->lastLeftX = INVALID;
+			camera_reader->lastLeftY = INVALID;
+			camera_reader->lastLeftWidth = INVALID;
 		}
 		if (msg.posX2 != INVALID) {
 
 			camera_reader->lastMidX = 2
 					* ((float) msg.posY2 / (float) imageWidth) - 1;
 			camera_reader->lastMidY = ((float) msg.posY2 / (float) imageHeight);
+			camera_reader->lastMidWidth = msg.width2;
+		}else{
+			camera_reader->lastMidX = INVALID;
+			camera_reader->lastMidY = INVALID;
+			camera_reader->lastMidWidth = INVALID;
 		}
 		if (msg.posX3 != INVALID) {
 			camera_reader->lastRightX = 2
 					* ((float) msg.posY3 / (float) imageWidth) - 1;
 			camera_reader->lastRightY =
 					((float) msg.posY3 / (float) imageHeight);
+			camera_reader->lastRightWidth = msg.width3;
+		}else{
+			camera_reader->lastRightX = INVALID;
+			camera_reader->lastRightY = INVALID;
+			camera_reader->lastRightWidth = INVALID;
 		}
+
 		camera_reader->mutex->unlock();
 	}
 #endif
@@ -195,7 +236,7 @@ double CameraReader::getCorrectedXAngle(double distance) {
 	}
 }
 
-double CameraReader::getCorrectedXAngle(){
+double CameraReader::getCorrectedXAngle() {
 	double dist = 81 / tan(M_PI * (getYAngle() / 180.0));
 
 	return getCorrectedXAngle(dist);
@@ -208,4 +249,8 @@ double CameraReader::getYAngle() {
 	} else {
 		return INVALID;
 	}
+}
+
+double CameraReader::getExpectedWidth(){
+	return 0;	//TODO: fix
 }

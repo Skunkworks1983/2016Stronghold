@@ -1,6 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/IndexToOuterWorks.h>
-#include <Commands/GoAndScoreHighGoal.h>
+#include <Commands/GoAndScoreHighGoal2.h>
 #include <Commands/HighGoalPosThree.h>
 #include <DigitalInput.h>
 #include <RobotMap.h>
@@ -29,9 +29,71 @@ void AutoBase::readValues() {
 	readDIPSwitchedObstacle(&obstacle);
 	readDIPSwitchedPosition(&startPos);
 
-	startPos = three;
-	obstacle = Obstacle_ramparts;
+	startPos = four;
+	obstacle = Obstacle_cheval;
 	goalPos = high;
+}
+
+AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
+		eGoalPos goalPos) {
+	AutoBase *auto_base = new AutoBase("SelectedAuto");
+
+	switch (obstacle) {
+	case BLANK:
+		return auto_base;
+	case Obstacle_lowbar:
+		auto_base->AddSequential(AutoBase::doLowB());
+		break;
+
+	case Obstacle_cheval:
+		auto_base->AddSequential(AutoBase::doCheval());
+		break;
+
+	case Obstacle_moat:
+		auto_base->AddSequential(AutoBase::doMoat());
+		break;
+
+	case Obstacle_rough:
+		auto_base->AddSequential(AutoBase::doRoughT());
+		break;
+
+	case Obstacle_ramparts:
+		auto_base->AddSequential(AutoBase::doRamP());
+		break;
+
+	case Obstacle_rockwall:
+		auto_base->AddSequential(AutoBase::doRockW());
+		break;
+
+	case Obstacle_portcullis:
+		auto_base->AddSequential(AutoBase::doPortC());
+		break;
+	}
+
+	auto_base->AddSequential(new IndexToOuterWorks());
+
+	if (goalPos == eGoalPos::high && obstacle != BLANK) {
+		if (startPos == eStartPos::five) {
+			auto_base->AddSequential(new HighGoalPosThree());
+		} else {
+			auto_base->AddSequential(new GoAndScoreHighGoal2());
+			//auto_base->AddSequential(new GoAndScoreHighGoal());
+		}
+	}
+
+	return auto_base;
+}
+
+AutoBase * AutoBase::getSelectedAuto() {
+	return createSelectedAuto(obstacle, startPos, goalPos);
+}
+
+eStartPos AutoBase::getStartPos(){
+	return startPos;
+}
+
+eObstacle AutoBase::getObstacle(){
+	return obstacle;
 }
 
 float AutoBase::getTurnAngle() {
@@ -306,58 +368,7 @@ TurnData *AutoBase::getSecondTurnData() {
 	return d;
 }
 
-AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
-		eGoalPos goalPos) {
-	AutoBase *auto_base = new AutoBase("SelectedAuto");
 
-	switch (obstacle) {
-	case BLANK:
-		return auto_base;
-	case Obstacle_lowbar:
-		auto_base->AddSequential(AutoBase::doLowB());
-		break;
-
-	case Obstacle_cheval:
-		auto_base->AddSequential(AutoBase::doCheval());
-		break;
-
-	case Obstacle_moat:
-		auto_base->AddSequential(AutoBase::doMoat());
-		break;
-
-	case Obstacle_rough:
-		auto_base->AddSequential(AutoBase::doRoughT());
-		break;
-
-	case Obstacle_ramparts:
-		auto_base->AddSequential(AutoBase::doRamP());
-		break;
-
-	case Obstacle_rockwall:
-		auto_base->AddSequential(AutoBase::doRockW());
-		break;
-
-	case Obstacle_portcullis:
-		auto_base->AddSequential(AutoBase::doPortC());
-		break;
-	}
-
-	auto_base->AddSequential(new IndexToOuterWorks());
-
-	if (goalPos == eGoalPos::high && obstacle != BLANK) {
-		if (startPos == eStartPos::five) {
-			auto_base->AddSequential(new HighGoalPosThree());
-		} else {
-			auto_base->AddSequential(new GoAndScoreHighGoal());
-		}
-	}
-
-	return auto_base;
-}
-
-AutoBase * AutoBase::getSelectedAuto() {
-	return createSelectedAuto(obstacle, startPos, goalPos);
-}
 
 void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
 	LOG_INFO("Read Switched Obstacle start");

@@ -7,17 +7,17 @@
 #include <TuningValues.h>
 #include <cmath>
 
-#define TURN_BOUND_LEFT -75
-#define TURN_BOUND_RIGHT 75
+#define TURN_BOUND_LEFT -60
+#define TURN_BOUND_RIGHT 60
 
 #define GO_STRAIGHT_TOLERANCE 6
 
 #define TURN_SPEED .7
-#define TURN_PERCENTAGE TURN_SPEED
+#define TURN_PERCENTAGE -.75
 #define MOVE_TOWARD_SPEED .3
 #define MOVE_TOWARD_PERCENT .5
 
-GoToBatter::GoToBatter(eStartPos startPos) :
+GoToBatter::GoToBatter() :
 		startPos(startPos) {
 	Requires(drivebase);
 	reader = CameraReader::getCameraReader();
@@ -25,6 +25,9 @@ GoToBatter::GoToBatter(eStartPos startPos) :
 
 // Called just before this Command runs the first time
 void GoToBatter::Initialize() {
+	SensorManager::getSensorManager()->ZeroYaw();
+	startPos = AutoBase::getStartPos();
+
 	switch(startPos){
 	case lowBar:
 		break;
@@ -46,8 +49,7 @@ void GoToBatter::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void GoToBatter::Execute() {
-	const double gyro_angle = SensorManager::getSensorManager()->getSensor(
-	SENSOR_GYRO_ID)->PIDGet();
+	const double gyro_angle = SensorManager::getSensorManager()->getYaw();
 	const double camera_angle = reader->getXAngle();
 
 	//magic numbers galore
@@ -88,6 +90,8 @@ void GoToBatter::Execute() {
 		if (fabs(distance_adjacent) > GO_STRAIGHT_TOLERANCE) {
 
 			state = TurningToAdjacent;
+			adjacentInitialYaw = gyro_angle;
+			LOG_INFO("Setting adjacentInitialYaw to %f", gyro_angle);
 		} else {
 			LOG_INFO(
 					"Angle %f is less than tolerance %d so going to move straight",
@@ -127,6 +131,7 @@ void GoToBatter::Execute() {
 			state = MovingAdjacent;
 			adjacentInitialLeft = left_encoder;
 			adjacentInitialRight = right_encoder;
+
 			LOG_INFO("InitialLeft %f InitialRight %f set", adjacentInitialLeft,
 					adjacentInitialRight);
 		}
@@ -142,7 +147,7 @@ void GoToBatter::Execute() {
 			drivebase->setLeftSpeed(TURN_SPEED);
 			drivebase->setRightSpeed(-TURN_SPEED);
 		}
-		if (fabs(gyro_angle) < 5) {
+		if (fabs(adjacentInitialYaw - gyro_angle) > 90) {
 			drivebase->setLeftSpeed(0);
 			drivebase->setRightSpeed(0);
 			state = MovingToward;
@@ -159,6 +164,7 @@ void GoToBatter::Execute() {
 		;
 
 		if (reader->getLastLeftX() != INVALID) {
+			LOG_INFO("Target Found at %f", reader->getLastLeftX());
 			state = JustNowFound;
 			break;
 		} else {
@@ -174,6 +180,7 @@ void GoToBatter::Execute() {
 		;
 
 		if (reader->getLastLeftX() != INVALID) {
+			LOG_INFO("Target Found at %f", reader->getLastLeftX());
 			state = JustNowFound;
 			break;
 		} else {
@@ -214,6 +221,7 @@ bool GoToBatter::IsFinished() {
 void GoToBatter::End() {
 	drivebase->setLeftSpeed(0.0);
 	drivebase->setRightSpeed(0.0);
+	SensorManager::getSensorManager()->ZeroYaw();
 }
 
 // Called when another command which requires one or more of the same

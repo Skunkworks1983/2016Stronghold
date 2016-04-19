@@ -70,14 +70,20 @@ void Robot::AutonomousInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	LOG_INFO("AutonomousInit Called");
 
-	SensorManager::getSensorManager()->ZeroYaw();
+	//actually reset the gyro
+	SensorManager::getSensorManager()->getGyro()->ZeroYaw();
+	SensorManager::getSensorManager()->getGyro()->Reset();
 	AutoBase::readValues();
+
+
+	CommandBase::drivebase->setBrakeMode(true);
 
 	cmd = AutoBase::getSelectedAuto();
 
 	cmd->Start();
 
-	//ArcTurn *turn = new ArcTurn(-90, -.75, -.5);
+
+	//ArcTurn *turn = new ArcTurn(90, .75, -.5);
 	//turn->Start();
 
 	//GoToBatter *gotoBatter = new GoToBatter(eStartPos::four);
@@ -98,6 +104,7 @@ void Robot::TeleopInit() {
 	LOG_INFO("TeleOp Called");
 	teleStart = GetFPGATime();
 	CameraReader::getCameraReader()->tele = true;
+	CommandBase::drivebase->setBrakeMode(false);
 }
 
 void Robot::TeleopPeriodic() {

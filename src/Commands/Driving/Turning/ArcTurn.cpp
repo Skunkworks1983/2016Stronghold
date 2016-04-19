@@ -12,6 +12,7 @@ ArcTurn::ArcTurn(TurnData *d) {
 	targetDegrees = d->angle;
 	targetInput = targetDegrees;
 	speed = d->power;
+	originalSpeed = speed;
 	percentTurn = d->percentage;
 	Requires(drivebase);
 }
@@ -22,14 +23,12 @@ bool absolute) :
 				absolute) {
 	Requires(drivebase);
 	targetInput = this->targetDegrees;
+	originalSpeed = speed;
 }
 
 // Called just before this Command runs the first time
 void ArcTurn::Initialize() {
-	if (targetDegrees == 0.0) {
-		targetDegrees = .001;	//LOLOL
-		targetInput = .001;
-	}
+	SensorManager::getSensorManager()->ZeroYaw();
 
 	motorManger = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
@@ -39,21 +38,16 @@ void ArcTurn::Initialize() {
 	initialRight = fabs(sensorManager->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	initialYaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+	initialYaw = sensorManager->getYaw();
 
 	if (!absolute) {
-		if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet() + targetDegrees
-				> 180.0) {
-			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
-			targetDegrees -= 360.0;
-		} else if (sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet()
-				+ targetDegrees < -180.0) {
-			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
-			targetDegrees += 360.0;
-		} else {
-			targetDegrees += sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
-		}
+		//nothing
 	} else {
+		targetDegrees -= SensorManager::getSensorManager()->getAbsoluteGyroYaw(
+				targetDegrees);
+
+		targetDegrees = SensorManager::wrapCheck(targetDegrees);
+
 		LOG_INFO("ArcTurn is absolute with target %f", targetDegrees);
 	}
 
@@ -64,58 +58,41 @@ void ArcTurn::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void ArcTurn::Execute() {
-	double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+	double yaw = sensorManager->getYaw();
 
-	LOG_INFO("target %f yaw %f speed %f", targetDegrees, yaw, speed);
+	LOG_INFO("ArcTurn target %f yaw %f speed %f", targetDegrees, yaw, speed);
 
-	if (targetInput > 0) {
+	// positive is clockwise on gyro heading
+	if (targetDegrees < 0) {
 		if (speed > 0) {
+			drivebase->setLeftSpeed(speed * percentTurn); // * percentTurn slows it down
+			drivebase->setRightSpeed(speed);
+		} else {
 			drivebase->setLeftSpeed(speed);
 			drivebase->setRightSpeed(speed * percentTurn);
-		} else {
-			drivebase->setLeftSpeed(speed * percentTurn);
-			drivebase->setRightSpeed(speed);
 		}
 	} else {
 		if (speed > 0) {
-			drivebase->setLeftSpeed(speed * percentTurn);
-			drivebase->setRightSpeed(speed);
-		} else {
 			drivebase->setLeftSpeed(speed);
 			drivebase->setRightSpeed(speed * percentTurn);
+		} else {
+			drivebase->setLeftSpeed(speed * percentTurn);
+			drivebase->setRightSpeed(speed);
 		}
 	}
 }
 
 // Make this return true when this Command no longer needs to run execute()
 bool ArcTurn::IsFinished() {
-	double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
+	double yaw = sensorManager->getYaw();
 
-	LOG_INFO("IsFinished Yaw %f Target %f", yaw, targetDegrees);
-
-	if (targetInput < 0) {
-		if (speed < 0) {
-			return yaw < targetDegrees
-					&& (yaw / fabs(yaw))
-							== (targetDegrees / fabs(targetDegrees));
-		} else {
-			return yaw < targetDegrees
-					&& (yaw / fabs(yaw))
-							== (targetDegrees / fabs(targetDegrees));
-		}
-	} else {
-		if (speed < 0) {
-			return yaw > targetDegrees
-					&& (yaw / fabs(yaw))
-							== (targetDegrees / fabs(targetDegrees));
-		} else {
-			return yaw > targetDegrees
-					&& (yaw / fabs(yaw))
-							== (targetDegrees / fabs(targetDegrees));
-		}
+	if (fabs(yaw - targetDegrees) < 10) {
+		speed = originalSpeed * .75;
 	}
 
-	return false;
+	//past and same sign
+	return (fabs(yaw) > fabs(targetDegrees))
+			&& (yaw < 0 ? -1 : 1) == (targetDegrees < 0 ? -1 : 1);
 }
 
 // Called once after isFinished returns true
@@ -125,6 +102,8 @@ void ArcTurn::End() {
 
 	LOG_INFO("ARC TURN ENDED WITH TARGET %f CURRENT YAW %f", targetDegrees,
 			sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet());
+
+	SensorManager::getSensorManager()->ZeroYaw();
 }
 
 // Called when another command which requires one or more of the same

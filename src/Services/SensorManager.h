@@ -23,18 +23,29 @@ private:
 	SensorManager();
 	~SensorManager();
 	int counter;
+	double absoluteHeading = 0;
 	//Declare other sensor types later (Encoder, Vision, etc)
 
 public:
 	static SensorManager* getSensorManager();
 	void initGyro();
-	float GetLightSensorVoltage();
+
 	float getYaw();
 	float getPitch();
 	float getRoll();
+
 	float GetAccelX();
 	float GetAccelY();
 	float GetAccelZ();
+
+	float getRawX();
+	float getRawY();
+	float getRawZ();
+
+	static double wrapCheck(double value);
+
+	float getAbsoluteGyroYaw(double target);
+
 	double GetEncoderPosition(int ID);
 	double GetSpeed(int ID);
 	void ZeroYaw();

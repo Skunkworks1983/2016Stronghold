@@ -71,6 +71,9 @@ public:
 	static float getFirstDistance();
 	static float getMiddleDistance();
 
+	static eStartPos getStartPos();
+	static eObstacle getObstacle();
+
 	static TurnData *getTurnData();
 	static TurnData *getSecondTurnData();
 

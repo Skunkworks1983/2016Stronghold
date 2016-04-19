@@ -7,10 +7,12 @@
 class MoveBackUntilRoll: public CommandBase {
 private:
 	unsigned count = 0;
+	double timeout = 0;
 public:
-	MoveBackUntilRoll();
+	MoveBackUntilRoll(double timeout);
 	void Initialize();
-	void Execute();bool IsFinished();
+	void Execute();
+	bool IsFinished();
 	void End();
 	void Interrupted();
 };

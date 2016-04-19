@@ -15,6 +15,7 @@ private:
 	double targetDegrees = 0.0;
 	double targetInput = 0.0;
 	double speed = 0.0;
+	double originalSpeed = 0.0;
 	double initialLeft = 0.0;
 	double initialRight = 0.0;
 	double initialYaw = 0.0;

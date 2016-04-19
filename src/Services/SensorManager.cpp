@@ -1,3 +1,4 @@
+#include <Commands/Autonomous/AutoBase.h>
 #include <I2C.h>
 #include <RobotMap.h>
 #include <Services/MotorManager.h>
@@ -77,10 +78,26 @@ SensorManager* SensorManager::getSensorManager() {
 	return instance;
 }
 
+double SensorManager::wrapCheck(double value) {
+	double ret = value;
+	if (value >= 180.0) {
+		ret -= 360.0;
+	} else if (value <= -180.0) {
+		ret += 360.0;
+	}
+	return ret;
+}
+
 void SensorManager::ZeroYaw() {
 	if (ahrs != NULL) {
+		LOG_INFO("AbsoluteHeading %f adding %f wrapCheck %f", absoluteHeading,
+				ahrs->GetYaw(), wrapCheck(absoluteHeading + ahrs->GetYaw()))
+		absoluteHeading = wrapCheck(absoluteHeading + ahrs->GetYaw());
+
 		ahrs->ZeroYaw();
 		ahrs->Reset();
+
+		LOG_INFO("After zeroYaw %f", ahrs->GetYaw());
 	}
 }
 
@@ -141,6 +158,30 @@ float SensorManager::getRoll() {
 		return ahrs->GetRoll();
 	}
 	return GYRO_NOT_CONNECTED_VALUE;
+}
+
+float SensorManager::getRawX() {
+	return ahrs->GetRawGyroX();
+}
+
+float SensorManager::getRawY() {
+	return ahrs->GetRawGyroY();
+}
+
+float SensorManager::getRawZ() {
+	return ahrs->GetRawGyroZ();
+}
+
+float SensorManager::getAbsoluteGyroYaw(double target) {
+	double ret = absoluteHeading;
+
+	if (AutoBase::getObstacle() == Obstacle_cheval) {
+		ret = wrapCheck(ret + 180.0);
+	}
+
+	LOG_INFO("Returning absolute gyro heading %f", ret);
+
+	return ret;
 }
 
 float SensorManager::GetAccelX() {
