@@ -14,11 +14,14 @@
 
 #define TURN_SPEED .7
 #define TURN_PERCENTAGE -.75
+
+#define SEARCH_SPEED .55
+#define SEARCH_PERCENT -.75
+
 #define MOVE_TOWARD_SPEED .3
 #define MOVE_TOWARD_PERCENT .5
 
-GoToBatter::GoToBatter() :
-		startPos(startPos) {
+GoToBatter::GoToBatter(){
 	Requires(drivebase);
 	reader = CameraReader::getCameraReader();
 }
@@ -118,7 +121,7 @@ void GoToBatter::Execute() {
 		LOG_INFO("GoToBatter State = TurningToAdjacent")
 		;
 
-		if (corrected_camera_angle < 0) {
+		if (corrected_camera_angle > 0) {
 			drivebase->setLeftSpeed(-TURN_SPEED);
 			drivebase->setRightSpeed(TURN_SPEED);
 		} else {
@@ -140,14 +143,14 @@ void GoToBatter::Execute() {
 		LOG_INFO("GoToBatter State = TurningAwayFromAdjacent")
 		;
 
-		if (corrected_camera_angle < 0) {
+		if (corrected_camera_angle > 0) {
 			drivebase->setLeftSpeed(-TURN_SPEED);
 			drivebase->setRightSpeed(TURN_SPEED);
 		} else {
 			drivebase->setLeftSpeed(TURN_SPEED);
 			drivebase->setRightSpeed(-TURN_SPEED);
 		}
-		if (fabs(adjacentInitialYaw - gyro_angle) > 90) {
+		if (fabs(gyro_angle) < 5) {
 			drivebase->setLeftSpeed(0);
 			drivebase->setRightSpeed(0);
 			state = MovingToward;
@@ -171,8 +174,8 @@ void GoToBatter::Execute() {
 			if (gyro_angle < TURN_BOUND_LEFT) {
 				state = SearchingRight;
 			}
-			drivebase->setLeftSpeed(-TURN_SPEED);
-			drivebase->setRightSpeed(TURN_SPEED);
+			drivebase->setLeftSpeed(-SEARCH_SPEED);
+			drivebase->setRightSpeed(SEARCH_SPEED);
 		}
 		break;
 	case SearchingRight:
@@ -187,8 +190,8 @@ void GoToBatter::Execute() {
 			if (gyro_angle > TURN_BOUND_RIGHT) {
 				state = JustNowLost;
 			}
-			drivebase->setLeftSpeed(TURN_SPEED);
-			drivebase->setRightSpeed(-TURN_SPEED);
+			drivebase->setLeftSpeed(SEARCH_SPEED);
+			drivebase->setRightSpeed(-SEARCH_SPEED);
 		}
 		break;
 	case MovingToward:
@@ -221,7 +224,6 @@ bool GoToBatter::IsFinished() {
 void GoToBatter::End() {
 	drivebase->setLeftSpeed(0.0);
 	drivebase->setRightSpeed(0.0);
-	SensorManager::getSensorManager()->ZeroYaw();
 }
 
 // Called when another command which requires one or more of the same

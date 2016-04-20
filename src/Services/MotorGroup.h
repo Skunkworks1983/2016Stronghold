@@ -31,6 +31,8 @@ public:
 };
 
 class DrivebaseMotorGroup: public MotorGroup {
+private:
+	unsigned log_count = 0;
 public:
 	DrivebaseMotorGroup(std::vector<Motor*> motorgroup);
 	void PIDWrite(float output);

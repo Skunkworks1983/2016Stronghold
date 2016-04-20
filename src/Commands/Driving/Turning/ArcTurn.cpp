@@ -102,8 +102,6 @@ void ArcTurn::End() {
 
 	LOG_INFO("ARC TURN ENDED WITH TARGET %f CURRENT YAW %f", targetDegrees,
 			sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet());
-
-	SensorManager::getSensorManager()->ZeroYaw();
 }
 
 // Called when another command which requires one or more of the same

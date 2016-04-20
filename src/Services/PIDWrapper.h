@@ -29,8 +29,11 @@ public:
 	void SetOutputRange(float minimumOutput, float maximumOutput);
 	void SetContinuous(bool isContinuous);
 	void SetPIDSourceType(PIDSourceType pidSource);
+	void setAbsoluteTolerance(double value);
 	bool IsEnabled();
 	void Reset();
+	bool OnTarget();
+	float getError();
 };
 
 

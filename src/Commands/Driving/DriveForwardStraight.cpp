@@ -83,8 +83,6 @@ bool DriveForwardStraight::IsFinished() {
 void DriveForwardStraight::End() {
 	drivebase->setLeftSpeed(0);
 	drivebase->setRightSpeed(0);
-
-	SensorManager::getSensorManager()->ZeroYaw();
 }
 
 void DriveForwardStraight::Interrupted() {

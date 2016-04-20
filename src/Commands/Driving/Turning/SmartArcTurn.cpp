@@ -93,17 +93,6 @@ void SmartArcTurn::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool SmartArcTurn::IsFinished() {
-	/*double leftEncoder = fabs(sensorManager->getSensor(
-	 SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
-	 double rightEncoder = fabs(sensorManager->getSensor(
-	 SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
-
-	 const bool leftPast = fabs(leftEncoder - initialLeft) > leftDist;
-	 const bool rightPast = fabs(rightEncoder - initialRight) > rightDist;
-
-
-	 return leftPast && rightPast;*/
-
 	const double yaw = sensorManager->getSensor(SENSOR_GYRO_ID)->PIDGet();
 
 	double angle_traveled = yaw - initialYaw;

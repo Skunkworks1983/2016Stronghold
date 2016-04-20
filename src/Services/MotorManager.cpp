@@ -47,6 +47,7 @@ void MotorManager::initDriveBase() {
 	CIM_MAX_CURRENT, DRIVEBASE, false, false);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_LEFTMOTOR_3_PORT,
 	CIM_MAX_CURRENT, DRIVEBASE, true, false);
+
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_1_PORT,
 	CIM_MAX_CURRENT, DRIVEBASE, true, true);
 	addMotor(Priority::PRIORITY_DRIVEBASE, DRIVEBASE_RIGHTMOTOR_2_PORT,
@@ -84,12 +85,6 @@ void MotorManager::initPIDS() {
 	DrivebaseLeftMotors.push_back(getMotor(DRIVEBASE_LEFTMOTOR_3_PORT));
 	MotorGroup * groupDrivebaseLeft = new MotorGroup(DrivebaseLeftMotors);
 
-	const double followP = 0.1;
-	const double followI = 0.0001;
-	const double followD = 0.0001;
-
-
-
 	/*createPID(groupDrivebaseLeft, SENSOR_DRIVE_BASE_LEFT_ENCODER_ID,
 	 PID_ID_DRIVEBASE_LEFT,
 	 DRIVEBASE_LEFT_P, DRIVEBASE_LEFT_I, DRIVEBASE_LEFT_D,
@@ -120,13 +115,15 @@ void MotorManager::initPIDS() {
 	//MotorGroup * gyroRightMotors = new MotorGroup(DrivebaseRightMotors);
 	//MotorGroup * gryoLeftMotors = new MotorGroup(DrivebaseLeftMotors);
 	double p = 1.0 / 120.0;
-	double i = 1.0 / 1500.0;
-	double d = 1.0 / 500.0;
+	double i = 1/5000.0;
+	double d = 1.0 / 400.0;
 	double f = 0.0;
 	//createPID(groupDrivebaseLeft, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE_LEFT, -p,-i, -d, -f, false, true);
 
 	createPID(drivebaseMotorGroup, SENSOR_GYRO_ID, PID_ID_DRIVEBASE_ROT, p, i,
 			d, f, false, true);
+
+	getPID(PID_ID_DRIVEBASE_ROT)->setAbsoluteTolerance(2.0);
 	/*createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
 	 TURN_GYRO_P, TURN_GYRO_I, TURN_GYRO_D, TURN_GYRO_F, false, true);*/
 #endif

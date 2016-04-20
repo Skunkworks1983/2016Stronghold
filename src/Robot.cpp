@@ -1,6 +1,5 @@
-#include <CameraServer.h>
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/Turning/ArcTurn.h>
+#include <Commands/Driving/Turning/PIDTurn.h>
 #include <Commands/Power/StallProtection.h>
 #include <Commands/Scheduler.h>
 #include <Robot.h>
@@ -11,10 +10,13 @@
 #include <Services/SensorManager.h>
 #include <Services/ShooterMotor.h>
 #include <SmartDashboard/SmartDashboard.h>
+#include <Subsystems/Drivebase.h>
 #include <Subsystems/Shooter.h>
 #include <TuningValues.h>
 #include <Utility.h>
 #include <cstdbool>
+
+#include "../navx-mxp/cpp/include/AHRS.h"
 
 uint64_t Robot::teleStart = 0;
 uint64_t Robot::autoStart = 0;
@@ -51,6 +53,10 @@ void Robot::RobotInit() {
 			CommandBase::shooter->getRight()->PIDGet());
 	SmartDashboard::PutNumber("time", GetFPGATime());
 
+	SmartDashboard::PutNumber("P", 100.0);
+	SmartDashboard::PutNumber("I", 5000.0);
+	SmartDashboard::PutNumber("D", 500.0);
+
 	LOG_INFO("END OF ROBOTINIT");
 }
 
@@ -75,19 +81,19 @@ void Robot::AutonomousInit() {
 	SensorManager::getSensorManager()->getGyro()->Reset();
 	AutoBase::readValues();
 
+	//cmd = AutoBase::getSelectedAuto();
 
-	CommandBase::drivebase->setBrakeMode(true);
-
-	cmd = AutoBase::getSelectedAuto();
-
-	cmd->Start();
+	//cmd->Start();
 
 
 	//ArcTurn *turn = new ArcTurn(90, .75, -.5);
 	//turn->Start();
 
-	//GoToBatter *gotoBatter = new GoToBatter(eStartPos::four);
+	//GoToBatter *gotoBatter = new GoToBatter();
 	//gotoBatter->Start();
+
+	PIDTurn *turn = new PIDTurn(90);
+	turn->Start();
 
 	oldTime = GetFPGATime();
 	autoStart = GetFPGATime();
