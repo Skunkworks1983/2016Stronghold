@@ -114,23 +114,21 @@ void MotorManager::initPIDS() {
 #if USE_GYRO
 	//MotorGroup * gyroRightMotors = new MotorGroup(DrivebaseRightMotors);
 	//MotorGroup * gryoLeftMotors = new MotorGroup(DrivebaseLeftMotors);
-	double p = 1.0 / 120.0;
-	double i = 1/5000.0;
-	double d = 1.0 / 400.0;
+	double p = 1.0 / TURN_GYRO_P;
+	double i = 1.0 / TURN_GYRO_I;
+	double d = 1.0 / TURN_GYRO_D;
 	double f = 0.0;
-	//createPID(groupDrivebaseLeft, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE_LEFT, -p,-i, -d, -f, false, true);
 
 	createPID(drivebaseMotorGroup, SENSOR_GYRO_ID, PID_ID_DRIVEBASE_ROT, p, i,
 			d, f, false, true);
 
 	getPID(PID_ID_DRIVEBASE_ROT)->setAbsoluteTolerance(2.0);
-	/*createPID(groupDrivebaseRot, SENSOR_GYRO_ID, PID_ID_TURN_DEGREE,
-	 TURN_GYRO_P, TURN_GYRO_I, TURN_GYRO_D, TURN_GYRO_F, false, true);*/
+	getPID(PID_ID_DRIVEBASE_ROT)->Disable();
+	getPID(PID_ID_DRIVEBASE_ROT)->SetContinuous(true);
+
 #endif
 
 #if USE_CAMERA
-//	MotorGroup * groupCamera = new MotorGroup(driveBaseMotors);
-//	createPID(groupCamera, SENSOR_CAMERA_ID, PID_ID_CAMERA,	MOVE_TOWARD_CAMERA_P, MOVE_TOWARD_CAMERA_I, MOVE_TOWARD_CAMERA_D, MOVE_TOWARD_CAMERA_F, false);
 #endif
 
 #endif
@@ -141,8 +139,7 @@ void MotorManager::initPIDS() {
 	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_3_PORT));
 	winchMotors.push_back(getMotor(CLIMBER_WINCH_MOTOR_4_PORT));
 	MotorGroup * winchMotorGroup = new MotorGroup(winchMotors);
-	createPID(winchMotorGroup, SENSOR_CLIMBER_WINCH_ENCODER, PID_ID_WINCH,
-	CLIMBER_WINCH_P, CLIMBER_WINCH_I, CLIMBER_WINCH_D, CLIMBER_WINCH_F, false);
+	//createPID(winchMotorGroup, SENSOR_CLIMBER_WINCH_ENCODER, PID_ID_WINCH, CLIMBER_WINCH_P, CLIMBER_WINCH_I, CLIMBER_WINCH_D, CLIMBER_WINCH_F, false);
 
 	std::vector<Motor*> armMotors;
 	armMotors.push_back(getMotor(CLIMBER_ARM_MOTOR_PORT));
@@ -154,6 +151,8 @@ void MotorManager::initPIDS() {
 
 	createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM, p, i, d,
 	CLIMBER_ARM_F, false);
+
+	getPID(PID_ID_ARM)->Disable();
 
 	/*createPID(groupArmMotors, SENSOR_CLIMBER_ARM_ENCODER, PID_ID_ARM,
 	 CLIMBER_ARM_P, CLIMBER_ARM_I, CLIMBER_ARM_D, CLIMBER_ARM_F, false);*/
@@ -174,6 +173,9 @@ void MotorManager::initPIDS() {
 
 	createPID(groupShooterRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
 	PID_ID_COLLECTOR, shooter_p, shooter_i, shooter_d, shooter_f, false);
+
+	getPID(PID_ID_COLLECTOR)->Disable();
+
 	/*
 	 std::vector<Motor*> rollerMotors;
 	 rollerMotors.push_back(getMotor(COLLECTOR_ROLLER_MOTOR_1_PORT));
@@ -325,6 +327,7 @@ void MotorManager::createPID(MotorGroup * group, unsigned PIDSourceID,
 		}
 		pidcontroller->SetContinuous(isContinuous);
 		pidControllerMap[pidID] = pidcontroller;
+		pidcontroller->Reset();
 		pidcontroller->Disable();
 		LOG_DEBUG("Created PIDController with ID %u", pidID);
 	} else {

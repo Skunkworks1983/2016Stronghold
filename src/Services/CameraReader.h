@@ -33,17 +33,26 @@ private:
 	bool reading = false;
 	bool ballInShooter = false;
 
-	float lastLeftX = INVALID;
-	float lastLeftY = INVALID;
-	unsigned lastLeftWidth = INVALID;
+	float xData[3];
+	float yData[3];
+	unsigned widthData[3];
 
-	float lastMidX = INVALID;
-	float lastMidY = INVALID;
-	unsigned lastMidWidth = INVALID;
+	float targetAngleOffset[3] = {-60, 0, 60 };
+	float targetXOffset[3] = {-12, 0, 12 };
+	float targetYOffset[3] = {-6, 0, -6 };
 
-	float lastRightX = INVALID;
-	float lastRightY = INVALID;
-	unsigned lastRightWidth = INVALID;
+
+	float goal1X = INVALID;
+	float goal1Y = INVALID;
+	unsigned goal1Width = INVALID;
+
+	float goal2X = INVALID;
+	float goal2Y = INVALID;
+	unsigned goal2Width = INVALID;
+
+	float goal3X = INVALID;
+	float goal3Y = INVALID;
+	unsigned goal3Width = INVALID;
 
 	pthread_t thread;
 	CameraMode currentMode = LEFTGOAL;
@@ -58,16 +67,18 @@ public:
 	void startReading();
 	void startUp();
 	void shutDown();
-	float getLastLeftX();
-	float getLastLeftY();
-	float getLastMidX();
-	float getLastMidY();
-	float getLastRightX();
-	float getLastRightY();
 
-	unsigned getLastLeftWidth();
-	unsigned getLastMidWidth();
-	unsigned getLastRightWidth();
+	float getGoal1X();
+	float getGoal1Y();
+	unsigned getGoal1Width();
+
+	float getGoal2X();
+	float getGoal2Y();
+	unsigned getGoal2Width();
+
+	float getGoal3X();
+	float getGoal3Y();
+	unsigned getGoal3Width();
 
 	bool tele = false;
 
@@ -75,13 +86,14 @@ public:
 
 	bool isBallInShooter();
 
-	double getXAngle();
 	double getCorrectedXAngle(double distance);
-	double getCorrectedXAngle();
-	double getYAngle();
+	double getCorrectedXAngle(unsigned index);
 
-	double getExpectedWidth();
-	unsigned getTargetSide();
+	double getStraightDistance(double yValue);
+
+	double getXAngle(unsigned index);
+	double getYAngle(unsigned index);
+	double getExpectedWidth(unsigned index);
 
 	double PIDGet();
 };

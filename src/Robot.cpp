@@ -47,15 +47,18 @@ void Robot::RobotInit() {
 
 	//CameraServer::GetInstance()->StartAutomaticCapture("cam0");
 
+	SensorManager::getSensorManager()->getGyro()->ZeroYaw();
+	SensorManager::getSensorManager()->getGyro()->Reset();
+
 	SmartDashboard::PutNumber("leftSpeed",
 			CommandBase::shooter->getLeft()->PIDGet());
 	SmartDashboard::PutNumber("rightSpeed",
 			CommandBase::shooter->getRight()->PIDGet());
 	SmartDashboard::PutNumber("time", GetFPGATime());
 
-	SmartDashboard::PutNumber("P", 100.0);
-	SmartDashboard::PutNumber("I", 5000.0);
-	SmartDashboard::PutNumber("D", 500.0);
+	SmartDashboard::PutNumber("P", TURN_GYRO_P);
+	SmartDashboard::PutNumber("I", TURN_GYRO_I);
+	SmartDashboard::PutNumber("D", TURN_GYRO_D);
 
 	LOG_INFO("END OF ROBOTINIT");
 }
@@ -76,24 +79,28 @@ void Robot::AutonomousInit() {
 	Scheduler::GetInstance()->RemoveAll();
 	LOG_INFO("AutonomousInit Called");
 
+	CommandBase::drivebase->setBrakeMode(true);
+
+	MotorManager::getMotorManager()->disablePID(PID_ID_DRIVEBASE_ROT);
+
 	//actually reset the gyro
 	SensorManager::getSensorManager()->getGyro()->ZeroYaw();
 	SensorManager::getSensorManager()->getGyro()->Reset();
 	AutoBase::readValues();
 
-	//cmd = AutoBase::getSelectedAuto();
+	cmd = AutoBase::getSelectedAuto();
 
-	//cmd->Start();
-
-
-	//ArcTurn *turn = new ArcTurn(90, .75, -.5);
-	//turn->Start();
+	cmd->Start();
 
 	//GoToBatter *gotoBatter = new GoToBatter();
 	//gotoBatter->Start();
 
-	PIDTurn *turn = new PIDTurn(90);
-	turn->Start();
+	//PIDTurn *turn = new PIDTurn(180);
+	//turn->Start();
+
+	//DriveTowardsTower *tower = new DriveTowardsTower(-.3);
+	//tower->Start();
+
 
 	oldTime = GetFPGATime();
 	autoStart = GetFPGATime();

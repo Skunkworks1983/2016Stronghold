@@ -24,6 +24,7 @@ private:
 	~SensorManager();
 	int counter;
 	double absoluteHeading = 0;
+	double lastYaw = 0.0;
 	//Declare other sensor types later (Encoder, Vision, etc)
 
 public:
@@ -41,6 +42,10 @@ public:
 	float getRawX();
 	float getRawY();
 	float getRawZ();
+
+	float getAngle();
+
+	float getFakeYaw();
 
 	static double wrapCheck(double value);
 

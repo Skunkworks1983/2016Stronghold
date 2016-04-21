@@ -6,7 +6,9 @@
 #include <Services/SensorManager.h>
 #include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
+#include <Utility.h>
 #include <cmath>
+#include <cstdint>
 
 #define TURN_DEGREE_ESPSILON 2.0
 

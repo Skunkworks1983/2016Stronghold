@@ -17,7 +17,6 @@ protected:
 	std::vector<Motor*> motorList;
 private:
 	int c;
-	float lastOutput;
 	float lastCurrent;
 	unsigned brownoutCount;
 public:
@@ -26,8 +25,6 @@ public:
 	virtual ~MotorGroup();
 	void PIDWrite(float output);
 	int getPID(Motor motor);
-	float getLastOutput();
-	float getLastCurrent();
 };
 
 class DrivebaseMotorGroup: public MotorGroup {
@@ -36,6 +33,8 @@ private:
 public:
 	DrivebaseMotorGroup(std::vector<Motor*> motorgroup);
 	void PIDWrite(float output);
+
+	static float lastOutput;
 };
 
 

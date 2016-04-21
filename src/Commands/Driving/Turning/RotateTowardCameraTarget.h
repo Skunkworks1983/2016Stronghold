@@ -2,10 +2,12 @@
 #define MOVETOWARDCAMERA
 
 #include <CommandBase.h>
-#include <PIDController.h>
 #include <PIDOutput.h>
-#include <PIDSource.h>
+#include <stddef.h>
 #include <cstdbool>
+#include <WPILib.h>
+
+class PIDController;
 
 class RotateTowardCameraTarget: public CommandBase, public PIDOutput {
 private:

@@ -5,12 +5,15 @@
  *      Author: S-4020395
  */
 
-#include <PIDSource.h>
+#include <CANSpeedController.h>
+#include <CANTalon.h>
+#include <RobotMap.h>
 #include <Services/Motor.h>
 #include <Services/MotorManager.h>
 #include <Services/Sensor.h>
 #include <Services/SensorManager.h>
-#include <RobotMap.h>
+
+#include "../../navx-mxp/cpp/include/AHRS.h"
 
 double SpeedSensor::PIDGet() {
 	if (talon != NULL) {
@@ -74,7 +77,7 @@ bool reversed) :
 
 Sensor::Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID,
 bool reversed) :
-		ahrs(ahrs), lowRange(lowRange), highRange(highRange), ID(ID), reversed(
+		ahrs(ahrs), lowRange(-180.0), highRange(180.0), ID(ID), reversed(
 				reversed) {
 	if (ahrs != NULL) {
 		ahrs->SetPIDSourceType(PIDSourceType::kDisplacement);
@@ -115,7 +118,7 @@ double Sensor::PIDGet() {
 			return (double) talon->GetPosition();
 		}
 	} else if (ahrs != NULL) {
-		return SensorManager::getSensorManager()->getYaw();
+		return SensorManager::getSensorManager()->getAngle();
 	} else if (src != NULL) {
 		LOG_INFO("PIDSource is returning PIDGet");
 		return src->PIDGet();

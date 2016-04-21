@@ -28,7 +28,7 @@ bool absolute) :
 
 // Called just before this Command runs the first time
 void ArcTurn::Initialize() {
-	SensorManager::getSensorManager()->ZeroYaw();
+	//SensorManager::getSensorManager()->ZeroYaw();
 
 	motorManger = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
@@ -38,15 +38,12 @@ void ArcTurn::Initialize() {
 	initialRight = fabs(sensorManager->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	initialYaw = sensorManager->getYaw();
+	initialYaw = sensorManager->getAngle();
 
 	if (!absolute) {
 		//nothing
 	} else {
-		targetDegrees -= SensorManager::getSensorManager()->getAbsoluteGyroYaw(
-				targetDegrees);
-
-		targetDegrees = SensorManager::wrapCheck(targetDegrees);
+		targetDegrees -= initialYaw;
 
 		LOG_INFO("ArcTurn is absolute with target %f", targetDegrees);
 	}
@@ -58,7 +55,7 @@ void ArcTurn::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void ArcTurn::Execute() {
-	double yaw = sensorManager->getYaw();
+	double yaw = sensorManager->getAngle();
 
 	LOG_INFO("ArcTurn target %f yaw %f speed %f", targetDegrees, yaw, speed);
 
@@ -84,7 +81,7 @@ void ArcTurn::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool ArcTurn::IsFinished() {
-	double yaw = sensorManager->getYaw();
+	double yaw = sensorManager->getAngle();
 
 	if (fabs(yaw - targetDegrees) < 10) {
 		speed = originalSpeed * .75;

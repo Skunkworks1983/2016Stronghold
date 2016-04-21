@@ -92,9 +92,9 @@
 #define SHOOTER_2_D 0
 #define SHOOTER_2_F 0
 
-#define TURN_GYRO_P 0.0075
-#define TURN_GYRO_I 0
-#define TURN_GYRO_D 0
+#define TURN_GYRO_P 180.0
+#define TURN_GYRO_I 8000.0
+#define TURN_GYRO_D 120.0
 #define TURN_GYRO_F 0
 
 #define DRIVEBASE_LEFT_P 0.0075

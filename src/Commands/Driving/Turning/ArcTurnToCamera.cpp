@@ -16,7 +16,7 @@ ArcTurnToCamera::ArcTurnToCamera(double speed, double percentTurn,
 
 // Called just before this Command runs the first time
 void ArcTurnToCamera::Initialize() {
-	SensorManager::getSensorManager()->ZeroYaw();
+//	SensorManager::getSensorManager()->ZeroYaw();
 
 	motorManger = MotorManager::getMotorManager();
 	sensorManager = SensorManager::getSensorManager();
@@ -28,7 +28,7 @@ void ArcTurnToCamera::Initialize() {
 
 	initialYaw = sensorManager->getYaw();
 
-	targetDegrees = CameraReader::getCameraReader()->getXAngle();
+	targetDegrees = CameraReader::getCameraReader()->getXAngle(0);
 
 	LOG_INFO("ArcTurn starting with target %f speed %f yaw %f", targetDegrees,
 			speed, initialYaw);

@@ -1,12 +1,14 @@
 #include <Commands/Driving/DriveForwardStraight.h>
+#include <DriverStation.h>
 #include <RobotMap.h>
-#include <Services/Logger.h>
+#include <Services/Sensor.h>
 #include <Subsystems/Drivebase.h>
 #include <TuningValues.h>
-#include <cstdio>
 #include <cmath>
 
-DriveForwardStraight::DriveForwardStraight(float distance, float speed, double timeout) : timeout(timeout) {
+DriveForwardStraight::DriveForwardStraight(float distance, float speed,
+		double timeout) :
+		timeout(timeout) {
 	Requires(drivebase);
 	sensorManager = SensorManager::getSensorManager();
 	this->distance = ((distance / DRIVEBASE_FOOT_PER_TICK));
@@ -22,12 +24,12 @@ DriveForwardStraight::~DriveForwardStraight() {
 }
 
 void DriveForwardStraight::Initialize() {
-	SensorManager::getSensorManager()->ZeroYaw();
+//	SensorManager::getSensorManager()->ZeroYaw();
 
-	if(timeout > 0){
+	if (timeout > 0) {
 		SetTimeout(timeout);
 	}
-	initialYaw = sensorManager->getYaw();
+	initialYaw = sensorManager->getAngle();
 
 	speed *= 12.75 / DriverStation::GetInstance().GetBatteryVoltage();
 
@@ -39,11 +41,12 @@ void DriveForwardStraight::Initialize() {
 	initialRight = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	LOG_INFO("Using gyro for straight drive initial yaw %f", initialYaw);
+	LOG_INFO("StraightDrive initial yaw %f initialLeft %f initialRight %f ",
+			initialYaw, initialLeft, initialRight);
 }
 
 void DriveForwardStraight::Execute() {
-	error = initialYaw - sensorManager->getYaw();
+	error = initialYaw - sensorManager->getAngle();
 
 	if (error < -180.0) {
 		error += 360.0;
@@ -51,21 +54,9 @@ void DriveForwardStraight::Execute() {
 		error -= 360.0;
 	}
 
-	double leftSpeed = ((1 / 15) * error + 1) * speed;
-	double rightSpeed = (-1 * (1 / 15) * error + 1) * speed;
-	LOG_INFO("Gyro: %f, Left: %f, Right: %f error %f", sensorManager->getYaw(),
-			leftSpeed, rightSpeed, error);
 	const double P = .07;
 	drivebase->setLeftSpeed(speed + error * P);
 	drivebase->setRightSpeed(speed - error * P);
-
-	/*if (error <= 0) { //If its tilting to the left
-	 drivebase->setLeftSpeed(speed);
-	 drivebase->setRightSpeed(rightSpeed); //At 15 degree error to the left, no forward motion, just pivot
-	 } else if (error >= 0) { //If its tilting to the right
-	 drivebase->setLeftSpeed(leftSpeed); //Same but tilted to the right
-	 drivebase->setRightSpeed(speed);
-	 }*/
 }
 
 bool DriveForwardStraight::IsFinished() {
@@ -73,6 +64,8 @@ bool DriveForwardStraight::IsFinished() {
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet());
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
+
+	LOG_INFO("StraightDrive LeftEncoder %f rightEncoder %f distance %f", left, right, distance)
 
 	bool leftPast = fabs(left - initialLeft) > fabs(distance);
 	bool rightPast = fabs(right - initialRight) > fabs(distance);

@@ -4,6 +4,7 @@
 #include <Services/MotorManager.h>
 #include <Services/SensorManager.h>
 #include <TuningValues.h>
+#include <cmath>
 #include <exception>
 
 #include "../../navx-mxp/cpp/include/AHRS.h"
@@ -88,11 +89,14 @@ double SensorManager::wrapCheck(double value) {
 	return ret;
 }
 
+float SensorManager::getAngle(){
+	return ahrs->GetAngle();
+}
+
 void SensorManager::ZeroYaw() {
 	if (ahrs != NULL) {
-		LOG_INFO("AbsoluteHeading %f adding %f wrapCheck %f", absoluteHeading,
-				ahrs->GetYaw(), wrapCheck(absoluteHeading + ahrs->GetYaw()))
-		absoluteHeading = wrapCheck(absoluteHeading + ahrs->GetYaw());
+		//LOG_INFO("AbsoluteHeading %f adding %f wrapCheck %f", absoluteHeading, ahrs->GetYaw(), wrapCheck(absoluteHeading + ahrs->GetYaw()))
+		//absoluteHeading = wrapCheck(absoluteHeading + ahrs->GetYaw());
 
 		ahrs->ZeroYaw();
 		ahrs->Reset();
@@ -103,6 +107,7 @@ void SensorManager::ZeroYaw() {
 
 void SensorManager::initGyro() {
 	LOG_INFO("Initializing Gyro");
+
 	if (ahrs == NULL) {
 		try {
 			ahrsDead = false;
@@ -144,6 +149,19 @@ float SensorManager::getYaw() {
 		return current;
 	}
 	return GYRO_NOT_CONNECTED_VALUE;
+}
+
+float SensorManager::getFakeYaw(){
+	const double yaw = getYaw();
+
+	const double lastYawAdd = fabs(180 - lastYaw) < fabs(lastYaw - 180) ? 180 - lastYaw : lastYaw - 180.0;
+	const double yawAdd = fabs(180 - yaw) < fabs(yaw - 180) ? 180 - yaw : yaw - 180.0;
+
+	const double ret = lastYaw + lastYawAdd + yawAdd;
+
+	lastYaw = ret;
+
+	return ret;
 }
 
 float SensorManager::getPitch() {

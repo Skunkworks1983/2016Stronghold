@@ -6,11 +6,9 @@
  */
 
 #include <PIDController.h>
-#include <PIDSource.h>
-#include <Services/Logger.h>
-#include <Services/PIDWrapper.h>
-#include <cstdio>
+#include <PIDOutput.h>
 #include <RobotMap.h>
+#include <Services/PIDWrapper.h>
 
 PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
 		PIDOutput *output) :
@@ -23,22 +21,22 @@ PIDWrapper::PIDWrapper(float p, float i, float d, float f, PIDSource *source,
 
 void PIDWrapper::Enable() {
 	ptr->Enable();
-	//LOG_DEBUG("PIDWrapper Enabled");
+	LOG_DEBUG("PIDWrapper Enabled");
 }
 
 void PIDWrapper::setAbsoluteTolerance(double value){
 	ptr->SetAbsoluteTolerance(value);
-	//LOG_DEBUG("PIDWrapper absoluteTolerance %f", value);
+	LOG_DEBUG("PIDWrapper absoluteTolerance %f", value);
 }
 
 void PIDWrapper::Disable() {
 	ptr->Disable();
-//	LOG_DEBUG("PIDWrapper Enabled");
+	LOG_DEBUG("PIDWrapper Disabled");
 }
 
 void PIDWrapper::SetSetpoint(float setpoint) {
 	ptr->SetSetpoint(setpoint);
-//	LOG_DEBUG("PIDWrapper SetSetpoint");
+	LOG_DEBUG("PIDWrapper SetSetpoint");
 }
 
 void PIDWrapper::SetPID(float p, float i, float d, float f) {
@@ -68,12 +66,13 @@ bool PIDWrapper::IsEnabled() {
 
 void PIDWrapper::Reset() {
 	ptr->Reset();
-	double p = ptr->GetP();
-	double i = ptr->GetI();
-	double d = ptr->GetD();
-	double f = ptr->GetF();
-	delete ptr;
-	ptr = new PIDController(p, i, d, f, source, output);
+	output->PIDWrite(0);
+//	double p = ptr->GetP();
+//	double i = ptr->GetI();
+//	double d = ptr->GetD();
+//	double f = ptr->GetF();
+//	delete ptr;
+//	ptr = new PIDController(p, i, d, f, source, output);
 }
 
 bool PIDWrapper::OnTarget(){

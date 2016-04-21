@@ -1,6 +1,8 @@
 #include <Commands/Driving/GoToBatter.h>
 #include <RobotMap.h>
 #include <Services/CameraReader.h>
+#include <Services/MotorManager.h>
+#include <Services/PIDWrapper.h>
 #include <Services/Sensor.h>
 #include <Services/SensorManager.h>
 #include <Subsystems/Drivebase.h>
@@ -18,20 +20,24 @@
 #define SEARCH_SPEED .55
 #define SEARCH_PERCENT -.75
 
-#define MOVE_TOWARD_SPEED .3
+#define MOVE_TOWARD_SPEED .35
 #define MOVE_TOWARD_PERCENT .5
 
-GoToBatter::GoToBatter(){
+GoToBatter::GoToBatter() {
 	Requires(drivebase);
 	reader = CameraReader::getCameraReader();
+	manager = MotorManager::getMotorManager();
+	sensor = SensorManager::getSensorManager();
+
+	pid = manager->getPID(PID_ID_DRIVEBASE_ROT);
 }
 
 // Called just before this Command runs the first time
 void GoToBatter::Initialize() {
-	SensorManager::getSensorManager()->ZeroYaw();
+//	sensor->ZeroYaw();
 	startPos = AutoBase::getStartPos();
 
-	switch(startPos){
+	switch (startPos) {
 	case lowBar:
 		break;
 	case two:
@@ -48,44 +54,53 @@ void GoToBatter::Initialize() {
 	adjacentInitialRight = 0;
 	distance_adjacent = 0;
 	LOG_INFO("Go to batter command has initialized");
+
+	first = true;
 }
 
 // Called repeatedly when this Command is scheduled to run
 void GoToBatter::Execute() {
-	const double gyro_angle = SensorManager::getSensorManager()->getYaw();
-	const double camera_angle = reader->getXAngle();
+	const double gyro_angle = sensor->getYaw();
+	const double camera_angle = reader->getXAngle(0);
 
 	//magic numbers galore
-	const double angleY = reader->getYAngle();
+	const double angleY = reader->getYAngle(0);
 	const double distance_away = 81 / tan(M_PI * (angleY / 180.0));
 
-	const double corrected_camera_angle = reader->getCorrectedXAngle(distance_away);
+	const double corrected_camera_angle = reader->getCorrectedXAngle(
+			distance_away);
 
-	const double left_encoder = (SensorManager::getSensorManager()->getSensor(
+	const double gyro_to_camera = SensorManager::wrapCheck(
+			corrected_camera_angle + gyro_angle);
+
+	const double left_encoder = (sensor->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet() * DRIVEBASE_FOOT_PER_TICK)
 			* 12;
-	const double right_encoder = (SensorManager::getSensorManager()->getSensor(
+	const double right_encoder = (sensor->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet() * DRIVEBASE_FOOT_PER_TICK)
 			* 12;
 
 	LOG_INFO(
 			"gyro %f cam_angleX %f camAngleY %f distance %f leftEncDiff %f rightEncDiff %f distance_adjacent %f correctedAngle %f",
-			gyro_angle, camera_angle, angleY, distance_away, fabs(left_encoder - adjacentInitialLeft),
-			fabs(right_encoder - adjacentInitialRight), distance_adjacent, corrected_camera_angle);
+			gyro_angle, camera_angle, angleY, distance_away,
+			fabs(left_encoder - adjacentInitialLeft),
+			fabs(right_encoder - adjacentInitialRight), distance_adjacent,
+			corrected_camera_angle);
 
 	switch (state) {
 	case Startup:
 		LOG_INFO("GoToBatter State = Startup")
 		;
 
-		if (reader->getLastLeftX() != INVALID) {
+		if (reader->getGoal1X() != INVALID) {
 			state = JustNowFound;
 		} else {
 			state = JustNowLost;
 		}
 		break;
 	case JustNowFound:
-		LOG_INFO("GoToBatter State = JustNowFound");
+		LOG_INFO("GoToBatter State = JustNowFound")
+		;
 
 		distance_adjacent = distance_away
 				* sin(M_PI * ((corrected_camera_angle + gyro_angle) / 180.0));
@@ -106,31 +121,41 @@ void GoToBatter::Execute() {
 		LOG_INFO("GoToBatter State = MovingAdjacent")
 		;
 
+		if (first) {
+			drivebase->setLeftSpeed(-.3);
+			drivebase->setRightSpeed(-.3);
+			first = false;
+		}
+
 		if (fabs(left_encoder - adjacentInitialLeft) > fabs(distance_adjacent)
 				|| fabs(right_encoder - adjacentInitialRight)
 						> fabs(distance_adjacent)) {
 			drivebase->setLeftSpeed(0.0);
 			drivebase->setRightSpeed(0.0);
+			first = true;
 			state = TurningAwayFromAdjacent;
-		} else {
-			drivebase->setLeftSpeed(-.3);
-			drivebase->setRightSpeed(-.3);
 		}
 		break;
 	case TurningToAdjacent:
 		LOG_INFO("GoToBatter State = TurningToAdjacent")
 		;
 
-		if (corrected_camera_angle > 0) {
-			drivebase->setLeftSpeed(-TURN_SPEED);
-			drivebase->setRightSpeed(TURN_SPEED);
-		} else {
-			drivebase->setLeftSpeed(TURN_SPEED);
-			drivebase->setRightSpeed(-TURN_SPEED);
+		if (first) {
+			pid->Reset();
+			if (gyro_to_camera > 0) {
+				pid->SetSetpoint(90);
+				pid->Enable();
+			} else {
+				pid->SetSetpoint(-90);
+				pid->Enable();
+			}
+			first = false;
 		}
-		if (fabs(gyro_angle) > 90) {
+		if (fabs(pid->getError()) < 2.0) {
+			pid->Disable();
 			drivebase->setLeftSpeed(0);
 			drivebase->setRightSpeed(0);
+			first = true;
 			state = MovingAdjacent;
 			adjacentInitialLeft = left_encoder;
 			adjacentInitialRight = right_encoder;
@@ -143,16 +168,17 @@ void GoToBatter::Execute() {
 		LOG_INFO("GoToBatter State = TurningAwayFromAdjacent")
 		;
 
-		if (corrected_camera_angle > 0) {
-			drivebase->setLeftSpeed(-TURN_SPEED);
-			drivebase->setRightSpeed(TURN_SPEED);
-		} else {
-			drivebase->setLeftSpeed(TURN_SPEED);
-			drivebase->setRightSpeed(-TURN_SPEED);
+		if (first) {
+			pid->Reset();
+			pid->SetSetpoint(0);
+			pid->Enable();
+			first = false;
 		}
-		if (fabs(gyro_angle) < 5) {
+		if (fabs(pid->getError()) < 2.0) {
+			pid->Disable();
 			drivebase->setLeftSpeed(0);
 			drivebase->setRightSpeed(0);
+			first = true;
 			state = MovingToward;
 		}
 		break;
@@ -166,32 +192,46 @@ void GoToBatter::Execute() {
 		LOG_INFO("GoToBatter State = SearchingLeft")
 		;
 
-		if (reader->getLastLeftX() != INVALID) {
-			LOG_INFO("Target Found at %f", reader->getLastLeftX());
+		if (first) {
+			pid->Reset();
+			pid->SetSetpoint(TURN_BOUND_LEFT);
+			pid->Enable();
+			first = false;
+		}
+
+		if (reader->getGoal1X() != INVALID) {
+			LOG_INFO("Target Found at %f", reader->getGoal1X());
+			first = true;
 			state = JustNowFound;
 			break;
 		} else {
-			if (gyro_angle < TURN_BOUND_LEFT) {
+			if (fabs(pid->getError()) < 2.0) {
+				first = true;
 				state = SearchingRight;
 			}
-			drivebase->setLeftSpeed(-SEARCH_SPEED);
-			drivebase->setRightSpeed(SEARCH_SPEED);
 		}
 		break;
 	case SearchingRight:
 		LOG_INFO("GoToBatter State = SearchingRight")
 		;
 
-		if (reader->getLastLeftX() != INVALID) {
-			LOG_INFO("Target Found at %f", reader->getLastLeftX());
+		if (first) {
+			pid->Reset();
+			pid->SetSetpoint(TURN_BOUND_RIGHT);
+			pid->Enable();
+		}
+
+		if (reader->getGoal1X() != INVALID) {
+			LOG_INFO("Target Found at %f", reader->getGoal1X());
+			first = true;
 			state = JustNowFound;
 			break;
 		} else {
-			if (gyro_angle > TURN_BOUND_RIGHT) {
+			if (fabs(pid->getError()) < 2.0) {
+				first = true;
 				state = JustNowLost;
 			}
-			drivebase->setLeftSpeed(SEARCH_SPEED);
-			drivebase->setRightSpeed(-SEARCH_SPEED);
+
 		}
 		break;
 	case MovingToward:
@@ -213,6 +253,11 @@ void GoToBatter::Execute() {
 		state = JustNowLost;
 		break;
 	}
+}
+
+void GoToBatter::changeState(BatterState state) {
+	first = true;
+	this->state = state;
 }
 
 // Make this return true when this Command no longer needs to run execute()

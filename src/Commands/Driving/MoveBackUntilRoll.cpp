@@ -35,7 +35,7 @@ bool MoveBackUntilRoll::IsFinished()
 	}else{
 		count = 0;
 	}
-	return count > 20 || IsTimedOut();
+	return count > 15 || IsTimedOut();
 }
 
 // Called once after isFinished returns true

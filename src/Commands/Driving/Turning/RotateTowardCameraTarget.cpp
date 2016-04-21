@@ -44,10 +44,10 @@ void RotateTowardCameraTarget::Execute() {
 	SmartDashboard::PutNumber("Error", error);
 	SmartDashboard::PutNumber("output", outputspeed);
 	LOG_INFO("CAMERA READING A %f output %f",
-			CameraReader::getCameraReader()->getLastLeftX(), outputspeed);
+			CameraReader::getCameraReader()->getGoal1X(), outputspeed);
 
 	//if last x value less than tolerance we are close to target
-	if (fabs(CameraReader::getCameraReader()->getLastLeftX()) < ERROR_TOLERANCE) {
+	if (fabs(CameraReader::getCameraReader()->getGoal1X()) < ERROR_TOLERANCE) {
 		onTargetCount++;
 	} else {
 		//"lost" target, reset

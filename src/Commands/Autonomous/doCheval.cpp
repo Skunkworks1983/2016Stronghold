@@ -1,9 +1,8 @@
 //doCheval.cpp
 
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/DriveForward.h>
 #include <Commands/Driving/DriveForwardStraight.h>
-#include <Commands/Driving/Turning/ArcTurn.h>
+#include <Commands/Driving/Turning/PIDTurn.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunNewCollector.h>
 #include <RobotMap.h>
@@ -22,9 +21,7 @@ AutoBase *AutoBase::doCheval() {
 	cmd->AddSequential(new DriveForwardStraight(2.5, 0.55));
 	cmd->AddParallel(new RotateShooter(cTOP));
 	cmd->AddSequential(new DriveForwardStraight(2.5, 0.55));
-	cmd->AddSequential(new ArcTurn(90, .80, -.75, true));
-	cmd->AddSequential(new DriveForward(-.70, -0.5));
-	cmd->AddSequential(new ArcTurn(0, -.80, -.75, true));
+	cmd->AddSequential(new PIDTurn(180.0));
 
 	return cmd;
 }

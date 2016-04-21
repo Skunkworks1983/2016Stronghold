@@ -11,6 +11,8 @@
 
 AutoBase *AutoBase::doLowBarandScore() {
 	AutoBase *cmd = new AutoBase((char*) "Autonomous-doLowB");
+	cmd->AddSequential(AutoBase::doLowB());
+
 	cmd->AddSequential(new RunNewCollector(.3));
 	cmd->AddParallel(new RotateShooter(cCollect));
 	cmd->AddSequential(new DriveForwardStraight(-5, -0.4));	//Reach the defence

@@ -8,9 +8,12 @@
 #ifndef SRC_SERVICES_SENSOR_H_
 #define SRC_SERVICES_SENSOR_H_
 
-#include <CANTalon.h>
+#include <PIDSource.h>
+#include <stddef.h>
+#include <cstdbool>
 
-#include "../../navx-mxp/cpp/include/AHRS.h"
+class AHRS;
+class CANTalon;
 
 class Sensor: public PIDSource {
 protected:

@@ -1,6 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/IndexToOuterWorks.h>
-#include <Commands/GoAndScoreHighGoal2.h>
+#include <Commands/GoAndScoreHighGoal.h>
 #include <Commands/HighGoalPosThree.h>
 #include <DigitalInput.h>
 #include <RobotMap.h>
@@ -70,14 +70,16 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 	}
 
-	auto_base->AddSequential(new IndexToOuterWorks());
+	if (startPos != lowBar) {
+		auto_base->AddSequential(new IndexToOuterWorks());
+	}
 
 	if (goalPos == eGoalPos::high && obstacle != BLANK) {
 		if (startPos == eStartPos::five) {
 			auto_base->AddSequential(new HighGoalPosThree());
 		} else {
-			auto_base->AddSequential(new GoAndScoreHighGoal2());
-			//auto_base->AddSequential(new GoAndScoreHighGoal());
+			//auto_base->AddSequential(new GoAndScoreHighGoal2());
+			auto_base->AddSequential(new GoAndScoreHighGoal());
 		}
 	}
 
@@ -88,11 +90,11 @@ AutoBase * AutoBase::getSelectedAuto() {
 	return createSelectedAuto(obstacle, startPos, goalPos);
 }
 
-eStartPos AutoBase::getStartPos(){
+eStartPos AutoBase::getStartPos() {
 	return startPos;
 }
 
-eObstacle AutoBase::getObstacle(){
+eObstacle AutoBase::getObstacle() {
 	return obstacle;
 }
 
@@ -159,13 +161,13 @@ float AutoBase::getFirstDistance() {
 	case spy:
 		return 0;
 	case lowBar:
-		return -3.8;
+		return -4.65;
 	case two:
 		return -8.5;
 	case three:
-		return 0;
+		return -2.0;
 	case four:
-		return 0;
+		return -2.0;
 	case five:
 		return -8.5;
 	}
@@ -217,7 +219,7 @@ TurnData *AutoBase::getTurnData() {
 		angle = 0.0;
 		break;
 	case lowBar:
-		angle = 60;
+		angle = 52;
 		break;
 	case two:
 		angle = 60;
@@ -226,7 +228,7 @@ TurnData *AutoBase::getTurnData() {
 		angle = 40;
 		break;
 	case four:
-		angle = -5;
+		angle = -15;
 		break;
 	case five:
 		angle = -50;
@@ -306,7 +308,7 @@ TurnData *AutoBase::getSecondTurnData() {
 		angle = -30;
 		break;
 	case four:
-		angle = 5;
+		angle = 15;
 		break;
 	case five:
 		angle = 0;
@@ -367,8 +369,6 @@ TurnData *AutoBase::getSecondTurnData() {
 
 	return d;
 }
-
-
 
 void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
 	LOG_INFO("Read Switched Obstacle start");

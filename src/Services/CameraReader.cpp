@@ -1,14 +1,26 @@
 #include <sys/socket.h>
 #include <HAL/cpp/priority_mutex.h>
-#include <Robot.h>
 #include <RobotMap.h>
 #include <Services/CameraReader.h>
-#include <cstdbool>
+#include <Services/SensorManager.h>
 #include <cmath>
+#include <cstdbool>
 #include <iostream>
 
 static const int imageWidth = 640;
 static const int imageHeight = 480;
+
+#define FOV_DEG_X 53.5
+#define FOV_DEG_Y 41.41
+
+#define CAM_ANGLE_DEG 40.0 - (FOV_DEG_Y / 2.0)
+#define CAM_HEIGHT_INCHES 11.0
+
+#define TOWER_HEIGHT 92.0
+#define TARGET_WIDTH_INCHES 20.0
+
+#define DEG(x) (x * 180.0) / M_PI
+#define RAD(x) (x * M_PI) / 180.0
 
 CameraReader::CameraReader() {
 	thread = (pthread_t) NULL;
@@ -38,11 +50,11 @@ CameraReader *CameraReader::getCameraReader() {
 bool CameraReader::isLastInvalid() {
 	switch (currentMode) {
 	case LEFTGOAL:
-		return getLastLeftX() == INVALID;
+		return getGoal1X() == INVALID;
 	case MIDGOAL:
-		return getLastMidX() == INVALID;
+		return getGoal2X() == INVALID;
 	case RIGHTGOAL:
-		return getLastRightX() == INVALID;
+		return getGoal3X() == INVALID;
 	}
 	return true;
 }
@@ -60,36 +72,36 @@ void CameraReader::startUp() {
 
 void CameraReader::startReading() {
 	reading = true;
-	lastLeftX = 0;
-	lastLeftY = 0;
-	lastLeftWidth = 0;
+	goal1X = 0;
+	goal1Y = 0;
+	goal1Width = 0;
 
-	lastMidX = 0;
-	lastMidY = 0;
-	lastMidWidth = 0;
+	goal2X = 0;
+	goal2Y = 0;
+	goal2Width = 0;
 
-	lastRightX = 0;
-	lastRightY = 0;
-	lastRightWidth = 0;
+	goal3X = 0;
+	goal3Y = 0;
+	goal3Width = 0;
 }
 
-unsigned CameraReader::getLastLeftWidth() {
+unsigned CameraReader::getGoal1Width() {
 	mutex->lock();
-	float tempLast = lastLeftWidth;
+	float tempLast = goal1Width;
 	mutex->unlock();
 	return tempLast;
 }
 
-unsigned CameraReader::getLastMidWidth() {
+unsigned CameraReader::getGoal2Width() {
 	mutex->lock();
-	float tempLast = lastMidWidth;
+	float tempLast = goal2Width;
 	mutex->unlock();
 	return tempLast;
 }
 
-unsigned CameraReader::getLastRightWidth() {
+unsigned CameraReader::getGoal3Width() {
 	mutex->lock();
-	float tempLast = lastRightWidth;
+	float tempLast = goal3Width;
 	mutex->unlock();
 	return tempLast;
 }
@@ -115,37 +127,35 @@ void *CameraReader::update(void *d) {
 		camera_reader->mutex->lock();
 
 		if (msg.posX1 != INVALID) {
-			camera_reader->lastLeftX = 2
-					* ((float) msg.posX1 / (float) imageWidth) - 1;
-			camera_reader->lastLeftY =
-					((float) msg.posY1 / (float) imageHeight);
-			camera_reader->lastLeftWidth = msg.width1;
-		}else{
-			camera_reader->lastLeftX = INVALID;
-			camera_reader->lastLeftY = INVALID;
-			camera_reader->lastLeftWidth = INVALID;
+			camera_reader->goal1X = 2 * ((float) msg.posX1 / (float) imageWidth)
+					- 1;
+			camera_reader->goal1Y = ((float) msg.posY1 / (float) imageHeight);
+			camera_reader->goal1Width = msg.width1;
+		} else {
+			camera_reader->goal1X = INVALID;
+			camera_reader->goal1Y = INVALID;
+			camera_reader->goal1Width = INVALID;
 		}
 		if (msg.posX2 != INVALID) {
 
-			camera_reader->lastMidX = 2
-					* ((float) msg.posY2 / (float) imageWidth) - 1;
-			camera_reader->lastMidY = ((float) msg.posY2 / (float) imageHeight);
-			camera_reader->lastMidWidth = msg.width2;
-		}else{
-			camera_reader->lastMidX = INVALID;
-			camera_reader->lastMidY = INVALID;
-			camera_reader->lastMidWidth = INVALID;
+			camera_reader->goal2X = 2 * ((float) msg.posY2 / (float) imageWidth)
+					- 1;
+			camera_reader->goal2Y = ((float) msg.posY2 / (float) imageHeight);
+			camera_reader->goal2Width = msg.width2;
+		} else {
+			camera_reader->goal2X = INVALID;
+			camera_reader->goal2Y = INVALID;
+			camera_reader->goal2Width = INVALID;
 		}
 		if (msg.posX3 != INVALID) {
-			camera_reader->lastRightX = 2
-					* ((float) msg.posY3 / (float) imageWidth) - 1;
-			camera_reader->lastRightY =
-					((float) msg.posY3 / (float) imageHeight);
-			camera_reader->lastRightWidth = msg.width3;
-		}else{
-			camera_reader->lastRightX = INVALID;
-			camera_reader->lastRightY = INVALID;
-			camera_reader->lastRightWidth = INVALID;
+			camera_reader->goal3X = 2 * ((float) msg.posY3 / (float) imageWidth)
+					- 1;
+			camera_reader->goal3Y = ((float) msg.posY3 / (float) imageHeight);
+			camera_reader->goal3Width = msg.width3;
+		} else {
+			camera_reader->goal3X = INVALID;
+			camera_reader->goal3Y = INVALID;
+			camera_reader->goal3Width = INVALID;
 		}
 
 		camera_reader->mutex->unlock();
@@ -157,44 +167,44 @@ void *CameraReader::update(void *d) {
 	return NULL;
 }
 
-float CameraReader::getLastLeftX() {
+float CameraReader::getGoal1X() {
 	mutex->lock();
-	float tempLast = lastLeftX;
+	float tempLast = goal1X;
 	mutex->unlock();
 	return tempLast;
 }
 
-float CameraReader::getLastLeftY() {
+float CameraReader::getGoal1Y() {
 	mutex->lock();
-	float tempLast = lastLeftY;
+	float tempLast = goal1Y;
 	mutex->unlock();
 	return tempLast;
 }
 
-float CameraReader::getLastMidX() {
+float CameraReader::getGoal2X() {
 	mutex->lock();
-	float tempLast = lastMidX;
+	float tempLast = goal2X;
 	mutex->unlock();
 	return tempLast;
 }
 
-float CameraReader::getLastMidY() {
+float CameraReader::getGoal2Y() {
 	mutex->lock();
-	float tempLast = lastMidY;
+	float tempLast = goal2Y;
 	mutex->unlock();
 	return tempLast;
 }
 
-float CameraReader::getLastRightX() {
+float CameraReader::getGoal3X() {
 	mutex->lock();
-	float tempLast = lastRightX;
+	float tempLast = goal3X;
 	mutex->unlock();
 	return tempLast;
 }
 
-float CameraReader::getLastRightY() {
+float CameraReader::getGoal3Y() {
 	mutex->lock();
-	float tempLast = lastRightY;
+	float tempLast = goal3Y;
 	mutex->unlock();
 	return tempLast;
 }
@@ -206,18 +216,18 @@ bool CameraReader::isBallInShooter() {
 double CameraReader::PIDGet() {
 	switch (currentMode) {
 	case LEFTGOAL:
-		return getLastLeftX();
+		return getGoal1X();
 	case MIDGOAL:
-		return getLastMidX();
+		return getGoal2X();
 	case RIGHTGOAL:
-		return getLastRightX();
+		return getGoal3X();
 	}
 	return 0.0;
 }
 
-double CameraReader::getXAngle() {
-	if (getLastLeftX() != INVALID) {
-		double angle = getLastLeftX() * (53.5 / 2);	//raspberry pi cam horizontal FOV
+double CameraReader::getXAngle(unsigned index) {
+	if (getGoal1X() != INVALID) {
+		double angle = getGoal1X() * (53.5 / 2); //raspberry pi cam horizontal FOV
 		return angle;
 	} else {
 		return INVALID;
@@ -225,9 +235,9 @@ double CameraReader::getXAngle() {
 }
 
 double CameraReader::getCorrectedXAngle(double distance) {
-	if (getLastLeftX() != INVALID) {
+	if (getGoal1X() != INVALID) {
 		double pixelX = (((atan(7 / distance) * M_PI) / 180.0) / 53.5)
-				+ getLastLeftX();
+				+ getGoal1X();
 		double angle = pixelX * (53.5 / 2);	//raspberry pi cam horizontal FOV
 
 		return angle;
@@ -236,21 +246,40 @@ double CameraReader::getCorrectedXAngle(double distance) {
 	}
 }
 
-double CameraReader::getCorrectedXAngle() {
-	double dist = 81 / tan(M_PI * (getYAngle() / 180.0));
+double CameraReader::getCorrectedXAngle(unsigned index) {
+	double dist = 81 / tan(M_PI * (getYAngle(index) / 180.0));
 
 	return getCorrectedXAngle(dist);
 }
 
-double CameraReader::getYAngle() {
-	if (getLastLeftY() != INVALID) {
-		const double angle = (((double) (1 - getLastLeftY())) * 41.41) + 28.46;
+double CameraReader::getYAngle(unsigned index) {
+	if (getGoal1Y() != INVALID) {
+		const double angle = (((double) (1 - getGoal1Y())) * 41.41) + 28.46;
 		return angle;
 	} else {
 		return INVALID;
 	}
 }
 
-double CameraReader::getExpectedWidth(){
-	return 0;	//TODO: fix
+double CameraReader::getStraightDistance(double yValue) {
+	const double angle = yValue * FOV_DEG_Y + CAM_ANGLE_DEG;
+	return TOWER_HEIGHT - CAM_HEIGHT_INCHES / sin(M_PI * (angle / 180.0));
+}
+
+double CameraReader::getExpectedWidth(unsigned index) {
+	const double x = xData[index];
+	const double y = yData[index];
+
+	const double dist = getStraightDistance(y);
+
+	const double angleToTarget = SensorManager::wrapCheck(
+			getCorrectedXAngle(index)
+					+ SensorManager::getSensorManager()->getYaw());
+
+	const double angularWidth = 2*DEG(atan(.5 * TARGET_WIDTH_INCHES / dist));
+	const double pixelWidth = (angularWidth / FOV_DEG_X) * imageWidth;
+
+	return pixelWidth * fabs(cos(RAD(angleToTarget + 0)));
+
+	return 0;
 }
