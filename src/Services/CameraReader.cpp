@@ -272,9 +272,8 @@ double CameraReader::getExpectedWidth(unsigned index) {
 
 	const double dist = getStraightDistance(y);
 
-	const double angleToTarget = SensorManager::wrapCheck(
-			getCorrectedXAngle(index)
-					+ SensorManager::getSensorManager()->getYaw());
+	const double angleToTarget = getCorrectedXAngle(index)
+					+ SensorManager::getSensorManager()->getYaw();
 
 	const double angularWidth = 2*DEG(atan(.5 * TARGET_WIDTH_INCHES / dist));
 	const double pixelWidth = (angularWidth / FOV_DEG_X) * imageWidth;

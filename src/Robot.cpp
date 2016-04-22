@@ -90,14 +90,14 @@ void Robot::AutonomousInit() {
 	SensorManager::getSensorManager()->getGyro()->Reset();
 	AutoBase::readValues();
 
-	//cmd = AutoBase::getSelectedAuto();
-//	cmd->Start();
+	cmd = AutoBase::getSelectedAuto();
+	cmd->Start();
 
 	//GoToBatter *gotoBatter = new GoToBatter();
 	//gotoBatter->Start();
 
-	PIDTurn *turn = new PIDTurn(30);
-	turn->Start();
+//	PIDTurn *turn = new PIDTurn(30);
+//	turn->Start();
 
 	//DriveTowardsTower *tower = new DriveTowardsTower(-.3);
 	//tower->Start();
@@ -129,7 +129,9 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
 
-	//LOG_INFO("Gyro %f",	SensorManager::getSensorManager()->getSensor(SENSOR_GYRO_ID)->PIDGet());
+	SmartDashboard::PutNumber("GyroAngle", SensorManager::getSensorManager()->getAngle());
+
+	LOG_INFO("GyroAngle %f",	SensorManager::getSensorManager()->getAngle());
 
 //	LOG_INFO("Yaw %f Roll %f Pitch %f",
 //			SensorManager::getSensorManager()->getYaw(),

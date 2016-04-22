@@ -13,7 +13,7 @@ SensorManager::SensorManager() {
 	LOG_INFO("SensorManager Created #%u", count++);
 #if USE_GYRO
 	initGyro();
-	sensors[SENSOR_GYRO_ID] = new Sensor(ahrs, 0, 360.0,
+	sensors[SENSOR_GYRO_ID] = new Sensor(ahrs, -180, 180,
 	SENSOR_GYRO_ID);
 #endif
 #if USE_CAMERA
@@ -77,16 +77,6 @@ SensorManager::~SensorManager() {
 SensorManager* SensorManager::getSensorManager() {
 	static SensorManager *instance = new SensorManager();
 	return instance;
-}
-
-double SensorManager::wrapCheck(double value) {
-	double ret = value;
-	if (value >= 180.0) {
-		ret -= 360.0;
-	} else if (value <= -180.0) {
-		ret += 360.0;
-	}
-	return ret;
 }
 
 float SensorManager::getAngle(){
@@ -188,18 +178,6 @@ float SensorManager::getRawY() {
 
 float SensorManager::getRawZ() {
 	return ahrs->GetRawGyroZ();
-}
-
-float SensorManager::getAbsoluteGyroYaw(double target) {
-	double ret = absoluteHeading;
-
-	if (AutoBase::getObstacle() == Obstacle_cheval) {
-		ret = wrapCheck(ret + 180.0);
-	}
-
-	LOG_INFO("Returning absolute gyro heading %f", ret);
-
-	return ret;
 }
 
 float SensorManager::GetAccelX() {

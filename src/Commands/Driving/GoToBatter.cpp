@@ -70,8 +70,7 @@ void GoToBatter::Execute() {
 	const double corrected_camera_angle = reader->getCorrectedXAngle(
 			distance_away);
 
-	const double gyro_to_camera = SensorManager::wrapCheck(
-			corrected_camera_angle + gyro_angle);
+	const double gyro_to_camera = corrected_camera_angle + gyro_angle;
 
 	const double left_encoder = (sensor->getSensor(
 	SENSOR_DRIVE_BASE_LEFT_ENCODER_ID)->PIDGet() * DRIVEBASE_FOOT_PER_TICK)

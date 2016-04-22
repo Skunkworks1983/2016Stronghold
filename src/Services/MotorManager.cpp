@@ -114,9 +114,9 @@ void MotorManager::initPIDS() {
 #if USE_GYRO
 	//MotorGroup * gyroRightMotors = new MotorGroup(DrivebaseRightMotors);
 	//MotorGroup * gryoLeftMotors = new MotorGroup(DrivebaseLeftMotors);
-	double p = 1.0 / TURN_GYRO_P;
-	double i = 1.0 / TURN_GYRO_I;
-	double d = 1.0 / TURN_GYRO_D;
+	double p = TURN_GYRO_P == 0 ? 0 : 1.0 / TURN_GYRO_P;
+	double i = TURN_GYRO_I == 0 ? 0 : 1.0 / TURN_GYRO_I;
+	double d = TURN_GYRO_D == 0 ? 0 : 1.0 / TURN_GYRO_D;
 	double f = 0.0;
 
 	createPID(drivebaseMotorGroup, SENSOR_GYRO_ID, PID_ID_DRIVEBASE_ROT, p, i,

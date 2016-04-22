@@ -24,7 +24,7 @@ void PIDWrapper::Enable() {
 	LOG_DEBUG("PIDWrapper Enabled");
 }
 
-void PIDWrapper::setAbsoluteTolerance(double value){
+void PIDWrapper::setAbsoluteTolerance(double value) {
 	ptr->SetAbsoluteTolerance(value);
 	LOG_DEBUG("PIDWrapper absoluteTolerance %f", value);
 }
@@ -67,19 +67,13 @@ bool PIDWrapper::IsEnabled() {
 void PIDWrapper::Reset() {
 	ptr->Reset();
 	output->PIDWrite(0);
-//	double p = ptr->GetP();
-//	double i = ptr->GetI();
-//	double d = ptr->GetD();
-//	double f = ptr->GetF();
-//	delete ptr;
-//	ptr = new PIDController(p, i, d, f, source, output);
 }
 
-bool PIDWrapper::OnTarget(){
+bool PIDWrapper::OnTarget() {
 	return ptr->OnTarget();
 }
 
-float PIDWrapper::getError(){
-	return ptr->GetError();
+float PIDWrapper::getError() {
+	return ptr->GetAvgError();
 }
 

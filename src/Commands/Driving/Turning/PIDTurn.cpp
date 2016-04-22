@@ -11,12 +11,6 @@
 #include <Utility.h>
 #include <cmath>
 
-PIDTurn::PIDTurn(TurnData *d) {
-	target = d->angle;
-	input = target;
-	Requires(drivebase);
-}
-
 PIDTurn::PIDTurn(double target, bool absolute) :
 		target(target), absolute(absolute) {
 	Requires(drivebase);
@@ -47,13 +41,14 @@ void PIDTurn::Initialize() {
 
 	correctCount = 0;
 
-	drivebase->setBrakeMode(false);
+	drivebase->setBrakeMode(true);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void PIDTurn::Execute() {
 	SmartDashboard::PutNumber("Gyro",
 			SensorManager::getSensorManager()->getAngle());
+	SmartDashboard::PutNumber("PIDOutput", DrivebaseMotorGroup::lastOutput);
 
 	const double error = MotorManager::getMotorManager()->getPID(
 	PID_ID_DRIVEBASE_ROT)->getError();
@@ -61,18 +56,6 @@ void PIDTurn::Execute() {
 	LOG_INFO("PIDTurn Angle %f Error %f Target %f motorPower %f",
 			SensorManager::getSensorManager()->getAngle(), error, target,
 			DrivebaseMotorGroup::lastOutput);
-
-	if (fabs(error) < 15 && !first) {
-		MotorManager::getMotorManager()->getPID(
-		PID_ID_DRIVEBASE_ROT)->Reset();
-		MotorManager::getMotorManager()->getPID(
-		PID_ID_DRIVEBASE_ROT)->SetPID(1.0 / TURN_GYRO_P, 1.0 / (1000),
-				1.0 / TURN_GYRO_D);
-		MotorManager::getMotorManager()->getPID(
-				PID_ID_DRIVEBASE_ROT)->Enable();
-		first = true;
-	}
-
 }
 
 // Make this return true when this Command no longer needs to run execute()
@@ -88,7 +71,6 @@ bool PIDTurn::IsFinished() {
 //		}
 //	}
 
-	SmartDashboard::PutNumber("time", GetFPGATime());
 	SmartDashboard::PutNumber("GyroError", error);
 
 	if (fabs(error) < 2.0) {

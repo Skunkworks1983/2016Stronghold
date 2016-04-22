@@ -13,7 +13,7 @@
 #include <iterator>
 #include <RobotMap.h>
 
-#define DRIVEBASE_MIN_OUTPUT .51
+#define DRIVEBASE_MIN_OUTPUT .35
 #define DRIVEBASE_MAX_OUTPUT .92
 
 float DrivebaseMotorGroup::lastOutput = 0;
@@ -60,53 +60,31 @@ DrivebaseMotorGroup::DrivebaseMotorGroup(std::vector<Motor*> motorgroup) :
 }
 
 void DrivebaseMotorGroup::PIDWrite(float output) {
-	//std::vector<Motor*> motorList = MotorGroup::getMotorList();
 	std::vector<Motor*>::iterator it = motorList.begin();
 
 	const float original = output;
 
-	unsigned count = 0;
-	for (; it != this->motorList.end(); it++) {
-		/*if ((*it)->stoppedStartTime == 0) {
-		 (*it)->talon->Set(output * (*it)->C);
-		 }
-		 (*it)->speed = output;*/
-		if (count != 1 && count != 4) {
-			if ((*it)->talon != NULL) {
-				if (output < 0) {
-					if (output > -DRIVEBASE_MIN_OUTPUT) {
-						output = -DRIVEBASE_MIN_OUTPUT;
-					}
-				} else if(output > 0) {
-					if (output < DRIVEBASE_MIN_OUTPUT) {
-						output = DRIVEBASE_MIN_OUTPUT;
-					}
-				}else{
-					//twiddle
-				}
-				if(output > DRIVEBASE_MAX_OUTPUT){
-					output = DRIVEBASE_MAX_OUTPUT;
-				}else if(output < -DRIVEBASE_MAX_OUTPUT){
-					output = -DRIVEBASE_MAX_OUTPUT;
-				}else{
-					//twiddle
+	if (output < 0) {
+					output = -1	* (DRIVEBASE_MIN_OUTPUT	+ fabs(output) * (DRIVEBASE_MAX_OUTPUT - DRIVEBASE_MIN_OUTPUT));
+				} else if (output > 0) {
+					output = DRIVEBASE_MIN_OUTPUT + output * (DRIVEBASE_MAX_OUTPUT - DRIVEBASE_MIN_OUTPUT);
+				} else {
+					//don't move if trying to literally go zero
 				}
 
 				DrivebaseMotorGroup::lastOutput = output;
 
-				//SmartDashboard::PutNumber("MotorPower", output);
+	unsigned count = 0;
+	for (; it != this->motorList.end(); it++) {
+		if ((*it)->talon != NULL) {
+			(*it)->talon->Set(output);
+		}
+	}
 
-				if (log_count++ > 3) {
-					//LOG_INFO("OutputToDriveBase: %f original %f", output, original);
+	if (log_count++ > 3) {
+					LOG_INFO("OutputToDriveBase: %f original %f", output, original);
 					log_count = 0;
 				}
 
-				(*it)->talon->Set(output);
-				//So we stop breaking the motor
-			}
-		}
-		count++;
-	}
-//LOG_INFO("DriveBaseMotorGroup PIDWrite is not the problem");
-
+	count++;
 }

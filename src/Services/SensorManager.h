@@ -47,10 +47,6 @@ public:
 
 	float getFakeYaw();
 
-	static double wrapCheck(double value);
-
-	float getAbsoluteGyroYaw(double target);
-
 	double GetEncoderPosition(int ID);
 	double GetSpeed(int ID);
 	void ZeroYaw();

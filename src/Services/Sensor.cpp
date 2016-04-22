@@ -77,7 +77,7 @@ bool reversed) :
 
 Sensor::Sensor(AHRS * ahrs, float lowRange, float highRange, unsigned ID,
 bool reversed) :
-		ahrs(ahrs), lowRange(-180.0), highRange(180.0), ID(ID), reversed(
+		ahrs(ahrs), lowRange(0), highRange(360), ID(ID), reversed(
 				reversed) {
 	if (ahrs != NULL) {
 		ahrs->SetPIDSourceType(PIDSourceType::kDisplacement);

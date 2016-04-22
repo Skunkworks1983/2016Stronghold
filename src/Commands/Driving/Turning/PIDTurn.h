@@ -15,7 +15,6 @@ private:
 	unsigned correctCount = 0;
 	bool first = false;
 public:
-	PIDTurn(TurnData *data);
 	PIDTurn(double target, bool absolute = false);
 	void Initialize();
 	void Execute();
