@@ -66,7 +66,7 @@ void PIDTurn::Execute() {
 		MotorManager::getMotorManager()->getPID(
 		PID_ID_DRIVEBASE_ROT)->Reset();
 		MotorManager::getMotorManager()->getPID(
-		PID_ID_DRIVEBASE_ROT)->SetPID(1.0 / TURN_GYRO_P, 1.0 / (2000),
+		PID_ID_DRIVEBASE_ROT)->SetPID(1.0 / TURN_GYRO_P, 1.0 / (1000),
 				1.0 / TURN_GYRO_D);
 		MotorManager::getMotorManager()->getPID(
 				PID_ID_DRIVEBASE_ROT)->Enable();

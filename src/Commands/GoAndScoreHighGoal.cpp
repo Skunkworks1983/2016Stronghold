@@ -1,6 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/DriveForward.h>
 #include <Commands/Driving/DriveForwardStraight.h>
+#include <Commands/Driving/DriveForwardStraightAccurate.h>
 #include <Commands/Driving/DriveTowardsTower.h>
 #include <Commands/Driving/Turning/PIDTurn.h>
 #include <Commands/GoAndScoreHighGoal.h>
@@ -14,15 +14,12 @@
 
 GoAndScoreHighGoal::GoAndScoreHighGoal() {
 
-	AddSequential(new DriveForwardStraight(AutoBase::getFirstDistance(), -.3));
+	AddSequential(new DriveForwardStraightAccurate(AutoBase::getFirstDistance(), -.3, 3.0));
 	AddParallel(new RotateShooter(ShooterPosition::cTOP));
 
-	AddSequential(new PIDTurn(AutoBase::getTurnData()));
-//	AddSequential(new RunNewCollector(.25));
-	AddSequential(new DriveForward(AutoBase::getMiddleDistance(), -.3));
-//	AddSequential(new RunNewCollector(.25));
-	AddSequential(new PIDTurn(AutoBase::getSecondTurnData()));
-//	AddSequential(new RunNewCollector(.25));
+	AddSequential(new PIDTurn(AutoBase::getFirstTurnAngle(), 2.0));
+	AddSequential(new DriveForwardStraightAccurate(AutoBase::getMiddleDistance(), -.3, 2.0));
+	AddSequential(new PIDTurn(AutoBase::getSecondTurnAngle(), 2.0));
 
 	AddSequential(new DriveTowardsTower(-.3, .08, 1.0));
 	AddSequential(new DriveTowardsTower(-.3, .06, 1.0));

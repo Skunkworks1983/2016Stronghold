@@ -1,8 +1,7 @@
 #include <Commands/Driving/HoldAgainstTower.h>
-#include <Services/Logger.h>
-#include <Subsystems/Drivebase.h>
-#include <cstdio>
 #include <RobotMap.h>
+#include <SmartDashboard/SmartDashboard.h>
+#include <Subsystems/Drivebase.h>
 
 HoldAgainstTower::HoldAgainstTower(float speed) :
 		speed(speed) {
@@ -11,13 +10,15 @@ HoldAgainstTower::HoldAgainstTower(float speed) :
 }
 
 void HoldAgainstTower::Initialize() {
-	drivebase->setHold(true);
+	SmartDashboard::PutNumber("speed",speed);
 	LOG_INFO("HoldAgainstTower Started");
 }
 
 void HoldAgainstTower::Execute() {
-	drivebase->setLeftSpeed(speed, speed, 0);
-	drivebase->setRightSpeed(speed, speed, 0);
+	speed = SmartDashboard::GetNumber("speed", speed);
+	LOG_INFO("DynamicSpeed at %f", speed);
+	drivebase->setLeftSpeed(speed);
+	drivebase->setRightSpeed(speed);
 }
 
 bool HoldAgainstTower::IsFinished() {
@@ -25,8 +26,6 @@ bool HoldAgainstTower::IsFinished() {
 }
 
 void HoldAgainstTower::End() {
-	/*drivebase->setLeftSpeed(0);
-	 drivebase->setRightSpeed(0);*/
 	drivebase->setLeftSpeed(0);
 	 drivebase->setRightSpeed(0);
 	drivebase->setHold(true);

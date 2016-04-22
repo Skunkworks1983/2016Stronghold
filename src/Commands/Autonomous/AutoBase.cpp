@@ -12,6 +12,7 @@
 eObstacle AutoBase::obstacle = BLANK;
 eStartPos AutoBase::startPos = spy;
 eGoalPos AutoBase::goalPos = high;
+float AutoBase::MoveAndTurnValues[4][5];
 
 AutoBase::AutoBase() {
 	AutoBase("AutoBase-Blank");
@@ -29,8 +30,8 @@ void AutoBase::readValues() {
 	readDIPSwitchedObstacle(&obstacle);
 	readDIPSwitchedPosition(&startPos);
 
-	startPos = four;
-	obstacle = Obstacle_cheval;
+	startPos = three;
+	obstacle = BLANK;
 	goalPos = high;
 }
 
@@ -40,7 +41,7 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 
 	switch (obstacle) {
 	case BLANK:
-		return auto_base;
+		break;
 	case Obstacle_lowbar:
 		auto_base->AddSequential(AutoBase::doLowB());
 		break;
@@ -74,13 +75,12 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		auto_base->AddSequential(new IndexToOuterWorks());
 	}
 
-	if (goalPos == eGoalPos::high && obstacle != BLANK) {
-		if (startPos == eStartPos::five) {
+	if (goalPos == eGoalPos::high) {
+		auto_base->AddSequential(new GoAndScoreHighGoal());
+		/*if (startPos == eStartPos::five) {
 			auto_base->AddSequential(new HighGoalPosThree());
 		} else {
-			//auto_base->AddSequential(new GoAndScoreHighGoal2());
-			auto_base->AddSequential(new GoAndScoreHighGoal());
-		}
+		}*/
 	}
 
 	return auto_base;
@@ -98,276 +98,44 @@ eObstacle AutoBase::getObstacle() {
 	return obstacle;
 }
 
-float AutoBase::getTurnAngle() {
-	float ret_val = 0;
-
-	switch (startPos) {
-	case spy:
-		ret_val = 0.0;
-		break;
-	case lowBar:
-		ret_val = 60;
-		break;
-	case two:
-		ret_val = 60;
-		break;
-	case three:
-		ret_val = 40;
-		break;
-	case four:
-		ret_val = -10;
-		break;
-	case five:
-		ret_val = -60;
-		break;
-	}
-
-	LOG_INFO("GETTURN ANGLE RETURNING %f", ret_val);
-
-	return ret_val;
-}
-
-float AutoBase::getSecondTurnAngle() {
-	float ret_val = 0;
-
-	switch (startPos) {
-	case spy:
-		ret_val = 0.0;
-		break;
-	case lowBar:
-		ret_val = 0.0;
-		break;
-	case two:
-		ret_val = 0;
-		break;
-	case three:
-		ret_val = -40;
-		break;
-	case four:
-		ret_val = 10;
-		break;
-	case five:
-		ret_val = 0;
-		break;
-	}
-
-	LOG_INFO("GETSECONDTURN ANGLE RETURNING %f", ret_val);
-
-	return ret_val;
-}
-
 float AutoBase::getFirstDistance() {
-	switch (startPos) {
-	case spy:
+	if (startPos == spy) {
 		return 0;
-	case lowBar:
-		return -4.65;
-	case two:
-		return -8.5;
-	case three:
-		return -2.0;
-	case four:
-		return -2.0;
-	case five:
-		return -8.5;
 	}
-	return 0;
+
+	unsigned index = startPos - 1;
+
+	return -getValue(0, index);
+}
+
+float AutoBase::getFirstTurnAngle() {
+	if (startPos == spy) {
+		return 0;
+	}
+
+	unsigned index = startPos - 1;
+
+	return getValue(1, index);
 }
 
 float AutoBase::getMiddleDistance() {
-	switch (startPos) {
-	case spy:
-		return -0.0;
-	case lowBar:
-		return -2.0;
-	case two:
-		return -2.0;
-	case three:
-		return -1.0;
-	case four:
-		return -2.0;
-	case five:
-		return -2.0;
+	if (startPos == spy) {
+		return 0;
 	}
-	return -2.0;
+
+	unsigned index = startPos - 1;
+
+	return -getValue(2, index);
 }
 
-AutoBase *AutoBase::readFromTextFile(std::string file) {
-	char* title;
-	std::string line;
-	std::ifstream myfile(file);
-	if (myfile.is_open()) {
-		while (getline(myfile, line)) {
-
-			std::cout << line << '\n';
-		}
-		myfile.close();
-	} else {
-		std::cout << "Unable to open file";
-	}
-	AutoBase *auto_base = new AutoBase(title);
-
-	return auto_base;
-}
-
-TurnData *AutoBase::getTurnData() {
-	TurnData *d = new TurnData();
-	float angle = 0;
-
-	switch (startPos) {
-	case spy:
-		angle = 0.0;
-		break;
-	case lowBar:
-		angle = 52;
-		break;
-	case two:
-		angle = 60;
-		break;
-	case three:
-		angle = 40;
-		break;
-	case four:
-		angle = -15;
-		break;
-	case five:
-		angle = -50;
-		break;
+float AutoBase::getSecondTurnAngle() {
+	if (startPos == spy) {
+		return 0;
 	}
 
-	d->angle = angle;
+	unsigned index = startPos - 1;
 
-	float power = 0;
-
-	switch (startPos) {
-	case spy:
-		power = -.5;
-		break;
-	case lowBar:
-		power = -.7;
-		break;
-	case two:
-		power = -.7;
-		break;
-	case three:
-		power = -.5;
-		break;
-	case four:
-		power = -.5;
-		break;
-	case five:
-		power = -.75;
-		break;
-	}
-
-	d->power = power;
-
-	float percentage = 0;
-
-	switch (startPos) {
-	case spy:
-		percentage = 0.3;
-		break;
-	case lowBar:
-		percentage = -.25;
-		break;
-	case two:
-		percentage = -.25;
-		break;
-	case three:
-		percentage = -0.5;
-		break;
-	case four:
-		percentage = 0.2;
-		break;
-	case five:
-		percentage = -0.7;
-		break;
-	}
-
-	d->percentage = percentage;
-
-	return d;
-}
-
-TurnData *AutoBase::getSecondTurnData() {
-	TurnData *d = new TurnData();
-	float angle = 0;
-
-	switch (startPos) {
-	case spy:
-		angle = 0.0;
-		break;
-	case lowBar:
-		angle = 0.0;
-		break;
-	case two:
-		angle = 0;
-		break;
-	case three:
-		angle = -30;
-		break;
-	case four:
-		angle = 15;
-		break;
-	case five:
-		angle = 0;
-		break;
-	}
-
-	d->angle = angle;
-
-	float power = 0;
-
-	switch (startPos) {
-	case spy:
-		power = -.5;
-		break;
-	case lowBar:
-		power = -.5;
-		break;
-	case two:
-		power = -.5;
-		break;
-	case three:
-		power = -.5;
-		break;
-	case four:
-		power = -.5;
-		break;
-	case five:
-		power = -.5;
-		break;
-	}
-
-	d->power = power;
-
-	float percentage = 0;
-
-	switch (startPos) {
-	case spy:
-		percentage = 0.3;
-		break;
-	case lowBar:
-		percentage = 0.3;
-		break;
-	case two:
-		percentage = 0.3;
-		break;
-	case three:
-		percentage = -0.5;
-		break;
-	case four:
-		percentage = 0.2;
-		break;
-	case five:
-		percentage = 0.3;
-		break;
-	}
-
-	d->percentage = percentage;
-
-	return d;
+	return getValue(3, index);
 }
 
 void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
@@ -452,16 +220,6 @@ void AutoBase::readDIPSwitches(eObstacle *obstacle, eStartPos *sp,
 		adder = adder << 1;
 	}
 	LOG_INFO("obstacle selected %d", (*obstacle));
-	//calculate goal
-	/**goal = (eGoalPos) 0; // start Position
-	 adder = 1;
-	 for (int i = DIP_CHANNEL_GOAL_START; i < DIP_CHANNEL_GOAL_END; i++) {
-	 bool isSet = digitalInputs[i]->Get();
-	 if (isSet) {
-	 *goal = (eGoalPos) ((*goal) | adder);
-	 }
-	 adder = adder << 1;
-	 }*/
 	LOG_INFO("goal selected %d", (*goal));
 
 	for (unsigned i = 0; i < digitalInputs.size(); ++i) {
@@ -469,3 +227,63 @@ void AutoBase::readDIPSwitches(eObstacle *obstacle, eStartPos *sp,
 	}
 }
 
+float AutoBase::getValue(unsigned x, unsigned y) {
+	if (x >= 4 || y >= 5) {
+		return 0;
+	}
+	return MoveAndTurnValues[x][y];
+}
+
+void AutoBase::setValue(unsigned x, unsigned y, float value) {
+	if (x < 4 && y < 5) {
+		MoveAndTurnValues[x][y] = value;
+	} else {
+		LOG_ERROR("Trying to write out of bounds %u %u are not valid", x, y);
+	}
+}
+
+void AutoBase::readAutoValues() {
+	char fileName[] = "/U/AutoValues.csv";
+
+	std::ifstream file(fileName, std::ifstream::in);
+
+	std::string line;
+	unsigned y = 0;
+	while (file.good() && y < 5) {
+		for (unsigned x = 0; x < 3; x++) {
+			getline(file, line, ',');
+			setValue(x, y, std::stof(line));
+		}
+		getline(file, line, '\n');
+		setValue(3, y, std::stof(line));
+
+		y++;
+	}
+
+	file.close();
+
+	for (int y = 0; y < 5; y++) {
+		for (int x = 0; x < 4; x++) {
+			LOG_INFO("Next Float %u,%u at %f", x, y, getValue(x, y));
+		}
+	}
+
+}
+
+AutoBase *AutoBase::readFromTextFile(std::string file) {
+	char* title;
+	std::string line;
+	std::ifstream myfile(file);
+	if (myfile.is_open()) {
+		while (getline(myfile, line)) {
+
+			std::cout << line << '\n';
+		}
+		myfile.close();
+	} else {
+		std::cout << "Unable to open file";
+	}
+	AutoBase *auto_base = new AutoBase(title);
+
+	return auto_base;
+}

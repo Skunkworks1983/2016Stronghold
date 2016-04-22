@@ -60,6 +60,8 @@ void Robot::RobotInit() {
 	SmartDashboard::PutNumber("I", TURN_GYRO_I);
 	SmartDashboard::PutNumber("D", TURN_GYRO_D);
 
+	AutoBase::readAutoValues();
+
 	LOG_INFO("END OF ROBOTINIT");
 }
 
@@ -88,19 +90,23 @@ void Robot::AutonomousInit() {
 	SensorManager::getSensorManager()->getGyro()->Reset();
 	AutoBase::readValues();
 
-	cmd = AutoBase::getSelectedAuto();
-
-	cmd->Start();
+	//cmd = AutoBase::getSelectedAuto();
+//	cmd->Start();
 
 	//GoToBatter *gotoBatter = new GoToBatter();
 	//gotoBatter->Start();
 
-	//PIDTurn *turn = new PIDTurn(180);
-	//turn->Start();
+	PIDTurn *turn = new PIDTurn(30);
+	turn->Start();
 
 	//DriveTowardsTower *tower = new DriveTowardsTower(-.3);
 	//tower->Start();
 
+//	HoldAgainstTower *tower = new HoldAgainstTower(.1);
+//	tower->Start();
+
+	//DriveForwardStraight *driveForward = new DriveForwardStraight(9, .3);
+	//driveForward->Start();
 
 	oldTime = GetFPGATime();
 	autoStart = GetFPGATime();

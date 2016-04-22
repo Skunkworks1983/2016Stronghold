@@ -5,6 +5,7 @@
 #include <Commands/Driving/Turning/PIDTurn.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunNewCollector.h>
+#include <Commands/ZeroGyro.h>
 #include <RobotMap.h>
 #include <cstdbool>
 
@@ -22,6 +23,7 @@ AutoBase *AutoBase::doCheval() {
 	cmd->AddParallel(new RotateShooter(cTOP));
 	cmd->AddSequential(new DriveForwardStraight(2.5, 0.55));
 	cmd->AddSequential(new PIDTurn(180.0));
+	cmd->AddSequential(new ZeroGyro());
 
 	return cmd;
 }

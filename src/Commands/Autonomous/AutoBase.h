@@ -47,7 +47,16 @@ private:
 	static eStartPos startPos;
 	static eObstacle obstacle;
 	static eGoalPos goalPos;
+
+	static float MoveAndTurnValues[4][5];
+
+
 public:
+	static void readAutoValues();
+
+	static float getValue(unsigned x, unsigned y);
+	static void setValue(unsigned x, unsigned y, float value);
+
 	static AutoBase *getSelectedAuto();
 
 	static AutoBase *readFromTextFile(std::string);
@@ -66,7 +75,7 @@ public:
 	static AutoBase *doSpy(); //Spy box
 	static AutoBase *doLowB(); // Low Bar
 	static AutoBase *doLowBarandScore(); // Low Bar and score
-	static float getTurnAngle();
+	static float getFirstTurnAngle();
 	static float getSecondTurnAngle();
 	static float getFirstDistance();
 	static float getMiddleDistance();
