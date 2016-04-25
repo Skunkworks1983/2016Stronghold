@@ -11,37 +11,71 @@
 #include <Utility.h>
 #include <cmath>
 
-PIDTurn::PIDTurn(double target, bool absolute) :
-		target(target), absolute(absolute) {
+PIDTurn::PIDTurn(double target, bool absolute, double timeout) :
+		target(target), absolute(absolute), timeout(timeout) {
 	Requires(drivebase);
 	input = target;
 }
 
 // Called just before this Command runs the first time
 void PIDTurn::Initialize() {
+	CommandBase::drivebase->setBrakeMode(true);
+
+	if (AutoBase::getObstacle() == Obstacle_cheval) {
+		input += 180.0;
+
+		if (input > 360.0) {
+			input = input - ((int) (input) / 360.0) * 360.0;
+		}
+
+		target = input;
+	}
+
+//ugh
+	this->timeout = 2.25; //1.5 * (fabs(input == 0 ? 180 : input) / 90.0);
+
+	if (timeout > 0) {
+		SetTimeout(timeout);
+	}
+
 	MotorManager::getMotorManager()->getPID(PID_ID_DRIVEBASE_ROT)->Reset();
 
 	if (!absolute) {
 		target = input + SensorManager::getSensorManager()->getAngle()
 				- (int) ((input + SensorManager::getSensorManager()->getAngle())
 						/ 360.0) * 360.0;
+	} else {
+		//do not modify for absolute
 	}
+
+	if (fabs(input) > 90) {
+		MotorManager::getMotorManager()->getPID(PID_ID_DRIVEBASE_ROT)->SetPID(
+				1.0 / 100.0, 1.0 / 20000, 0);
+	} else {
+		MotorManager::getMotorManager()->getPID(PID_ID_DRIVEBASE_ROT)->SetPID(
+				1.0 / TURN_GYRO_P, 1.0 / TURN_GYRO_I, 1.0 / TURN_GYRO_D);
+	}
+
+	/*double p = SmartDashboard::GetNumber("P", TURN_GYRO_P);
+	 double i = SmartDashboard::GetNumber("I", TURN_GYRO_I);
+	 double d = SmartDashboard::GetNumber("D", TURN_GYRO_D);
+
+	 p = (p != 0 ? 1 / p : 0);
+	 i = (i != 0 ? 1 / i : 0);
+	 d = (d != 0 ? 1 / d : 0);
+
+	 MotorManager::getMotorManager()->getPID(PID_ID_DRIVEBASE_ROT)->SetPID(p, i,
+	 d);*/
+
 	MotorManager::getMotorManager()->enablePID(PID_ID_DRIVEBASE_ROT, target);
-
-	double p = SmartDashboard::GetNumber("P", TURN_GYRO_P);
-	double i = SmartDashboard::GetNumber("I", TURN_GYRO_I);
-	double d = SmartDashboard::GetNumber("D", TURN_GYRO_D);
-
-	p = (p != 0 ? 1 / p : 0);
-	i = (i != 0 ? 1 / i : 0);
-	d = (d != 0 ? 1 / d : 0);
-
-	MotorManager::getMotorManager()->getPID(PID_ID_DRIVEBASE_ROT)->SetPID(p, i,
-			d);
 
 	correctCount = 0;
 
-	drivebase->setBrakeMode(true);
+//	drivebase->setBrakeMode(true);
+
+	LOG_INFO("PIDTurn initialize with target: %f absolute %u timeout %f",
+			MotorManager::getMotorManager()->getPID(PID_ID_DRIVEBASE_ROT)->GetSetPoint(),
+			absolute, timeout);
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -53,9 +87,13 @@ void PIDTurn::Execute() {
 	const double error = MotorManager::getMotorManager()->getPID(
 	PID_ID_DRIVEBASE_ROT)->getError();
 
-	LOG_INFO("PIDTurn Angle %f Error %f Target %f motorPower %f",
-			SensorManager::getSensorManager()->getAngle(), error, target,
-			DrivebaseMotorGroup::lastOutput);
+	LOG_INFO(
+			"PIDTurn Target %f Angle %f Error %f Target %f motorPower %f runningFor %f seconds",
+			MotorManager::getMotorManager()->getPID( PID_ID_DRIVEBASE_ROT)->GetSetPoint(),
+			SensorManager::getSensorManager()->getAngle(), error,
+			MotorManager::getMotorManager()->getPID(PID_ID_DRIVEBASE_ROT)->GetSetPoint(),
+			DrivebaseMotorGroup::lastOutput, this->TimeSinceInitialized());
+
 }
 
 // Make this return true when this Command no longer needs to run execute()
@@ -73,12 +111,12 @@ bool PIDTurn::IsFinished() {
 
 	SmartDashboard::PutNumber("GyroError", error);
 
-	if (fabs(error) < 2.0) {
+	if (fabs(error) < 3.0) {
 		correctCount++;
 	} else {
 		correctCount = 0;
 	}
-	return correctCount > 3;
+	return correctCount > 2 || IsTimedOut();
 }
 
 // Called once after isFinished returns true
@@ -87,9 +125,11 @@ void PIDTurn::End() {
 	drivebase->setLeftSpeed(0.0);
 	drivebase->setRightSpeed(0.0);
 	MotorManager::getMotorManager()->disablePID(PID_ID_DRIVEBASE_ROT);
+//MotorManager::getMotorManager()->getPID(PID_ID_DRIVEBASE_ROT)->Reset();
 
-	LOG_INFO("PIDTurn Ended with target %f yaw %f motorPower %f", target,
-			SensorManager::getSensorManager()->getYaw(),
+	LOG_INFO("PIDTurn Ended with target %f yaw %f motorPower %f",
+			MotorManager::getMotorManager()->getPID(PID_ID_DRIVEBASE_ROT)->GetSetPoint(),
+			SensorManager::getSensorManager()->getAngle(),
 			DrivebaseMotorGroup::lastOutput);
 }
 

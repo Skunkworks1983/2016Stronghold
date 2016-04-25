@@ -13,8 +13,8 @@
 #include <iterator>
 #include <RobotMap.h>
 
-#define DRIVEBASE_MIN_OUTPUT .35
-#define DRIVEBASE_MAX_OUTPUT .92
+#define DRIVEBASE_MIN_OUTPUT .4
+#define DRIVEBASE_MAX_OUTPUT .84
 
 float DrivebaseMotorGroup::lastOutput = 0;
 
@@ -65,14 +65,14 @@ void DrivebaseMotorGroup::PIDWrite(float output) {
 	const float original = output;
 
 	if (output < 0) {
-					output = -1	* (DRIVEBASE_MIN_OUTPUT	+ fabs(output) * (DRIVEBASE_MAX_OUTPUT - DRIVEBASE_MIN_OUTPUT));
-				} else if (output > 0) {
-					output = DRIVEBASE_MIN_OUTPUT + output * (DRIVEBASE_MAX_OUTPUT - DRIVEBASE_MIN_OUTPUT);
-				} else {
-					//don't move if trying to literally go zero
-				}
+		output = -1	* (DRIVEBASE_MIN_OUTPUT	+ fabs(output) * (DRIVEBASE_MAX_OUTPUT - DRIVEBASE_MIN_OUTPUT));
+	} else if (output > 0) {
+		output = DRIVEBASE_MIN_OUTPUT + output * (DRIVEBASE_MAX_OUTPUT - DRIVEBASE_MIN_OUTPUT);
+	} else {
+		//don't move if trying to literally go zero
+	}
 
-				DrivebaseMotorGroup::lastOutput = output;
+	DrivebaseMotorGroup::lastOutput = output;
 
 	unsigned count = 0;
 	for (; it != this->motorList.end(); it++) {
@@ -82,9 +82,9 @@ void DrivebaseMotorGroup::PIDWrite(float output) {
 	}
 
 	if (log_count++ > 3) {
-					LOG_INFO("OutputToDriveBase: %f original %f", output, original);
-					log_count = 0;
-				}
+		LOG_INFO("OutputToDriveBase: %f original %f", output, original);
+		log_count = 0;
+	}
 
 	count++;
 }

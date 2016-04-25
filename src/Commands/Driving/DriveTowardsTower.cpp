@@ -21,7 +21,7 @@ DriveTowardsTower::~DriveTowardsTower() {
 void DriveTowardsTower::Initialize() {
 //	SensorManager::getSensorManager()->ZeroYaw();
 
-	initialAngle = SensorManager::getSensorManager()->getAngle();
+	initialAngle = SensorManager::getSensorManager()->getYaw();
 
 	if (timeout > 0) {
 		SetTimeout(timeout);
@@ -37,7 +37,7 @@ void DriveTowardsTower::Initialize() {
 	initialRight = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	LOG_INFO("Start of drivetowardTower");
+	LOG_INFO("Start of drivetowardTower initialAngle %f", initialAngle);
 }
 
 void DriveTowardsTower::Execute() {
@@ -45,19 +45,30 @@ void DriveTowardsTower::Execute() {
 
 	if (oldCamAngle != cam_angle) {
 		oldCamAngle = cam_angle;
-		//offset = SensorManager::getSensorManager()->getYaw();
-		//SensorManager::getSensorManager()->ZeroYaw();
 	}
 
-	const double error =
-			fabs(cam_angle) > 4100 ?
-					0 : SensorManager::getSensorManager()->getAngle() - initialAngle - cam_angle;
+	double error = 0;
 
-	LOG_INFO("TowardsTower cam_angle: %f error %f error*P %f", cam_angle, error,
+	if (fabs(cam_angle) >= 4100) {
+		//we have the invalid value of 4200 (stupid check for floating point error
+		error = 0;
+		//update initial because we have lost camera so reset relative calculation
+		initialAngle = SensorManager::getSensorManager()->getYaw();
+	} else {
+		//valid angle, calculate error
+		error = SensorManager::getSensorManager()->getYaw() - initialAngle
+				- cam_angle;
+	}
+
+	LOG_INFO("TowardsTower cam_angle: %f angle %f error %f error*P %f",
+			cam_angle, SensorManager::getSensorManager()->getYaw(), error,
 			error * P);
 
-	drivebase->setLeftSpeed(speed - error * P);
-	drivebase->setRightSpeed(speed + error * P);
+	const double leftSpeed = speed - error * P;
+	const double rightSpeed = speed + error * P;
+
+	drivebase->setLeftSpeed(leftSpeed >= 0 ? 0 : leftSpeed);
+	drivebase->setRightSpeed(rightSpeed >= 0 ? 0 : rightSpeed);
 }
 
 bool DriveTowardsTower::IsFinished() {

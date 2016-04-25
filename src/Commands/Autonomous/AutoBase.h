@@ -50,7 +50,6 @@ private:
 
 	static float MoveAndTurnValues[4][5];
 
-
 public:
 	static void readAutoValues();
 

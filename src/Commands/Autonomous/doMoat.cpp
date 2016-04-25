@@ -9,7 +9,7 @@ AutoBase *AutoBase::doMoat() {
 	AutoBase *cmd = new AutoBase("Autonomous-doMoat");
 #if USE_SHOOTER
 	cmd->AddParallel(new RotateShooter(cTOP, true));
-	cmd->AddSequential(new RunNewCollector(.4));
+	cmd->AddParallel(new RunNewCollector(.4));
 #endif
 	cmd->AddSequential(new DriveForwardStraight(-5, -.85f));	//Reach the defence
 	cmd->AddParallel(new RotateShooter(cTOP, true));

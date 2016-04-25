@@ -14,8 +14,9 @@ private:
 	double input = 0;
 	unsigned correctCount = 0;
 	bool first = false;
+	double timeout = 0;
 public:
-	PIDTurn(double target, bool absolute = false);
+	PIDTurn(double target, bool absolute, double timeout = 0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

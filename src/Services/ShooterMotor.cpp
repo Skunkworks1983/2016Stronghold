@@ -69,9 +69,11 @@ void ShooterMotor::PIDWrite(float output) {
 
 	switch (side) {
 	case LEFT:
+		SmartDashboard::PutNumber("leftPower", oldOutput);
 		CommandBase::shooter->setLeftShooterSpeed(oldOutput);
 		break;
 	case RIGHT:
+		SmartDashboard::PutNumber("rightPower", oldOutput);
 		CommandBase::shooter->setRightShooterSpeed(oldOutput);
 		break;
 	}
@@ -188,10 +190,10 @@ void ShooterMotor::Reset() {
 	controller->Reset();
 	switch (side) {
 	case LEFT:
-		oldOutput = CommandBase::shooter->getLeftShooterMotorPower();
+		oldOutput = 0;//CommandBase::shooter->getLeftShooterMotorPower();
 		break;
 	case RIGHT:
-		oldOutput = CommandBase::shooter->getRightShooterMotorPower();
+		oldOutput = 0;//CommandBase::shooter->getRightShooterMotorPower();
 		break;
 	}
 #endif

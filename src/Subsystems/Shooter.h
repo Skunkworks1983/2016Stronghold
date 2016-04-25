@@ -3,20 +3,19 @@
 
 #include <Commands/Subsystem.h>
 #include <stddef.h>
+#include <TuningValues.h>
 #include <cstdbool>
 
 class ShooterMotor;
-
 class MotorManager;
 class SensorManager;
-
 class DigitalInput;
 
 class Shooter: public Subsystem {
 private:
-	float p = .0045;	//works = .0018
-	float i = 0.0;		//works = 0.0
-	float d = 0.015;	//works = 0.0
+	float p = SHOOTER_LEFT_P;	//works = .0018
+	float i = SHOOTER_LEFT_I;		//works = 0.0
+	float d = SHOOTER_LEFT_D;	//works = 0.0
 
 	//working values
 //	float p = .003;

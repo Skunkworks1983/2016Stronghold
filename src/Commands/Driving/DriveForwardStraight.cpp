@@ -65,7 +65,7 @@ bool DriveForwardStraight::IsFinished() {
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	LOG_INFO("StraightDrive LeftEncoder %f rightEncoder %f distance %f", left, right, distance)
+	LOG_INFO("StraightDrive Error %f LeftEncoder %f rightEncoder %f distance %f", error, left, right, distance)
 
 	bool leftPast = fabs(left - initialLeft) > fabs(distance);
 	bool rightPast = fabs(right - initialRight) > fabs(distance);

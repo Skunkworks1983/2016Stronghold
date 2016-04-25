@@ -33,10 +33,10 @@ SensorManager::SensorManager() {
 	true);
 #endif
 #if USE_SHOOTER
-	sensors[SENSOR_SHOOTER_ENCODER_1_ID] = new Sensor(
-	SHOOTER_MOTOR_LEFT_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_1_ID, false);	//TODO: check if this is correct, encoder might be backward
-	sensors[SENSOR_SHOOTER_ENCODER_2_ID] = new Sensor(
-	SHOOTER_MOTOR_RIGHT_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_2_ID, false);
+	sensors[SENSOR_SHOOTER_ENCODER_LEFT_ID] = new Sensor(
+	SHOOTER_MOTOR_LEFT_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_LEFT_ID, false);	//TODO: check if this is correct, encoder might be backward
+	sensors[SENSOR_SHOOTER_ENCODER_RIGHT_ID] = new Sensor(
+	SHOOTER_MOTOR_RIGHT_ENCODER_PORT, 0, 0, SENSOR_SHOOTER_ENCODER_RIGHT_ID, false);
 
 	sensors[SENSOR_COLLECTOR_ROTATION_ENCODER_ID] = new Sensor(
 	COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT,

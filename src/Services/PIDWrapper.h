@@ -34,6 +34,7 @@ public:
 	void Reset();
 	bool OnTarget();
 	float getError();
+	double GetSetPoint();
 };
 
 

@@ -12,11 +12,25 @@
 
 PIDShot::PIDShot(double leftSpeed, double rightSpeed, float timeout) :
 		leftSpeed(leftSpeed), rightSpeed(rightSpeed), timeout(timeout) {
+
 }
 
 // Called just before this Command runs the first time
 void PIDShot::Initialize() {
 	LOG_INFO("PIDShot Initialize called");
+
+	/*double pl = SmartDashboard::GetNumber("PL", SHOOTER_LEFT_P);
+	double il = SmartDashboard::GetNumber("IL", SHOOTER_LEFT_I);
+	double dl = SmartDashboard::GetNumber("DL", SHOOTER_LEFT_D);
+
+	shooter->getLeft()->setPID(pl, il, dl);
+
+	double pr = SmartDashboard::GetNumber("PR", SHOOTER_RIGHT_P);
+	double ir = SmartDashboard::GetNumber("IR", SHOOTER_RIGHT_I);
+	double dr = SmartDashboard::GetNumber("DR", SHOOTER_RIGHT_D);
+
+	shooter->getRight()->setPID(pr, ir, dr);*/
+
 #if USE_CAN_PID
 	current_left_setpoint = fmax(5.0, shooter->getLeft()->PIDGet());
 	current_right_setpoint = fmax(5.0, shooter->getRight()->PIDGet());
@@ -38,13 +52,9 @@ void PIDShot::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void PIDShot::Execute() {
-	SmartDashboard::PutNumber("Left", shooter->getLeft()->PIDGet());
-	SmartDashboard::PutNumber("Right", shooter->getRight()->PIDGet());
+	SmartDashboard::PutNumber("Left", shooter->getLeft()->getError());
+	SmartDashboard::PutNumber("Right", shooter->getRight()->getError());
 	SmartDashboard::PutNumber("time", GetFPGATime());
-
-	SmartDashboard::PutNumber("leftPower", shooter->getLeftShooterMotorPower());
-	SmartDashboard::PutNumber("rightPower", shooter->getRightShooterMotorPower());
-
 
 	const double leftDiff = fabs(shooter->getLeft()->PIDGet() - leftSpeed);
 	const bool leftOnTarget = leftDiff < SHOT_TOLERANCE;

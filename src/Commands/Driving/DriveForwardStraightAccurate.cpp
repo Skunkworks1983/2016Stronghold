@@ -8,7 +8,9 @@
 
 #define ENCODER_ERROR_BOUND_FEET 30
 #define ENCODER_ERROR_TOLERANCE_FEET .25
-#define DRIVE_FORWARD_MIN_OUTUPUT .12
+#define DRIVE_FORWARD_MIN_OUTUPUT .15
+
+#define USE_ERROR_FEET 3.0
 
 #define FMIN_MAG(x,y) fabs(x) < fabs(y) ? x : y
 #define FMAX_MAG(x,y) fabs(x) > fabs(y) ? x : y
@@ -52,7 +54,7 @@ void DriveForwardStraightAccurate::Initialize() {
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet();
 
 	LOG_INFO(
-			"StraightDrive target %f initial yaw %f initialLeft %f initialRight %f ",
+			"StraightDriveAccurate target %f initial yaw %f initialLeft %f initialRight %f ",
 			distance * DRIVEBASE_FOOT_PER_TICK, initialYaw, initialLeft,
 			initialRight);
 }
@@ -80,12 +82,12 @@ void DriveForwardStraightAccurate::Execute() {
 
 	const double minError = FMIN_MAG(leftError, rightError);
 
-	if (fabs(minError) < 3) {
+	if (fabs(minError) < USE_ERROR_FEET) {
 		drivebase->setLeftSpeed(
-				FMAX_MAG(minError * .06,
+				FMAX_MAG(minError * .1,
 						minError < 0 ? -DRIVE_FORWARD_MIN_OUTUPUT : DRIVE_FORWARD_MIN_OUTUPUT));
 		drivebase->setRightSpeed(
-				FMAX_MAG(minError * .06,
+				FMAX_MAG(minError * .1,
 						minError < 0 ? -DRIVE_FORWARD_MIN_OUTUPUT : DRIVE_FORWARD_MIN_OUTUPUT));
 	} else {
 		const double P = .07;
@@ -93,7 +95,7 @@ void DriveForwardStraightAccurate::Execute() {
 		drivebase->setRightSpeed(speed - error * P);
 	}
 
-	LOG_INFO("StraightDrive left %f right %f avgError %f distance %f", left,
+	LOG_INFO("StraightDriveAccurate left %f right %f avgError %f distance %f", left,
 			right, minError, distance * DRIVEBASE_FOOT_PER_TICK);
 }
 

@@ -13,8 +13,8 @@ MoveBackUntilRoll::MoveBackUntilRoll(double timeout) : timeout(timeout)
 // Called just before this Command runs the first time
 void MoveBackUntilRoll::Initialize()
 {
-	drivebase->setLeftSpeed(.3);
-	drivebase->setRightSpeed(.3);
+	drivebase->setLeftSpeed(.5);
+	drivebase->setRightSpeed(.5);
 	if(timeout > 0){
 		SetTimeout(timeout);
 	}

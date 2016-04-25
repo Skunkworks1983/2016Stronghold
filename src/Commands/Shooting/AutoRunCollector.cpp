@@ -9,7 +9,7 @@
 //in microseconds
 #define AUTONOMOUS_TIMEOUT 1.0 * 1000 * 1000
 
-#define AUTO_SHOOT 14 * 1000 * 1000
+#define AUTO_SHOOT 14.5 * 1000 * 1000
 
 AutoRunCollector::AutoRunCollector(bool autonomous) :
 		autonomous(autonomous) {

@@ -66,7 +66,6 @@ bool PIDWrapper::IsEnabled() {
 
 void PIDWrapper::Reset() {
 	ptr->Reset();
-	output->PIDWrite(0);
 }
 
 bool PIDWrapper::OnTarget() {
@@ -74,6 +73,11 @@ bool PIDWrapper::OnTarget() {
 }
 
 float PIDWrapper::getError() {
-	return ptr->GetAvgError();
+	return ptr->GetError();
 }
+
+double PIDWrapper::GetSetPoint(){
+	return ptr->GetSetpoint();
+}
+
 

@@ -347,10 +347,12 @@ void MotorManager::enablePID(unsigned pidID, float setPoint) {
 
 	if (pidControllerMap.count(pidID) >= 1) {
 		pidControllerMap[pidID]->SetSetpoint(setPoint);
+		LOG_INFO("PIDCotnroller %u set to %f", pidID, pidControllerMap[pidID]->GetSetPoint());
 		if (!pidControllerMap[pidID]->IsEnabled()) {
 			pidControllerMap[pidID]->Enable();
 		}
 	}
+
 }
 
 void MotorManager::enablePID(unsigned pidID) {

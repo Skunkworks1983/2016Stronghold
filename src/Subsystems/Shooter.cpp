@@ -147,19 +147,19 @@ void Shooter::setLeftShooterSpeed(float speedLeft) {
 //rotation per second
 float Shooter::getLeftShooterSpeed() {
 	return -10 * (SensorManager::getSensorManager()->getSensor(
-	SENSOR_SHOOTER_ENCODER_1_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
+	SENSOR_SHOOTER_ENCODER_LEFT_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
 }
 
 //rotation per second
 float Shooter::getRightShooterSpeed() {
 	return 10 * (SensorManager::getSensorManager()->getSensor(
-	SENSOR_SHOOTER_ENCODER_2_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
+	SENSOR_SHOOTER_ENCODER_RIGHT_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
 }
 
 float Shooter::getLeftShooterMotorPower() {
-	return -MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_RIGHT_PORT)->talon->Get();
+	return -MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_LEFT_PORT)->talon->Get();
 }
 
 float Shooter::getRightShooterMotorPower() {
-	return -MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_LEFT_PORT)->talon->Get();
+	return -MotorManager::getMotorManager()->getMotor(SHOOTER_MOTOR_RIGHT_PORT)->talon->Get();
 }

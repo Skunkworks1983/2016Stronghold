@@ -60,7 +60,15 @@ void Robot::RobotInit() {
 	SmartDashboard::PutNumber("I", TURN_GYRO_I);
 	SmartDashboard::PutNumber("D", TURN_GYRO_D);
 
-	AutoBase::readAutoValues();
+	/*SmartDashboard::PutNumber("PL", SHOOTER_LEFT_P);
+	SmartDashboard::PutNumber("IL", SHOOTER_LEFT_I);
+	SmartDashboard::PutNumber("DL", SHOOTER_LEFT_D);
+
+	SmartDashboard::PutNumber("PR", SHOOTER_RIGHT_P);
+	SmartDashboard::PutNumber("IR", SHOOTER_RIGHT_I);
+	SmartDashboard::PutNumber("DR", SHOOTER_RIGHT_D);*/
+
+//	AutoBase::readAutoValues();
 
 	LOG_INFO("END OF ROBOTINIT");
 }
@@ -70,7 +78,9 @@ void Robot::DisabledInit() {
 	MotorManager::getMotorManager()->disablePID(PID_ID_ARM);
 	MotorManager::getMotorManager()->disablePID(PID_ID_COLLECTOR);
 	MotorManager::getMotorManager()->disablePID(PID_ID_DRIVEBASE_ROT);
-	//MotorManager::getMotorManager()->disablePID(PID_ID_TURN_DEGREE_RIGHT);
+
+	CommandBase::drivebase->setLeftSpeed(0.0);
+	CommandBase::drivebase->setRightSpeed(0.0);
 }
 
 void Robot::DisabledPeriodic() {
@@ -96,11 +106,11 @@ void Robot::AutonomousInit() {
 	//GoToBatter *gotoBatter = new GoToBatter();
 	//gotoBatter->Start();
 
-//	PIDTurn *turn = new PIDTurn(30);
+//	PIDTurn *turn = new PIDTurn(180,false);
 //	turn->Start();
 
-	//DriveTowardsTower *tower = new DriveTowardsTower(-.3);
-	//tower->Start();
+//	DriveTowardsTower *tower = new DriveTowardsTower(-.3, .08);
+//	tower->Start();
 
 //	HoldAgainstTower *tower = new HoldAgainstTower(.1);
 //	tower->Start();
@@ -129,9 +139,10 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
 
-	SmartDashboard::PutNumber("GyroAngle", SensorManager::getSensorManager()->getAngle());
+	SmartDashboard::PutNumber("GyroAngle",
+			SensorManager::getSensorManager()->getAngle());
 
-	LOG_INFO("GyroAngle %f",	SensorManager::getSensorManager()->getAngle());
+	//LOG_INFO("GyroAngle %f",	SensorManager::getSensorManager()->getAngle());
 
 //	LOG_INFO("Yaw %f Roll %f Pitch %f",
 //			SensorManager::getSensorManager()->getYaw(),

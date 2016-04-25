@@ -1,7 +1,10 @@
 #include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/IndexToOuterWorks.h>
-#include <Commands/GoAndScoreHighGoal.h>
-#include <Commands/HighGoalPosThree.h>
+#include <Commands/GoScoreLowBar.h>
+#include <Commands/GoScorePositionFive.h>
+#include <Commands/GoScorePositionFour.h>
+#include <Commands/GoScorePositionThree.h>
+#include <Commands/GoScorePositionTwo.h>
 #include <DigitalInput.h>
 #include <RobotMap.h>
 #include <cstdbool>
@@ -12,7 +15,8 @@
 eObstacle AutoBase::obstacle = BLANK;
 eStartPos AutoBase::startPos = spy;
 eGoalPos AutoBase::goalPos = high;
-float AutoBase::MoveAndTurnValues[4][5];
+float AutoBase::MoveAndTurnValues[4][5] = { { 6.87, 60, 420, 420 }, { 10.29, 60,
+		420, 420 }, { 3.25, -30, 2, 0 }, { 10.79, 420, 420, -50 } };
 
 AutoBase::AutoBase() {
 	AutoBase("AutoBase-Blank");
@@ -30,8 +34,8 @@ void AutoBase::readValues() {
 	readDIPSwitchedObstacle(&obstacle);
 	readDIPSwitchedPosition(&startPos);
 
-	startPos = three;
-	obstacle = BLANK;
+	startPos = four;
+	obstacle = Obstacle_cheval;
 	goalPos = high;
 }
 
@@ -75,12 +79,22 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		auto_base->AddSequential(new IndexToOuterWorks());
 	}
 
-	if (goalPos == eGoalPos::high) {
-		auto_base->AddSequential(new GoAndScoreHighGoal());
-		/*if (startPos == eStartPos::five) {
-			auto_base->AddSequential(new HighGoalPosThree());
-		} else {
-		}*/
+	switch (startPos) {
+	case lowBar:
+		auto_base->AddSequential(new GoScoreLowBar());
+		break;
+	case two:
+		auto_base->AddSequential(new GoScorePositionTwo());
+		break;
+	case three:
+		auto_base->AddSequential(new GoScorePositionThree());
+		break;
+	case four:
+		auto_base->AddSequential(new GoScorePositionFour());
+		break;
+	case five:
+		auto_base->AddSequential(new GoScorePositionFive());
+		break;
 	}
 
 	return auto_base;
@@ -115,7 +129,9 @@ float AutoBase::getFirstTurnAngle() {
 
 	unsigned index = startPos - 1;
 
-	return getValue(1, index);
+	return getValue(1, index)
+			+ ((obstacle == Obstacle_cheval && getValue(1, index) != 420) ?
+					180.0 : 0);
 }
 
 float AutoBase::getMiddleDistance() {
@@ -135,7 +151,9 @@ float AutoBase::getSecondTurnAngle() {
 
 	unsigned index = startPos - 1;
 
-	return getValue(3, index);
+	return getValue(3, index)
+			+ ((obstacle == Obstacle_cheval && getValue(1, index) != 420) ?
+					180.0 : 0);
 }
 
 void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {

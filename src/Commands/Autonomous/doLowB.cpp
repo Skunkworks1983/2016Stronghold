@@ -7,7 +7,7 @@ AutoBase *AutoBase::doLowB()
 {
 	AutoBase *cmd = new AutoBase((char*)"Autonomous-doLowB");
 #if USE_SHOOTER
-	cmd->AddSequential(new RunNewCollector(.4));
+	cmd->AddParallel(new RunNewCollector(.4));
 	cmd->AddParallel(new RotateShooter(cCollect));
 #endif
 	cmd->AddSequential(new DriveForwardStraight(-5, -0.35));	//Reach the defence
