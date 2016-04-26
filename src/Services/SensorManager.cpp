@@ -168,6 +168,10 @@ float SensorManager::getRoll() {
 	return GYRO_NOT_CONNECTED_VALUE;
 }
 
+bool SensorManager::isMoving(){
+	return ahrs->IsMoving();
+}
+
 float SensorManager::getRawX() {
 	return ahrs->GetRawGyroX();
 }
@@ -182,7 +186,7 @@ float SensorManager::getRawZ() {
 
 float SensorManager::GetAccelX() {
 	if (ahrs != NULL) {
-		return ahrs->GetWorldLinearAccelX();
+		return ahrs->GetRawAccelX();
 	}
 	return 0.0;
 
@@ -190,7 +194,7 @@ float SensorManager::GetAccelX() {
 
 float SensorManager::GetAccelY() {
 	if (ahrs != NULL) {
-		return ahrs->GetWorldLinearAccelY();
+		return ahrs->GetRawAccelY();
 	}
 	return 0.0;
 
@@ -198,7 +202,7 @@ float SensorManager::GetAccelY() {
 
 float SensorManager::GetAccelZ() {
 	if (ahrs != NULL) {
-		return ahrs->GetWorldLinearAccelZ();
+		return ahrs->GetRawAccelZ();
 	}
 	return 0.0;
 

@@ -1,3 +1,4 @@
+#include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/DriveForwardStraight.h>
 #include <DriverStation.h>
 #include <RobotMap.h>
@@ -7,8 +8,8 @@
 #include <cmath>
 
 DriveForwardStraight::DriveForwardStraight(float distance, float speed,
-		double timeout) :
-		timeout(timeout) {
+		double timeout, bool absolute) :
+		timeout(timeout), absolute(absolute) {
 	Requires(drivebase);
 	sensorManager = SensorManager::getSensorManager();
 	this->distance = ((distance / DRIVEBASE_FOOT_PER_TICK));
@@ -29,7 +30,15 @@ void DriveForwardStraight::Initialize() {
 	if (timeout > 0) {
 		SetTimeout(timeout);
 	}
-	initialYaw = sensorManager->getAngle();
+	if (absolute) {
+		if (AutoBase::getObstacle() != Obstacle_cheval) {
+			initialYaw = 0.0;
+		} else {
+			initialYaw = 180.0;
+		}
+	} else {
+		initialYaw = sensorManager->getAngle();
+	}
 
 	speed *= 12.75 / DriverStation::GetInstance().GetBatteryVoltage();
 
@@ -41,7 +50,7 @@ void DriveForwardStraight::Initialize() {
 	initialRight = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	LOG_INFO("StraightDrive initial yaw %f initialLeft %f initialRight %f ",
+	LOG_INFO("StraightDrive target %f initial yaw %f initialLeft %f initialRight %f ", distance * DRIVEBASE_FOOT_PER_TICK,
 			initialYaw, initialLeft, initialRight);
 }
 
@@ -65,7 +74,9 @@ bool DriveForwardStraight::IsFinished() {
 	double right = fabs(SensorManager::getSensorManager()->getSensor(
 	SENSOR_DRIVE_BASE_RIGHT_ENCODER_ID)->PIDGet());
 
-	LOG_INFO("StraightDrive Error %f LeftEncoder %f rightEncoder %f distance %f", error, left, right, distance)
+	LOG_INFO(
+			"StraightDrive Error %f LeftEncoder %f rightEncoder %f distance %f",
+			error, left, right, distance)
 
 	bool leftPast = fabs(left - initialLeft) > fabs(distance);
 	bool rightPast = fabs(right - initialRight) > fabs(distance);

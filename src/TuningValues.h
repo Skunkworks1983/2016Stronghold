@@ -60,6 +60,8 @@
 #define CLIMBER_SERVO_IN_ANGLE 0
 #define CLIMBER_SERVO_OUT_ANGLE 130
 
+#define AUTO_SHOT_SPEED 75.0
+
 /**
  * Power Management
  */

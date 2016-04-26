@@ -42,8 +42,7 @@ void TankDrive::Execute() {
 			const float r3 = MotorManager::getMotorManager()->getMotor(
 			DRIVEBASE_RIGHTMOTOR_3_PORT)->talon->GetOutputCurrent();
 
-			//LOG_INFO("USING ONLY ONE CIM %f %f", oiLeft, oiRight);
-			LOG_INFO("Holding! %f %f %f %f %f %f", l1, l2, l3, r1, r2, r3);
+//			LOG_INFO("Holding! %f %f %f %f %f %f", l1, l2, l3, r1, r2, r3);
 		} else {
 			drivebase->setLeftSpeed(oi->getLeftStickY());
 			drivebase->setRightSpeed(oi->getRightStickY());

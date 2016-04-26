@@ -10,16 +10,16 @@
 #include <cstdbool>
 
 GoScorePositionFour::GoScorePositionFour() {
-	AddSequential(new DriveForwardStraightAccurate(-3.5, -.65, 3.0));
+	AddSequential(new DriveForwardStraightAccurate(-3.5, -.65, 3.0, true));
 	AddParallel(new RotateShooter(ShooterPosition::cTOP));
 
-	AddSequential(new PIDTurn(-30, 3.5));
+	AddSequential(new PIDTurn(-30, true, 3.5));
 	AddSequential(new DriveForwardStraight(-2.0, -.5, 3.0));
-	AddSequential(new PIDTurn(0, 3.5));
+	AddSequential(new PIDTurn(0, true, 3.5));
 
 	AddParallel(new DriveTowardsTower(-.3, .08));
 
-	const double shot_speed = 75.0;
+	const double shot_speed = AUTO_SHOT_SPEED;
 
 	AddSequential(new WaitUntilAutoTime(12.5));
 	AddParallel(new RotateShooter(ShooterPosition::cTOP));

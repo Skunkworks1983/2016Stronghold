@@ -34,8 +34,8 @@ void AutoBase::readValues() {
 	readDIPSwitchedObstacle(&obstacle);
 	readDIPSwitchedPosition(&startPos);
 
-	startPos = four;
-	obstacle = Obstacle_cheval;
+	startPos = five;
+	obstacle = Obstacle_moat;
 	goalPos = high;
 }
 
@@ -75,12 +75,10 @@ AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		break;
 	}
 
-	if (startPos != lowBar) {
-		auto_base->AddSequential(new IndexToOuterWorks());
-	}
+	auto_base->AddSequential(new IndexToOuterWorks());
 
 	switch (startPos) {
-	case lowBar:
+	case one:
 		auto_base->AddSequential(new GoScoreLowBar());
 		break;
 	case two:

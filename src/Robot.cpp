@@ -61,15 +61,14 @@ void Robot::RobotInit() {
 	SmartDashboard::PutNumber("D", TURN_GYRO_D);
 
 	/*SmartDashboard::PutNumber("PL", SHOOTER_LEFT_P);
-	SmartDashboard::PutNumber("IL", SHOOTER_LEFT_I);
-	SmartDashboard::PutNumber("DL", SHOOTER_LEFT_D);
+	 SmartDashboard::PutNumber("IL", SHOOTER_LEFT_I);
+	 SmartDashboard::PutNumber("DL", SHOOTER_LEFT_D);
 
-	SmartDashboard::PutNumber("PR", SHOOTER_RIGHT_P);
-	SmartDashboard::PutNumber("IR", SHOOTER_RIGHT_I);
-	SmartDashboard::PutNumber("DR", SHOOTER_RIGHT_D);*/
+	 SmartDashboard::PutNumber("PR", SHOOTER_RIGHT_P);
+	 SmartDashboard::PutNumber("IR", SHOOTER_RIGHT_I);
+	 SmartDashboard::PutNumber("DR", SHOOTER_RIGHT_D);*/
 
 //	AutoBase::readAutoValues();
-
 	LOG_INFO("END OF ROBOTINIT");
 }
 
@@ -144,10 +143,13 @@ void Robot::TeleopPeriodic() {
 
 	//LOG_INFO("GyroAngle %f",	SensorManager::getSensorManager()->getAngle());
 
-//	LOG_INFO("Yaw %f Roll %f Pitch %f",
-//			SensorManager::getSensorManager()->getYaw(),
-//			SensorManager::getSensorManager()->getRoll(),
-//			SensorManager::getSensorManager()->getPitch());
+	/*LOG_INFO("X %f Y %f Z %f worldX %f worldY %f worldZ %f",
+			SensorManager::getSensorManager()->getRawX(),
+			SensorManager::getSensorManager()->getRawY(),
+			SensorManager::getSensorManager()->getRawZ(),
+			SensorManager::getSensorManager()->GetAccelX(),
+			SensorManager::getSensorManager()->GetAccelY(),
+			SensorManager::getSensorManager()->GetAccelZ());*/
 }
 
 void Robot::TestPeriodic() {

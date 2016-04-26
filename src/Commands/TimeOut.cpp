@@ -39,5 +39,5 @@ void TimeOut::End()
 // subsystems is scheduled to run
 void TimeOut::Interrupted()
 {
-
+	LOG_INFO("Timeout Interrupted after %f seconds", timeout);
 }

@@ -8,6 +8,7 @@ class MoveBackUntilRoll: public CommandBase {
 private:
 	unsigned count = 0;
 	double timeout = 0;
+	bool ready = true;
 public:
 	MoveBackUntilRoll(double timeout);
 	void Initialize();

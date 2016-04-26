@@ -13,11 +13,10 @@ AutoBase *AutoBase::doRockW()
 	cmd->AddParallel(new RotateShooter(cTOP, true));
 	cmd->AddParallel(new RunNewCollector(.4));
 #endif
-	cmd->AddSequential(new DriveForwardStraight(-5, -0.7));	//Reach the defence
+	cmd->AddSequential(new DriveForwardStraight(-5, -0.6));	//Reach the defence
 	cmd->AddParallel(new RotateShooter(cTOP, true));
-	cmd->AddSequential(new DriveForwardStraight(-6.5, -0.7));	//breach the defence
+	cmd->AddSequential(new DriveForwardStraight(-7.5, -0.6));	//breach the defence
 	cmd->AddParallel(new RotateShooter(cTOP, true));
-	cmd->AddSequential(new ArcTurn(0.0, 0.75, 0.1, true));
 
 	return cmd;
 

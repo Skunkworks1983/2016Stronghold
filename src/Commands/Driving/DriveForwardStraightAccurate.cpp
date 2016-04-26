@@ -1,3 +1,4 @@
+#include <Commands/Autonomous/AutoBase.h>
 #include <Commands/Driving/DriveForwardStraightAccurate.h>
 #include <DriverStation.h>
 #include <RobotMap.h>
@@ -16,8 +17,8 @@
 #define FMAX_MAG(x,y) fabs(x) > fabs(y) ? x : y
 
 DriveForwardStraightAccurate::DriveForwardStraightAccurate(float distance,
-		float speed, double timeout) :
-		timeout(timeout) {
+		float speed, double timeout, bool absolute) :
+		timeout(timeout), absolute(absolute) {
 	Requires(drivebase);
 	sensorManager = SensorManager::getSensorManager();
 	this->distance = ((distance / DRIVEBASE_FOOT_PER_TICK));
@@ -39,8 +40,15 @@ void DriveForwardStraightAccurate::Initialize() {
 	if (timeout > 0) {
 		SetTimeout(timeout);
 	}
-	initialYaw = sensorManager->getAngle();
-
+	if (absolute) {
+		if (AutoBase::getObstacle() != Obstacle_cheval) {
+			initialYaw = 0.0;
+		} else {
+			initialYaw = 180.0;
+		}
+	} else {
+		initialYaw = sensorManager->getAngle();
+	}
 	drivebase->setBrakeMode(true);
 
 	speed *= 12.75 / DriverStation::GetInstance().GetBatteryVoltage();
@@ -95,8 +103,8 @@ void DriveForwardStraightAccurate::Execute() {
 		drivebase->setRightSpeed(speed - error * P);
 	}
 
-	LOG_INFO("StraightDriveAccurate left %f right %f avgError %f distance %f", left,
-			right, minError, distance * DRIVEBASE_FOOT_PER_TICK);
+	LOG_INFO("StraightDriveAccurate left %f right %f avgError %f distance %f",
+			left, right, minError, distance * DRIVEBASE_FOOT_PER_TICK);
 }
 
 bool DriveForwardStraightAccurate::IsFinished() {

@@ -11,7 +11,7 @@ enum eGoalPos {
 };
 
 enum eStartPos {
-	spy, lowBar, two, three, four, five
+	spy, one, two, three, four, five
 };
 
 enum eObstacle {

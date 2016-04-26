@@ -18,10 +18,3 @@ AutoBase *AutoBase::doPortC()
 
 	return cmd;
 }
-
-
-/*lower shooter,
- * move forward
- * raise shooter
- * move forward/drive through
-*/

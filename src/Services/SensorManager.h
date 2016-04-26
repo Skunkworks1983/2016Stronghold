@@ -47,6 +47,8 @@ public:
 
 	float getFakeYaw();
 
+	bool isMoving();
+
 	double GetEncoderPosition(int ID);
 	double GetSpeed(int ID);
 	void ZeroYaw();

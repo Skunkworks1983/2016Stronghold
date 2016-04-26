@@ -38,7 +38,7 @@ void GoToBatter::Initialize() {
 	startPos = AutoBase::getStartPos();
 
 	switch (startPos) {
-	case lowBar:
+	case one:
 		break;
 	case two:
 		break;

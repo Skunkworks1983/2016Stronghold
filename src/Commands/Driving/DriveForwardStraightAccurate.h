@@ -24,12 +24,15 @@ private:
 	double initialLeft = 0;
 	double initialRight = 0;
 
+	bool absolute = false;
+
 	unsigned withinCount = 0;
 public:
-	DriveForwardStraightAccurate(float distance, float speed, double timeout = 0);
+	DriveForwardStraightAccurate(float distance, float speed, double timeout = 0, bool absolute = false);
 	virtual ~DriveForwardStraightAccurate();
 	void Initialize();
-	void Execute();bool IsFinished();
+	void Execute();
+	bool IsFinished();
 	void End();
 	void Interrupted();
 };

@@ -10,17 +10,17 @@
 #include <cstdbool>
 
 GoScoreLowBar::GoScoreLowBar() {
-	AddSequential(new DriveForwardStraightAccurate(6.87, -.65, 3.0));
+	AddSequential(new DriveForwardStraightAccurate(-6.87, -.65, 3.0));
 	AddParallel(new RotateShooter(ShooterPosition::cTOP));
 
-	AddSequential(new PIDTurn(60, 3.5));
-	AddSequential(new DriveForwardStraightAccurate(1.5, -.65, 3.0));
+	AddSequential(new PIDTurn(60, true, 3.5));
+	AddSequential(new DriveForwardStraightAccurate(-1.5, -.65, 3.0));
 
 	AddSequential(new DriveTowardsTower(-.3, .08, .75));
 	AddSequential(new DriveTowardsTower(-.3, .06, .75));
 	AddParallel(new DriveTowardsTower(-.3, .04));
 
-	const double shot_speed = 75.0;
+	const double shot_speed = AUTO_SHOT_SPEED;
 
 	AddSequential(new WaitUntilAutoTime(11));
 	AddParallel(new RotateShooter(ShooterPosition::cTOP));

@@ -20,14 +20,14 @@ private:
 	float 			initialYaw;			//Initial yaw at the start of the command
 	float			initialPosition;	//Initial encoder position at start of command
 	double timeout = 0;
+	bool absolute = false;
 	SensorManager * sensorManager = NULL;
-	float			error;		//Current enc position - initial enc position
+	float			error = 0.0;		//Current enc position - initial enc position
 	//Todo: Check if ahrsDead and ignore all orient calls if it is
-	double initialLeft;
-	double initialRight;
-	void            setDistance(float distance, float speed);
+	double initialLeft = 0;
+	double initialRight = 0;
 public:
-	DriveForwardStraight(float distance, float speed, double timeout = 0); //distance to drive (ENCODER TICKS), speed at which to drive, whether or not to orient after drive is complete
+	DriveForwardStraight(float distance, float speed, double timeout = 0, bool absolute =false); //distance to drive (ENCODER TICKS), speed at which to drive, whether or not to orient after drive is complete
 
 	virtual 		~DriveForwardStraight();
 	void 			Initialize();
