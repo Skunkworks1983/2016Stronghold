@@ -1,5 +1,5 @@
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/DriveForward.h>
+#include <Commands/Driving/AutoDriving/DriveForward.h>
 #include <Commands/MultiTool/RotateShooter.h>
 
 AutoBase *AutoBase::doSpy()

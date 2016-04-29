@@ -27,6 +27,14 @@ public:
 	int getPID(Motor motor);
 };
 
+class ShooterRotatorGroup: public MotorGroup {
+private:
+	float realOutput = 0;
+public:
+	ShooterRotatorGroup(std::vector<Motor*> motorgroup);
+	void PIDWrite(float output);
+};
+
 class DrivebaseMotorGroup: public MotorGroup {
 private:
 	unsigned log_count = 0;
@@ -36,6 +44,5 @@ public:
 
 	static float lastOutput;
 };
-
 
 #endif /* SRC_SERVICES_MOTORGROUP_H_ */

@@ -1,4 +1,4 @@
-#include <Commands/Driving/GoToBatter.h>
+#include <Commands/Driving/AutoDriving/GoToBatter.h>
 #include <RobotMap.h>
 #include <Services/CameraReader.h>
 #include <Services/MotorManager.h>

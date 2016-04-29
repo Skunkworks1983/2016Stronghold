@@ -1,8 +1,6 @@
-#include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/DriveForwardStraight.h>
-#include <Commands/Driving/GoToBatter.h>
-#include <Commands/Driving/Turning/ArcTurn.h>
-#include <Commands/GoAndScoreHighGoal2.h>
+#include <Commands/Autonomous/GoAndScoreHighGoal2.h>
+#include <Commands/Driving/AutoDriving/DriveForwardStraight.h>
+#include <Commands/Driving/AutoDriving/GoToBatter.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/PIDShot.h>

@@ -1,10 +1,8 @@
-#include <Commands/Climbing/MoveServo.h>
 #include <Commands/Climbing/RunWinch.h>
 #include <Commands/Climbing/SafeRotateArm.h>
 #include <Commands/Climbing/StopArmPID.h>
 #include <Commands/Driving/Turning/ArcTurnToCamera.h>
 #include <Commands/MultiTool/ManualCollectorMove.h>
-#include <Commands/MultiTool/ResetCollectorEncoder.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunCollector.h>
 #include <Commands/MultiTool/RunNewCollector.h>
@@ -12,11 +10,15 @@
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/IndexBall.h>
 #include <Commands/Shooting/PIDShot.h>
-#include <Commands/Shooting/RampToSpeed.h>
+#include <Commands/Shooting/StupidShot.h>
+#include <Commands/TurnOnLight.h>
 #include <OI.h>
 #include <Subsystems/Shooter.h>
 #include <cmath>
 #include <cstdbool>
+
+#define UNDER_DEFENCE_TOLERANCE 2.0
+#define NO_DEFENCE_TOLERANCE .75
 
 OI::OI() {
 #if USE_GAMEPAD
@@ -136,7 +138,7 @@ void OI::registerButtonListeners() {
 
 	shooter45->WhenPressed(new RotateShooter(c45));
 
-	lowFire->WhileHeld(new AutoRunCollector());
+	lowFire->WhileHeld(new AutoRunCollector(UNDER_DEFENCE_TOLERANCE));
 	lowArm->WhenPressed(new IndexBall());	//no need for this at the moment
 	shooterPass->WhenPressed(new RotateShooter(c60));
 
@@ -144,23 +146,20 @@ void OI::registerButtonListeners() {
 
 	//highArm->WhileHeld(new PIDShot(70.0, 70.0));	//good one	//one inch spacer
 	highArm->WhileHeld(new PIDShot(shot_speed, shot_speed));
-	highArmPosition1->WhileHeld(new PIDShot(shot_speed - 3, shot_speed - 3));
-	//highArmPosition2->WhileHeld(new PIDShot(shot_speed + 3, shot_speed + 3));
+	highArmPosition1->WhileHeld(new AutoRunCollector(NO_DEFENCE_TOLERANCE));
+	highArmPosition2->WhileHeld(new StupidShot(shot_speed));
 	//highArmPosition2->WhileHeld(new RampToSpeed(1.0, 10.0));
 	//highArmPosition2->WhileHeld(new PIDShot(100.0, 100.0));
 
 	highFire->WhileHeld(new RunCollector(Shooter::KForward, 1.0));
 	//highAimPosition1;
-	highLineUp->WhenPressed(new ResetShooterRotationEncoder());
+	highLineUp->WhenPressed(new TurnOnLight(true, true));
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
 	const double climber_arm_up_debug = 3125;
 	climberArmsUp->WhileHeld(new SafeRotateArm(climber_arm_up_debug));
 	climberArmsUp->WhenReleased(new StopArmPID());
 	winchEngage->WhileHeld(new RunWinch(1.0));
 	//manualOveride;	no effect currently
-	manualWinchReverse->WhenPressed(new ResetShooterRotationEncoder());
-	manualShooterDown->WhenPressed(
-			new MoveServo(MoveServo::eServoPosition::OUT));
 	manualShooterDown->WhileHeld(new ManualRotateShooter(.4));
 	manualShooterUp->WhileHeld(new ManualRotateShooter(-.4));
 

@@ -5,14 +5,13 @@
 #include <Utility.h>
 #include <cmath>
 
-#define SHOT_TOLERANCE .65
 //in microseconds
 #define AUTONOMOUS_TIMEOUT 1.0 * 1000 * 1000
 
 #define AUTO_SHOOT 14.5 * 1000 * 1000
 
-AutoRunCollector::AutoRunCollector(bool autonomous) :
-		autonomous(autonomous) {
+AutoRunCollector::AutoRunCollector(double tolerance, bool autonomous) :
+		tolerance(tolerance), autonomous(autonomous) {
 	if (timeout > 0) {
 		SetTimeout(timeout);
 	}
@@ -27,10 +26,10 @@ void AutoRunCollector::Initialize() {
 void AutoRunCollector::Execute() {
 	double leftDiff = fabs(
 			shooter->getLeft()->PIDGet() - shooter->getLeft()->getSetpoint());
-	bool leftOnTarget = (leftDiff < SHOT_TOLERANCE);
+	bool leftOnTarget = (leftDiff < tolerance);
 	double rightDiff = fabs(
 			shooter->getRight()->PIDGet() - shooter->getRight()->getSetpoint());
-	bool rightOnTarget = (rightDiff < SHOT_TOLERANCE);
+	bool rightOnTarget = (rightDiff < tolerance);
 
 	double rightLeftDiff = fabs(shooter->getRight()->PIDGet())
 			- fabs(shooter->getLeft()->PIDGet());

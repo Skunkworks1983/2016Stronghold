@@ -70,6 +70,12 @@ void CameraReader::startUp() {
 	}
 }
 
+unsigned CameraReader::getPacketCount(){
+	unsigned ret = packetCount;
+
+	return ret;
+}
+
 void CameraReader::startReading() {
 	reading = true;
 	goal1X = 0;
@@ -125,6 +131,8 @@ void *CameraReader::update(void *d) {
 		int len = recv(camera_reader->mysocket, (char *) &msg, sizeof(msg), 0);
 
 		camera_reader->mutex->lock();
+
+		camera_reader->increasePacketCount();
 
 		if (msg.posX1 != INVALID) {
 			camera_reader->goal1X = 2 * ((float) msg.posX1 / (float) imageWidth)
@@ -193,6 +201,10 @@ float CameraReader::getGoal2Y() {
 	float tempLast = goal2Y;
 	mutex->unlock();
 	return tempLast;
+}
+
+void CameraReader::increasePacketCount(){
+	packetCount++;
 }
 
 float CameraReader::getGoal3X() {

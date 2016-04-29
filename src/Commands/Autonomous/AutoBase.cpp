@@ -1,10 +1,12 @@
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/IndexToOuterWorks.h>
-#include <Commands/GoScoreLowBar.h>
-#include <Commands/GoScorePositionFive.h>
-#include <Commands/GoScorePositionFour.h>
-#include <Commands/GoScorePositionThree.h>
-#include <Commands/GoScorePositionTwo.h>
+#include <Commands/Autonomous/Positions/GoScoreLowBar.h>
+#include <Commands/Autonomous/Positions/GoScorePositionFive.h>
+#include <Commands/Autonomous/Positions/GoScorePositionFour.h>
+#include <Commands/Autonomous/Positions/GoScorePositionThree.h>
+#include <Commands/Autonomous/Positions/GoScorePositionTwo.h>
+#include <Commands/Driving/AutoDriving/IndexToOuterWorks.h>
+#include <Commands/MultiTool/RotateShooter.h>
+#include <Commands/MultiTool/RunNewCollector.h>
 #include <DigitalInput.h>
 #include <RobotMap.h>
 #include <cstdbool>
@@ -17,6 +19,9 @@ eStartPos AutoBase::startPos = spy;
 eGoalPos AutoBase::goalPos = high;
 float AutoBase::MoveAndTurnValues[4][5] = { { 6.87, 60, 420, 420 }, { 10.29, 60,
 		420, 420 }, { 3.25, -30, 2, 0 }, { 10.79, 420, 420, -50 } };
+
+//inverts the bits in read because device is now pulled high
+#define NEW_DIPSWITCH true
 
 AutoBase::AutoBase() {
 	AutoBase("AutoBase-Blank");
@@ -34,14 +39,18 @@ void AutoBase::readValues() {
 	readDIPSwitchedObstacle(&obstacle);
 	readDIPSwitchedPosition(&startPos);
 
-	startPos = five;
-	obstacle = Obstacle_moat;
+	//startPos = five;
+	//obstacle = Obstacle_moat;
 	goalPos = high;
 }
 
 AutoBase *AutoBase::createSelectedAuto(eObstacle obstacle, eStartPos startPos,
 		eGoalPos goalPos) {
 	AutoBase *auto_base = new AutoBase("SelectedAuto");
+
+#if USE_SHOOTER
+	auto_base->AddSequential(new RunNewCollector(.4));
+#endif
 
 	switch (obstacle) {
 	case BLANK:
@@ -158,7 +167,7 @@ void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
 	LOG_INFO("Read Switched Obstacle start");
 	std::vector<DigitalInput *> digitalInputs; // initialize digital input
 
-	for (int i = 1; i < 4; i++) {
+	for (int i = 0; i < 4; i++) {
 		digitalInputs.push_back(new DigitalInput(i));
 	}
 
@@ -166,8 +175,9 @@ void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
 	*obstacle = (eObstacle) 0;
 	int adder = 1;
 	for (unsigned i = 0; i < digitalInputs.size(); i++) {
-		bool isSet = digitalInputs[i]->Get();
-		LOG_INFO("index %u bool %u", i, isSet);
+		//if it is the new dip switch board, invert input because pulled high
+		bool isSet = NEW_DIPSWITCH ? !digitalInputs[i]->Get() : digitalInputs[i]->Get();
+//		LOG_INFO("index %u bool %u", i, isSet);
 		if (isSet) {
 			*obstacle = (eObstacle) ((*obstacle) | adder);
 		}
@@ -183,7 +193,7 @@ void AutoBase::readDIPSwitchedPosition(eStartPos *startPos) {
 	LOG_INFO("Read Switched Obstacle start");
 	std::vector<DigitalInput *> digitalInputs; // initialize digital input
 
-	for (int i = 4; i < 7; i++) {
+	for (int i = 4; i < 8; i++) {
 		digitalInputs.push_back(new DigitalInput(i));
 	}
 
@@ -191,8 +201,8 @@ void AutoBase::readDIPSwitchedPosition(eStartPos *startPos) {
 	*startPos = (eStartPos) 0;
 	int adder = 1;
 	for (unsigned i = 0; i < digitalInputs.size(); i++) {
-		bool isSet = digitalInputs[i]->Get();
-		LOG_INFO("index %u bool %u", i, isSet);
+		bool isSet = NEW_DIPSWITCH ? !digitalInputs[i]->Get() : digitalInputs[i]->Get();
+//		LOG_INFO("index %u bool %u", i, isSet);
 		if (isSet) {
 			*startPos = (eStartPos) ((*startPos) | adder);
 		}

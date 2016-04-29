@@ -27,7 +27,7 @@ private:
 	struct sockaddr_in dest;
 	long counter = 0;
 	char buffer[MAXRCVLEN + 1]; /* +1 so we can add null terminator */
-	priority_mutex *mutex;
+	priority_mutex *mutex = NULL;
 
 	static CameraReader *reader;
 	bool reading = false;
@@ -41,6 +41,7 @@ private:
 	float targetXOffset[3] = {-12, 0, 12 };
 	float targetYOffset[3] = {-6, 0, -6 };
 
+	unsigned packetCount = 0;
 
 	float goal1X = INVALID;
 	float goal1Y = INVALID;
@@ -94,6 +95,9 @@ public:
 	double getXAngle(unsigned index);
 	double getYAngle(unsigned index);
 	double getExpectedWidth(unsigned index);
+
+	unsigned getPacketCount();
+	void increasePacketCount();
 
 	double PIDGet();
 };

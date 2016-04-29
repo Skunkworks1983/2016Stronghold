@@ -16,8 +16,9 @@ private:
 	unsigned c = 0;
 	bool autonomous = false;
 	uint64_t startingTime = 0.0;
+	double tolerance = 0.0;
 public:
-	AutoRunCollector(bool autonomous = false);
+	AutoRunCollector(double tolerance, bool autonomous = false);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

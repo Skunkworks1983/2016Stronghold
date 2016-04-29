@@ -1,20 +1,22 @@
-#include <Commands/Driving/DriveForwardStraight.h>
-#include <Commands/Driving/DriveForwardStraightAccurate.h>
-#include <Commands/Driving/DriveTowardsTower.h>
+#include <Commands/Autonomous/Positions/GoScorePositionThree.h>
+#include <Commands/Driving/AutoDriving/DriveForwardStraight.h>
+#include <Commands/Driving/AutoDriving/DriveForwardStraightAccurate.h>
+#include <Commands/Driving/AutoDriving/DriveTowardsTower.h>
 #include <Commands/Driving/Turning/PIDTurn.h>
-#include <Commands/GoScorePositionTwo.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/PIDShot.h>
 #include <Commands/WaitUntilAutoTime.h>
-#include <RobotMap.h>
+#include <TuningValues.h>
 #include <cstdbool>
 
-GoScorePositionTwo::GoScorePositionTwo() {
-	AddSequential(new DriveForwardStraightAccurate(-12.75, -.65, 3.0, true));
+GoScorePositionThree::GoScorePositionThree() {
+	AddSequential(new DriveForwardStraightAccurate(-3.25, -.65, 3.0, true));
 	AddParallel(new RotateShooter(ShooterPosition::cTOP));
 
-	AddSequential(new PIDTurn(59, true, 3.5));
+	AddSequential(new PIDTurn(90, true, 3.5));
+	AddSequential(new DriveForwardStraightAccurate(-3.0, -.65, 3.0));
+	AddSequential(new PIDTurn(0, true, 3.5));
 
 	AddParallel(new DriveTowardsTower(-.3, .08));
 

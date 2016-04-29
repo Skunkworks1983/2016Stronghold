@@ -50,25 +50,7 @@ void Robot::RobotInit() {
 	SensorManager::getSensorManager()->getGyro()->ZeroYaw();
 	SensorManager::getSensorManager()->getGyro()->Reset();
 
-	SmartDashboard::PutNumber("leftSpeed",
-			CommandBase::shooter->getLeft()->PIDGet());
-	SmartDashboard::PutNumber("rightSpeed",
-			CommandBase::shooter->getRight()->PIDGet());
-	SmartDashboard::PutNumber("time", GetFPGATime());
-
-	SmartDashboard::PutNumber("P", TURN_GYRO_P);
-	SmartDashboard::PutNumber("I", TURN_GYRO_I);
-	SmartDashboard::PutNumber("D", TURN_GYRO_D);
-
-	/*SmartDashboard::PutNumber("PL", SHOOTER_LEFT_P);
-	 SmartDashboard::PutNumber("IL", SHOOTER_LEFT_I);
-	 SmartDashboard::PutNumber("DL", SHOOTER_LEFT_D);
-
-	 SmartDashboard::PutNumber("PR", SHOOTER_RIGHT_P);
-	 SmartDashboard::PutNumber("IR", SHOOTER_RIGHT_I);
-	 SmartDashboard::PutNumber("DR", SHOOTER_RIGHT_D);*/
-
-//	AutoBase::readAutoValues();
+	AutoBase::readValues();
 	LOG_INFO("END OF ROBOTINIT");
 }
 
@@ -80,6 +62,8 @@ void Robot::DisabledInit() {
 
 	CommandBase::drivebase->setLeftSpeed(0.0);
 	CommandBase::drivebase->setRightSpeed(0.0);
+
+	CommandBase::shooter->turnOnLight(false);
 }
 
 void Robot::DisabledPeriodic() {
@@ -105,14 +89,14 @@ void Robot::AutonomousInit() {
 	//GoToBatter *gotoBatter = new GoToBatter();
 	//gotoBatter->Start();
 
-//	PIDTurn *turn = new PIDTurn(180,false);
-//	turn->Start();
+	//	PIDTurn *turn = new PIDTurn(180,false);
+	//	turn->Start();
 
-//	DriveTowardsTower *tower = new DriveTowardsTower(-.3, .08);
-//	tower->Start();
+	//	DriveTowardsTower *tower = new DriveTowardsTower(-.3, .08);
+	//	tower->Start();
 
-//	HoldAgainstTower *tower = new HoldAgainstTower(.1);
-//	tower->Start();
+	//	HoldAgainstTower *tower = new HoldAgainstTower(.1);
+	//	tower->Start();
 
 	//DriveForwardStraight *driveForward = new DriveForwardStraight(9, .3);
 	//driveForward->Start();

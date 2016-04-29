@@ -15,8 +15,8 @@ class RunCollector: public CommandBase
 {
 private:
 	Shooter::rollerDirection dir;
-	float speed;
-	float timeOut;
+	float speed = 0;
+	float timeOut = 0;
 	bool already_on  =false;
 public:
 	RunCollector(Shooter::rollerDirection dir, float speed = COLLECT_SPEED, float timeOut = 0);

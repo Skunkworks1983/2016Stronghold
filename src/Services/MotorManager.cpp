@@ -164,15 +164,17 @@ void MotorManager::initPIDS() {
 	rotationShooterMotors.push_back(
 			getMotor(COLLECTOR_ROTATOR_MOTOR_RIGHT_PORT));
 
-	MotorGroup * groupShooterRotation = new MotorGroup(rotationShooterMotors);
+	ShooterRotatorGroup * groupShooterRotation = new ShooterRotatorGroup(rotationShooterMotors);
 
-	const double shooter_p = 0.00015;
+	const double shooter_p = 0.00020;
 	const double shooter_i = 0.0000015;
 	const double shooter_d = 0.0003;
-	const double shooter_f = -.1 / 3565;
+	const double shooter_f = (-.00005 / 2) + (-.1 / 3565);
 
 	createPID(groupShooterRotation, SENSOR_COLLECTOR_ROTATION_ENCODER_ID,
 	PID_ID_COLLECTOR, shooter_p, shooter_i, shooter_d, shooter_f, false);
+
+	getPID(PID_ID_COLLECTOR)->SetOutputRange(-.75,.75);
 
 	getPID(PID_ID_COLLECTOR)->Disable();
 

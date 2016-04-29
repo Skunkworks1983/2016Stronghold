@@ -6,6 +6,7 @@
 #include <TuningValues.h>
 #include <cstdbool>
 
+class DigitalOutput;
 class ShooterMotor;
 class MotorManager;
 class SensorManager;
@@ -17,6 +18,8 @@ private:
 	float i = SHOOTER_LEFT_I;		//works = 0.0
 	float d = SHOOTER_LEFT_D;	//works = 0.0
 
+	bool lightState = false;
+
 	//working values
 //	float p = .003;
 //	float i = 0.0;
@@ -27,6 +30,8 @@ private:
 	ShooterMotor *left = NULL;
 	ShooterMotor *right = NULL;
 	Command *lastCommand = NULL;
+
+	DigitalOutput *light = NULL;
 
 	bool upToSpeed = false;
 public:
@@ -64,6 +69,9 @@ public:
 
 	float getLeftShooterMotorPower();
 	float getRightShooterMotorPower();
+
+	bool getLightState();
+	void turnOnLight(bool state);
 };
 
 #endif

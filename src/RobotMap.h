@@ -2,7 +2,7 @@
 #define ROBOTMAP_H
 
 #define ROBOT_NAME "VanillaThunder"
-#define PRACTICEBOT 1
+#define PRACTICEBOT 0
 
 #include "TuningValues.h"
 
@@ -89,6 +89,8 @@
 #define COLLECTOR_BREAK_BEAM_PORT 0
 
 #define COLLECTOR_ROTATION_TICKS_PER_DEGREE (3565/135)
+
+#define LIGHT_DIGITAL_OUTPUT_PORT 8
 
 /**
  * Climber

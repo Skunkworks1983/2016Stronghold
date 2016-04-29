@@ -1,12 +1,13 @@
-#include <Commands/Driving/DriveForwardStraight.h>
-#include <Commands/Driving/DriveForwardStraightAccurate.h>
-#include <Commands/Driving/DriveTowardsTower.h>
+#include <Commands/Autonomous/Positions/GoScoreLowBar.h>
+#include <Commands/Driving/AutoDriving/DriveForwardStraight.h>
+#include <Commands/Driving/AutoDriving/DriveForwardStraightAccurate.h>
+#include <Commands/Driving/AutoDriving/DriveTowardsTower.h>
 #include <Commands/Driving/Turning/PIDTurn.h>
-#include <Commands/GoScoreLowBar.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/PIDShot.h>
 #include <Commands/WaitUntilAutoTime.h>
+#include <TuningValues.h>
 #include <cstdbool>
 
 GoScoreLowBar::GoScoreLowBar() {

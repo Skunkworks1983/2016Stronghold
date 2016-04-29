@@ -1,7 +1,8 @@
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/DriveForward.h>
+#include <Commands/Driving/AutoDriving/DriveForward.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/MultiTool/RunCollector.h>
+#include <RobotMap.h>
 #include <Subsystems/Shooter.h>
 
 #define PORT_DISTANCE 15

@@ -1,15 +1,16 @@
 #include <CANTalon.h>
 #include <Commands/Command.h>
-#include <DigitalInput.h>
+#include <DigitalOutput.h>
 #include <RobotMap.h>
-#include <Services/Logger.h>
 #include <Services/Motor.h>
 #include <Services/MotorManager.h>
+#include <Services/Sensor.h>
 #include <Services/SensorManager.h>
 #include <Services/ShooterMotor.h>
 #include <Subsystems/Shooter.h>
-#include <TuningValues.h>
-#include <cstdio>
+
+#define LIGHT_ON_PWM 255
+#define LIGHT_OFF_PWM 0
 
 Shooter::Shooter() :
 		Subsystem("Shooter") {
@@ -18,6 +19,10 @@ Shooter::Shooter() :
 
 	left = new ShooterMotor(ShooterMotor::LEFT, p, i, d);
 	right = new ShooterMotor(ShooterMotor::RIGHT, p, i, d);
+
+	light = new DigitalOutput(LIGHT_DIGITAL_OUTPUT_PORT);
+
+	turnOnLight(false);
 }
 
 Shooter::~Shooter() {
@@ -26,6 +31,19 @@ Shooter::~Shooter() {
 
 void Shooter::InitDefaultCommand() {
 
+}
+
+void Shooter::turnOnLight(bool state){
+	lightState = state;
+	if(state){
+		light->Set(LIGHT_ON_PWM);
+	}else{
+		light->Set(LIGHT_OFF_PWM);
+	}
+}
+
+bool Shooter::getLightState(){
+	return lightState;
 }
 
 ShooterMotor *Shooter::getLeft() {
@@ -152,7 +170,7 @@ float Shooter::getLeftShooterSpeed() {
 
 //rotation per second
 float Shooter::getRightShooterSpeed() {
-	return 10 * (SensorManager::getSensorManager()->getSensor(
+	return -10 * (SensorManager::getSensorManager()->getSensor(
 	SENSOR_SHOOTER_ENCODER_RIGHT_ID)->getSpeed() / SHOOTER_ENCODER_TICKS_PER_REV);
 }
 

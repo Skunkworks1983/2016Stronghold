@@ -1,6 +1,6 @@
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/IndexToOuterWorks.h>
-#include <Commands/Driving/MoveBackUntilRoll.h>
+#include <Commands/Driving/AutoDriving/IndexToOuterWorks.h>
+#include <Commands/Driving/AutoDriving/MoveBackUntilRoll.h>
 #include <Commands/Driving/Turning/PIDTurn.h>
 #include <Commands/TimeOut.h>
 #include <RobotMap.h>

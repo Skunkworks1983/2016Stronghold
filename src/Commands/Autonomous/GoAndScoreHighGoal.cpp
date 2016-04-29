@@ -1,13 +1,14 @@
 #include <Commands/Autonomous/AutoBase.h>
-#include <Commands/Driving/DriveForwardStraight.h>
-#include <Commands/Driving/DriveForwardStraightAccurate.h>
-#include <Commands/Driving/DriveTowardsTower.h>
+#include <Commands/Autonomous/GoAndScoreHighGoal.h>
+#include <Commands/Driving/AutoDriving/DriveForwardStraight.h>
+#include <Commands/Driving/AutoDriving/DriveForwardStraightAccurate.h>
+#include <Commands/Driving/AutoDriving/DriveTowardsTower.h>
 #include <Commands/Driving/Turning/PIDTurn.h>
-#include <Commands/GoAndScoreHighGoal.h>
 #include <Commands/MultiTool/RotateShooter.h>
 #include <Commands/Shooting/AutoRunCollector.h>
 #include <Commands/Shooting/PIDShot.h>
 #include <Commands/WaitUntilAutoTime.h>
+#include <TuningValues.h>
 #include <cstdbool>
 
 #define FIRST_DRIVEFORWARD 100

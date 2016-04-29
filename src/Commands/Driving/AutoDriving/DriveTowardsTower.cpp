@@ -1,4 +1,4 @@
-#include <Commands/Driving/DriveTowardsTower.h>
+#include <Commands/Driving/AutoDriving/DriveTowardsTower.h>
 #include <DriverStation.h>
 #include <RobotMap.h>
 #include <Services/CameraReader.h>
@@ -60,9 +60,9 @@ void DriveTowardsTower::Execute() {
 				- cam_angle;
 	}
 
-	LOG_INFO("TowardsTower cam_angle: %f angle %f error %f error*P %f",
+	LOG_INFO("TowardsTower cam_angle: %f angle %f error %f error*P %f PacketCount %u",
 			cam_angle, SensorManager::getSensorManager()->getYaw(), error,
-			error * P);
+			error * P, CameraReader::getCameraReader()->getPacketCount());
 
 	const double leftSpeed = speed - error * P;
 	const double rightSpeed = speed + error * P;

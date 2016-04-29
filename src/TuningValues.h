@@ -79,6 +79,8 @@
  * PID Values
  */
 
+//setpoint 3565
+
 #define COLLECTOR_ROTATION_P 0.00015
 #define COLLECTOR_ROTATION_I 0.0000015
 #define COLLECTOR_ROTATION_D 0.0006
