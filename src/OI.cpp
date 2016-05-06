@@ -147,13 +147,14 @@ void OI::registerButtonListeners() {
 	//highArm->WhileHeld(new PIDShot(70.0, 70.0));	//good one	//one inch spacer
 	highArm->WhileHeld(new PIDShot(shot_speed, shot_speed));
 	highArmPosition1->WhileHeld(new AutoRunCollector(NO_DEFENCE_TOLERANCE));
-	highArmPosition2->WhileHeld(new StupidShot(shot_speed));
+	highArmPosition2->WhileHeld(new PIDShot(shot_speed - 5.0, shot_speed - 5.0));
+	highLineUp->WhileHeld(new PIDShot(shot_speed - 3.0, shot_speed - 3.0));
+
 	//highArmPosition2->WhileHeld(new RampToSpeed(1.0, 10.0));
 	//highArmPosition2->WhileHeld(new PIDShot(100.0, 100.0));
 
 	highFire->WhileHeld(new RunCollector(Shooter::KForward, 1.0));
 	//highAimPosition1;
-	highLineUp->WhenPressed(new TurnOnLight(true, true));
 	//highLineUp->WhenPressed(new RotateTowardCameraTarget());
 	const double climber_arm_up_debug = 3125;
 	climberArmsUp->WhileHeld(new SafeRotateArm(climber_arm_up_debug));

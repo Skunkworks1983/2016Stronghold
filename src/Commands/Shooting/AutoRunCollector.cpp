@@ -44,10 +44,10 @@ void AutoRunCollector::Execute() {
 		c = 0;
 	}
 
-	LOG_INFO(
-	 "leftSpeed %f rightSpeed %f leftDiff %f rightDiff %f leftOnTarget differenceright-left %f",
-	 shooter->getLeft()->PIDGet(), shooter->getRight()->PIDGet(),
-	 leftDiff, rightDiff, rightLeftDiff);
+//	LOG_INFO(
+//	 "leftSpeed %f rightSpeed %f leftDiff %f rightDiff %f leftOnTarget differenceright-left %f",
+//	 shooter->getLeft()->PIDGet(), shooter->getRight()->PIDGet(),
+//	 leftDiff, rightDiff, rightLeftDiff);
 
 	if ((c >= 3 || (autonomous && GetFPGATime() - Robot::getAutoStartTime() > AUTO_SHOOT))  && !alreadyUp) {
 		shooter->setRollerSpeed(Shooter::KForward, 1.0);
