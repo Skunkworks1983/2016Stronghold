@@ -359,7 +359,7 @@ void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
 	LOG_INFO("Read Switched Obstacle start");
 	std::vector<DigitalInput *> digitalInputs; // initialize digital input
 
-	for (int i = 1; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		digitalInputs.push_back(new DigitalInput(i));
 	}
 
@@ -367,7 +367,7 @@ void AutoBase::readDIPSwitchedObstacle(eObstacle *obstacle) {
 	*obstacle = (eObstacle) 0;
 	int adder = 1;
 	for (unsigned i = 0; i < digitalInputs.size(); i++) {
-		bool isSet = digitalInputs[i]->Get();
+		bool isSet = !digitalInputs[i]->Get();
 		LOG_INFO("index %u bool %u", i, isSet);
 		if (isSet) {
 			*obstacle = (eObstacle) ((*obstacle) | adder);
@@ -387,12 +387,12 @@ void AutoBase::readDIPSwitchedPosition(eStartPos *startPos) {
 	for (int i = 4; i < 7; i++) {
 		digitalInputs.push_back(new DigitalInput(i));
 	}
-
+	//left obstacle, right position
 	//calculate obstacle
 	*startPos = (eStartPos) 0;
 	int adder = 1;
 	for (unsigned i = 0; i < digitalInputs.size(); i++) {
-		bool isSet = digitalInputs[i]->Get();
+		bool isSet = !digitalInputs[i]->Get();
 		LOG_INFO("index %u bool %u", i, isSet);
 		if (isSet) {
 			*startPos = (eStartPos) ((*startPos) | adder);
